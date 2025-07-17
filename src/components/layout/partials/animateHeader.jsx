@@ -18,7 +18,7 @@ function AnimationHeader() {
         <motion.div
             className={`fixed top-0 left-0 right-0 z-50 transition-all shadow-md`}
             animate={{
-                backgroundColor: scrolled ? "rgba(25, 27, 31, 0.9)" : "rgba(0,0,0,0)",
+                backgroundColor: scrolled ? "rgba(25, 27, 31, 0.95)" : "rgba(0,0,0,0)",
                 height: scrolled ? 80 : 120,
                 opacity: scrolled ? 1 : 1,
                 boxShadow: scrolled ? "0 2px 12px rgba(0, 0, 0, 0.1)" : "0 0 0 rgba(0, 0, 0, 0)",
