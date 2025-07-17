@@ -4,10 +4,12 @@ function Footer() {
 
   return (
     <>
-        <h1>
-            footer
+      <div className='h-96 bg-green-300 w-full'>
+        <h1 className=''>
+          footer
         </h1>
-        
+      </div>
+
     </>
   )
 }

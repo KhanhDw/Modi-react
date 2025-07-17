@@ -1,4 +1,4 @@
-function About() {
+function AboutPage() {
     return (
         <>
             <p className="text-9xl">about page</p>
@@ -6,4 +6,4 @@ function About() {
     );
 }
 
-export default About
+export default AboutPage
