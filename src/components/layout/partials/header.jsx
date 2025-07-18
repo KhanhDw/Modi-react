@@ -1,50 +1,47 @@
 import react, { useState } from 'react'
 import { FaUser } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
+import { FaEarthAmericas } from "react-icons/fa6";
 function Header({ scrolled }) {
-  const navigate = useNavigate();
   
   const [acitveIndex, setActiveIndex] = useState(1);
   const [isHoverServices, setIsHoverServices] = useState(false);
   const [isHoverNews, setIsHoverNews] = useState(false);
-  const [isHoverContact, setIsHoverContact] = useState(false);
-  const [isHoverAbout, setIsHoverAbout] = useState(false);
-
-  const gotoLoginPage = () => {
-    navigate('/about');
-  };
 
   return (
     <>
       <div className={`${scrolled ? 'h-20' : 'h-30'}  bg-transparent   w-full flex justify-between items-center px-40 transition-all duration-200`}>
-        <div className='flex justify-center items-center  rounded-2xl overflow-hidden w-fit h-10 px-3 py-2'>
-          <img src="./logoModi.png" className='w-fit h-10' alt='logo' />
+        <div className='flex items-center justify-center h-10 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
+          <img src="./logoModi.png" className='h-10 w-fit' alt='logo' />
         </div>
-        <div className='flex justify-center items-center gap-15 font-bold text-lg '>
-          <a onClick={() => setActiveIndex(1)} href='#' className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</a>
+        <div className='flex items-center justify-center text-lg font-bold gap-15 '>
+          <Link to={'/'} onClick={() => setActiveIndex(1)} className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
 
-          <a onClick={() => setActiveIndex(2)} href='#' className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</a>
+          <Link to={'/about'} onClick={() => setActiveIndex(2)} className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
 
-          <a onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)} onClick={() => setActiveIndex(3)} href='#'
+          <Link to={'/'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)} onClick={() => setActiveIndex(3)} href='#'
             className={` h-full flex justify-center items-center ${acitveIndex === 3 ? 'text-green-400' : 'text-white'}`}>
             Dịch Vụ<IoMdArrowDropdown />
             <div className={` rounded-lg text-black font-normal text-sm absolute translate-x-15 ${scrolled ? 'top-13.5' : 'top-18.5'} transition-all duration-300`}>
               {isHoverServices && <ModalServices />}
-            </div></a>
+            </div>
+          </Link>
 
-          <a onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} onClick={() => setActiveIndex(4)} href='#' className={`flex justify-center items-center ${acitveIndex === 4 ? 'text-green-400' : 'text-white'}`}>
+          <Link to={'/'} onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} onClick={() => setActiveIndex(4)} href='#' className={`flex justify-center items-center ${acitveIndex === 4 ? 'text-green-400' : 'text-white'}`}>
             Tin Tức<IoMdArrowDropdown />
             <div className={` rounded-lg text-black font-normal text-sm absolute translate-x-8 ${scrolled ? 'top-13.5':'top-18.5'} transition-all duration-300`}>
               {isHoverNews && <ModalNews />}
             </div>  
-          </a>
+          </Link>
 
-          <a onClick={() => setActiveIndex(5)} href='#' className={`flex justify-center items-center ${acitveIndex === 5 ? 'text-green-400' : 'text-white'}`}>Liên Hệ</a>
+          <Link to={'/'} onClick={() => setActiveIndex(5)} href='#' className={`flex justify-center items-center ${acitveIndex === 5 ? 'text-green-400' : 'text-white'}`}>Liên Hệ</Link>
+          <Link to={'/recruitment'} onClick={() => setActiveIndex(5)} href='#' className={`flex justify-center items-center ${acitveIndex === 5 ? 'text-green-400' : 'text-white'}`}>Tuyển Dụng</Link>
         </div>
-        <div>
-          <button onClick={gotoLoginPage} typeof='button' className='transtion-all duration-200 p-2 text-white flex justify-center items-center border-2 border-white rounded-3xl gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><FaUser />Tài khoản</button>
+        <div >
+
+          <Link  to={'/about'} className='transtion-all duration-200 p-2 text-white flex justify-center items-center border-2 border-white rounded-3xl gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><FaEarthAmericas /></Link>
+          <Link hidden to={'/about'} className='transtion-all duration-200 p-2 text-white flex justify-center items-center border-2 border-white rounded-3xl gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><FaUser />Tài khoản</Link>
         </div>
       </div>
 
@@ -71,8 +68,8 @@ function ModalServices() {
   ];
 
   return (<>
-    <div className='bg-white w-fit rounded-lg h-fit '>
-      <ul className="list-none p-0 max-w-xs rounded-tr-lg">
+    <div className='bg-white rounded-lg w-fit h-fit '>
+      <ul className="max-w-xs p-0 list-none rounded-tr-lg">
         {services.map((service, index) => (
           <li
             key={index}
@@ -95,8 +92,8 @@ function ModalNews() {
   ];
 
   return (<>
-    <div className='bg-white w-fit rounded-lg h-fit '>
-      <ul className="list-none p-0 max-w-xs rounded-tr-lg">
+    <div className='bg-white rounded-lg w-fit h-fit '>
+      <ul className="max-w-xs p-0 list-none rounded-tr-lg">
         {news.map((item, index) => (
           <li
             key={index}

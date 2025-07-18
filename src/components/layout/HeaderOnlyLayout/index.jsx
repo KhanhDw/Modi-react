@@ -1,6 +1,6 @@
 import Header from "../partials/header";
 
-function HeaderOnlyLayout({children}) {
+function HeaderOnlyLayout({children}) { 
     return ( <div>
          <Header></Header>
         <main>{children}</main>
