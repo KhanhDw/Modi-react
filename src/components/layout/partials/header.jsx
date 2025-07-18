@@ -25,7 +25,7 @@ function Header({ scrolled }) {
         <div className='flex justify-center items-center gap-15 font-bold text-lg '>
           <a onClick={() => setActiveIndex(1)} href='#' className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</a>
 
-          <a onClick={() => setActiveIndex(2)} href='#' className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</a>
+          <a onClick={() => setActiveIndex(2)} href='/about' className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</a>
 
           <a onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)} onClick={() => setActiveIndex(3)} href='#'
             className={` h-full flex justify-center items-center ${acitveIndex === 3 ? 'text-green-400' : 'text-white'}`}>
