@@ -23,7 +23,7 @@ function Header({ scrolled }) {
           <img src="./logoModi.png" className='w-fit h-10' alt='logo' />
         </div>
         <div className='flex justify-center items-center gap-15 font-bold text-lg '>
-          <a onClick={() => setActiveIndex(1)} href='#' className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</a>
+          <a onClick={() => setActiveIndex(1)} href='/' className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</a>
 
           <a onClick={() => setActiveIndex(2)} href='/about' className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</a>
 

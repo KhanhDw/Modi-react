@@ -1,19 +1,42 @@
+import { ThemeProvider } from "../contexts/about/ThemeContext"
+import { LanguageProvider } from "../contexts/about/LanguageContext"
+import ThemeToggle from "../components/about/ThemeToggle"
 import HeroBanner from "../components/about/HeroBanner"
-import Introduction from "../components/about/Introduction"
+import Mission from "../components/about/Mission"
 import Services from "../components/about/Services"
-import Goals from "../components/about/Goals"
-import Team from "../components/about/Team"
-import CallToAction from "../components/about/CallToAction"
+import WhyChooseUs from "../components/about/WhyChooseUs"
+import Customers from "../components/about/Customers"
+import Contact from "../components/about/Contact"
+
+/**
+ * About Page Component
+ * Trang giới thiệu công ty với đầy đủ tính năng:
+ * - Dark/Light mode
+ * - Multi-language (VI/EN)
+ * - Responsive design
+ * - Smooth animations
+ *
+ * Structure:
+ * - ThemeProvider: Quản lý theme
+ * - LanguageProvider: Quản lý ngôn ngữ
+ * - ThemeToggle: Nút điều khiển
+ * - Các sections: Hero, Mission, Services, etc.
+ */
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <HeroBanner />
-      <Introduction />
-      <Services />
-      <Goals />
-      <Team />
-      <CallToAction />
-    </div>
+    <ThemeProvider>
+      <LanguageProvider>
+        <div className="min-h-screen transition-all duration-500">
+          <ThemeToggle />
+          <HeroBanner />
+          <Mission />
+          <Services />
+          <WhyChooseUs />
+          <Customers />
+          <Contact />
+        </div>
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }
