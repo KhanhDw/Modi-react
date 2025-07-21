@@ -2,11 +2,13 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
 import { Suspense } from "react"
 import { publicRoutes } from "./routes";
 import Lenis from '@studio-freight/lenis';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 function App() {
   const lenis = useRef(null);
+
+
 
   useEffect(() => {
     // Initialize Lenis
@@ -31,9 +33,11 @@ function App() {
   }, []);
 
 
+
+
   return (
-    <Router>
-      <Suspense fallback={<div className="flex justify-center items-center min-h-screen">Đang tải...</div>}>
+    <Router >
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Đang tải...</div>}>
         <Routes>
           {publicRoutes.map((router, index) => {
             const Page = router.component;

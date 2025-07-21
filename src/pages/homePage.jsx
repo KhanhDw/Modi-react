@@ -79,9 +79,9 @@ const customerCards = [
     "Khách hàng ?",
 ]
 
-function HomePage() {
+function HomePage({ activeSidebarHeader }) {
     return (
-        <div className='w-full h-full p-4 '>
+        <div className={`${activeSidebarHeader ? 'overflow-hidden' : ''}  w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center `}>
             <BannerSilder />
             <BaseModi />
             <ThreeCardBusiness />
@@ -125,31 +125,30 @@ function BannerSilder() {
                 initial={{ opacity: 0 }} // Trạng thái ban đầu (mờ và dịch chuyển xuống 50px)
                 animate={{ opacity: 1 }} // Trạng thái khi hoàn thành (hiển thị và trở về vị trí ban đầu)
                 transition={{ duration: 1.5, ease: 'easeOut' }} // Thời gian và kiểu chuyển động
-                className={`relative h-[80vh] w-full rounded-[60px] overflow-hidden mb-10`}>
+                className={`relative h-[80vh] w-full  md:rounded-[40px] overflow-hidden mb-10`}>
                 {/* Ảnh hiện tại - đây là cái người dùng nhìn thấy*/}
-                <AnimatePresence mode="wait">
+                <AnimatePresence >
                     <motion.img
                         key={`current-image-${currentIndex}`}
                         src={bannerImagesAndContent[currentIndex].img}
                         initial={{ opacity: 1, filter: 'brightness(100%)', }}
                         animate={{ opacity: showNext ? 0 : 1, filter: showNext ? 'brightness(100%)' : 'brightness(50%)' }}
                         transition={{ duration: 1 }}
-                        className="absolute top-0 left-0 w-full h-full object-cover rounded-[60px] z-20"
+                        className="absolute top-0 left-0 w-full h-full object-cover  md:rounded-[40px] z-20"
                         alt="banner"
                     />
-
                     {/* --- Nội dung nằm trên ảnh --- */}
                     <div className="relative top-0 left-0 w-full h-full border-red-600" >
                         {/* nội dung nằm trên - đây là cái người dùng nhìn thấy*/}
 
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence >
                             <motion.div
                                 key={`content-${currentIndex}`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: showNext ? 0 : 1, filter: showNext ? 'blur(0px)' : 'blur(0px)', y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.2, }}
-                                className="absolute inset-0 z-30 flex flex-col items-start justify-center pl-40 text-white bg-transparent " // z-index cao hơn ảnh
+                                className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent sm:px-12 md:px-20 md:pl-20 lg:pl-40 2xl:w-2/3" // z-index cao hơn ảnh
                             >
                                 <div className="flex flex-col items-start justify-center gap-2 p-4 ">
                                     <motion.h2
@@ -158,7 +157,7 @@ function BannerSilder() {
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -100 }}
                                         transition={{ duration: 0.8 }}
-                                        className="mb-4 text-5xl font-bold bg-transparent text-start ">
+                                        className="mb-4 xs:text-2xl md:text-5xl  2xl:text-6xl font-bold bg-transparent text-start ">
                                         {bannerImagesAndContent[currentIndex].title}
                                     </motion.h2>
                                     <motion.p
@@ -167,23 +166,23 @@ function BannerSilder() {
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1 }}
-                                        className="max-w-2xl mb-8 text-md text-start">
+                                        className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start 3xl:text-3xl">
                                         {bannerImagesAndContent[currentIndex].description}
                                     </motion.p>
                                     <motion.button
-                                        key={`desc-${currentIndex}`}
+                                        key={`btncontent-${currentIndex}`}
                                         initial={{ opacity: 0, }}
                                         animate={{ opacity: 1, }}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1, delay: 0.5 }}
-                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700">
+                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 3xl:text-3xl">
                                         {bannerImagesAndContent[currentIndex].buttonText}
                                     </motion.button>
                                 </div>
                             </motion.div>
                         </AnimatePresence>
                         {/* nội dung nằm dưới */}
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence >
                             <motion.div
                                 key={`content-${currentIndex}`}
                                 initial={{ opacity: 0, y: 20 }}
@@ -199,7 +198,7 @@ function BannerSilder() {
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -100 }}
                                         transition={{ duration: 0.8 }}
-                                        className="mb-4 text-5xl font-bold bg-transparent text-start ">
+                                        className="mb-4 xs:text-2xl md:text-5xl font-bold bg-transparent text-start ">
                                         {bannerImagesAndContent[currentIndex].title}
                                     </motion.h2>
                                     <motion.p
@@ -208,11 +207,11 @@ function BannerSilder() {
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1 }}
-                                        className="max-w-2xl mb-8 text-md text-start">
+                                        className="mb-8 w-2xl text-md text-start">
                                         {bannerImagesAndContent[currentIndex].description}
                                     </motion.p>
                                     <motion.button
-                                        key={`desc-${currentIndex}`}
+                                        key={`btncontent-${currentIndex}`}
                                         initial={{ opacity: 0, }}
                                         animate={{ opacity: 1, }}
                                         exit={{ opacity: 0 }}
@@ -235,24 +234,24 @@ function BannerSilder() {
                         initial={{ opacity: 0, filter: 'blur(5px)' }}
                         animate={{ opacity: showNext ? 1 : 0, filter: showNext ? 'blur(0px)' : 'blur(0px)' }}
                         transition={{ duration: 1 }}
-                        className="absolute top-0 left-0 w-full h-full object-cover rounded-[60px] z-10"
+                        className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-10"
                         alt="next banner"
                     />
                 </AnimatePresence>
 
-                <div className='absolute right-0 flex flex-col items-center justify-center h-[80vh] mx-4 transform -translate-y-1/2  z-51 top-1/2'>
+                {/* dot change background */}
+                <div className='absolute right-0 flex md:flex-col items-center justify-center h-[80vh] md:mx-4 md:transform xs:-translate-y-1/2 z-51 xs:bottom md:top-1/2 xs:gap-1 md:gap-2'>
 
                     {bannerImagesAndContent.map((item, index) => {
                         return (
-                            <AnimatePresence mode="wait">
+                            <AnimatePresence mode="wait" key={`btn-banner-${index}`}>
                                 <motion.button
-                                    key={`desc-${currentIndex}`}
                                     initial={{ opacity: 1, }}
                                     animate={{ opacity: 1, }}
                                     exit={{ opacity: 1 }}
                                     transition={{ duration: 1 }}
                                     onClick={() => setCurrentIndex(index)}
-                                    className={`${currentIndex === index ? "bg-gray-100" : "bg-gray-600"} w-4 h-4 mb-3  rounded-full cursor-pointer`}></motion.button>
+                                    className={`${currentIndex === index ? "bg-gray-100" : "bg-gray-600"} xs:h-2 md:w-4 xs:w-2 md:h-4 mb-3  rounded-full cursor-pointer`}></motion.button>
                             </AnimatePresence>)
                     })}
                 </div>
@@ -265,14 +264,14 @@ function BannerSilder() {
 function BaseModi() {
     return (
         <div className="flex flex-col items-center justify-center pb-10">
-            <div className="w-1/2">
+            <div className="w-3/4">
                 {/* Tiêu đề: phóng từ nhỏ đến lớn */}
                 <AnimatePresence mode='wait'>
                     <motion.p
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                        className="mb-4 text-4xl font-bold text-center"
+                        className="mb-4 xs:text-xl md:text-4xl  3xl:text-8xl font-bold text-center"
                     >
                         Nền tảng Modi
                     </motion.p>
@@ -283,7 +282,7 @@ function BaseModi() {
                         initial={{ y: 40, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                        className="text-center"
+                        className="text-center xs:text-sm md:text-md 3xl:text-3xl"
                     >
                         Mộc Điền xây dựng nền tảng công nghệ linh hoạt, dễ tùy biến, tích hợp quản lý bán hàng, nội dung và khách hàng. Ưu tiên bảo mật, tốc độ và khả năng mở rộng, giúp doanh nghiệp vận hành hiệu quả và phát triển bền vững trong kỷ nguyên số.
                     </motion.p>
@@ -295,7 +294,7 @@ function BaseModi() {
 
 function ThreeCardBusiness() {
     return (
-        <div className="flex items-center justify-center gap-5 pb-10">
+        <div className="flex xs:flex-col md:flex-row items-center justify-center md:gap-2 md:pb-10">
             {cards.map((item, index) => {
                 // Chọn animation theo vị trí index
                 let initial, animate;
@@ -316,15 +315,15 @@ function ThreeCardBusiness() {
                         initial={initial}
                         animate={animate}
                         transition={{ duration: 0.6 }}
-                        className="flex flex-col items-start justify-start w-1/4 p-4 bg-gray-100 h-80 rounded-2xl"
+                        className="flex flex-col items-start justify-start md:w-1/3  md:p-4 xs:p-3 xs:m-2 bg-gray-200 xs:h-fit md:h-fit rounded-2xl"
                     >
-                        <div className="flex items-center justify-between w-full gap-2 px-6">
+                        <div className="flex md:flex-col 3xl:items-start md:items-center justify-between w-full md:gap-1 md:px-1">
                             <img className="w-25" src={item.img} alt={`img-${index}`} />
-                            <div className="flex items-center justify-start w-full text-xl font-bold text-center">
+                            <div className="flex items-center justify-start w-full md:text-xl font-bold text-center 3xl:text-5xl">
                                 <p>{item.title}</p>
                             </div>
                         </div>
-                        <p className="mt-4">{item.content}</p>
+                        <p className="pb-2 mt-4 text-justify text-gray-700 3xl:text-4xl">{item.content}</p>
                     </motion.div>
                 );
             })}
@@ -341,13 +340,13 @@ function ServiceModi() {
     const randomizedIndexes = useMemo(() => shuffleArray(services.map((_, i) => i)), []);
 
     return (
-        <div className="pb-20">
-            <div className="relative flex flex-col items-center justify-center w-full gap-4 py-20 rounded-2xl">
+        <div className="pb-20 w-full">
+            <div className="relative flex flex-col  items-center justify-center w-full gap-4 py-20 md:rounded-2xl xs:px-2">
                 <div
                     style={{
                         backgroundImage: `url(${modiservicesImage})`,
                     }}
-                    className="absolute w-full h-full bg-center bg-no-repeat bg-cover brightness-40 rounded-2xl"
+                    className="absolute w-full h-full bg-center bg-no-repeat bg-cover brightness-40 md:rounded-2xl"
                 />
                 <AnimatePresence mode='await'>
                     <motion.div
@@ -356,7 +355,7 @@ function ServiceModi() {
                         transition={{ duration: 0.8 }}
                         className="relative flex flex-col items-center justify-center gap-4"
                     >
-                        <p className="text-4xl font-bold text-center text-white">Dịch vụ Modi</p>
+                        <p className="text-4xl 3xl:text-8xl font-bold text-center text-white ">Dịch vụ Modi</p>
                     </motion.div>
                 </AnimatePresence>
                 <AnimatePresence mode='await'>
@@ -364,26 +363,25 @@ function ServiceModi() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.2, delay: 0.5 }}
-                        className="relative w-[460px] text-center text-white font-semibold"
+                        className="relative text-center xs:text-sm md:text-xl 3xl:text-3xl  md:w-1/2 text-white font-semibold"
                     >
                         Nền tảng kết nối, cung cấp dịch vụ toàn diện, đồng hành cùng doanh nghiệp Việt từ khởi nghiệp đến xuất khẩu quốc tế
                     </motion.p>
                 </AnimatePresence>
                 <div className="flex items-center justify-center w-full gap-4 pt-10">
-                    <div className="relative grid grid-cols-4 gap-8">
+                    <div className="relative grid md:grid-cols-4 xs:grid-cols-2  gap-8">
                         {services.map((item, index) => {
                             const delay = randomizedIndexes[index] * 0.2;
 
                             return (
-                                <AnimatePresence mode='await'>
+                                <AnimatePresence key={`btnservices-${index}`}>
                                     <motion.div
-                                        key={index}
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ duration: 0.5, delay }}
                                         className="backdrop-blur-md bg-black/20"
                                     >
-                                        <p className="px-5 py-6 text-2xl font-bold text-center text-white border-2 border-white rounded-2xl">
+                                        <p className="px-5 py-6 3xl:text-3xl xs:text-sm md:text-lg font-bold text-center text-white border-2 border-white rounded-2xl">
                                             {item.title}
                                         </p>
                                     </motion.div>
@@ -401,28 +399,28 @@ function BenefitBusiness() {
     const [hovered, setHovered] = useState(false);
     const [showContent, setShowContent] = useState(false);
     return (
-        <div className='flex items-center justify-center w-full gap-5 pb-10 px-30'>
+        <div className='flex items-center justify-center w-full md:gap-2 xs:pb-1 md:pb-10 xs:px-2'>
             {/* Left Images */}
-            <div className='flex items-center justify-center w-1/2 gap-5'>
+            <div className='flex items-center justify-end md:w-1/2 xs:hidden md:flex md:gap-3 '>
                 {/* Image 1 - Từ trái sang phải */}
                 <motion.div
                     initial={{ x: -100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.8 }}
-                    className='flex w-1/2 overflow-hidden h-140 rounded-2xl'
+                    className='flex md:w-1/2  overflow-hidden xs:h-140 md:h-140 3xl:h-180 rounded-2xl shadow-sm shadow-black'
                 >
-                    <img src='/images/company.jpg' className='object-cover w-full h-full' />
+                    <img src='/images/company.jpg' className='object-cover w-full h-full ' />
                 </motion.div>
 
                 {/* Image 2 + 3 */}
-                <div className='flex flex-col w-1/2 gap-5 h-140'>
+                <div className='flex flex-col w-1/2 gap-3 h-140 3xl:h-180'>
                     {/* Image 2 - Trên xuống */}
                     <motion.img
                         initial={{ y: -80, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.3 }}
                         src='/images/business.jpg'
-                        className='object-cover w-full h-full overflow-hidden rounded-2xl'
+                        className='object-cover w-full h-full overflow-hidden rounded-2xl shadow-sm shadow-black'
                     />
 
                     {/* Image 3 - Dưới lên */}
@@ -431,19 +429,19 @@ function BenefitBusiness() {
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.5 }}
                         src='/images/Benefits.jpg'
-                        className='object-cover w-full h-full overflow-hidden rounded-2xl'
+                        className='object-cover w-full h-full overflow-hidden rounded-2xl shadow-sm shadow-black'
                     />
                 </div>
             </div>
 
             {/* Right Text */}
-            <div className='flex flex-col items-start justify-center w-1/2 pl-20'>
+            <div className='flex flex-col md:items-start xs:items-center justify-center md:w-1/2 md:pl-10 xs:px-5 '>
                 {/* Title - phải sang trái */}
                 <motion.p
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.8 }}
-                    className='mb-10 text-4xl font-bold text-center'
+                    className='mb-10 md:text-3xl xs:text-xl 3xl:text-8xl font-bold text-center'
                 >
                     Lợi ích từ Modi
                 </motion.p>
@@ -455,12 +453,10 @@ function BenefitBusiness() {
                             <motion.button
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 1, delay: index * 0.2 }}
+                                transition={{ duration: 1 }}
                                 whileHover={{ scale: 1.05 }}
                                 onAnimationComplete={() => setShowContent(true)}
-                                onMouseEnter={() => setHovered(true)}
-                                onMouseLeave={() => setHovered(false)}
-                                className='flex items-center justify-start gap-2 mb-2 text-2xl font-bold text-center transition-all duration-300 cursor-pointer'
+                                className='flex items-center justify-start xs:gap-0 mb-2 xs:text-lg  md:text-md 3xl:text-5xl font-bold text-center transition-all duration-300 cursor-pointer'
                                 type='button'
                             >
                                 <TiArrowSortedDown
@@ -483,7 +479,7 @@ function BenefitBusiness() {
                                 >
                                     <ul>
                                         {item.content.map((contentItem, subIndex) => (
-                                            <li key={subIndex} className='py-1 pl-1 list-disc'>
+                                            <li key={subIndex} className='py-1 pl-1 list-disc 3xl:text-3xl'>
                                                 {contentItem}
                                             </li>
                                         ))}
@@ -499,13 +495,13 @@ function BenefitBusiness() {
 }
 
 // các gói dịch vụ chính của công ty?
-function ServiceMain() {}
+function ServiceMain() { }
 
 function BannerText() {
     return (
 
-        <div class="marquee w-full ">
-            <div class="marquee-content text-6xl font-bold text-gray-400">
+        <div className="w-full marquee">
+            <div className="xs:text-2xl md:text-6xl 3xl:text-8xl font-bold text-gray-400 marquee-content">
                 Modi tận tâm và đồng hành cùng bạn!
             </div>
 
@@ -517,25 +513,25 @@ function Customer() {
 
     return (
         <div>
-            <div className="flex flex-col items-center justify-center w-full gap-10 p-6 px-20 mb-10 bg-white rounded-lg md:flex-row">
+            <div className="flex flex-col items-center justify-center w-full xs:gap-2 md:p-4 xs:px-3 xs:py-6 md:px-3 mb-10 bg-white rounded-lg md:flex-row">
                 {/* Hình ảnh khách hàng */}
                 <motion.div
                     initial={{ x: -100, scale: 0.8, opacity: 0 }}
                     animate={{ x: 0, scale: 1, opacity: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="p-4 overflow-hidden shadow-sm md:w-1/3 shadow-black rounded-2xl"
+                    className="md:p-4 xs:p-2 overflow-hidden shadow-sm md:w-1/2 shadow-black rounded-2xl"
                 >
                     <img src="./images/customer-support.jpg" alt="Hỗ trợ khách hàng" className="rounded-lg" />
                 </motion.div>
 
                 {/* Nội dung */}
-                <div className="p-4 md:w-1/2">
+                <div className="p-4 md:w-1/2 xs:w-full gap-5">
                     {/* Tiêu đề */}
                     <motion.h2
                         initial={{ y: -50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 120 }}
-                        className="mb-4 text-4xl font-bold text-center"
+                        className="mb-4 xs:text-2xl  md:text-4xl 2xl:text-6xl 3xl:text-8xl font-bold text-center"
                     >
                         Khách hàng
                     </motion.h2>
@@ -545,20 +541,20 @@ function Customer() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mb-4 text-justify text-gray-700"
+                        className="mb-4 text-justify text-gray-700 md:text-sm 2xl:text-lg 3xl:text-3xl"
                     >
                         Chúng tôi luôn lắng nghe ý kiến khách hàng để hoàn thiện, nâng cao chất lượng dịch vụ trong suốt hành trình mua sắm của quý khách. Chúng tôi luôn sẵn sàng hỗ trợ quý khách trong việc mua sắm, tư vấn, giải đáp thắc mắc hoặc khiếu nại của quý khách. Hãy liên hệ với chúng tôi để được hỗ trợ tốt nhất!
                     </motion.p>
 
                     {/* Grid thẻ khách hàng */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 mt-10">
                         {customerCards.map((text, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ rotateX: 90, opacity: 0 }}
                                 animate={{ rotateX: 0, opacity: 1 }}
                                 transition={{ duration: 0.5, delay: 0.3 + index * 0.15 }}
-                                className="p-4 text-center bg-gray-100 rounded-lg shadow-md shadow-gray-300"
+                                className="p-4 text-center bg-gray-100 rounded-lg shadow-md shadow-gray-300 3xl:text-3xl 2xl:text-lg"
                             >
                                 {text}
                             </motion.div>

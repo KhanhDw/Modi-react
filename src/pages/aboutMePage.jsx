@@ -1,7 +1,7 @@
 function AboutPage() {
     return (
         <>
-            <p className="text-9xl">about page</p>
+            <p className="text-black text-9xl">about page</p>
         </>
     );
 }
