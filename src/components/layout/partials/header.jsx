@@ -162,8 +162,6 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
               </li>
             )
           })}
-          
-          
         </ul>
       </div>
     </div>
