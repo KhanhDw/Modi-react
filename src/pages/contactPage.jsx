@@ -1,7 +1,9 @@
 function ContactPage() {
     return (
         <>
-            <p className="text-9xl">ContactPage page</p>
+            <div className="h-2000">
+                dsds
+            </div>
         </>
     );
 }

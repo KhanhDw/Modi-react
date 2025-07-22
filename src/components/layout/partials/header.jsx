@@ -1,5 +1,5 @@
 import react, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaEarthAmericas } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
@@ -16,48 +16,62 @@ const MenuHeader = [
 
 function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
 
-  const [acitveIndex, setActiveIndex] = useState(1);
+  const location = useLocation();
+
+  // const [acitveIndex, setActiveIndex] = useState(() => {
+  //   const savedIndex = localStorage.getItem("activeIndex");
+  //   return savedIndex ? Number(savedIndex) : 1;
+  // });
   const [isHoverServices, setIsHoverServices] = useState(false);
   const [isHoverNews, setIsHoverNews] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-   const toggleSidebar = () => {
-     const next = !isSidebarOpen;
-     setIsSidebarOpen(next);
-     setActiveScoll_open_HeaderSideBar(next);
+  // useEffect(() => { 
+  //   localStorage.setItem("activeIndex", acitveIndex);
+  // }, [acitveIndex]);
+
+  const toggleSidebar = () => {
+    const next = !isSidebarOpen;
+    setIsSidebarOpen(next);
+    setActiveScoll_open_HeaderSideBar(next);
   };
 
   return (
     <>
-      <div className={`${scrolled ? 'xs:h-10 md:h-20 2xl:h-20 3xl:h-30' : 'xs:h-15 md:h-30 2xl:h-40'} w-full bg-transparent  flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
+      <div className={`${location.pathname === "/"
+          ? (scrolled
+            ? "xs:h-10 md:h-20 2xl:h-20 3xl:h-30"
+            : "xs:h-15 md:h-30 2xl:h-40")
+          : "h-20"
+        } w-full bg-transparent  flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
           <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-12 3xl:h-15 w-fit' alt='logo' />
         </Link>
 
-        <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-5 xl:gap-10 lg:text-md xl:text-xl'>          
-          
-          <Link to={'/'} onClick={() => setActiveIndex(1)} className={`flex 2xl:text-2xl justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
+        <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-5 xl:gap-10 lg:text-md xl:text-xl'>
 
-          <Link to={'/about'} onClick={() => setActiveIndex(2)} className={`2xl:text-2xl flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
+          <Link to={'/'} className={`flex 2xl:text-2xl justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
 
-          <Link to={'/'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)} onClick={() => setActiveIndex(3)} href='#'
-            className={` h-full flex justify-center items-center 2xl:text-2xl ${acitveIndex === 3 ? 'text-green-400' : 'text-white'}`}>
+          <Link to={'/about'} className={`2xl:text-2xl flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
+
+          <Link to={'/services'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)}
+            className={` h-full flex justify-center items-center 2xl:text-2xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>
             Dịch Vụ<IoMdArrowDropdown />
             <div className={`rounded-lg text-black font-normal 2xl:text-lg text-sm absolute translate-x-15 ${scrolled ? 'md:top-13.5 xl:top-13.5' : 'md:top-18.5 xl:top-23.5'} transition-all duration-300`}>
               {isHoverServices && <ModalServices />}
             </div>
           </Link>
 
-          <Link to={'/'} onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} onClick={() => setActiveIndex(4)} href='#' className={`flex justify-center items-center 2xl:text-2xl ${acitveIndex === 4 ? 'text-green-400' : 'text-white'}`}>
+          <Link to={'/news'} onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} className={`flex justify-center items-center 2xl:text-2xl ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}>
             Tin Tức<IoMdArrowDropdown />
             <div className={` rounded-lg text-black font-normal 2xl:text-lg text-sm absolute translate-x-8 ${scrolled ? 'md:top-13.5 xl:top-13.5' : 'md:top-18.5 xl:top-23.5'} transition-all duration-300`}>
               {isHoverNews && <ModalNews />}
             </div>
           </Link>
 
-          <Link to={'/'} onClick={() => setActiveIndex(5)} href='#' className={`flex justify-center items-center ${acitveIndex === 5 ? 'text-green-400' : 'text-white'} 2xl:text-2xl`}>Liên Hệ</Link>
-          <Link to={'/recruitment'} onClick={() => setActiveIndex(5)} href='#' className={`flex justify-center items-center ${acitveIndex === 5 ? 'text-green-400' : 'text-white'} 2xl:text-2xl`}>Tuyển Dụng</Link>
+          <Link to={'/contact'} className={`flex justify-center items-center ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-2xl`}>Liên Hệ</Link>
+          <Link to={'/recruitment'} className={`flex justify-center items-center ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-2xl`}>Tuyển Dụng</Link>
         </div>
 
         <div >
@@ -145,8 +159,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     <div id="drawer-navigation" className={`fixed top-0 left-0 z-40 w-64  h-screen p-4 overflow-y-auto bg-white dark:bg-gray-800 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
       <div className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-12 3xl:h-15 w-fit' alt='logo' />
-        </div>
+        <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-12 3xl:h-15 w-fit' alt='logo' />
+      </div>
       <button onClick={() => setIsSidebarOpen(false)} type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
         <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
         <span className="sr-only">Close menu</span>
