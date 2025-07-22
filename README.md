@@ -6,3 +6,4 @@ tạo 1 branch git checkout -b TenNGdung
 (lần sau chỉ sài git push là được)
 
 test
+ lan 2
