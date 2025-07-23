@@ -7,9 +7,9 @@ import { TiThMenu } from "react-icons/ti";
 const MenuHeader = [
   { id: 1, name: 'Trang Chủ', link: '/' },
   { id: 2, name: 'Về Chúng Tôi', link: '/about' },
-  { id: 3, name: 'Dịch Vụ', link: '/' },
-  { id: 4, name: 'Tin Tức', link: '/' },
-  { id: 5, name: 'Liên Hệ', link: '/' },
+  { id: 3, name: 'Dịch Vụ', link: '/services' },
+  { id: 4, name: 'Tin Tức', link: '/news' },
+  { id: 5, name: 'Liên Hệ', link: '/contact' },
   { id: 6, name: 'Tuyển Dụng', link: '/recruitment' },
 ];
 
@@ -41,41 +41,41 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     <>
       <div className={`${location.pathname === "/"
           ? (scrolled
-            ? "xs:h-10 md:h-20 2xl:h-20 3xl:h-30"
-            : "xs:h-15 md:h-30 2xl:h-40")
+            ? "xs:h-10 md:h-15 2xl:h-20 3xl:h-30"
+            : "xs:h-15 md:h-15 2xl:h-20")
           : "h-20"
         } w-full bg-transparent  flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-12 3xl:h-15 w-fit' alt='logo' />
+          <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
         </Link>
 
         <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-5 xl:gap-10 lg:text-md xl:text-xl'>
 
-          <Link to={'/'} className={`flex 2xl:text-2xl justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
+          <Link to={'/'} className={`flex 2xl:text-xl justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
 
-          <Link to={'/about'} className={`2xl:text-2xl flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
+          <Link to={'/about'} className={`2xl:text-xl flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
 
           <Link to={'/services'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)}
-            className={` h-full flex justify-center items-center 2xl:text-2xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>
+            className={` h-full flex justify-center items-center 2xl:text-xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>
             Dịch Vụ<IoMdArrowDropdown />
             <div className={`rounded-lg text-black font-normal 2xl:text-lg text-sm absolute translate-x-15 ${scrolled ? 'md:top-13.5 xl:top-13.5' : 'md:top-18.5 xl:top-23.5'} transition-all duration-300`}>
               {isHoverServices && <ModalServices />}
             </div>
           </Link>
 
-          <Link to={'/news'} onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} className={`flex justify-center items-center 2xl:text-2xl ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}>
+          <Link to={'/news'} onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} className={`flex justify-center items-center 2xl:text-xl ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}>
             Tin Tức<IoMdArrowDropdown />
             <div className={` rounded-lg text-black font-normal 2xl:text-lg text-sm absolute translate-x-8 ${scrolled ? 'md:top-13.5 xl:top-13.5' : 'md:top-18.5 xl:top-23.5'} transition-all duration-300`}>
               {isHoverNews && <ModalNews />}
             </div>
           </Link>
 
-          <Link to={'/contact'} className={`flex justify-center items-center ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-2xl`}>Liên Hệ</Link>
-          <Link to={'/recruitment'} className={`flex justify-center items-center ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-2xl`}>Tuyển Dụng</Link>
+          <Link to={'/contact'} className={`flex justify-center items-center ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>Liên Hệ</Link>
+          <Link to={'/recruitment'} className={`flex justify-center items-center ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>Tuyển Dụng</Link>
         </div>
 
         <div >
-          <Link to={'/about'} className='hidden md:flex transtion-all duration-200 p-2 text-white 2xl:text-2xl justify-center items-center border-2 border-white rounded-3xl gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><FaEarthAmericas /></Link>
+          <Link to={'/about'} className='hidden md:flex transtion-all duration-200 p-1 text-white 2xl:text-lg justify-center items-center border-2 border-white rounded-3xl gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><FaEarthAmericas /></Link>
           {/* Menu for mobi and tablet */}
           <button type="button" onClick={toggleSidebar} className='flex  md:hidden transtion-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><TiThMenu /></button>
         </div>
