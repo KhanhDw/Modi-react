@@ -3,17 +3,14 @@ function AboutPage() {
     return (
         <div className="h-full w-full pt-[104px] px-1 flex flex-col">
             <div className="relative w-full h-[70vh] overflow-hidden rounded-3xl">
-                {/* Ảnh nền */}
                 <img
                     src="/images/banner1.jpg"
                     alt="Về chúng tôi"
                     className="w-full h-full object-cover rounded-3xl"
                 />
 
-                {/* Overlay màu tối nhẹ */}
                 <div className="absolute inset-0 bg-black/40 rounded-3xl"></div>
 
-                {/* Text nằm giữa */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
                     <h1 className="text-4xl md:text-5xl font-bold mb-2">Về Chúng Tôi</h1>
                     <p className="text-lg md:text-xl font-medium max-w-2xl">
@@ -33,7 +30,6 @@ function AboutPage() {
                         </h2>
 
                         <div className="my-6">
-                            {/* Icon nút play */}
                             <button className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                                 <span className="text-red-500 text-xl">▶</span>
                             </button>
@@ -105,7 +101,6 @@ function AboutPage() {
                         Doanh nghiệp tại Việt Nam
                     </h2>
 
-                    {/* Box 1 */}
                     <div className="bg-red-100 rounded-lg mb-4 flex items-start p-5 gap-4">
                         <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-red-500 text-white text-sm font-bold rounded">
                             1
@@ -118,7 +113,6 @@ function AboutPage() {
                         </div>
                     </div>
 
-                    {/* Box 2 */}
                     <div className="bg-red-100 rounded-lg flex items-start p-5 gap-4">
                         <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-red-500 text-white text-sm font-bold rounded">
                             2
@@ -136,14 +130,12 @@ function AboutPage() {
             </div>
 
             <div className="bg-[#08192f] text-white py-20 px-6 md:px-20 rounded-3xl w-full text-center relative overflow-hidden">
-                {/* Nội dung chính */}
                 <div className="relative z-10">
                     <p className="text-[14px] font-bold mb-3">Mục tiêu Modi</p>
                     <h2 className="text-2xl md:text-3xl font-bold leading-relaxed max-w-3xl mx-auto mb-10">
                         Kết nối, lắng nghe, chia sẻ và tư vấn giải quyết các nhu cầu của Doanh nghiệp, đồng hành trong việc xây dựng và bảo vệ uy tín thương hiệu, thông qua các giải pháp xác thực, nền tảng kết nối, tìm kiếm đối tác, phát triển kênh thương mại điện tử, mở rộng thị trường
                     </h2>
 
-                    {/* Hai khối giải pháp */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-[70px]">
 
                         <div className="relative rounded-xl overflow-hidden group">
@@ -152,7 +144,6 @@ function AboutPage() {
                                 alt="Hình 1"
                                 className="w-full h-90 object-cover rounded-xl transform transition duration-500 group-hover:scale-110"
                             />
-                            {/* Lớp phủ mờ */}
                             <div
                                 style={{
                                     position: 'absolute',
@@ -176,14 +167,12 @@ function AboutPage() {
                             </div>
                         </div>
 
-                        {/* Box 2 */}
                         <div className="relative rounded-xl overflow-hidden group">
                             <img
                                 src="/images/hinh2.png"
                                 alt="Hình 2"
                                 className="w-full h-90 object-cover rounded-xl transform transition duration-500 group-hover:scale-110"
                             />
-                            {/* Lớp phủ mờ */}
                             <div
                                 style={{
                                     position: 'absolute',
@@ -302,14 +291,12 @@ function AboutPage() {
             </section>
 
             <div className="py-15 px-5">
-                {/* Tiêu đề giữ căn giữa trong max-w-6xl */}
                 <div className="max-w-6xl mx-auto text-center mb-8">
                     <h2 className="text-sm font-bold">
                         Hệ sinh thái tập đoàn
                     </h2>
                 </div>
 
-                {/* Logo nằm hẳn bên trái trang */}
                 <div className="flex gap-10 mx-[185px]">
                     <img src="/images/echeck-logo.png" alt="eCheckX" className="h-10" />
                     <img src="/images/numlab-logo.svg" alt="Numlab" className="h-10" />
