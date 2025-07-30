@@ -39,21 +39,14 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
 
   return (
     <>
-      <div className={`${location.pathname === "/"
-          ? (scrolled
-            ? "xs:h-10 md:h-15 2xl:h-20 3xl:h-30"
-            : "xs:h-15 md:h-15 2xl:h-20")
-          : "h-20"
-        } w-full bg-transparent  flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
-        <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
-        </Link>
+      <div className={`${scrolled ? 'h-20' : 'h-30'}  bg-transparent   w-full flex justify-between items-center px-40 transition-all duration-200`}>
+        <div className='flex justify-center items-center  rounded-2xl overflow-hidden w-fit h-10 px-3 py-2'>
+          <img src="./logoModi.png" className='w-fit h-10' alt='logo' />
+        </div>
+        <div className='flex justify-center items-center gap-15 font-bold text-lg '>
+          <a onClick={() => setActiveIndex(1)} href='/' className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</a>
 
-        <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-5 xl:gap-10 lg:text-md xl:text-xl'>
-
-          <Link to={'/'} className={`flex 2xl:text-xl justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
-
-          <Link to={'/about'} className={`2xl:text-xl flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
+          <a onClick={() => setActiveIndex(2)} href='/about' className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</a>
 
           <Link to={'/services'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)}
             className={` h-full flex justify-center items-center 2xl:text-xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>

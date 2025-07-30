@@ -1,9 +1,42 @@
-function AboutPage() {
-    return (
-        <>
-            <p className="text-black text-9xl">about page</p>
-        </>
-    );
-}
+import { ThemeProvider } from "../contexts/about/ThemeContext"
+import { LanguageProvider } from "../contexts/about/LanguageContext"
+import ThemeToggle from "../components/about/ThemeToggle"
+import HeroBanner from "../components/about/HeroBanner"
+import Mission from "../components/about/Mission"
+import Services from "../components/about/Services"
+import WhyChooseUs from "../components/about/WhyChooseUs"
+import Customers from "../components/about/Customers"
+import Contact from "../components/about/Contact"
 
-export default AboutPage
+/**
+ * About Page Component
+ * Trang giới thiệu công ty với đầy đủ tính năng:
+ * - Dark/Light mode
+ * - Multi-language (VI/EN)
+ * - Responsive design
+ * - Smooth animations
+ *
+ * Structure:
+ * - ThemeProvider: Quản lý theme
+ * - LanguageProvider: Quản lý ngôn ngữ
+ * - ThemeToggle: Nút điều khiển
+ * - Các sections: Hero, Mission, Services, etc.
+ */
+
+export default function About() {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <div className="min-h-screen transition-all duration-500">
+          <ThemeToggle />
+          <HeroBanner />
+          <Mission />
+          <Services />
+          <WhyChooseUs />
+          <Customers />
+          <Contact />
+        </div>
+      </LanguageProvider>
+    </ThemeProvider>
+  )
+}
