@@ -44,9 +44,9 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
           <img src="./logoModi.png" className='w-fit h-10' alt='logo' />
         </div>
         <div className='flex justify-center items-center gap-15 font-bold text-lg '>
-          <a onClick={() => setActiveIndex(1)} href='/' className={`flex justify-center items-center ${acitveIndex === 1 ? 'text-green-400' : 'text-white'}`}>Trang Chủ</a>
+          <Link onClick={() => setActiveIndex(1)} to={'/' }className={`flex justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
 
-          <a onClick={() => setActiveIndex(2)} href='/about' className={`flex justify-center items-center ${acitveIndex === 2 ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</a>
+          <Link onClick={() => setActiveIndex(2)} to={'/about'} className={`flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
 
           <Link to={'/services'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)}
             className={` h-full flex justify-center items-center 2xl:text-xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>
