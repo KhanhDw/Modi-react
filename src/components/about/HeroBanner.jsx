@@ -51,7 +51,7 @@ export default function HeroBanner() {
               }`}
             >
               <img
-                src="/public/images/banner1.jpg"
+                src="/images/banner1.jpg"
                 alt="Banner công ty"
                 className="w-full h-80 md:h-96 object-cover rounded-2xl shadow-2xl"
               />
@@ -61,7 +61,7 @@ export default function HeroBanner() {
               {/* Title overlay on banner */}
               <div className="absolute inset-4 flex items-center justify-center rounded-2xl">
                 <div className="text-center">
-                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient font-sans drop-shadow-2xl">
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold  mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient font-sans drop-shadow-2xl">
                     {t("whoAreWe")}
                   </h1>
                   <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full"></div>
