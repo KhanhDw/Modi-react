@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaEarthAmericas } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
+import ThemeToggle from '../../about/ThemeToggle';
+import { ThemeProvider } from "../../../contexts/about/ThemeContext"
+import { LanguageProvider } from "../../../contexts/about/LanguageContext"
 
 const MenuHeader = [
   { id: 1, name: 'Trang Chủ', link: '/' },
@@ -39,14 +42,16 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
 
   return (
     <>
-      <div className={`${scrolled ? 'h-20' : 'h-30'}  bg-transparent   w-full flex justify-between items-center px-40 transition-all duration-200`}>
+    <ThemeProvider>
+    <LanguageProvider>
+      <div className={`${location.pathname === '/' ? scrolled ? 'h-20' : 'h-30' : 'h-20'}  bg-transparent   w-full flex justify-between items-center  transition-all duration-200 gap-30`}>
         <div className='flex justify-center items-center  rounded-2xl overflow-hidden w-fit h-10 px-3 py-2'>
-          <img src="./logoModi.png" className='w-fit h-10' alt='logo' />
+         <Link to={'/'}><img src="./logoModi.png" className='w-fit h-10' alt='logo' /></Link> 
         </div>
-        <div className='flex justify-center items-center gap-15 font-bold text-lg '>
-          <Link onClick={() => setActiveIndex(1)} to={'/' }className={`flex justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
+        <div className='flex justify-center items-center gap-10 font-bold text-lg '>
+          <Link onClick={() => setActiveIndex(1)} to={'/' }className={`flex justify-center items-center 2xl:text-xl ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
 
-          <Link onClick={() => setActiveIndex(2)} to={'/about'} className={`flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
+          <Link onClick={() => setActiveIndex(2)} to={'/about'} className={`flex justify-center items-center 2xl:text-xl ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
 
           <Link to={'/services'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)}
             className={` h-full flex justify-center items-center 2xl:text-xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>
@@ -68,12 +73,13 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
         </div>
 
         <div >
-          <Link to={'/about'} className='hidden md:flex transtion-all duration-200 p-1 text-white 2xl:text-lg justify-center items-center border-2 border-white rounded-3xl gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><FaEarthAmericas /></Link>
+          <ThemeToggle />
+          
           {/* Menu for mobi and tablet */}
           <button type="button" onClick={toggleSidebar} className='flex  md:hidden transtion-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><TiThMenu /></button>
         </div>
       </div>
-      {/* Sidebar */}
+      {/* Sidebar - mobi*/}
       <div >
         <div
           onClick={toggleSidebar}
@@ -85,6 +91,8 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
         />
         <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       </div>
+      </LanguageProvider>
+    </ThemeProvider>
     </>
   )
 }

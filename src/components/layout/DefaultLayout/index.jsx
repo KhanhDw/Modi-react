@@ -32,11 +32,11 @@ function DefaultLayout({ children }) {
             md:px-4 
             mx-auto
         `}>
-            <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''}`}>
+            <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''} transition-all duration-200`}>
                 <AnimatedHeader ActiveSideBarHeader={setActiveSidebarHeader} />
             </div>
             <main className={`
-                ${location.pathname === '/' ? 'z-1' : ''}  w-full h-full 
+                ${location.pathname === '/' ? 'z-1 ' : 'pt-20'}  w-full h-full  
             `}>
                 {React.Children.map(children, child => {
                     return React.cloneElement(child, { activeSidebarHeader: activeSidebarHeader });

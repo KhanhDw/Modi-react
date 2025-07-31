@@ -53,7 +53,8 @@ export default function ThemeToggle() {
   const { language, toggleLanguage } = useLanguage()
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex space-x-3">
+    // <div className="fixed top-6 right-6 z-50 flex space-x-3">
+    <div className="flex space-x-3">
       {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
