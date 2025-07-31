@@ -17,7 +17,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem("about-theme")
+      const savedTheme = localStorage.getItem("web-theme")
       if (savedTheme) {
         setIsDark(savedTheme === "dark")
       }
@@ -26,21 +26,26 @@ export function ThemeProvider({ children }) {
     }
   }, [])
 
-  const toggleTheme = () => {
-    const newTheme = !isDark
-    setIsDark(newTheme)
-    try {
-      localStorage.setItem("about-theme", newTheme ? "dark" : "light")
-    } catch (error) {
-      console.log("LocalStorage not available")
-    }
+  useEffect(() => {
+  if (isDark) {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("web-theme", "dark");
+  } else {
+    document.documentElement.classList.add("light");
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("web-theme", "light");
   }
+}, [isDark]);
 
-  return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-      <div className={isDark ? "dark" : "light"}>{children}</div>
-    </ThemeContext.Provider>
-  )
+
+  const toggleTheme = () => setIsDark(prev => !prev)
+
+ return (
+  <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+    {children}
+  </ThemeContext.Provider>
+)
 }
 
 export const useTheme = () => {

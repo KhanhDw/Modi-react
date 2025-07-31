@@ -1,7 +1,5 @@
-"use client"
-
-import { useTheme } from "../../contexts/about/ThemeContext"
-import { useLanguage } from "../../contexts/about/LanguageContext"
+import { useTheme } from "../../contexts/ThemeContext"
+import { useLanguage } from "../../contexts/LanguageContext"
 
 const Shield = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,32 +48,32 @@ export default function WhyChooseUs() {
     {
       icon: <Shield className="w-8 h-8" />,
       emoji: "🔹",
-      title: t("reason1Title"),
-      description: t("reason1Description"),
+      title: t("about.reason1Title"),
+      description: t("about.reason1Description"),
       color: "text-cyan-400",
       bgColor: isDark ? "bg-slate-700/30" : "from-cyan-500/10 to-blue-500/10",
     },
     {
       icon: <Zap className="w-8 h-8" />,
       emoji: "🔹",
-      title: t("reason2Title"),
-      description: t("reason2Description"),
+      title: t("about.reason2Title"),
+      description: t("about.reason2Description"),
       color: "text-yellow-400",
       bgColor: isDark ? "bg-slate-700/30" : "from-yellow-500/10 to-orange-500/10",
     },
     {
       icon: <DollarSign className="w-8 h-8" />,
       emoji: "🔹",
-      title: t("reason3Title"),
-      description: t("reason3Description"),
+      title: t("about.reason3Title"),
+      description: t("about.reason3Description"),
       color: "text-green-400",
       bgColor: isDark ? "bg-slate-700/30" : "from-green-500/10 to-teal-500/10",
     },
     {
       icon: <Palette className="w-8 h-8" />,
       emoji: "🔹",
-      title: t("reason4Title"),
-      description: t("reason4Description"),
+      title: t("about.reason4Title"),
+      description: t("about.reason4Description"),
       color: "text-purple-400",
       bgColor: isDark ? "bg-slate-700/30" : "from-purple-500/10 to-pink-500/10",
     },
@@ -92,7 +90,7 @@ export default function WhyChooseUs() {
           <h2
             className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900"}`}
           >
-            🚀 {t("whyChooseUs")}
+            🚀 {t("about.whyChooseUs")}
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-6"></div>
         </div>

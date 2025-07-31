@@ -1,7 +1,6 @@
-"use client"
 
-import { useTheme } from "../../contexts/about/ThemeContext"
-import { useLanguage } from "../../contexts/about/LanguageContext"
+import { useTheme } from "../../contexts/ThemeContext"
+import { useLanguage } from "../../contexts/LanguageContext"
 import { Link } from "react-router-dom"
 
 const Code = ({ className }) => (
@@ -51,25 +50,25 @@ export default function Services() {
   const services = [
     {
       icon: <Code className="w-12 h-12" />,
-      title: t("websiteDesign"),
+      title: t("about.websiteDesign"),
       emoji: "🌐",
-      items: [t("websiteItem1"), t("websiteItem2"), t("websiteItem3")],
+      items: [t("about.websiteItem1"), t("about.websiteItem2"), t("about.websiteItem3")],
       color: "from-cyan-500 to-blue-500",
       link: "/services/website-development",
     },
     {
       icon: <Smartphone className="w-12 h-12" />,
-      title: t("mobileApp"),
+      title: t("about.mobileApp"),
       emoji: "📱",
-      items: [t("mobileItem1"), t("mobileItem2"), t("mobileItem3")],
+      items: [t("about.mobileItem1"), t("about.mobileItem2"), t("about.mobileItem3")],
       color: "from-purple-500 to-pink-500",
       link: "/services/mobile-app-development",
     },
     {
       icon: <Cog className="w-12 h-12" />,
-      title: t("additionalServices"),
+      title: t("about.additionalServices"),
       emoji: "🛠️",
-      items: [t("additionalItem1"), t("additionalItem2"), t("additionalItem3")],
+      items: [t("about.additionalItem1"), t("about.additionalItem2"), t("about.additionalItem3")],
       color: "from-green-500 to-teal-500",
       link: "/services/additional-services",
     },
@@ -84,7 +83,7 @@ export default function Services() {
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            🧩 {t("whatWeBring")}
+            🧩 {t("about.whatWeBring")}
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-6"></div>
           <p
@@ -92,7 +91,7 @@ export default function Services() {
               isDark ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            {t("servicesDescription")}
+            {t("about.servicesDescription")}
           </p>
         </div>
 

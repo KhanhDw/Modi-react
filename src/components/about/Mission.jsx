@@ -1,7 +1,6 @@
-"use client"
 
-import { useTheme } from "../../contexts/about/ThemeContext"
-import { useLanguage } from "../../contexts/about/LanguageContext"
+import { useTheme } from "../../contexts/ThemeContext"
+import { useLanguage } from "../../contexts/LanguageContext"
 
 const Lightbulb = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,7 +28,7 @@ export default function Mission() {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              {t("ourMission")}
+              {t("about.ourMission")}
             </h2>
           </div>
 
@@ -48,7 +47,7 @@ export default function Mission() {
               }`}
             >
               <span className="text-6xl text-cyan-400 opacity-50 absolute -top-4 -left-2">"</span>
-              {t("missionQuote")}
+              {t("about.missionQuote")}
               <span className="text-6xl text-purple-400 opacity-50 absolute -bottom-8 -right-2">"</span>
             </blockquote>
 
@@ -59,7 +58,7 @@ export default function Mission() {
                 isDark ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              {t("missionDescription")}
+              {t("about.missionDescription")}
             </p>
           </div>
         </div>

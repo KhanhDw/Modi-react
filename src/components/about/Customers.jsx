@@ -1,7 +1,5 @@
-"use client"
-
-import { useTheme } from "../../contexts/about/ThemeContext"
-import { useLanguage } from "../../contexts/about/LanguageContext"
+import { useTheme } from "../../contexts/ThemeContext"
+import { useLanguage } from "../../contexts/LanguageContext"
 
 const Users = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,26 +18,26 @@ export default function Customers() {
 
   const customers = [
     {
-      type: t("startups"),
-      description: t("startupsDescription"),
+      type: t("about.startups"),
+      description: t("about.startupsDescription"),
       icon: "🚀",
       color: "from-cyan-500 to-blue-500",
     },
     {
-      type: t("stores"),
-      description: t("storesDescription"),
+      type: t("about.stores"),
+      description: t("about.storesDescription"),
       icon: "🛍️",
       color: "from-purple-500 to-pink-500",
     },
     {
-      type: t("youngPeople"),
-      description: t("youngPeopleDescription"),
+      type: t("about.youngPeople"),
+      description: t("about.youngPeopleDescription"),
       icon: "💡",
       color: "from-green-500 to-teal-500",
     },
     {
-      type: t("education"),
-      description: t("educationDescription"),
+      type: t("about.education"),
+      description: t("about.educationDescription"),
       icon: "🎓",
       color: "from-orange-500 to-red-500",
     },
@@ -53,10 +51,10 @@ export default function Customers() {
             <span className="text-4xl">🌐</span>
             <h2
               className={`text-4xl md:text-5xl font-bold transition-colors duration-500 ${
-                isDark ? "text-white" : "text-gray-900"
+                isDark ?  "text-white":"text-gray-900"
               }`}
             >
-              {t("ourCustomers")}
+              {t("about.ourCustomers")}
             </h2>
           </div>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-6"></div>
@@ -65,7 +63,7 @@ export default function Customers() {
               isDark ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            {t("customersDescription")}
+            {t("about.customersDescription")}
           </p>
         </div>
 

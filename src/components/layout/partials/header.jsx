@@ -1,38 +1,22 @@
-import react, { useState, useEffect } from 'react'
+import react, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown } from "react-icons/io";
-import { FaEarthAmericas } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
-import ThemeToggle from '../../about/ThemeToggle';
-import { ThemeProvider } from "../../../contexts/about/ThemeContext"
-import { LanguageProvider } from "../../../contexts/about/LanguageContext"
-
-const MenuHeader = [
-  { id: 1, name: 'Trang Chủ', link: '/' },
-  { id: 2, name: 'Về Chúng Tôi', link: '/about' },
-  { id: 3, name: 'Dịch Vụ', link: '/services' },
-  { id: 4, name: 'Tin Tức', link: '/news' },
-  { id: 5, name: 'Liên Hệ', link: '/contact' },
-  { id: 6, name: 'Tuyển Dụng', link: '/recruitment' },
-];
+import ThemeToggle from './ThemeToggle';
+import { useLanguage } from '../../../contexts/LanguageContext';
 
 
-function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
 
+
+function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
+
+  const { t } = useLanguage();
   const location = useLocation();
 
-  // const [acitveIndex, setActiveIndex] = useState(() => {
-  //   const savedIndex = localStorage.getItem("activeIndex");
-  //   return savedIndex ? Number(savedIndex) : 1;
-  // });
   const [isHoverServices, setIsHoverServices] = useState(false);
   const [isHoverNews, setIsHoverNews] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  // useEffect(() => { 
-  //   localStorage.setItem("activeIndex", acitveIndex);
-  // }, [acitveIndex]);
 
   const toggleSidebar = () => {
     const next = !isSidebarOpen;
@@ -40,43 +24,51 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     setActiveScoll_open_HeaderSideBar(next);
   };
 
+
+
+
   return (
     <>
-    <ThemeProvider>
-    <LanguageProvider>
-      <div className={`${location.pathname === '/' ? scrolled ? 'h-20' : 'h-30' : 'h-20'}  bg-transparent   w-full flex justify-between items-center  transition-all duration-200 gap-30`}>
-        <div className='flex justify-center items-center  rounded-2xl overflow-hidden w-fit h-10 px-3 py-2'>
-         <Link to={'/'}><img src="./logoModi.png" className='w-fit h-10' alt='logo' /></Link> 
-        </div>
-        <div className='flex justify-center items-center gap-10 font-bold text-lg '>
-          <Link onClick={() => setActiveIndex(1)} to={'/' }className={`flex justify-center items-center 2xl:text-xl ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>Trang Chủ</Link>
+      <div className={`${location.pathname === "/"
+          ? (scrolled
+            ? "xs:h-10 md:h-15 2xl:h-20 3xl:h-30"
+            : "xs:h-15 md:h-15 2xl:h-20")
+          : "h-20"
+        } w-full bg-transparent  flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
+        <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
+          <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+        </Link>
 
-          <Link onClick={() => setActiveIndex(2)} to={'/about'} className={`flex justify-center items-center 2xl:text-xl ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>Về Chúng Tôi</Link>
+
+        <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-5 xl:gap-10 lg:text-md xl:text-xl'>
+
+          <Link to={'/'} className={`flex 2xl:text-xl justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>{t("header.home")}</Link>
+
+          <Link to={'/about'} className={`2xl:text-xl flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>{t("header.about")}</Link>
 
           <Link to={'/services'} onMouseEnter={() => setIsHoverServices(true)} onMouseLeave={() => setIsHoverServices(false)}
             className={` h-full flex justify-center items-center 2xl:text-xl ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}>
-            Dịch Vụ<IoMdArrowDropdown />
+           {t("header.services")}<IoMdArrowDropdown />
             <div className={`rounded-lg text-black font-normal 2xl:text-lg text-sm absolute translate-x-15 ${scrolled ? 'md:top-13.5 xl:top-13.5' : 'md:top-18.5 xl:top-23.5'} transition-all duration-300`}>
               {isHoverServices && <ModalServices />}
             </div>
           </Link>
 
           <Link to={'/news'} onMouseEnter={() => setIsHoverNews(true)} onMouseLeave={() => setIsHoverNews(false)} className={`flex justify-center items-center 2xl:text-xl ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}>
-            Tin Tức<IoMdArrowDropdown />
+           {t("header.news")}<IoMdArrowDropdown />
             <div className={` rounded-lg text-black font-normal 2xl:text-lg text-sm absolute translate-x-8 ${scrolled ? 'md:top-13.5 xl:top-13.5' : 'md:top-18.5 xl:top-23.5'} transition-all duration-300`}>
               {isHoverNews && <ModalNews />}
             </div>
           </Link>
 
-          <Link to={'/contact'} className={`flex justify-center items-center ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>Liên Hệ</Link>
-          <Link to={'/recruitment'} className={`flex justify-center items-center ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>Tuyển Dụng</Link>
+          <Link to={'/contact'} className={`flex justify-center items-center ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.contact")}</Link>
+          <Link to={'/recruitment'} className={`flex justify-center items-center ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.recruitment")}</Link>
         </div>
 
         <div >
-          <ThemeToggle />
-          
+          <div className='hidden md:flex'><ThemeToggle /></div>
           {/* Menu for mobi and tablet */}
-          <button type="button" onClick={toggleSidebar} className='flex  md:hidden transtion-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><TiThMenu /></button>
+          <button type="button" onClick={toggleSidebar} className='flex md:hidden transtion-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><TiThMenu /></button>
         </div>
       </div>
       {/* Sidebar - mobi*/}
@@ -91,8 +83,6 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
         />
         <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       </div>
-      </LanguageProvider>
-    </ThemeProvider>
     </>
   )
 }
@@ -156,6 +146,16 @@ function ModalNews() {
 }
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
+  const { t } = useLanguage();
+  const MenuHeader = [
+    { id: 1, name: t("header.home"), link: '/' },
+    { id: 2, name: t("header.about"), link: '/about' },
+    { id: 3, name: t("header.services"), link: '/services' },
+    { id: 4, name: t("header.news"), link: '/news' },
+    { id: 5, name: t("header.contact"), link: '/contact' },
+    { id: 6, name: t("header.recruitment"), link: '/recruitment' },
+  ];
+
   return (
     <div id="drawer-navigation" className={`fixed top-0 left-0 z-40 w-64  h-screen p-4 overflow-y-auto bg-white dark:bg-gray-800 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>

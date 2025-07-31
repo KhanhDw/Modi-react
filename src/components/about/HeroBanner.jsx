@@ -1,8 +1,6 @@
-"use client"
-
 import { useState, useEffect } from "react"
-import { useTheme } from "../../contexts/about/ThemeContext"
-import { useLanguage } from "../../contexts/about/LanguageContext"
+import { useTheme } from "../../contexts/ThemeContext"
+import { useLanguage } from "../../contexts/LanguageContext"
 
 const ChevronDown = () => (
   <svg className="w-8 h-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21,7 +19,7 @@ export default function HeroBanner() {
 
   return (
     <section
-      className={`relative min-h-screen flex items-center justify-center overflow-hidden transition-all duration-500 ${
+      className={`relative min-h-screen flex items-center justify-center overflow-hidden transition-all duration-500 pt-10 ${
         isDark
           ? "bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
           : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"
@@ -62,7 +60,7 @@ export default function HeroBanner() {
               <div className="absolute inset-4 flex items-center justify-center rounded-2xl">
                 <div className="text-center">
                   <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold  mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient font-sans drop-shadow-2xl">
-                    {t("whoAreWe")}
+                    {t("about.whoAreWe")}
                   </h1>
                   <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full"></div>
                 </div>
@@ -73,21 +71,21 @@ export default function HeroBanner() {
 
         <div className="max-w-5xl mx-auto space-y-6">
           <p className={`text-xl md:text-2xl leading-relaxed ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-            {t("welcome")}
+            {t("about.welcome")}
           </p>
 
-          <p className={`text-lg leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>{t("description")}</p>
+          <p className={`text-lg leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>{t("about.description")}</p>
 
           <div
             className={`inline-flex items-center space-x-3 backdrop-blur-sm rounded-full px-8 py-4 border mt-8 ${
               isDark ? "bg-white/10 border-white/20" : "bg-black/10 border-black/20"
             }`}
           >
-            <span className="text-cyan-400 font-bold text-lg">{t("codeQuality")}</span>
+            <span className="text-cyan-400 font-bold text-lg">{t("about.codeQuality")}</span>
             <span className={`text-xl ${isDark ? "text-white" : "text-black"}`}>•</span>
-            <span className="text-purple-400 font-bold text-lg">{t("reasonablePrice")}</span>
+            <span className="text-purple-400 font-bold text-lg">{t("about.reasonablePrice")}</span>
             <span className={`text-xl ${isDark ? "text-white" : "text-black"}`}>•</span>
-            <span className="text-pink-400 font-bold text-lg">{t("dedicatedSupport")}</span>
+            <span className="text-pink-400 font-bold text-lg">{t("about.dedicatedSupport")}</span>
           </div>
         </div>
 

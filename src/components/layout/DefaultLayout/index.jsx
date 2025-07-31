@@ -23,27 +23,26 @@ function DefaultLayout({ children }) {
     }, [activeSidebarHeader]);
 
     return <>
-        <div className={`
-            min-h-screen
-            overflow-auto
-            ${activeSidebarHeader ? 'overflow-hidden' : ''}
-            w-full
-            flex flex-col items-start justify-center
-            md:px-4 
-            mx-auto
-        `}>
-            <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''} transition-all duration-200`}>
-                <AnimatedHeader ActiveSideBarHeader={setActiveSidebarHeader} />
-            </div>
-            <main className={`
-                ${location.pathname === '/' ? 'z-1 ' : 'pt-20'}  w-full h-full  
-            `}>
-                {React.Children.map(children, child => {
-                    return React.cloneElement(child, { activeSidebarHeader: activeSidebarHeader });
-                })}
-            </main>
-            <div className="w-full"><Footer></Footer></div>
-        </div>
+                <div className={`
+                    min-h-screen
+                    overflow-auto
+                    ${activeSidebarHeader ? 'overflow-hidden' : ''}
+                    w-full
+                    flex flex-col items-start justify-center
+                    md:px-4 
+                    mx-auto
+                    dark:bg-gray-800
+                `}>
+                    <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''} transition-all duration-200`}>
+                        <AnimatedHeader ActiveSideBarHeader={setActiveSidebarHeader} />
+                    </div>
+                    <main className={`${location.pathname === '/' ? 'z-1 ' : 'pt-20'}  w-full h-full overflow-hidden`}>
+                        {React.Children.map(children, child => {
+                            return React.cloneElement(child, { activeSidebarHeader: activeSidebarHeader });
+                        })}
+                    </main>
+                    <div className="w-full"><Footer></Footer></div>
+                </div>
     </>;
 }
 

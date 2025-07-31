@@ -2,32 +2,42 @@ import { MapPin, Phone, Mail } from "lucide-react"
 import { FaLinkedin } from "react-icons/fa";
 import { FaFacebookSquare } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useLanguage } from '../../../contexts/LanguageContext';
 
+
+
+
+
+
+export default function Footer() {
+
+  const { t } = useLanguage();
 
 const services = [
-  'Thiết kế website',
-  'Thiết kế App',
-  'Marketing sản phẩm',
-  '...',
-  '...',
-  '...',
-  '...',
-  '...',
-  '...',
-  '...',
+ t("footer.listServices.0"),
+ t("footer.listServices.1"),
+ t("footer.listServices.2"),
+ t("footer.listServices.3"),
+ t("footer.listServices.4"),
+ t("footer.listServices.5"),
+ t("footer.listServices.6"),
+ t("footer.listServices.7"),
+ t("footer.listServices.8"),
+ t("footer.listServices.9"),
+ t("footer.listServices.10"),
+ t("footer.listServices.11"),
 ]
 
 
 
 const privacy_statement = [
-  'Giới thiệu',
-  'Chính sách bảo mật',
-
+  t("footer.privacyStatement.0"),
+  t("footer.privacyStatement.1"),
+  t("footer.privacyStatement.2"),
+  t("footer.privacyStatement.3"),
 ]
 
 
-
-export default function Footer() {
   return (
     <footer className="md:mb-4 md:p-8 xs:p-4 xs:m-0 text-white bg-gray-900 md:rounded-2xl">
       <div className="3xl:max-w-full 3xl:w-full md:max-w-6xl mx-auto 3xl:px-20">
@@ -72,7 +82,7 @@ export default function Footer() {
 
           {/* Middle Section - Services */}
           <div>
-            <h3 className="mb-6 text-xl font-semibold 3xl:text-5xl">Dịch vụ</h3>
+            <h3 className="mb-6 text-xl font-semibold 3xl:text-5xl">{t("footer.services")}</h3>
 
             <div className="grid grid-cols-2 gap-x-8">
               <ul className="space-y-3">
@@ -97,16 +107,14 @@ export default function Footer() {
           {/* Right Section - About & Links */}
           <div className="space-y-8">
             <div>
-              <h3 className="mb-4 text-xl font-semibold 3xl:text-5xl">Về Chúng Tôi</h3>
+              <h3 className="mb-4 text-xl font-semibold 3xl:text-5xl">{t("footer.aboutUs")}</h3>
               <p className="text-sm leading-relaxed text-justify text-gray-300 3xl:text-3xl">
-                Mộc Điền là công ty công nghệ – marketing hỗ trợ doanh nghiệp Việt xây dựng thương hiệu, quản lý hiệu
-                quả. Chúng tôi cung cấp các giải pháp website, hệ thống quản lý
-                và chiến lược tiếp thị phù hợp với từng mô hình kinh doanh.
+                {t("footer.contentAboutUs")}
               </p>
             </div>
 
             <div>
-              <h3 className="mb-4 text-xl font-semibold 3xl:text-5xl">Chính sách</h3>
+              <h3 className="mb-4 text-xl font-semibold 3xl:text-5xl">{t("footer.privacy")}</h3>
               <div className="grid grid-cols-2 gap-x-8">
                 <ul className="space-y-3">
                   {privacy_statement.slice(0, Math.ceil(privacy_statement.length / 2)).map((service, index) => (

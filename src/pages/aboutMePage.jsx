@@ -1,5 +1,3 @@
-import { ThemeProvider } from "../contexts/about/ThemeContext"
-import { LanguageProvider } from "../contexts/about/LanguageContext"
 import HeroBanner from "../components/about/HeroBanner"
 import Mission from "../components/about/Mission"
 import Services from "../components/about/Services"
@@ -24,8 +22,6 @@ import Contact from "../components/about/Contact"
 
 export default function About() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
         <div className="min-h-screen transition-all duration-500 md:p-4">
           <HeroBanner />
           <Mission />
@@ -34,7 +30,5 @@ export default function About() {
           <Customers />
           <Contact />
         </div>
-      </LanguageProvider>
-    </ThemeProvider>
   )
 }

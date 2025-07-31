@@ -4,11 +4,11 @@ import { publicRoutes } from "./routes";
 import Lenis from '@studio-freight/lenis';
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 function App() {
   const lenis = useRef(null);
-
-
 
   useEffect(() => {
     // Initialize Lenis
@@ -36,28 +36,32 @@ function App() {
 
 
   return (
-    <Router >
-      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Đang tải...</div>}>
-        <Routes>
-          {publicRoutes.map((router, index) => {
-            const Page = router.component;
-            const Layout = router.layout || (({ children }) => <>{children}</>);
+    <ThemeProvider>
+      <LanguageProvider>
+        <Router >
+          <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Đang tải...</div>}>
+            <Routes>
+              {publicRoutes.map((router, index) => {
+                const Page = router.component;
+                const Layout = router.layout || (({ children }) => <>{children}</>);
 
-            return (
-              <Route
-                key={index}
-                path={router.path}
-                element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                }
-              />
-            );
-          })}
-        </Routes>
-      </Suspense>
-    </Router>
+                return (
+                  <Route
+                    key={index}
+                    path={router.path}
+                    element={
+                      <Layout>
+                        <Page />
+                      </Layout>
+                    }
+                  />
+                );
+              })}
+            </Routes>
+          </Suspense>
+        </Router>
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }
 

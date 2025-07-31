@@ -1,7 +1,5 @@
-"use client"
-
-import { useTheme } from "../../contexts/about/ThemeContext"
-import { useLanguage } from "../../contexts/about/LanguageContext"
+import { useTheme } from "../../contexts/ThemeContext"
+import { useLanguage } from "../../contexts/LanguageContext"
 
 const Phone = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,29 +52,29 @@ export default function Contact() {
   const contacts = [
     {
       icon: <Phone className="w-7 h-7" />,
-      label: t("phoneLabel"),
-      value: t("phonePlaceholder"),
+      label: t("about.phoneLabel"),
+      value: t("about.phonePlaceholder"),
       emoji: "📱",
       color: "from-green-500 to-teal-500",
     },
     {
       icon: <Mail className="w-7 h-7" />,
-      label: t("emailLabel"),
-      value: t("emailPlaceholder"),
+      label: t("about.emailLabel"),
+      value: t("about.emailPlaceholder"),
       emoji: "📧",
       color: "from-blue-500 to-cyan-500",
     },
     {
       icon: <Globe className="w-7 h-7" />,
-      label: t("websiteLabel"),
-      value: t("websitePlaceholder"),
+      label: t("about.websiteLabel"),
+      value: t("about.websitePlaceholder"),
       emoji: "🌐",
       color: "from-purple-500 to-pink-500",
     },
     {
       icon: <MessageCircle className="w-7 h-7" />,
-      label: t("fanpageLabel"),
-      value: t("fanpagePlaceholder"),
+      label: t("about.fanpageLabel"),
+      value: t("about.fanpagePlaceholder"),
       emoji: "💬",
       color: "from-orange-500 to-red-500",
     },
@@ -93,7 +91,7 @@ export default function Contact() {
           <h2
             className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900"}`}
           >
-            📞 {t("contactUs")}
+            📞 {t("about.contactUs")}
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-8"></div>
 
@@ -101,9 +99,9 @@ export default function Contact() {
             <p
               className={`text-lg md:text-xl leading-relaxed mb-6 transition-colors duration-500 ${isDark ? "text-gray-300" : "text-gray-600"}`}
             >
-              {t("contactDescription")}
+              {t("about.contactDescription")}
             </p>
-            <p className="text-cyan-400 text-xl font-semibold">{t("freeConsultationText")}</p>
+            <p className="text-cyan-400 text-xl font-semibold">{t("about.freeConsultationText")}</p>
           </div>
         </div>
 
@@ -144,7 +142,7 @@ export default function Contact() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <button className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 group">
               <span className="group-hover:scale-110 transition-transform inline-block">
-                🚀 {t("freeConsultation")}
+                🚀 {t("about.freeConsultation")}
               </span>
             </button>
             <button
@@ -154,7 +152,7 @@ export default function Contact() {
                   : "border-gray-300 text-gray-900 hover:bg-gray-100"
               }`}
             >
-              <span className="group-hover:scale-110 transition-transform inline-block">📂 {t("viewPortfolio")}</span>
+              <span className="group-hover:scale-110 transition-transform inline-block">📂 {t("about.viewPortfolio")}</span>
             </button>
           </div>
         </div>
