@@ -39,9 +39,6 @@ function AnimationHeader({ ActiveSideBarHeader }) {
     }, [location.pathname, scrolled, windowWidth]);
 
 
-
-
-
     const isMobile = windowWidth < 768;
     const isTablet = windowWidth >= 768 && windowWidth < 1024;
     const isDesktop = windowWidth >= 1024 && windowWidth < 1920;

@@ -59,12 +59,12 @@ export default function ThemeToggle() {
       {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
-        className={`p-3 rounded-full border transition-all duration-300 hover:scale-110 ${location.pathname === '/' ?
-            "bg-white/10 border-white/20 text-white hover:bg-white/20" :
+        className={`p-3 rounded-full border transition-all duration-300 hover:scale-110 ${
             isDark
-              ? "bg-white/10 border-white/20 text-white hover:bg-white/20"
-              : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+              ? 'bg-white/10 border-white/20 text-white hover:bg-white/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
+              : 'bg-black/10 border-black/20 text-black hover:bg-black/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
           }`}
+
         title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
@@ -74,11 +74,10 @@ export default function ThemeToggle() {
       {/* Language Toggle Button */}
       <button
         onClick={toggleLanguage}
-        className={`p-3 w-20 rounded-full border transition-all duration-300 hover:scale-110 flex items-center justify-center space-x-2 ${location.pathname === '/' ?
-            "bg-white/10 border-white/20 text-white hover:bg-white/20" :
-            isDark
-              ? "bg-white/10 border-white/20 text-white hover:bg-white/20"
-              : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+        className={`p-3 w-20 rounded-full border transition-all duration-300 hover:scale-110 flex items-center justify-center space-x-2 
+        ${isDark
+              ? 'bg-white/10 border-white/20 text-white hover:bg-white/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
+              : 'bg-black/10 border-black/20 text-black hover:bg-black/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
           }`}
         title={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
         aria-label={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
