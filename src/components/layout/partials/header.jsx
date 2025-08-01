@@ -74,10 +74,10 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
             className="relative h-full flex items-center "
           >
             <Link
-              to="/services"
+              to="/news"
               className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}
             >
-              {t("header.services")} <IoMdArrowDropdown />
+              {t("header.news")} <IoMdArrowDropdown />
             </Link>
 
             {isHoverNews && (

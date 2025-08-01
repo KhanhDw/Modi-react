@@ -39,7 +39,7 @@ const privacy_statement = [
 
 
   return (
-    <footer className="md:mb-4 md:p-8 xs:p-4 xs:m-0 text-white bg-gray-900 md:rounded-2xl">
+    <footer className="md:mb-4 md:p-8 xs:p-4 xs:m-0 text-white bg-gray-900 md:rounded-2xl border-1 dark:border-slate-700 border-slate-300">
       <div className="3xl:max-w-full 3xl:w-full md:max-w-6xl mx-auto 3xl:px-20">
         <div className="grid grid-cols-1  gap-8 mb-8 md:grid-cols-3">
           {/* Left Section - Company Info */}

@@ -76,14 +76,24 @@ export default {
             title: "Modi Services",
             description: "A connecting platform, providing comprehensive services, accompanying Vietnamese businesses from startup to international export.",
             services: [
-                { title: "Website Design" },
-                { title: "Product Marketing" },
-                { title: "Service C?" },
-                { title: "Service D?" },
-                { title: "Service E?" },
-                { title: "Service F?" },
-                { title: "Service G?" },
-                { title: "Service H?" },
+                {
+                    "title": "Website Design"
+                },
+                {
+                    "title": "App Design"
+                },
+                {
+                    "title": "Product Marketing"
+                },
+                {
+                    "title": "SEO"
+                },
+                {
+                    "title": "Mini ERP"
+                },
+                {
+                    "title": "Logo Design"
+                }
             ]
         },
 
@@ -108,6 +118,118 @@ export default {
                     "Flexible expansion according to needs",
                     "Accompanied long-term, with a dedicated and supportive technical team"
                 ]
+            }
+        },
+
+        // services Combo
+        PricingPage: {
+            tagMostPopular: "Most Popular",
+            buttonOrderNow: "Order Now",
+            stage1: [
+                {
+                    title: "Online Starter",
+                    price: "From 1.5M - 3M VND",
+                    features: [
+                        "Basic company profile website design",
+                        "Responsive mobile-friendly interface",
+                        "International domain & SSD hosting",
+                        "HTTPS SSL security installation"
+                    ]
+                },
+                {
+                    title: "One-Me",
+                    price: "Custom design",
+                    features: [
+                        "Free 1:1 consultation",
+                        "Exclusive website design",
+                        "Integration of support tools",
+                        "Free domain + hosting for 1 year"
+                    ]
+                }
+            ],
+            stage2: [
+                {
+                    title: "Brand Building",
+                    price: "From 4M - 10M VND",
+                    features: [
+                        "Modern corporate profile website",
+                        "Professional logo design",
+                        "Brand identity kit",
+                        "SSD hosting + domain + email"
+                    ]
+                },
+                {
+                    title: "Online Selling",
+                    price: "From 8M - 16M VND",
+                    features: [
+                        "E-commerce website + shopping cart",
+                        "Product and order management",
+                        "Online payment integration",
+                        "Shipping integration"
+                    ],
+                    "isPopular": true
+                },
+                {
+                    title: "Service Booking",
+                    price: "From 14M - 22M VND",
+                    features: [
+                        "Service showcase website",
+                        "Online booking system",
+                        "Appointment confirmation notifications",
+                        "Google Business & SEO setup"
+                    ]
+                }
+            ],
+            stage3: [
+                {
+                    title: "RE:VISION",
+                    price: "Website upgrade",
+                    features: [
+                        "Free 1:1 upgrade consultation",
+                        "Source code & performance upgrade",
+                        "Enhanced website security",
+                        "Training / handover instructions"
+                    ]
+                },
+                {
+                    title: "Comprehensive Management",
+                    price: "From 25M - 50M VND",
+                    features: [
+                        "Company profile website",
+                        "Task management system",
+                        "Basic HR management",
+                        "Simple customer CRM"
+                    ]
+                },
+                {
+                    title: "Website + Application",
+                    price: "From 35M - 60M VND",
+                    features: [
+                        "E-commerce/service website",
+                        "Mobile app (iOS/Android)",
+                        "Automatic data synchronization",
+                        "Third-party service integration"
+                    ]
+                }
+            ],
+            title: "Website Development & Growth Roadmap",
+            description: "From your first steps online to a comprehensive management solution, we're with you every step of the way.",
+            i_stage1: {
+                title: "STAGE 1: LAYING THE ONLINE FOUNDATION",
+                description: "For individuals and startups who want to establish a professional online presence."
+            },
+            i_stage2: {
+                title: "STAGE 2: GROWTH & BUSINESS",
+                description: "Ready to build a strong brand and generate revenue."
+            },
+            i_stage3: {
+                title: "STAGE 3: OPTIMIZATION & EXPANSION",
+                description: "The ultimate solution for businesses that require an in-depth management system."
+            },
+            footer: {
+                title: "Still unsure which package is right for you?",
+                description: "Leave your information or call us now for a free 1:1 consultation!",
+                button: "Get a Consultation Now"
             }
         },
 
