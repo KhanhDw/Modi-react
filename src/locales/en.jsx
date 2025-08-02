@@ -1,37 +1,58 @@
 export default {
     header: {
-        home: "Home",
-        about: "About Us",
-        services: "Services",
-        news: "News",
-        contact: "Contact",
-        recruitment: "Recruitment",
+        home: { title: "Home", },
+        about: { title: "About Us", },
+        services: {
+            title: "Services",
+            listServices: [
+                "Online Startup",
+                "One-Me",
+                "Brand Building",
+                "Online Sales",
+                "Service Booking",
+                "Comprehensive Management",
+                "Website + Application",
+                "RE:VISION",
+                "Website Design",
+                "App Design",
+                "Product Marketing",
+                "SEO",
+                "Mini ERP",
+                "Logo Design"
+            ],
+        },
+        news: { title: "News", },
+        contact: { title: "Contact", },
+        recruitment: { title: "Careers", },
     },
     footer: {
         aboutUs: "About Us",
         contentAboutUs: "Moc Dien is a technology - marketing company that supports Vietnamese businesses in building brands and managing effectively. We provide website solutions, management systems and marketing strategies suitable for each business model.",
         services: "Services",
+        address1_1: "Long Xuyên city, An Giang Provine, Việt Nam",
         listServices: [
-            "Thiết kế website",
-            "Marketing sản phẩm",
-            "Dịch vụ C?",
-            "Dịch vụ D?",
-            "Dịch vụ E?",
-            "Dịch vụ F?",
-            "Dịch vụ G?",
-            "Dịch vụ H?",
-            "Dịch vụ J?",
-            "Dịch vụ K?",
-            "Dịch vụ L?",
-            "Dịch vụ M?",
+            "Online Startup",
+            "One-Me",
+            "Brand Building",
+            "Online Sales",
+            "Service Booking",
+            "Comprehensive Management",
+            "Website + Application",
+            "RE:VISION",
+            "Website Design",
+            "App Design",
+            "Product Marketing",
+            "SEO",
+            "Mini ERP",
+            "Logo Design"
         ],
         news: "News",
-        privacy: "Privacy Policy",
+        privacy: "Quick Links",
         privacyStatement: [
-            "Giới thiệu",
-            "Quyền riêng tư",
-            "Điều khoản sử dụng",
-            "Liên hệ",
+            "About",
+            "Terms of Service",
+            "Contact",
+            "Careers"
         ]
     },
     home: {
@@ -337,4 +358,80 @@ export default {
         websitePlaceholder: "[Website Address]",
         fanpagePlaceholder: "[Facebook/Zalo OA Link]",
     },
+    TermsOfServicePage: {
+        header: {
+            title: "Terms of Service",
+            lastUpdated: "Last updated: 08/01/2025"
+        },
+        sections: {
+            generalTerms: {
+                title: "1. General Terms",
+                paragraph1: "Welcome to the Canh Cam Software Design and Consulting Co., Ltd. website (hereinafter referred to as the website). This website and its services are built and owned by Canh Cam Software Design and Consulting Co., Ltd. Your use of the website and its services signifies your agreement to the terms below (Service Agreement). If you do not agree, please do not use the website and its services.",
+                paragraph2: "We may change or modify the Service Agreement. You should review the Service Agreement regularly each time you visit the website. If you continue to use the website and its services after we have made adjustments, it means you have agreed to our new Service Agreement."
+            },
+            ourServices: {
+                title: "2. Our Services and Responsibilities",
+                content: "Our services are those listed on this website (hereinafter referred to as the services). You agree that we have the right, without prior notice, to modify the services. You also agree that we have the right to modify or delete the information you provide to us to ensure that the registered information complies with the website's regulations. You agree that we will not be responsible for any damages caused by the lack or inaccuracy of information on the website, including direct, indirect, incidental, or consequential damages resulting from your access to or use of information on the website. Therefore, you are solely responsible for the consequences of using the website. You understand and agree that login names and passwords must be kept confidential and that you must notify us immediately if you suspect that your password has been compromised. You agree that we have the right to temporarily or permanently block your access and use of the website if you take actions that harm the website or violate the Service Agreement."
+            },
+            yourResponsibilities: {
+                title: "3. Your Responsibilities and Obligations",
+                content: "You must agree to the Service Agreement, commit to providing accurate information when registering, and take full responsibility for this information. You are responsible for protecting your access password and for the consequences of any login using your password, whether or not you logged in directly."
+            },
+            ageLimit: {
+                title: "4. Age Limit",
+                content: "Everyone can access this website. However, if you wish to register as a member to post information on the website, you must be at least 18 years old and capable of being responsible for your own actions."
+            },
+            contentUsage: {
+                title: "5. Content Usage",
+                content: "The content on this website can be viewed, printed, or sent to others. You cannot modify, sell, or commercially transfer any information from this website."
+            },
+            membershipRegistration: {
+                title: "6. Membership Registration",
+                items: [
+                    "Membership registration is completely free.",
+                    "We reserve the right to refuse to post information on the website if we feel that the information you provide is not reliable. You can re-register after 2 days if you do not see your registration information on the website.",
+                    "Each member is allowed to have a maximum of one registration. If a member violates this rule, we will delete that member's registration."
+                ]
+            },
+            memberInfoUpdate: {
+                title: "7. Member Information Update",
+                content: "Members are responsible for updating their own information. Members use their registered login name and password to update information and images by clicking the “Update Information” menu on the website. Members can also delete their own registration if they wish."
+            },
+            prohibitions: {
+                title: "8. Prohibitions",
+                intro: "You agree not to violate the following prohibitions:",
+                items: [
+                    "(a) Providing information that violates the law, fine customs, illegal business, or harms other businesses.",
+                    "(b) Using information on the website for the purpose of sending emails or advertisements without the recipient's consent.",
+                    "(c) Providing information or images that are the property of another entity and protected by domestic and international laws."
+                ]
+            },
+            otherItems: [
+                {
+                    title: "9. Products and Services of Other Entities",
+                    content: "We will not be responsible for any damages caused by products or services registered or advertised on the website, whether directly or indirectly."
+                },
+                {
+                    title: "10. Notification of Violation",
+                    content: "If you discover any information on the website that violates a trademark that you own, please notify us immediately."
+                },
+                {
+                    title: "11. Applicable Laws",
+                    content: "You agree that commercial or non-commercial activities on and through the website must comply with the regulations and laws of Vietnam and international laws to which Vietnam is a party. When a new law is enacted or applied, this law will be applied to all members of the website."
+                }
+            ]
+        },
+        footer: {
+            title: "12. Contact Information",
+            companyName: "CANH CAM SOFTWARE DESIGN AND CONSULTING CO., LTD",
+            addressLabel: "Address:",
+            addressValue: "156 Nguyen Van Thu, Da Kao Ward, District 1, Ho Chi Minh City",
+            phoneLabel: "Phone:",
+            phoneValue: "08. 3823 8364 – 3823 8365",
+            faxLabel: "Fax:",
+            faxValue: "08. 3823 8365",
+            emailLabel: "Email:",
+            emailValue: "info@canhcam.vn"
+        }
+    }
 };

@@ -13,29 +13,29 @@ export default function Footer() {
 
   const { t } = useLanguage();
 
-const services = [
- t("footer.listServices.0"),
- t("footer.listServices.1"),
- t("footer.listServices.2"),
- t("footer.listServices.3"),
- t("footer.listServices.4"),
- t("footer.listServices.5"),
- t("footer.listServices.6"),
- t("footer.listServices.7"),
- t("footer.listServices.8"),
- t("footer.listServices.9"),
- t("footer.listServices.10"),
- t("footer.listServices.11"),
-]
+  const services = [
+    t("footer.listServices.0"),
+    t("footer.listServices.1"),
+    t("footer.listServices.2"),
+    t("footer.listServices.3"),
+    t("footer.listServices.4"),
+    t("footer.listServices.5"),
+    t("footer.listServices.6"),
+    t("footer.listServices.7"),
+    t("footer.listServices.8"),
+    t("footer.listServices.9"),
+    t("footer.listServices.10"),
+    t("footer.listServices.11"),
+  ]
 
 
 
-const privacy_statement = [
-  t("footer.privacyStatement.0"),
-  t("footer.privacyStatement.1"),
-  t("footer.privacyStatement.2"),
-  t("footer.privacyStatement.3"),
-]
+  const privacy_statement = [
+    {link:"/about" ,title: t("footer.privacyStatement.0"), },
+    {link:"/terms-of-services" ,title: t("footer.privacyStatement.1"), },
+    {link:"/contact" ,title: t("footer.privacyStatement.2"), },
+    {link:"/careers" ,title: t("footer.privacyStatement.3"), },
+  ]
 
 
   return (
@@ -55,18 +55,12 @@ const privacy_statement = [
               <div className="flex items-start gap-3">
                 <MapPin className="flex-shrink-0 mt-1 text-red-500 xs:text-sm md:text-xl " size={20} />
                 <div className="xs:text-sm md:text-md 3xl:text-3xl">
-                  <p>182 Trần Bình Trọng, Phường Chợ Quán,</p>
-                  <p>Thành phố Hồ Chí Minh, Việt Nam</p>
+                  <p>{t("footer.address1_1")}</p>
+
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <MapPin className="flex-shrink-0 mt-1 text-red-500 xs:text-sm md:text-xl" size={20} />
-                <div className="xs:text-sm md:text-md 3xl:text-3xl">
-                  <p>182 Trần Bình Trọng, Phường Chợ Quán,</p>
-                  <p>Thành phố Hồ Chí Minh, Việt Nam</p>
-                </div>
-              </div>
+              {/* nếu có thêm địa chỉ thì copy trên xuống */}
 
               <div className="flex items-center gap-3">
                 <Phone className="flex-shrink-0 text-blue-500" size={20} />
@@ -75,7 +69,7 @@ const privacy_statement = [
 
               <div className="flex items-center gap-3">
                 <Mail className="flex-shrink-0 text-red-500" size={20} />
-                <p className="xs:text-sm md:text-md 3xl:text-3xl">modl-company@modl.vn</p>
+                <p className="xs:text-sm md:text-md 3xl:text-3xl">modi-company@modi.vn</p>
               </div>
             </div>
           </div>
@@ -119,7 +113,7 @@ const privacy_statement = [
                 <ul className="space-y-3">
                   {privacy_statement.slice(0, Math.ceil(privacy_statement.length / 2)).map((service, index) => (
                     <li key={index} className="transition-all duration-200 hover:text-green-400 3xl:text-3xl">
-                      <Link to="/">{service}</Link>
+                      <Link to={service.link}>{service.title}</Link>
                     </li>
                   ))}
                 </ul>
@@ -127,7 +121,7 @@ const privacy_statement = [
                 <ul className="space-y-3">
                   {privacy_statement.slice(Math.ceil(privacy_statement.length / 2)).map((service, index) => (
                     <li key={index + 100} className="transition-all duration-200 hover:text-green-400">
-                      <Link to="/" className="xs:text-sm md:text-md 3xl:text-3xl">{service}</Link>
+                      <Link to={service.link} className="xs:text-sm md:text-md 3xl:text-3xl">{service.title}</Link>
                     </li>
                   ))}
                 </ul>

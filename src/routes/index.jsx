@@ -16,6 +16,7 @@ import ManagerServices from "../pages/managers/ServicesPage"
 import ManagerNews from "../pages/managers/NewsPage"
 import ManagerRecruitment from "../pages/managers/RecruitmentPage"
 import ManagerContact from "../pages/managers/ContactPage"
+import TermsOfServicePage from "../pages/TermsOfServicePage"
 
 
 
@@ -26,7 +27,8 @@ const publicRoutes = [
     {path: "/services", component: Services, layout:DefaultLayout  },
     {path: "/news", component: News, layout:DefaultLayout  },
     {path: "/contact", component: Contact, layout:DefaultLayout  },
-    {path: "/recruitment", component: Recruitment, layout:DefaultLayout  },
+    {path: "/careers", component: Recruitment, layout:DefaultLayout  },
+    {path: "/terms-of-services", component: TermsOfServicePage, layout:DefaultLayout  },
     {path: "*", component: NotFound, layout:NoneHeaderFooterLayout  },
 
     //admin routes

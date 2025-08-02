@@ -1,39 +1,59 @@
-import { title } from "framer-motion/client";
-
 export default {
     header: {
-        home: "Trang Chủ",
-        about: "Về Chúng Tôi",
-        services: "Dịch Vụ",
-        news: "Tin Tức",
-        contact: "Liên Hệ",
-        recruitment: "Tuyển Dụng",
+        home: { title: "Trang Chủ" },
+        about: { title: "Về Chúng Tôi" },
+        services: {
+            title: "Dịch Vụ",
+            listServices: [
+                "Khởi Đầu Online",
+                "One-Me",
+                "Xây Dựng Thương Hiệu",
+                "Bán Hàng Online",
+                "Đặt Lịch Dịch Vụ",
+                "Quản Lý Toàn Diện",
+                "Website + Ứng Dụng",
+                "RE:VISION",
+                "Thiết kế website",
+                "Thiết kế App",
+                "Marketing sản phẩm",
+                "SEO",
+                "Mini ERP",
+                "Thiết kế Logo",
+            ],
+        },
+        news: { title: "Tin Tức" },
+        contact: { title: "Liên Hệ" },
+        recruitment: { title: "Tuyển Dụng" },
     },
     footer: {
         aboutUs: "Về Chúng Tôi",
         contentAboutUs: "Mộc Điền là công ty công nghệ – marketing hỗ trợ doanh nghiệp Việt xây dựng thương hiệu, quản lý hiệu quả. Chúng tôi cung cấp các giải pháp website, hệ thống quản lý và chiến lược tiếp thị phù hợp với từng mô hình kinh doanh.",
         services: "Dịch Vụ",
+        address1_1: "Long Xuyên, An Giang, Việt Nam",
+
         listServices: [
+            "Khởi Đầu Online",
+            "One-Me",
+            "Xây Dựng Thương Hiệu",
+            "Bán Hàng Online",
+            "Đặt Lịch Dịch Vụ",
+            "Quản Lý Toàn Diện",
+            "Website + Ứng Dụng",
+            "RE:VISION",
             "Thiết kế website",
+            "Thiết kế App",
             "Marketing sản phẩm",
-            "Dịch vụ C?",
-            "Dịch vụ D?",
-            "Dịch vụ E?",
-            "Dịch vụ F?",
-            "Dịch vụ G?",
-            "Dịch vụ H?",
-            "Dịch vụ J?",
-            "Dịch vụ K?",
-            "Dịch vụ L?",
-            "Dịch vụ M?",
+            "SEO",
+            "Mini ERP",
+            "Thiết kế Logo",
         ],
         news: "Tin Tức",
-        privacy: "Chính Sách & Điều Khoản",
+        privacy: "Liên kết nhanh",
         privacyStatement: [
             "Giới thiệu",
-            "Chính sách bảo mật",
             "Điều khoản sử dụng",
             "Liên hệ",
+            "Tuyển dụng",
         ]
     },
     home: {
@@ -79,7 +99,7 @@ export default {
             description: "Nền tảng kết nối, cung cấp dịch vụ toàn diện, đồng hành cùng doanh nghiệp Việt từ khởi nghiệp đến xuất khẩu quốc tế.",
             services: [
                 { title: "Thiết kế website" },
-                { title: "Thiết kế APP" },
+                { title: "Thiết kế App" },
                 { title: "Marketing sản phẩm" },
                 { title: "SEO" },
                 { title: "Mini ERP" },
@@ -329,4 +349,82 @@ export default {
         websitePlaceholder: "[Địa chỉ website]",
         fanpagePlaceholder: "[Link Facebook/Zalo OA]",
     },
+    TermsOfServicePage: {
+        header: {
+            title: "Điều khoản sử dụng",
+            lastUpdated: "Cập nhật lần cuối: 01/08/2025"
+        },
+        sections: {
+            generalTerms: {
+                title: "1. Điều khoản chung",
+                paragraph1: "Chào mừng bạn đến website Công ty TNHH Tư Vấn Thiết Kế Phần Mềm Cánh Cam (sau đây gọi tắt là website). Website này và những dịch vụ trên website được xây dựng và thuộc sở hữu của Công ty TNHH Tư Vấn Thiết Kế Phần Mềm Cánh Cam. Việc bạn sử dụng website và các dịch vụ của website đồng nghĩa với việc bạn đã đồng ý với những thoả thuận dưới đây (Thoả thuận sử dụng dịch vụ). Nếu bạn không đồng ý, xin vui lòng không sử dụng website và những dịch vụ của website.",
+                paragraph2: "Chúng tôi có thể sẽ thay đổi hoặc điều chỉnh Thoả thuận sử dụng dịch vụ. Bạn nên thường xuyên xem Thoả thuận sử dụng dịch vụ mỗi khi vào website. Nếu bạn tiếp tục sử dụng website và những dịch vụ sau khi chúng tôi đã điều chỉnh tức là bạn đã đồng ý với Thoả thuận sử dụng dịch vụ mới của chúng tôi."
+            },
+            ourServices: {
+                title: "2. Dịch vụ và trách nhiệm của chúng tôi",
+                content: "Dịch vụ của chúng tôi là những dịch vụ được ghi trên website này (sau đây gọi tắt là dịch vụ). Bạn đồng ý rằng chúng tôi có quyền, và không cần thông báo trước, điều chỉnh những dịch vụ. Bạn cũng đồng ý rằng chúng tôi có quyền điều chỉnh hoặc xoá những thông tin mà bạn cung cấp cho chúng tôi để bảo đảm những thông tin được đăng ký phù hợp với Quy định của website. Bạn đồng ý rằng chúng tôi sẽ không chịu trách nhiệm cho những thiệt hại do sự thiếu hoặc không chính xác của thông tin trên website, bao gồm những hậu quả trực tiếp, gián tiếp, ngẫu nhiên, hoặc phát sinh từ việc bạn truy cập hoăc sử dụng thông tin trên website. Vì vậy, bạn hoàn toàn chịu trách nhiệm cho những hậu quả của việc sử dụng website. Bạn hiểu và đồng ý rằng các thông tin về tên truy cập và mật khẩu phải được giữ bí mật, và phải thông báo ngay cho chúng tôi nếu bạn nghi ngờ rằng mật khẩu của mình đã bị tiết lộ. Bạn đồng ý rằng chúng tôi có quyền ngăn chặn tạm thời hoặc lâu dài sự truy cập và sử dụng website của bạn nếu như bạn có hành động gây hại đến website hoặc vi phạm Thoả thuận sử dụng dịch vụ."
+            },
+            yourResponsibilities: {
+                title: "3. Trách nhiệm và nghĩa vụ của bạn",
+                content: "Bạn cần đồng ý với Thoả thuận sử dụng dịch vụ, cam kết cung cấp thông tin chính xác khi đăng ký và chịu hoàn toàn trách nhiệm về những thông tin này. Bạn chịu trách nhiệm bảo vệ mật khẩu truy cập, và trách nhiệm của việc đăng nhập bằng mật khẩu của bạn, do hoặc không do bạn trực tiếp đăng nhập."
+            },
+            ageLimit: {
+                title: "4. Giới hạn độ tuổi",
+                content: "Mọi người đều có thể truy cập website này. Tuy nhiên, nếu bạn muốn đăng ký thành viên để đưa thông tin lên website, bạn phải ít nhất 18 tuổi và có đủ khả năng chịu trách nhiệm về hành vi của mình."
+            },
+            contentUsage: {
+                title: "5. Sử dụng nội dung",
+                content: "Nội dung trên website này có thể được xem và in ra hoặc gửi cho người khác. Bạn không thể sửa đổi, bán hoặc chuyển nhượng thương mại bất kỳ thông tin gì từ website này."
+            },
+            membershipRegistration: {
+                title: "6. Đăng kí thành viên",
+                items: [
+                    "Đăng kí thành viên hoàn toàn miễn phí.",
+                    "Chúng tôi có quyền từ chối đưa thông tin lên website nếu như chúng tôi cảm thấy thông tin do bạn cung cấp không có sự tin cậy. Bạn có thể đăng ký lại sau 2 ngày nếu như bạn không thấy thông tin đăng ký của bạn trên website.",
+                    "Mỗi thành viên chỉ được có tối đa một đăng ký. Nếu thành viên vi phạm quy định, chúng tôi sẽ xóa đăng ký của thành viên đó."
+                ]
+            },
+            memberInfoUpdate: {
+                title: "7. Cập nhật thông tin thành viên",
+                content: "Thành viên chịu trách nhiệm tự cập nhật thông tin của mình. Thành viên sử dụng tên truy cập và mật khẩu khi đăng ký để cập nhật thông tin và hình ảnh qua bằng cách nhấn menu “Cập nhật thông tin” trên website. Thành viên cũng có thể tự xoá đăng ký của mình nếu muốn."
+            },
+            prohibitions: {
+                title: "8. Những điều cấm",
+                intro: "Bạn đồng ý không vi phạm các quy định cấm sau đây:",
+                items: [
+                    "(a) Cung cấp các thông tin vi phạm pháp luật, thuần phong mỹ tục, kinh doanh bất hợp pháp, gây hại đến doanh nghiệp khác.",
+                    "(b) Sử dụng những thông tin trên website nhằm mục đích gửi những email hoặc quảng cáo không có sự đồng ý của người nhận.",
+                    "(c) Cung cấp các thông tin hoặc hình ảnh thuộc sở hữu của chủ thể khác được bảo vệ bởi luật pháp trong và ngoài nước."
+                ]
+            },
+            otherItems: [
+                {
+                    title: "9. Sản phẩm và dịch vụ của chủ thể khác",
+                    content: "Chúng tôi sẽ không chịu trách nhiệm về bất kỳ sự thiệt hại gây ra do sản phẩm dịch vụ được đăng ký hoặc quảng cáo trên website, trực tiếp hoặc gián tiếp."
+                },
+                {
+                    title: "10. Thông báo nếu có sự vi phạm",
+                    content: "Nếu bạn phát hiện có bất kỳ thông tin nào trên website vi phạm với nhãn hiệu hàng hoá mà bạn có quyền sở hữu, hãy thông báo ngay cho chúng tôi biết."
+                },
+                {
+                    title: "11. Các điều luật được áp dụng",
+                    content: "Bạn đồng ý rằng hoạt động thương mại hoặc không thương mại trên và thông qua website phải tuân theo các quy định và luật pháp Việt Nam và các điều luật quốc tế mà Việt Nam có ký kết. Khi có điều luật mới được ban hành hoặc áp dụng, điều luật này sẽ được áp dụng với tất cả thành viên của website."
+                }
+            ]
+        },
+        footer: {
+            title: "12. Thông tin liên lạc",
+            companyName: "CÔNG TY TNHH TƯ VẤN THIẾT KẾ PHẦN MỀM CÁNH CAM",
+            addressLabel: "Địa chỉ:",
+            addressValue: "156 Nguyễn Văn Thủ, P. Đakao, Quận 1, Tp. HCM",
+            phoneLabel: "Điện thoại:",
+            phoneValue: "08. 3823 8364 – 3823 8365",
+            faxLabel: "Fax:",
+            faxValue: "08. 3823 8365",
+            emailLabel: "Email:",
+            emailValue: "info@canhcam.vn"
+        }
+
+    }
+
 };

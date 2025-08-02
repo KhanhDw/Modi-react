@@ -42,9 +42,9 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
 
         <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-8 xl:gap-10 lg:text-md xl:text-xl'>
 
-          <Link to={'/'} className={`flex 2xl:text-xl lg:text-md  justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>{t("header.home")}</Link>
+          <Link to={'/'} className={`flex 2xl:text-xl lg:text-md  justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>{t("header.home.title")}</Link>
 
-          <Link to={'/about'} className={`2xl:text-xl lg:text-md  flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>{t("header.about")}</Link>
+          <Link to={'/about'} className={`2xl:text-xl lg:text-md  flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>{t("header.about.title")}</Link>
 
           <div
             onMouseEnter={() => setIsHoverServices(true)}
@@ -55,7 +55,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
               to="/services"
               className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}
             >
-              {t("header.services")} <IoMdArrowDropdown />
+              {t("header.services.title")} <IoMdArrowDropdown />
             </Link>
 
             {isHoverServices && (
@@ -68,31 +68,20 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
           </div>
 
 
-          <div
-            onMouseEnter={() => setIsHoverNews(true)}
-            onMouseLeave={() => setIsHoverNews(false)}
-            className="relative h-full flex items-center "
-          >
+         
             <Link
               to="/news"
               className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}
             >
-              {t("header.news")} <IoMdArrowDropdown />
+              {t("header.news.title")}
             </Link>
 
-            {isHoverNews && (
-              <div
-                className="absolute top-full left-1/2 -translate-x-1/2 z-50 min-w-max"
-              >
-                <ModalNews />
-              </div>
-            )}
-          </div>
+            
 
 
 
-          <Link to={'/contact'} className={`flex justify-center items-center lg:text-md  ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.contact")}</Link>
-          <Link to={'/recruitment'} className={`flex justify-center items-center lg:text-md  ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.recruitment")}</Link>
+          <Link to={'/contact'} className={`flex justify-center items-center lg:text-md  ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.contact.title")}</Link>
+          <Link to={'/careers'} className={`flex justify-center items-center lg:text-md  ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.recruitment.title")}</Link>
         </div>
 
         <div >
@@ -118,21 +107,22 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
 }
 
 function ModalServices() {
-
+  const { t } = useLanguage();
   const services = [
-    "Công xạc thục eHub",
-    "Thành lập Doanh nghiệp",
-    "Mã số mã vạch",
-    "Thiết kế Website",
-    "Dịch vụ Logistics",
-    "Thương mại điện tử Numbala",
-    "Quản trị KISCL",
-    "Nhận mặt, Bảo bì, Tém chống giả",
-    "Quản trị QLC",
-    "Đào tạo",
-    "Marketing truyền thông",
-    "Bảo hiểm",
-    "Sở hữu trí tuệ",
+    {title: t("header.services.listServices.0"), link: "/services"},
+    {title: t("header.services.listServices.1"), link: "/services"},
+    {title: t("header.services.listServices.2"), link: "/services"},
+    {title: t("header.services.listServices.3"), link: "/services"},
+    {title: t("header.services.listServices.4"), link: "/services"},
+    {title: t("header.services.listServices.5"), link: "/services"},
+    {title: t("header.services.listServices.6"), link: "/services"},
+    {title: t("header.services.listServices.7"), link: "/services"},
+    {title: t("header.services.listServices.8"), link: "/services"},
+    {title: t("header.services.listServices.9"), link: "/services"},
+    {title: t("header.services.listServices.10"), link: "/services"},
+    {title: t("header.services.listServices.11"), link: "/services"},
+    {title: t("header.services.listServices.12"), link: "/services"},
+    {title: t("header.services.listServices.13"), link: "/services"},
   ];
 
   return (
@@ -147,7 +137,7 @@ function ModalServices() {
                        hover:translate-x-3 transition-transform duration-200
                        md:text-sm lg:text-md xl:text-md 2xl:text-md font-normal"
             >
-              {service}
+             <Link to={service.link}>{service.title}</Link>
             </li>
           ))}
         </ul>
@@ -156,42 +146,17 @@ function ModalServices() {
   );
 }
 
-function ModalNews() {
 
-  const news = [
-    "Công xạc thục eHub",
-    "Thành lập Doanh nghiệp",
-    "Mã số mã vạch",
-  ];
-
-  return (<>
-    <div className='rounded-lg bg-linear-to-b/increasing from-indigo-500 to-teal-400 w-full h-fit overflow-hidden'>
-      <ul className="max-w-xs p-0 list-none rounded-tr-lg overflow-hidden">
-        {news.map((item, index) => (
-          <li
-            key={index}
-            className={`cursor-default bg-white px-3 py-1 border-l-4 text-gray-700
-                       border-transparent hover:bg-green-900 hover:text-white
-                       hover:translate-x-3 transition-transform duration-200
-                       md:text-sm lg:text-md xl:text-md 2xl:text-md font-normal`}
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </>);
-}
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const { t } = useLanguage();
   const MenuHeader = [
-    { id: 1, name: t("header.home"), link: '/' },
-    { id: 2, name: t("header.about"), link: '/about' },
-    { id: 3, name: t("header.services"), link: '/services' },
-    { id: 4, name: t("header.news"), link: '/news' },
-    { id: 5, name: t("header.contact"), link: '/contact' },
-    { id: 6, name: t("header.recruitment"), link: '/recruitment' },
+    { id: 1, name: t("header.home.title"), link: '/' },
+    { id: 2, name: t("header.about.title"), link: '/about' },
+    { id: 3, name: t("header.services.title"), link: '/services' },
+    { id: 4, name: t("header.news.title"), link: '/news' },
+    { id: 5, name: t("header.contact.title"), link: '/contact' },
+    { id: 6, name: t("header.recruitment.title"), link: '/recruitment' },
   ];
 
   return (
@@ -213,8 +178,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
               {MenuHeader.map((item) => {
                 return (
                   <li key={item.id}>
-                    <Link to={item.link} onClick={() => setIsSidebarOpen(false)} 
-                    className="flex items-center p-2 text-gray-900 rounded-lg  w-full
+                    <Link to={item.link} onClick={() => setIsSidebarOpen(false)}
+                      className="flex items-center p-2 text-gray-900 rounded-lg  w-full
                     dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                       <span className="ml-3">{item.name}</span>
                     </Link>
