@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
 import { Suspense } from "react"
 import { publicRoutes } from "./routes";
-import Lenis from '@studio-freight/lenis';
+import Lenis from 'lenis';
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { ThemeProvider } from "./contexts/ThemeContext";
