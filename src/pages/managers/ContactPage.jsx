@@ -3,31 +3,19 @@ import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
 import ContactDetail from "../../components/admin/contact/ContactDetail"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function ContactPage() {
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      ho_ten: "Nguyễn Văn A",
-      email: "nguyenvana@email.com",
-      so_dien_thoai: "0123456789",
-      noi_dung: "Tôi muốn tư vấn về dịch vụ thiết kế website",
-      trang_thai: "Chưa phản hồi",
-      ngay_gui: "2024-01-15",
-    },
-    {
-      id: 2,
-      ho_ten: "Trần Thị B",
-      email: "tranthib@email.com",
-      so_dien_thoai: "0987654321",
-      noi_dung: "Báo giá dịch vụ SEO",
-      trang_thai: "Đã phản hồi",
-      ngay_gui: "2024-01-20",
-    },
-  ])
-
+  const [contacts, setContacts] = useState([])
   const [showDetail, setShowDetail] = useState(null)
+
+  // Lấy danh sách liên hệ từ backend khi component mount
+  useEffect(() => {
+    fetch('http://localhost:3000/api/lienhe')
+      .then((response) => response.json())
+      .then((data) => setContacts(data))
+      .catch((error) => console.error('Lỗi khi lấy dữ liệu:', error))
+  }, [])
 
   const columns = [
     { key: "ho_ten", label: "Họ tên", className: "font-medium text-gray-900" },
@@ -49,20 +37,36 @@ export default function ContactPage() {
     { key: "ngay_gui", label: "Ngày gửi" },
   ]
 
-  const handleStatusChange = (id, newStatus) => {
-    setContacts(contacts.map((c) => (c.id === id ? { ...c, trang_thai: newStatus } : c)))
-    if (showDetail && showDetail.id === id) {
-      setShowDetail({ ...showDetail, trang_thai: newStatus })
-    }
-  }
-
   const handleDelete = (id) => {
     if (confirm("Bạn có chắc muốn xóa liên hệ này?")) {
-      setContacts(contacts.filter((c) => c.id !== id))
+      fetch(`http://localhost:3000/api/lienhe/${id}`, {
+        method: 'DELETE',
+      })
+        .then((response) => response.json())
+        .then(() => setContacts(contacts.filter((c) => c.id !== id)))
+        .catch((error) => console.error('Lỗi khi xóa:', error))
       if (showDetail && showDetail.id === id) {
         setShowDetail(null)
       }
     }
+  }
+
+  const handleStatusChange = (id, newStatus) => {
+    fetch(`http://localhost:3000/api/lienhe/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trang_thai: newStatus }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        setContacts((prev) =>
+          prev.map((c) => (c.id === id ? { ...c, trang_thai: newStatus } : c))
+        )
+        if (showDetail && showDetail.id === id) {
+          setShowDetail({ ...showDetail, trang_thai: newStatus })
+        }
+      })
+      .catch((error) => console.error('Lỗi khi cập nhật trạng thái:', error))
   }
 
   const extraInfo = `Tổng: ${contacts.length} | Chưa phản hồi: ${
@@ -73,9 +77,7 @@ export default function ContactPage() {
     <AdminLayout>
       <div className="p-6">
         <PageHeader title="Quản lý liên hệ" extra={extraInfo} />
-
         <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} />
-
         <ContactDetail
           contact={showDetail}
           isOpen={!!showDetail}

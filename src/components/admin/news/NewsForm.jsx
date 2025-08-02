@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
 import FormButtons from "../common/FormButtons"
 
@@ -11,9 +11,23 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
     tac_gia: news?.tac_gia || "",
   })
 
+  useEffect(() => {
+    setFormData({
+      tieu_de: news?.tieu_de || "",
+      noi_dung: news?.noi_dung || "",
+      tac_gia: news?.tac_gia || "",
+    })
+  }, [news])
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData)
+    // Nếu là sửa, không gửi trường tac_gia
+    if (news) {
+      const { tieu_de, noi_dung } = formData
+      onSubmit({ tieu_de, noi_dung })
+    } else {
+      onSubmit(formData)
+    }
   }
 
   return (
@@ -34,7 +48,7 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
           <textarea
             value={formData.noi_dung}
             onChange={(e) => setFormData({ ...formData, noi_dung: e.target.value })}
-            rows="5"
+            rows="4"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -46,6 +60,8 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
             value={formData.tac_gia}
             onChange={(e) => setFormData({ ...formData, tac_gia: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            disabled={!!news} // Disable khi sửa
           />
         </div>
         <FormButtons onSubmit={handleSubmit} onCancel={onCancel} isEditing={!!news} />

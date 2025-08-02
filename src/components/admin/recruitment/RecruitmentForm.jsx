@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
 import FormButtons from "../common/FormButtons"
 
@@ -14,6 +14,19 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
     dia_diem: job?.dia_diem || "",
     muc_luong: job?.muc_luong || "",
   })
+
+  // Cập nhật lại formData khi job thay đổi
+  useEffect(() => {
+    setFormData({
+      vi_tri: job?.vi_tri || "",
+      mo_ta_cong_viec: job?.mo_ta_cong_viec || "",
+      yeu_cau_ung_vien: job?.yeu_cau_ung_vien || "",
+      so_luong: job?.so_luong || "",
+      han_nop_ho_so: job?.han_nop_ho_so || "",
+      dia_diem: job?.dia_diem || "",
+      muc_luong: job?.muc_luong || "",
+    })
+  }, [job])
 
   const handleSubmit = (e) => {
     e.preventDefault()
