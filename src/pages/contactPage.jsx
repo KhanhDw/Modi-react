@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import CaptchaImage from '../components/feature/CaptchaImage';
 
 // Trạng thái ban đầu của form
