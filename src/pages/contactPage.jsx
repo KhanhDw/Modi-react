@@ -96,12 +96,13 @@ export default function ContactPage() {
         {/* Cột trái: Thông tin và form */}
         <div className="space-y-5">
           <div className="space-y-4">
-            <p className="text-sm text-red-600 dark:text-red-400 uppercase tracking-wider font-semibold">liên hệ với chúng tôi</p>
+            <p className="text-sm text-red-600 dark:text-red-400 uppercase tracking-wider font-semibold"> {t("contactPage.title")}</p>
             <h1 className="text-2xl sm:text-xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
               {t("contactPage.nameCompany")}
             </h1>
             <p className="text-gray-600 dark:text-slate-400  sm:text-sm leading-relaxed">
               {t("contactPage.description")}
+             
             </p>
             {serviceOrderURL && (
               <div className="text-center text-gray-600 dark:text-slate-400 text-base sm:text-lg font-bold leading-relaxed border-2 border-red-500 dark:border-red-400 rounded-lg p-2">
@@ -179,7 +180,7 @@ export default function ContactPage() {
                 type="submit"
                 className="w-full h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-semibold text-lg rounded-lg transition-transform transform hover:scale-105"
               >
-                Gửi Liên Hệ
+                {t("contactPage.btnSendContact")}
               </button>
             </form>
           </div>

@@ -443,5 +443,7 @@ export default {
         inputPhoneNumber: "Phone",
         inputPin: "Security Code",
         inputContext: "Content",
+        btnSendContact: "Send contact",
+
     },
 };

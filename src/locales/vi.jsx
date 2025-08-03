@@ -416,7 +416,7 @@ export default {
         },
         footer: {
             title: "12. Thông tin liên lạc",
-            companyName: "CÔNG TY TNHH TƯ VẤN THIẾT KẾ PHẦN MỀM CÁNH CAM",
+            companyName: "CÔNG TY TNHH TƯ VẤN THIẾT KẾ PHẦN MỀM MỘC ĐIỀN",
             addressLabel: "Địa chỉ:",
             addressValue: "156 Nguyễn Văn Thủ, P. Đakao, Quận 1, Tp. HCM",
             phoneLabel: "Điện thoại:",
@@ -438,6 +438,7 @@ export default {
         inputPin: "Mã bảo mật",
         inputContext: "Nội dung", 
         contextBtnModalInformation: "Đóng",
+        btnSendContact: "Gửi Liên Hệ",
     },
 
 };
