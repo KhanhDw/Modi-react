@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
 import FormButtons from "../common/FormButtons"
 
@@ -9,6 +9,14 @@ export default function ServiceForm({ service, onSubmit, onCancel }) {
     ten_dich_vu: service?.ten_dich_vu || "",
     mo_ta: service?.mo_ta || "",
   })
+
+  // Thêm useEffect để cập nhật formData khi service thay đổi
+  useEffect(() => {
+    setFormData({
+      ten_dich_vu: service?.ten_dich_vu || "",
+      mo_ta: service?.mo_ta || "",
+    })
+  }, [service])
 
   const handleSubmit = (e) => {
     e.preventDefault()
