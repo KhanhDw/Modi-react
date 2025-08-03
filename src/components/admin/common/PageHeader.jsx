@@ -1,4 +1,3 @@
-"use client"
 
 export default function PageHeader({ title, buttonText, onButtonClick, extra }) {
   return (

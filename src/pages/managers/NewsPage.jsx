@@ -1,9 +1,11 @@
-"use client"
 import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
 import NewsForm from "../../components/admin/news/NewsForm"
 import { useState, useEffect } from "react"
+import formatDateTime from "../../utils/formatDate"
+
+
 
 export default function NewsPage() {
   const [news, setNews] = useState([])
@@ -60,11 +62,12 @@ export default function NewsPage() {
       .then((response) => response.json())
       .then((data) => {
         if (editingNews) {
-          setNews(news.map((n) => (n.id === editingNews.id ? { ...n, ...formData } : n)))
+          setNews(news.map((n) => (n.id === editingNews.id ? {  ...formData,...n } : n)))
         } else {
           setNews([
-            ...news,
+            // { id: data.data?.id || Date.now(), ...formData, ngay_dang: new Date().toISOString().split("T")[0] },
             { id: data.data?.id || Date.now(), ...formData, ngay_dang: new Date().toISOString().split("T")[0] },
+            ...news,
           ])
         }
         setShowForm(false)

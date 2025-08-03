@@ -1,5 +1,3 @@
-"use client"
-
 export default function FormButtons({ onSubmit, onCancel, submitText = "Lưu", isEditing = false }) {
   return (
     <div className="flex space-x-2">

@@ -1,4 +1,3 @@
-"use client"
 import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
@@ -63,11 +62,11 @@ export default function RecruitmentPage() {
       .then((response) => response.json())
       .then((data) => {
         if (editingJob) {
-          setJobs(jobs.map((j) => (j.id === editingJob.id ? { ...j, ...formData } : j)))
+          setJobs(jobs.map((j) => (j.id === editingJob.id ? { ...formData,  ...j } : j)))
         } else {
           setJobs([
-            ...jobs,
             { id: data.data?.id || Date.now(), ...formData, ngay_dang: new Date().toISOString().split("T")[0] },
+            ...jobs
           ])
         }
         setShowForm(false)

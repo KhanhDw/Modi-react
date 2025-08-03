@@ -1,4 +1,3 @@
-"use client"
 import AdminLayout from "../../components/admin/AdminLayout";
 import PageHeader from "../../components/admin/common/PageHeader";
 import Table from "../../components/admin/common/Table";
@@ -60,9 +59,12 @@ export default function ServicesPage() {
       .then((response) => response.json())
       .then((data) => {
         if (editingService) {
-          setServices(services.map((s) => (s.id === editingService.id ? { ...s, ...formData } : s)));
+          setServices(services.map((s) => (s.id === editingService.id ? {  ...formData, ...s, } : s)));
         } else {
-          setServices([...services, { id: data.data?.id || Date.now(), ...formData, ngay_tao: new Date().toISOString().split("T")[0] }]);
+          setServices([
+            { id: data.data?.id || Date.now(), ...formData, ngay_tao: new Date().toISOString().split("T")[0] }],
+            ...services, 
+          );
         }
         setShowForm(false);
       })

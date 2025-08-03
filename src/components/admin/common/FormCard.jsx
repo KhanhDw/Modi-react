@@ -1,5 +1,3 @@
-"use client"
-
 export default function FormCard({ title, onClose, children }) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-6">

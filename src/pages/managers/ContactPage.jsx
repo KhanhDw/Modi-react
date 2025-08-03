@@ -1,4 +1,3 @@
-"use client"
 import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
@@ -60,10 +59,10 @@ export default function ContactPage() {
       .then((response) => response.json())
       .then(() => {
         setContacts((prev) =>
-          prev.map((c) => (c.id === id ? { ...c, trang_thai: newStatus } : c))
+          prev.map((c) => (c.id === id ? { trang_thai: newStatus,  ...c, } : c))
         )
         if (showDetail && showDetail.id === id) {
-          setShowDetail({ ...showDetail, trang_thai: newStatus })
+          setShowDetail({  trang_thai: newStatus, ...showDetail, })
         }
       })
       .catch((error) => console.error('Lỗi khi cập nhật trạng thái:', error))
