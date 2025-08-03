@@ -9,6 +9,7 @@ import News from '../pages/newsPage'
 import Contact from '../pages/contactPage'
 import Recruitment from '../pages/recruitmentPage'
 import NotFound from '../pages/notFoundPage'
+import NewsDetail from '../pages/detailNewsPage'
 
 //admin
 import ManagerDashboard from "../pages/managers/DashboardPage"
@@ -23,6 +24,7 @@ import TermsOfServicePage from "../pages/TermsOfServicePage"
 
 const publicRoutes = [
     {path: "/", component: Home, layout: DefaultLayout },
+    {path: "/1", component: NewsDetail, layout: DefaultLayout },
     {path: "/about", component: About, layout:DefaultLayout  },
     {path: "/services", component: Services, layout:DefaultLayout  },
     {path: "/news", component: News, layout:DefaultLayout  },
@@ -30,6 +32,9 @@ const publicRoutes = [
     {path: "/careers", component: Recruitment, layout:DefaultLayout  },
     {path: "/terms-of-services", component: TermsOfServicePage, layout:DefaultLayout  },
     {path: "*", component: NotFound, layout:NoneHeaderFooterLayout  },
+
+    // redirect /managers -> /managers/dashboard
+    { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
 
     //admin routes
     {path: "/managers/dashboard", component: ManagerDashboard},

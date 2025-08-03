@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import CaptchaImage from '../components/feature/CaptchaImage';
+import { useFetcher } from "react-router-dom";
 
 // Trạng thái ban đầu của form
 const initialFormState = {
@@ -52,6 +53,9 @@ export default function ContactPage() {
       return () => clearTimeout(timer)
     }
   }, [formSubmitted])
+
+
+  
 
   return (
     <div className=" dark:bg-slate-900 text-gray-900 dark:text-slate-200 py-10 px-4 sm:px-6 lg:px-8 2xl:py-5 transition-colors duration-300">
