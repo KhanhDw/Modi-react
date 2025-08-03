@@ -156,7 +156,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     { id: 3, name: t("header.services.title"), link: '/services' },
     { id: 4, name: t("header.news.title"), link: '/news' },
     { id: 5, name: t("header.contact.title"), link: '/contact' },
-    { id: 6, name: t("header.recruitment.title"), link: '/recruitment' },
+    { id: 6, name: t("header.recruitment.title"), link: '/careers' },
   ];
 
   return (

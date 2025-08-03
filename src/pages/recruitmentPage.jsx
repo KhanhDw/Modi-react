@@ -125,7 +125,7 @@ const jobs = [
 
 function JobItem({ job }) {
   return (
-    <div className="p-6 border-l-4 border-l-blue-500 mb-6 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 dark:border-2  dark:hoaver:border-violet-600">
+    <div className="p-6 border-l-4 border-t-2 border-r-2 border-b-2 rounded-tr-2xl rounded-br-2xl  border-l-blue-500 mb-6 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 dark:border-2  dark:hoaver:border-violet-600">
       <div className="flex flex-col space-y-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">

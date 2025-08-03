@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import CaptchaImage from '../components/feature/CaptchaImage';
-import { useFetcher } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
+import getServiceBySlug from '../utils/slugData.jsx';
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 
 // Trạng thái ban đầu của form
 const initialFormState = {
@@ -12,6 +14,15 @@ const initialFormState = {
 }
 
 export default function ContactPage() {
+
+  const { t } = useLanguage();
+
+
+  const [searchParams] = useSearchParams();
+  const serviceOrderURL = getServiceBySlug(searchParams.get('service-order')) ? getServiceBySlug(searchParams.get('service-order')).name : "";
+
+
+
   const [formData, setFormData] = useState(initialFormState)
   const [formSubmitted, setFormSubmitted] = useState(false)
 
@@ -55,7 +66,10 @@ export default function ContactPage() {
   }, [formSubmitted])
 
 
-  
+
+
+
+
 
   return (
     <div className=" dark:bg-slate-900 text-gray-900 dark:text-slate-200 py-10 px-4 sm:px-6 lg:px-8 2xl:py-5 transition-colors duration-300">
@@ -70,7 +84,7 @@ export default function ContactPage() {
               onClick={() => setFormSubmitted(false)}
               className="mt-6 px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition"
             >
-              Đóng
+              {t("contactPage.contextBtnModalInformation")}
             </button>
           </div>
         </div>
@@ -84,11 +98,17 @@ export default function ContactPage() {
           <div className="space-y-4">
             <p className="text-sm text-red-600 dark:text-red-400 uppercase tracking-wider font-semibold">liên hệ với chúng tôi</p>
             <h1 className="text-2xl sm:text-xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
-              Công Ty ?? Modi
+              {t("contactPage.nameCompany")}
             </h1>
-            <p className="text-gray-600 dark:text-slate-400 text-base sm:text-md leading-relaxed">
-              Mọi thắc mắc và yêu cầu cần hỗ trợ từ chúng tôi, vui lòng để lại thông tin tại đây.
+            <p className="text-gray-600 dark:text-slate-400  sm:text-sm leading-relaxed">
+              {t("contactPage.description")}
             </p>
+            {serviceOrderURL && (
+              <div className="text-center text-gray-600 dark:text-slate-400 text-base sm:text-lg font-bold leading-relaxed border-2 border-red-500 dark:border-red-400 rounded-lg p-2">
+                <span className="block sm:inline">{t("contactPage.titleOrderName")}: </span>
+                <span className="block sm:inline dark:text-amber-300 text-red-500">{serviceOrderURL}</span>
+              </div>)
+            }
           </div>
 
 
@@ -99,7 +119,7 @@ export default function ContactPage() {
                 <input
                   type="text"
                   name="name"
-                  placeholder="Họ tên (*)"
+                  placeholder={t("contactPage.inputName")+`(*)`}
                   value={formData.name}
                   onChange={handleInputChange}
                   required
@@ -108,7 +128,7 @@ export default function ContactPage() {
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="Điện thoại (*)"
+                  placeholder={t("contactPage.inputPhoneNumber")+`(*)`}
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
@@ -132,7 +152,7 @@ export default function ContactPage() {
                 <input
                   type="text"
                   name="securityCode"
-                  placeholder="Mã bảo mật (*)"
+                  placeholder={t("contactPage.inputPin")+`(*)`}
                   value={formData.securityCode}
                   onChange={handleInputChange}
                   required
@@ -140,14 +160,14 @@ export default function ContactPage() {
                 />
                 <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-2 rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
                   <div className="w-full h-12 rounded-lg">
-                     <CaptchaImage captchaText={captchaText} />
+                    <CaptchaImage captchaText={captchaText} />
                   </div>
                 </div>
               </div>
 
               <textarea
                 name="message"
-                placeholder="Nội dung (*)"
+                placeholder={t("contactPage.inputContext")}
                 value={formData.message}
                 onChange={handleInputChange}
                 required

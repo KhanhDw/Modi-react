@@ -1,5 +1,6 @@
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import slugify from '../../utils/slug';
 
 
 // các gói dịch vụ chính của công ty?
@@ -7,6 +8,13 @@ const PricingCard = ({ title, price, features, isPopular = false }) => {
     const { t } = useLanguage();
     const popularClasses = 'relative border-2 border-purple-500 dark:border-purple-400 md:scale-105';
     const normalClasses = 'border border-slate-200 dark:border-slate-700';
+
+    const navigate = useNavigate();
+
+    const defineButtonOrderActive = (titleBtn) => {
+        navigate(`/contact?service-order=${slugify(titleBtn)}`);
+    };
+
 
     return (
         <div className={`w-full max-w-sm flex flex-col p-8 bg-white dark:bg-slate-800 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-purple-500/10 hover:border-purple-500 dark:hover:border-purple-400 ${isPopular ? popularClasses : normalClasses}`}>
@@ -24,7 +32,7 @@ const PricingCard = ({ title, price, features, isPopular = false }) => {
                     </li>
                 ))}
             </ul>
-            <button className="mt-8 w-full font-bold py-3 px-6 rounded-lg text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/40 transition-all duration-300">
+            <button onClick={() => defineButtonOrderActive(title)} className="mt-8 w-full font-bold py-3 px-6 rounded-lg text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/40 transition-all duration-300">
                 {t("home.PricingPage.buttonOrderNow")}
             </button>
         </div>
@@ -125,6 +133,12 @@ export default function PricingPage() {
         ],
     };
 
+const navigate = useNavigate();
+
+    const defineButtonOrderActive = (titleBtn) => {
+        navigate(`/contact?service-order=${slugify(titleBtn)}`);
+    };
+
     return (
         <div className="bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-30 w-full">
             <div className="container mx-auto px-4 py-16 md:py-24">
@@ -185,9 +199,9 @@ export default function PricingPage() {
                 <footer className="text-center mt-20 md:mt-24 p-10 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{t("home.PricingPage.footer.title")}</h3>
                     <p className="mt-2 mb-6 text-slate-600 dark:text-slate-400">{t("home.PricingPage.footer.description")}</p>
-                    <Link  to="/contact" className="inline-block mr-4 text-blue-500 hover:underline">
-                        <button className="font-bold py-3 px-8 rounded-lg text-white bg-gradient-to-r from-teal-400 to-blue-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-teal-500/40 transition-all duration-300">{t("home.PricingPage.footer.button")}</button>
-                    </Link>
+                    
+                        <button  onClick={() => defineButtonOrderActive(t("home.PricingPage.footer.button"))} className="font-bold py-3 px-8 rounded-lg text-white bg-gradient-to-r from-teal-400 to-blue-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-teal-500/40 transition-all duration-300">{t("home.PricingPage.footer.button")}</button>
+                    
                 </footer>
             </div>
         </div>

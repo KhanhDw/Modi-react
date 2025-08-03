@@ -1,3 +1,5 @@
+import { title } from "framer-motion/client";
+
 export default {
     header: {
         home: { title: "Trang Chủ" },
@@ -425,6 +427,17 @@ export default {
             emailValue: "info@canhcam.vn"
         }
 
-    }
+    },
+    contactPage: {
+        title: "liên hệ với chúng tôi",
+        nameCompany: "CÔNG TY TNHH TƯ VẤN THIẾT KẾ PHẦN MỀM MỘC ĐIỀN",
+        description: "Mọi thắc mắc và yêu cầu cần hỗ trợ từ chúng tôi, vui lòng để lại thông tin tại đây.",
+        titleOrderName: "Gói dịch vụ đặt hàng",
+        inputName: "Họ tên",
+        inputPhoneNumber: "Điện thoại",
+        inputPin: "Mã bảo mật",
+        inputContext: "Nội dung", 
+        contextBtnModalInformation: "Đóng",
+    },
 
 };

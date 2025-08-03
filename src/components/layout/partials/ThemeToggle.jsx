@@ -49,6 +49,9 @@ const Globe = ({ className }) => (
 
 export default function ThemeToggle() {
   const location = useLocation()
+const params = new URLSearchParams(location.search);
+
+const isServiceOrder = params.has("service-order");
 
   const { isDark, toggleTheme } = useTheme()
   const { language, toggleLanguage } = useLanguage()
@@ -73,8 +76,9 @@ export default function ThemeToggle() {
 
       {/* Language Toggle Button */}
       <button
+        disabled={isServiceOrder}
         onClick={toggleLanguage}
-        className={`p-3 w-20 rounded-full border transition-all duration-300 hover:scale-110 flex items-center justify-center space-x-2 
+        className={`${isServiceOrder? "cursor-not-allowed opacity-50":""} p-3 w-20 rounded-full border transition-all duration-300 hover:scale-110 flex items-center justify-center space-x-2 
         ${isDark
               ? 'bg-white/10 border-white/20 text-white hover:bg-white/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
               : 'bg-black/10 border-black/20 text-black hover:bg-black/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'

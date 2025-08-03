@@ -433,5 +433,15 @@ export default {
             emailLabel: "Email:",
             emailValue: "info@canhcam.vn"
         }
-    }
+    },
+    contactPage: {
+        title: "Contact Us",
+        nameCompany: "MOC DIEN SOFTWARE DESIGN CONSULTING COMPANY LIMITED",
+        description: "For any questions and requests for support from us, please leave your information here.",
+        titleOrderName: "Order Package",
+        inputName: "Full Name",
+        inputPhoneNumber: "Phone",
+        inputPin: "Security Code",
+        inputContext: "Content",
+    },
 };
