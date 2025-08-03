@@ -1,6 +1,6 @@
 
 import {DefaultLayout, HeaderOnlyLayout, NoneHeaderFooterLayout} from "../components/layout"
-
+import {Navigate} from "react-router-dom"
 
 import Home from "../pages/homePage"
 import About from "../pages/aboutMePage"
