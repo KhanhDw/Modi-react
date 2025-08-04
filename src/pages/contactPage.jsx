@@ -6,11 +6,11 @@ import { useLanguage } from "../contexts/LanguageContext.jsx";
 
 // Trạng thái ban đầu của form
 const initialFormState = {
-  name: "",
-  phone: "",
+  ho_ten: "",
+  so_dien_thoai: "",
   email: "",
   securityCode: "",
-  message: "",
+  noi_dung: "",
 }
 
 export default function ContactPage() {
@@ -42,8 +42,10 @@ export default function ContactPage() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    
     // Thư viện cung cấp hàm xác thực
     if (formData.securityCode.trim().toLowerCase() === captchaText.toLowerCase()) {
       // Xử lý thành công
@@ -55,6 +57,23 @@ export default function ContactPage() {
       setFormData(prev => ({ ...prev, securityCode: "" }));
       setCaptchaText(generateCaptcha());
     }
+
+     try {
+      const response = await fetch('http://localhost:3000/api/lienhe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+      console.log('Kết quả từ server:', data);
+      alert(data.message);
+    } catch (error) {
+      console.error('Lỗi khi gửi dữ liệu:', error);
+    }
+
   }
 
   // Tự động đóng modal sau 3 giây
@@ -64,10 +83,6 @@ export default function ContactPage() {
       return () => clearTimeout(timer)
     }
   }, [formSubmitted])
-
-
-
-
 
 
 
@@ -119,18 +134,18 @@ export default function ContactPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input
                   type="text"
-                  name="name"
+                  name="ho_ten"
                   placeholder={t("contactPage.inputName")+`(*)`}
-                  value={formData.name}
+                  value={formData.ho_ten}
                   onChange={handleInputChange}
                   required
                   className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition"
                 />
                 <input
                   type="tel"
-                  name="phone"
+                  name="so_dien_thoai"
                   placeholder={t("contactPage.inputPhoneNumber")+`(*)`}
-                  value={formData.phone}
+                  value={formData.so_dien_thoai}
                   onChange={handleInputChange}
                   required
                   className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition"
@@ -167,9 +182,9 @@ export default function ContactPage() {
               </div>
 
               <textarea
-                name="message"
+                name="noi_dung"
                 placeholder={t("contactPage.inputContext")}
-                value={formData.message}
+                value={formData.noi_dung}
                 onChange={handleInputChange}
                 required
                 rows={6}
