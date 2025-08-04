@@ -48,15 +48,11 @@ export default function ServicePage() {
                     {t("servicesPage.intro.description")}
                 </motion.p>
 
-                {/* Danh sách dịch vụ */}
+                {/* Danh sách dịch vụ - KHÔNG animation */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {services.map((service, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1, duration: 0.6 }}
-                            viewport={{ once: true }}
+                    {services.map((service) => (
+                        <div
+                            key={service.slug}
                             className="relative bg-white dark:bg-[#1f1f1f] p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/40 to-transparent dark:from-blue-900/20 z-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
@@ -96,7 +92,7 @@ export default function ServicePage() {
                                     </Link>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
             </div>
