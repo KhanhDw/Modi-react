@@ -433,5 +433,195 @@ export default {
             emailLabel: "Email:",
             emailValue: "info@canhcam.vn"
         }
+    },
+    servicesPage: {
+        banner: {
+            title: "Services",
+            breadcrumbHome: "Home"
+        },
+        intro: {
+            heading: "Services",
+            description:
+                "We offer a variety of service packages, from website upgrades and new website development to management solutions and online business growth."
+        },
+        servicePrice: "Service Price",
+        detailTitle: "Service Details",
+        services: [
+            {
+                id: "re-vision",
+                slug: "re-vision",
+                title: "RE:VISION",
+                subtitle: "Upgrade Existing Website",
+                features: [
+                    "Free 1-on-1 upgrade consultation",
+                    "Upgrade old source code to current standards",
+                    "Integrate tools and installment plans",
+                    "Improve SEO quality scores",
+                    "Enhance user experience (UX/UI)",
+                    "Training and handover guidance",
+                    "Bonus gifts included!!!"
+                ],
+                price: "Package based",
+                btnText: "View Details",
+                details: [
+                    "RE:VISION is a complete solution to upgrade your current website without rebuilding from scratch, ensuring updated technology, modern design, and trend-based functionality. Through a 1-on-1 consultation, our experts will analyze your existing website, assess its strengths and weaknesses, and recommend the most effective upgrade strategy.",
+                    "Upgrades include source code optimization for faster loading, improved SEO scores, and enhanced security. We also integrate modern tools such as online payments, booking systems, and automated chatbots. The user experience is greatly improved through a friendly UI/UX design, increasing visitor retention and conversion rates.",
+                    "Finally, we provide a full system handover with detailed documentation and hands-on training for your team, ensuring you're equipped to confidently manage and grow your site moving forward."
+                ]
+            },
+            {
+                id: "online-kickstart",
+                slug: "online-kickstart",
+                title: "Online Kickstart",
+                subtitle: "Basic Introductory Website",
+                features: [
+                    "Custom designed introductory website",
+                    "Responsive design",
+                    ".vn / .com domain for 1 year",
+                    "High-speed SSD hosting for 12 months",
+                    "Google Analytics and Google Maps integration",
+                    "HTTPS SSL installation"
+                ],
+                price: "From 1.5M–3M VND",
+                btnText: "View Details",
+                details: [
+                    "The Online Kickstart package is perfect for individuals or small businesses looking to quickly launch a professional brand website at a reasonable cost. The site is fully responsive, ensuring optimal display on all devices from desktops to smartphones.",
+                    "You’ll receive a free .vn or .com domain valid for one year, along with fast and reliable SSD hosting. HTTPS SSL is included for enhanced security and trust.",
+                    "We also integrate key tools like Google Analytics for tracking site performance, and Google Maps to help customers easily find your location. This is a solid foundation to begin building your online presence and expanding your market reach."
+                ]
+            },
+            {
+                id: "one-me",
+                slug: "one-me",
+                title: "One-Me",
+                subtitle: "Custom Design",
+                features: [
+                    "Free 1:1 consulting",
+                    "Exclusive personal website design",
+                    "Integration of personalized support tools",
+                    "Free domain + hosting for 1 year",
+                    "Basic SEO setup & usage guidance",
+                    "Bonus gifts included!!!"
+                ],
+                price: "Package based",
+                btnText: "View Details",
+                details: [
+                    "One-Me is a personalized web design package tailored for individuals, influencers, freelancers, or small businesses looking to showcase their unique identity. We provide a free 1-on-1 consultation to understand your vision and goals.",
+                    "The website is custom-designed with no templates or duplication, and includes features like blogs, portfolios, or interactive tools depending on your needs. A free domain and 1-year hosting are included to reduce startup costs and enhance user experience.",
+                    "We also offer basic SEO setup to increase your visibility on search engines and provide detailed documentation to help you manage the site confidently—even with minimal technical background."
+                ]
+            },
+            {
+                id: "brand-building",
+                slug: "brand-building",
+                title: "Brand Building",
+                subtitle: "Trend-based Branding",
+                features: [
+                    "Modern corporate website",
+                    "Professional logo design",
+                    "Complete brand identity kit",
+                    "3 promotional service banners",
+                    "SSD hosting + domain + business email",
+                    "Basic SEO setup + site performance optimization"
+                ],
+                price: "From 4M–10M VND",
+                btnText: "View Details",
+                details: [
+                    "This service provides a comprehensive solution for building and developing your online brand. It includes a modern business website, a professional logo, and a cohesive brand identity kit.",
+                    "We design three custom banners to highlight your key services and attract your target audience. The package also includes high-speed SSD hosting, a domain, and business email to boost credibility.",
+                    "Basic SEO configuration and speed optimization are included to ensure your website not only looks great but also ranks well on Google and performs efficiently across all devices."
+                ]
+            },
+            {
+                id: "online-store",
+                slug: "online-store",
+                title: "Online Store",
+                subtitle: "Smart Shop",
+                features: [
+                    "E-commerce website with shopping cart & online payment",
+                    "Product, order, and customer management",
+                    "Payment integration (VNPay, Momo, COD...)",
+                    "Shipping integration (GHTK, GHN...)",
+                    "5 promotional banners",
+                    "Admin system training",
+                    "Sample SEO setup for 5 products"
+                ],
+                price: "From 8M–16M VND",
+                btnText: "View Details",
+                details: [
+                    "Smart Shop is designed for businesses looking to build a fully functional and professional online store. The website includes a shopping cart and supports popular payment gateways like VNPay, Momo, and Cash on Delivery.",
+                    "You’ll have powerful tools for managing products, orders, and customers, plus seamless shipping integration with trusted services like GHN and GHTK for timely deliveries.",
+                    "The package also includes five custom promotional banners, training on how to manage the system, and SEO setup for your first five products to help you attract traffic and generate sales."
+                ]
+            },
+            {
+                id: "service-booking",
+                slug: "service-booking",
+                title: "Service Booking",
+                subtitle: "Smart Booking",
+                features: [
+                    "Service website with team introduction",
+                    "Online booking by date/time",
+                    "Automated email confirmations",
+                    "Promotional landing page design",
+                    "Google Business setup + keyword SEO",
+                    "3 professional banners + custom icon set"
+                ],
+                price: "From 14M–22M VND",
+                btnText: "View Details",
+                details: [
+                    "Smart Booking is the ideal solution for spas, clinics, salons, or any appointment-based service provider. Your website will professionally present your team and services to build client trust.",
+                    "Customers can schedule appointments via a dynamic booking system with real-time email confirmations, reducing errors and enhancing user experience. A promotional landing page is also included to run marketing campaigns effectively.",
+                    "We handle your Google Business setup and implement keyword-based SEO to improve visibility on search engines. The branding is completed with custom-designed banners and a matching icon set for consistency and professionalism."
+                ]
+            },
+            {
+                id: "comprehensive-management",
+                slug: "comprehensive-management",
+                title: "Comprehensive Management",
+                subtitle: "Mini ERP",
+                features: [
+                    "Company introduction website",
+                    "Task and deadline management system",
+                    "Basic HR tools (attendance, payroll)",
+                    "Simple CRM system",
+                    "Company email + internal admin subdomain",
+                    "1:1 system usage training"
+                ],
+                price: "From 25M–50M VND",
+                btnText: "View Details",
+                details: [
+                    "Mini ERP is an integrated business management solution combining your corporate website with internal systems for task management, HR, and customer relations.",
+                    "Task and deadline management helps you monitor project progress easily.",
+                    "HR tools automate attendance tracking and payroll, while the CRM system supports better customer care.",
+                    "Includes company email and a secure subdomain for internal administration.",
+                    "We provide 1-on-1 training to help your team use the system quickly and effectively."
+                ]
+            },
+            {
+                id: "website-app",
+                slug: "website-app",
+                title: "Website + App",
+                subtitle: "Web & Mobile Sync",
+                features: [
+                    "E-commerce or service website",
+                    "Mobile apps (iOS & Android) synced with website",
+                    "Login, order management, notifications",
+                    "Real-time data synchronization between web and app",
+                    "Third-party integrations (chat, maps, etc.)"
+                ],
+                price: "From 35M–60M VND",
+                btnText: "View Details",
+                details: [
+                    "The Website + App package creates a synchronized digital ecosystem across your website and mobile applications (iOS & Android).",
+                    "Features like login, order management, and notifications sync in real-time, providing a seamless user experience.",
+                    "Product, order, and customer data automatically sync between platforms, reducing errors and saving management time.",
+                    "The system is customizable to your needs and supports long-term growth.",
+                    "Includes integration with third-party tools such as live chat and maps for better user interaction and convenience."
+                ]
+            }
+        ]
     }
+
+
 };

@@ -24,27 +24,24 @@ export default function Mission() {
           <div className="inline-flex items-center space-x-3 mb-8">
             <Lightbulb className="w-10 h-10 text-yellow-400" />
             <h2
-              className={`text-4xl md:text-5xl font-bold transition-colors duration-500 ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
+              className={`text-4xl md:text-5xl font-bold transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900"
+                }`}
             >
               {t("about.ourMission")}
             </h2>
           </div>
 
           <div
-            className={`rounded-3xl p-12 border max-w-5xl mx-auto relative overflow-hidden transition-all duration-500 ${
-              isDark ? "bg-slate-800/50 border-slate-700" : "bg-gradient-to-r from-cyan-50 to-purple-50 border-gray-200"
-            }`}
+            className={`rounded-3xl p-12 border max-w-5xl mx-auto relative overflow-hidden transition-all duration-500 ${isDark ? "bg-slate-800/50 border-slate-700" : "bg-gradient-to-r from-cyan-50 to-purple-50 border-gray-200"
+              }`}
           >
             {/* Decorative elements */}
             <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-r from-cyan-400/20 to-purple-400/20 rounded-full blur-xl"></div>
             <div className="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-r from-pink-400/20 to-yellow-400/20 rounded-full blur-xl"></div>
 
             <blockquote
-              className={`text-2xl md:text-4xl font-bold mb-8 leading-relaxed relative z-10 transition-colors duration-500 ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
+              className={`text-2xl md:text-4xl font-bold mb-8 leading-relaxed relative z-10 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900"
+                }`}
             >
               <span className="text-6xl text-cyan-400 opacity-50 absolute -top-4 -left-2">"</span>
               {t("about.missionQuote")}
@@ -54,9 +51,8 @@ export default function Mission() {
             <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-8"></div>
 
             <p
-              className={`text-lg md:text-xl leading-relaxed relative z-10 transition-colors duration-500 ${
-                isDark ? "text-gray-300" : "text-gray-600"
-              }`}
+              className={`text-lg md:text-xl leading-relaxed relative z-10 transition-colors duration-500 ${isDark ? "text-gray-300" : "text-gray-600"
+                }`}
             >
               {t("about.missionDescription")}
             </p>
@@ -73,11 +69,10 @@ export default function Mission() {
           ].map((stat, index) => (
             <div
               key={index}
-              className={`rounded-xl p-6 border transition-all duration-500 hover:scale-105 group ${
-                isDark
-                  ? "bg-slate-800/50 border-slate-700 hover:bg-slate-800/70"
-                  : "bg-white border-gray-200 hover:bg-gray-50 shadow-sm hover:shadow-md"
-              }`}
+              className={`rounded-xl p-6 border transition-all duration-500 hover:scale-105 group ${isDark
+                ? "bg-slate-800/50 border-slate-700 hover:bg-slate-800/70"
+                : "bg-white border-gray-200 hover:bg-gray-50 shadow-sm hover:shadow-md"
+                }`}
             >
               <div
                 className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform`}
