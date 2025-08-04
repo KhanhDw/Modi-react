@@ -1,17 +1,17 @@
 import { useState } from "react"
-import AdminSidebar from "./AdminSidebar"
+import AdminSidebar from "../../admin/AdminSidebar"
 import { Link } from "react-router-dom"
 
 export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
+      <div className="flex-1 flex flex-col  lg:ml-64">
         {/* Mobile menu button */}
         <div className="lg:hidden p-4 bg-white flex items-center justify-between">
           <button

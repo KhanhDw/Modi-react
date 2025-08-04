@@ -1,5 +1,5 @@
 
-import { DefaultLayout, HeaderOnlyLayout, NoneHeaderFooterLayout } from "../components/layout"
+import { DefaultLayout, HeaderOnlyLayout, NoneHeaderFooterLayout, AdminLayout } from "../components/layout"
 import { Navigate } from "react-router-dom"
 
 import Home from "../pages/homePage"
@@ -46,11 +46,11 @@ const privateRoutes = [
     { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
 
     //admin routes
-    { path: "/managers/dashboard", component: ManagerDashboard },
-    { path: "/managers/services", component: ManagerServices },
-    { path: "/managers/news", component: ManagerNews },
-    { path: "/managers/recruitment", component: ManagerRecruitment },
-    { path: "/managers/contact", component: ManagerContact },
+    { path: "/managers/dashboard", component: ManagerDashboard,  layout: AdminLayout },
+    { path: "/managers/services", component: ManagerServices,  layout: AdminLayout },
+    { path: "/managers/news", component: ManagerNews,  layout: AdminLayout },
+    { path: "/managers/recruitment", component: ManagerRecruitment,  layout: AdminLayout },
+    { path: "/managers/contact", component: ManagerContact,  layout: AdminLayout },
 
 ]
 

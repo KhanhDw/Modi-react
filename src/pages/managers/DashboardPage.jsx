@@ -1,4 +1,3 @@
-import AdminLayout from "../../components/admin/AdminLayout"
 
 export default function DashboardPage() {
   const stats = [
@@ -9,7 +8,6 @@ export default function DashboardPage() {
   ]
 
   return (
-    <AdminLayout>
       <div className="p-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Tổng quan hệ thống</h1>
 
@@ -51,6 +49,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-    </AdminLayout>
+
   )
 }

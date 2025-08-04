@@ -1,4 +1,4 @@
-import AdminLayout from "../../components/admin/AdminLayout";
+
 import PageHeader from "../../components/admin/common/PageHeader";
 import Table from "../../components/admin/common/Table";
 import ServiceForm from "../../components/admin/services/ServiceForm";
@@ -72,7 +72,7 @@ export default function ServicesPage() {
   };
 
   return (
-    <AdminLayout>
+  
       <div className="p-6">
         <PageHeader title="Quản lý dịch vụ" buttonText="Thêm dịch vụ" onButtonClick={handleAdd} />
 
@@ -82,6 +82,6 @@ export default function ServicesPage() {
 
         <Table columns={columns} data={services} onEdit={handleEdit} onDelete={handleDelete} />
       </div>
-    </AdminLayout>
+
   );
 }

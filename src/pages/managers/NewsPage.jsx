@@ -1,4 +1,3 @@
-import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
 import NewsForm from "../../components/admin/news/NewsForm"
@@ -76,7 +75,6 @@ export default function NewsPage() {
   }
 
   return (
-    <AdminLayout>
       <div className="p-6">
         <PageHeader title="Quản lý tin tức" buttonText="Thêm tin tức" onButtonClick={handleAdd} />
 
@@ -90,6 +88,5 @@ export default function NewsPage() {
 
         <Table columns={columns} data={news} onEdit={handleEdit} onDelete={handleDelete} />
       </div>
-    </AdminLayout>
   )
 }

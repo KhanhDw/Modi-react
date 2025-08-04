@@ -14,11 +14,13 @@ function App() {
   useEffect(() => {
     // Initialize Lenis
     lenis.current = new Lenis({
-      duration: 0.6, // Control the duration of the scroll
+      duration: 0.9, // Control the duration of the scroll
       easing: (t) => 1 - Math.pow(1 - t, 3), // Cubic easing for smooth stop
       smooth: true,
       smoothTouch: true, // Enable smooth scrolling on touch devices
+      // orientation: 'vertical',
     });
+
 
     const animate = (time) => {
       lenis.current.raf(time);
@@ -26,6 +28,9 @@ function App() {
     };
 
     requestAnimationFrame(animate);
+
+
+    window.__lenis = lenis.current; // 👈 Gán vào window để hook có thể truy cập
 
     // Cleanup on unmount
     return () => {

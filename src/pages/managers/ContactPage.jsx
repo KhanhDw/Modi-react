@@ -1,4 +1,3 @@
-import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
 import ContactDetail from "../../components/admin/contact/ContactDetail"
@@ -73,7 +72,7 @@ export default function ContactPage() {
   }`
 
   return (
-    <AdminLayout>
+    
       <div className="p-6">
         <PageHeader title="Quản lý liên hệ" extra={extraInfo} />
         <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} />
@@ -84,6 +83,6 @@ export default function ContactPage() {
           onStatusChange={handleStatusChange}
         />
       </div>
-    </AdminLayout>
+    
   )
 }

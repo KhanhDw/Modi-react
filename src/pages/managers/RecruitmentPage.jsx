@@ -1,4 +1,3 @@
-import AdminLayout from "../../components/admin/AdminLayout"
 import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
 import RecruitmentForm from "../../components/admin/recruitment/RecruitmentForm"
@@ -75,7 +74,7 @@ export default function RecruitmentPage() {
   }
 
   return (
-    <AdminLayout>
+    
       <div className="p-6">
         <PageHeader title="Quản lý tuyển dụng" buttonText="Thêm tin tuyển dụng" onButtonClick={handleAdd} />
 
@@ -89,6 +88,6 @@ export default function RecruitmentPage() {
 
         <Table columns={columns} data={jobs} onEdit={handleEdit} onDelete={handleDelete} />
       </div>
-    </AdminLayout>
+    
   )
 }
