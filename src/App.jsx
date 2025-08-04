@@ -1,6 +1,7 @@
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
 import { Suspense } from "react"
-import { publicRoutes } from "./routes";
+import { publicRoutes, privateRoutes } from "./routes";
+import PrivateRoute from "./components/guardRouter/PrivateRoute";
 import Lenis from 'lenis';
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
@@ -55,6 +56,23 @@ function App() {
                       </Layout>
                     }
                   />
+                );
+              })}
+              {privateRoutes.map((router, index) => {
+                const Page = router.component;
+                const Layout = router.layout || (({ children }) => <>{children}</>);
+
+                return (
+                  <Route
+                    key={"private" + index}
+                    path={router.path}
+                    element={
+                      <PrivateRoute>
+                        <Layout>
+                          <Page />
+                        </Layout>
+                      </PrivateRoute>
+                    } />
                 );
               })}
             </Routes>
