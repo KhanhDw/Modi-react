@@ -440,5 +440,16 @@ export default {
         contextBtnModalInformation: "Đóng",
         btnSendContact: "Gửi Liên Hệ",
     },
+    careers: {
+        title: "Cơ hội việc làm",
+        slogan: "Hãy gia nhập đội ngũ của chúng tôi và cùng nhau xây dựng tương lai",
+        position: "Vị trí đang tuyển dụng",
+        Requirements: "Yêu cầu",
+        Benefits: "Phúc lợi",
+        btnApply: "Ứng tuyển ngay",
+        footer: {
+            title: "Không tìm được vị trí phù hợp? Hãy gửi CV của bạn cho chúng tôi tại ",
+        }
+    }
 
 };

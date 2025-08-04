@@ -1,4 +1,5 @@
 import { MapPin, Clock, DollarSign, Users, Briefcase } from "lucide-react"
+import {useLanguage} from '../contexts/LanguageContext'
 
 const jobs = [
   {
@@ -124,6 +125,9 @@ const jobs = [
 ]
 
 function JobItem({ job }) {
+
+  const {t} = useLanguage()
+
   return (
     <div className="p-6 border-l-4 border-t-2 border-r-2 border-b-2 rounded-tr-2xl rounded-br-2xl  border-l-blue-500 mb-6 transition-all duration-200 hover:shadow-lg bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 dark:border-2  dark:hoaver:border-violet-600">
       <div className="flex flex-col space-y-4">
@@ -163,7 +167,7 @@ function JobItem({ job }) {
 
         {/* Requirements */}
         <div>
-          <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Requirements:</h3>
+          <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">{t("careers.Requirements")}:</h3>
           <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
             {job.requirements.map((req, index) => (
               <li key={index} className="flex items-start gap-2">
@@ -176,7 +180,7 @@ function JobItem({ job }) {
 
         {/* Benefits */}
         <div>
-          <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Benefits:</h3>
+          <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">{t("careers.Benefits")}:</h3>
           <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
             {job.benefits.map((benefit, index) => (
               <li key={index} className="flex items-start gap-2">
@@ -190,7 +194,7 @@ function JobItem({ job }) {
         {/* Apply Button */}
         <div className="pt-2">
           <button className="px-6 py-2 rounded-lg font-medium transition-colors duration-200 bg-blue-600 hover:bg-blue-700 text-white">
-            Apply Now
+            {t("careers.btnApply")}
           </button>
         </div>
       </div>
@@ -199,16 +203,20 @@ function JobItem({ job }) {
 }
 
 export default function RecruitmentPage() {
+
+  const {t} = useLanguage()
+
+
   return (
     <div className="min-h-screen transition-colors duration-300 bg-slate-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Page Title */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Career Opportunities</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">Join our team and build the future together</p>
+          <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">{t("careers.title")}</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300">{t("careers.slogan")}</p>
           <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-500 dark:text-gray-400">
             <Users className="w-4 h-4" />
-            <span>{jobs.length} positions available</span>
+            <span>{jobs.length} {t("careers.position")}</span>
           </div>
         </div>
 
@@ -222,7 +230,7 @@ export default function RecruitmentPage() {
         {/* Bottom Info */}
         <div className="text-center mt-12 p-6 rounded-lg bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300">
           <p className="text-sm">
-            {"Can't find the right position? Send us your CV at "}
+            {t("careers.footer.title")}
             <a href="mailto:careers@company.com" className="text-blue-500 hover:underline">
               careers@company.com
             </a>

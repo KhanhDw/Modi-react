@@ -1,7 +1,6 @@
-"use client"
-
 import { useState } from "react"
 import AdminSidebar from "./AdminSidebar"
+import { Link } from "react-router-dom"
 
 export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -14,7 +13,7 @@ export default function AdminLayout({ children }) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
         {/* Mobile menu button */}
-        <div className="lg:hidden p-4 bg-white">
+        <div className="lg:hidden p-4 bg-white flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -23,6 +22,9 @@ export default function AdminLayout({ children }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
+          <div>
+            <Link to={"/"} className="text-xl font-bold text-gray-900 bg-green-100 border-1 rounded-xl p-2">Về trang chủ</Link>
+          </div>
         </div>
 
         {/* Page Content */}

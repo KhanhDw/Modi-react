@@ -446,4 +446,15 @@ export default {
         btnSendContact: "Send contact",
 
     },
+    careers: {
+        title: "Career Opportunities",
+        slogan: "Join our team and build the future together",
+        position: "positions available",
+        Requirements: "Requirements",
+        Benefits: "Benefits",
+        btnApply: "Apply now",
+        footer: {
+            title: "Can't find the right position? Send us your CV at ",
+        }
+    }
 };

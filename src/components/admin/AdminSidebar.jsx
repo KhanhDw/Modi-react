@@ -40,6 +40,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
               </Link>
             ))}
           </nav>
+            <Link to={"/"} className="text-xl font-bold text-gray-900 bg-green-100 border-1  p-2">Về trang chủ</Link>
         </div>
       </div>
 
@@ -76,7 +77,9 @@ export default function AdminSidebar({ isOpen, onClose }) {
               </Link>
             ))}
           </nav>
+          
         </div>
+        
       </div>
     </>
   )
