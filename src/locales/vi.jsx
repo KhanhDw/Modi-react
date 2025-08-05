@@ -436,7 +436,7 @@ export default {
         inputName: "Họ tên",
         inputPhoneNumber: "Điện thoại",
         inputPin: "Mã bảo mật",
-        inputContext: "Nội dung", 
+        inputContext: "Nội dung",
         contextBtnModalInformation: "Đóng",
         btnSendContact: "Gửi Liên Hệ",
     },
@@ -450,6 +450,206 @@ export default {
         footer: {
             title: "Không tìm được vị trí phù hợp? Hãy gửi CV của bạn cho chúng tôi tại ",
         }
-    }
+    },
+    servicesPage: {
+        banner: {
+            title: "Dịch vụ",
+            breadcrumbHome: "Trang chủ"
+        },
+        intro: {
+            heading: "Dịch vụ",
+            description:
+                "Chúng tôi cung cấp nhiều gói dịch vụ đa dạng, từ nâng cấp website, phát triển website mới, đến giải pháp quản lý và phát triển kinh doanh trực tuyến."
+        },
+        servicePrice: "Giá dịch vụ",
+        detailTitle: "Chi tiết dịch vụ",
+        services: [
+            {
+                id: "re-vision",
+                slug: "re-vision",
+                title: "RE:VISION",
+                subtitle: "Nâng cấp website hiện có",
+                features: [
+                    "Tư vấn nâng cấp 1:1 miễn phí",
+                    "Nâng cấp mã nguồn cũ lên chuẩn mới",
+                    "Tích hợp công cụ và phương thức trả góp",
+                    "Cải thiện điểm chất lượng SEO",
+                    "Tăng trải nghiệm người dùng (UX/UI)",
+                    "Hướng dẫn chuyển giao và đào tạo",
+                    "Quà tặng hấp dẫn đi kèm!!!"
+                ],
+                price: "Theo gói dịch vụ",
+                btnText: "Xem chi tiết",
+                details: [
+                    "RE:VISION là giải pháp nâng cấp toàn diện website hiện có mà không cần xây dựng lại từ đầu, đảm bảo công nghệ cập nhật, thiết kế hiện đại và tính năng theo xu hướng.",
+                    "Qua buổi tư vấn 1:1, chuyên gia sẽ phân tích website, đánh giá điểm mạnh/yếu, và đề xuất chiến lược nâng cấp hiệu quả nhất.",
+                    "Nâng cấp bao gồm tối ưu mã nguồn giúp tải trang nhanh hơn, cải thiện điểm SEO, và tăng cường bảo mật. Chúng tôi tích hợp các công cụ hiện đại như thanh toán online, đặt lịch, chatbot tự động.",
+                    "Trải nghiệm người dùng được cải thiện rõ rệt với thiết kế UI/UX thân thiện, tăng thời gian ở lại và tỷ lệ chuyển đổi khách hàng.",
+                    "Cuối cùng, bạn sẽ nhận tài liệu chi tiết và đào tạo sử dụng hệ thống để tự tin vận hành và phát triển website."
+                ]
+            },
+            {
+                id: "online-kickstart",
+                slug: "online-kickstart",
+                title: "Khởi Đầu Online",
+                subtitle: "Website giới thiệu cơ bản",
+                features: [
+                    "Thiết kế website giới thiệu cá nhân chuyên nghiệp",
+                    "Thiết kế đáp ứng mọi thiết bị (responsive)",
+                    "Tên miền .vn / .com miễn phí 1 năm",
+                    "Hosting SSD tốc độ cao trong 12 tháng",
+                    "Tích hợp Google Analytics và Google Maps",
+                    "Cài đặt SSL HTTPS bảo mật"
+                ],
+                price: "Từ 1.5M–3M VND",
+                btnText: "Xem chi tiết",
+                details: [
+                    "Gói Khởi Đầu Online phù hợp cá nhân hoặc doanh nghiệp nhỏ muốn xây dựng website thương hiệu nhanh với chi phí hợp lý.",
+                    "Website được thiết kế responsive, hiển thị tối ưu trên mọi thiết bị từ máy tính đến điện thoại.",
+                    "Bạn được tặng tên miền .vn hoặc .com miễn phí 1 năm, hosting SSD nhanh và ổn định, kèm SSL HTTPS đảm bảo an toàn.",
+                    "Tích hợp các công cụ quan trọng như Google Analytics để theo dõi hiệu suất, Google Maps giúp khách hàng tìm địa chỉ dễ dàng.",
+                    "Đây là nền tảng vững chắc để bắt đầu xây dựng sự hiện diện trực tuyến và mở rộng thị trường."
+                ]
+            },
+            {
+                id: "one-me",
+                slug: "one-me",
+                title: "One-Me",
+                subtitle: "Thiết kế cá nhân hóa",
+                features: [
+                    "Tư vấn 1:1 miễn phí",
+                    "Thiết kế website cá nhân độc quyền",
+                    "Tích hợp công cụ hỗ trợ cá nhân hóa",
+                    "Tặng tên miền và hosting 1 năm",
+                    "Cài đặt SEO cơ bản & hướng dẫn sử dụng",
+                    "Quà tặng hấp dẫn đi kèm!!!"
+                ],
+                price: "Theo gói dịch vụ",
+                btnText: "Xem chi tiết",
+                details: [
+                    "One-Me là gói thiết kế website cá nhân dành cho cá nhân, influencer, freelancer hoặc doanh nghiệp nhỏ muốn thể hiện cá tính riêng.",
+                    "Tư vấn 1:1 để hiểu rõ ý tưởng và mục tiêu của bạn.",
+                    "Website được thiết kế riêng biệt không dùng mẫu, bao gồm blog, portfolio hoặc công cụ tương tác tùy nhu cầu.",
+                    "Tặng tên miền và hosting 1 năm giảm chi phí khởi nghiệp và nâng cao trải nghiệm người dùng.",
+                    "Cài đặt SEO cơ bản để tăng khả năng hiển thị và cung cấp tài liệu hướng dẫn quản lý website dễ dàng dù không có kỹ thuật."
+                ]
+            },
+            {
+                id: "brand-building",
+                slug: "brand-building",
+                title: "Xây Dựng Thương Hiệu",
+                subtitle: "Thương hiệu theo xu hướng",
+                features: [
+                    "Website doanh nghiệp hiện đại",
+                    "Thiết kế logo chuyên nghiệp",
+                    "Bộ nhận diện thương hiệu hoàn chỉnh",
+                    "3 banner quảng cáo dịch vụ",
+                    "Hosting SSD + tên miền + email doanh nghiệp",
+                    "SEO cơ bản & tối ưu hiệu suất website"
+                ],
+                price: "Từ 4M–10M VND",
+                btnText: "Xem chi tiết",
+                details: [
+                    "Gói dịch vụ xây dựng thương hiệu toàn diện bao gồm website doanh nghiệp hiện đại, logo chuyên nghiệp và bộ nhận diện thương hiệu đồng bộ.",
+                    "Chúng tôi thiết kế 3 banner quảng cáo riêng biệt để làm nổi bật dịch vụ và thu hút khách hàng mục tiêu.",
+                    "Gói bao gồm hosting SSD tốc độ cao, tên miền và email doanh nghiệp tăng độ tin cậy.",
+                    "Cài đặt SEO cơ bản và tối ưu tốc độ website giúp trang web đẹp, nhanh và xếp hạng tốt trên Google."
+                ]
+            },
+            {
+                id: "online-store",
+                slug: "online-store",
+                title: "Cửa Hàng Online",
+                subtitle: "Smart Shop",
+                features: [
+                    "Website thương mại điện tử với giỏ hàng & thanh toán online",
+                    "Quản lý sản phẩm, đơn hàng và khách hàng",
+                    "Tích hợp thanh toán (VNPay, Momo, COD...)",
+                    "Tích hợp vận chuyển (GHTK, GHN...)",
+                    "5 banner quảng cáo",
+                    "Đào tạo quản trị hệ thống",
+                    "Cài đặt SEO mẫu cho 5 sản phẩm"
+                ],
+                price: "Từ 8M–16M VND",
+                btnText: "Xem chi tiết",
+                details: [
+                    "Smart Shop thiết kế cửa hàng online chuyên nghiệp đầy đủ chức năng như giỏ hàng, thanh toán qua VNPay, Momo, COD.",
+                    "Quản lý sản phẩm, đơn hàng và khách hàng dễ dàng với hệ thống quản trị mạnh mẽ.",
+                    "Tích hợp vận chuyển với các đơn vị uy tín như GHN, GHTK giúp giao hàng nhanh chóng.",
+                    "Bao gồm 5 banner quảng cáo riêng biệt, đào tạo quản trị hệ thống và cài đặt SEO mẫu cho 5 sản phẩm đầu tiên."
+                ]
+            },
+            {
+                id: "service-booking",
+                slug: "service-booking",
+                title: "Đặt Lịch Dịch Vụ",
+                subtitle: "Smart Booking",
+                features: [
+                    "Website dịch vụ giới thiệu đội ngũ",
+                    "Đặt lịch online theo ngày/giờ",
+                    "Email xác nhận tự động",
+                    "Thiết kế landing page quảng cáo",
+                    "Thiết lập Google Business + SEO từ khóa",
+                    "3 banner chuyên nghiệp + bộ icon tùy chỉnh"
+                ],
+                price: "Từ 14M–22M VND",
+                btnText: "Xem chi tiết",
+                details: [
+                    "Smart Booking phù hợp cho spa, phòng khám, salon hoặc các dịch vụ đặt lịch hẹn.",
+                    "Website giới thiệu chuyên nghiệp đội ngũ và dịch vụ để tạo niềm tin khách hàng.",
+                    "Khách có thể đặt lịch qua hệ thống online với email xác nhận tự động, giảm sai sót và nâng cao trải nghiệm.",
+                    "Bao gồm landing page quảng cáo để chạy chiến dịch tiếp thị hiệu quả.",
+                    "Chúng tôi thiết lập Google Business và SEO từ khóa giúp tăng khả năng hiển thị trên công cụ tìm kiếm.",
+                    "Thiết kế bộ banner và icon tùy chỉnh đảm bảo thương hiệu đồng bộ và chuyên nghiệp."
+                ]
+            },
+            {
+                id: "comprehensive-management",
+                slug: "comprehensive-management",
+                title: "Quản Lý Toàn Diện",
+                subtitle: "Mini ERP",
+                features: [
+                    "Website giới thiệu công ty",
+                    "Hệ thống quản lý công việc và deadline",
+                    "Công cụ nhân sự cơ bản (chấm công, lương)",
+                    "Hệ thống CRM đơn giản",
+                    "Email công ty + subdomain quản trị nội bộ",
+                    "Đào tạo sử dụng hệ thống 1:1"
+                ],
+                price: "Từ 25M–50M VND",
+                btnText: "Xem chi tiết",
+                details: [
+                    "Mini ERP là giải pháp quản lý doanh nghiệp tích hợp website công ty và hệ thống nội bộ quản lý công việc, nhân sự, khách hàng hiệu quả.",
+                    "Quản lý công việc và deadline giúp theo dõi tiến độ dự án dễ dàng.",
+                    "Công cụ nhân sự tự động hóa chấm công, tính lương, hệ thống CRM hỗ trợ chăm sóc khách hàng tốt hơn.",
+                    "Cung cấp email công ty và subdomain bảo mật dùng nội bộ.",
+                    "Đào tạo 1:1 giúp nhân viên sử dụng hệ thống nhanh chóng và hiệu quả."
+                ]
+            },
+            {
+                id: "website-app",
+                slug: "website-app",
+                title: "Website + Ứng Dụng",
+                subtitle: "Đồng bộ Web & App",
+                features: [
+                    "Website thương mại điện tử hoặc dịch vụ",
+                    "Ứng dụng di động (iOS & Android) đồng bộ với website",
+                    "Đăng nhập, quản lý đơn hàng, thông báo",
+                    "Đồng bộ dữ liệu thời gian thực giữa web và app",
+                    "Tích hợp bên thứ 3 (chat, bản đồ, v.v.)"
+                ],
+                price: "Từ 35M–60M VND",
+                btnText: "Xem chi tiết",
+                details: [
+                    "Gói Website + Ứng Dụng giúp tạo hệ sinh thái số đồng bộ trên web và app di động (iOS & Android).",
+                    "Các tính năng như đăng nhập, quản lý đơn hàng, thông báo được đồng bộ realtime mang lại trải nghiệm liền mạch.",
+                    "Dữ liệu sản phẩm, đơn hàng, khách hàng tự động đồng bộ, giảm sai sót và tiết kiệm thời gian quản trị.",
+                    "Hệ thống có thể tùy chỉnh theo nhu cầu, hỗ trợ phát triển lâu dài.",
+                    "Tích hợp công cụ bên thứ 3 như chat trực tiếp, bản đồ giúp tương tác và thuận tiện cho người dùng."
+                ]
+            }
+        ]
+    },
+
 
 };

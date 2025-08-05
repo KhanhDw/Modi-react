@@ -9,6 +9,7 @@ import News from '../pages/newsPage'
 import Contact from '../pages/contactPage'
 import Recruitment from '../pages/recruitmentPage'
 import NotFound from '../pages/notFoundPage'
+import ServiceDetailPage from "../pages/serviceDetailPage";
 
 import AdminLoginPage from '../pages/managers/AdminLoginPage'
 import NewsDetail from '../pages/detailNewsPage'
@@ -34,8 +35,8 @@ const publicRoutes = [
     { path: "/careers", component: Recruitment, layout: DefaultLayout },
     { path: "/terms-of-services", component: TermsOfServicePage, layout: DefaultLayout },
     { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
+    { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
 
-    
     { path: "/1", component: NewsDetail, layout: DefaultLayout },
     { path: "/login", component: AdminLoginPage, layout: NoneHeaderFooterLayout },
 ]
@@ -46,13 +47,14 @@ const privateRoutes = [
     { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
 
     //admin routes
-    { path: "/managers/dashboard", component: ManagerDashboard,  layout: AdminLayout },
-    { path: "/managers/services", component: ManagerServices,  layout: AdminLayout },
-    { path: "/managers/news", component: ManagerNews,  layout: AdminLayout },
-    { path: "/managers/recruitment", component: ManagerRecruitment,  layout: AdminLayout },
-    { path: "/managers/contact", component: ManagerContact,  layout: AdminLayout },
+    { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
+    { path: "/managers/services", component: ManagerServices, layout: AdminLayout },
+    { path: "/managers/news", component: ManagerNews, layout: AdminLayout },
+    { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
+    { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
 
 ]
 
 
+export { publicRoutes, privateRoutes }
 export { publicRoutes, privateRoutes }
