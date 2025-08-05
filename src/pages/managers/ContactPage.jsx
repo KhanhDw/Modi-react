@@ -24,9 +24,8 @@ export default function ContactPage() {
       label: "Trạng thái",
       render: (value) => (
         <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-            value === "Đã phản hồi" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-          }`}
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${value === "Đã phản hồi" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+            }`}
         >
           {value}
         </span>
@@ -58,31 +57,30 @@ export default function ContactPage() {
       .then((response) => response.json())
       .then(() => {
         setContacts((prev) =>
-          prev.map((c) => (c.id === id ? { trang_thai: newStatus,  ...c, } : c))
+          prev.map((c) => (c.id === id ? { ...c, trang_thai: newStatus, } : c))
         )
         if (showDetail && showDetail.id === id) {
-          setShowDetail({  trang_thai: newStatus, ...showDetail, })
+          setShowDetail({ ...showDetail, trang_thai: newStatus, })
         }
       })
       .catch((error) => console.error('Lỗi khi cập nhật trạng thái:', error))
   }
 
-  const extraInfo = `Tổng: ${contacts.length} | Chưa phản hồi: ${
-    contacts.filter((c) => c.trang_thai === "Chưa phản hồi").length
-  }`
+  const extraInfo = `Tổng: ${contacts.length} | Chưa phản hồi: ${contacts.filter((c) => c.trang_thai === "Chưa phản hồi").length
+    }`
 
   return (
-    
-      <div className="p-6">
-        <PageHeader title="Quản lý liên hệ" extra={extraInfo} />
-        <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} />
-        <ContactDetail
-          contact={showDetail}
-          isOpen={!!showDetail}
-          onClose={() => setShowDetail(null)}
-          onStatusChange={handleStatusChange}
-        />
-      </div>
-    
+
+    <div className="p-6">
+      <PageHeader title="Quản lý liên hệ" extra={extraInfo} />
+      <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} />
+      <ContactDetail
+        contact={showDetail}
+        isOpen={!!showDetail}
+        onClose={() => setShowDetail(null)}
+        onStatusChange={handleStatusChange}
+      />
+    </div>
+
   )
 }

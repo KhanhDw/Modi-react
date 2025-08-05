@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
@@ -13,6 +13,8 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
     han_nop_ho_so: job?.han_nop_ho_so || "",
     dia_diem: job?.dia_diem || "",
     muc_luong: job?.muc_luong || "",
+    kinh_nghiem: job?.kinh_nghiem || "1+ năm", // Thêm trường này
+    thoi_gian_lam_viec: job?.thoi_gian_lam_viec || "Full-time", // Thêm trường này
   })
 
   // Cập nhật lại formData khi job thay đổi
@@ -25,6 +27,8 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
       han_nop_ho_so: job?.han_nop_ho_so || "",
       dia_diem: job?.dia_diem || "",
       muc_luong: job?.muc_luong || "",
+      kinh_nghiem: job?.kinh_nghiem || "1+ năm", // Cập nhật trường này
+      thoi_gian_lam_viec: job?.thoi_gian_lam_viec || "Full-time", // Cập nhật trường này
     })
   }, [job])
 
@@ -83,6 +87,39 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          <div className="flex items-center justify-between gap-2 ">
+            <div className="w-1/2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Thời gian làm việc</label>
+              <select
+                value={formData.thoi_gian_lam_viec}
+                onChange={(e) => setFormData({ ...formData, thoi_gian_lam_viec: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+              </select>
+            </div>
+            <div className="w-1/2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Năm kinh nghiệm</label>
+              <select
+                value={formData.kinh_nghiem}
+                onChange={(e) => setFormData({ ...formData, kinh_nghiem: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="1">1+ năm</option>
+                <option value="2">2+ năm</option>
+                <option value="3">3+ năm</option>
+                <option value="4">4+ năm</option>
+                <option value="5">5+ năm</option>
+                <option value="6">6+ năm</option>
+                <option value="7">7+ năm</option>
+                <option value="8">8+ năm</option>
+                <option value="9">9+ năm</option>
+                <option value="10">10+ năm</option>
+              </select>
+            </div>
+          </div>
+
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Mô tả công việc</label>

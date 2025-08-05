@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
@@ -33,6 +32,10 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
   return (
     <FormCard title={news ? "Sửa tin tức" : "Thêm tin tức mới"}>
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Banner tin tức</label>
+          <input type="file" className="border-2 border-gray-500 px-2 py-1 rounded-4xl"></input>
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Tiêu đề</label>
           <input

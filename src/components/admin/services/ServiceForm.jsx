@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
