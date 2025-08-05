@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Clock, User } from "lucide-react"
 
-export default function NewsDetail() {
+export default function NewsDetail1() {
   const { id } = useParams()
   const [article, setArticle] = useState(null)
 

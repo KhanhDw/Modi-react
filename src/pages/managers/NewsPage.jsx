@@ -21,8 +21,9 @@ export default function NewsPage() {
   const columns = [
     { key: "id", label: "ID", className: "text-gray-900" },
     { key: "tieu_de", label: "Tiêu đề", className: "font-medium text-gray-900" },
-    { key: "hinh_anh", label: "Hình ảnh", render: (value) => (
-        <img src={value} alt="Hình ảnh" style={{ width: 80, height: 50, objectFit: "cover" }} />
+    {
+      key: "hinh_anh", label: "Hình ảnh", render: (value) => (
+        <img src={value || null} alt="Hình ảnh" style={{ width: 80, height: 50, objectFit: "cover" }} />
       )
     },
     { key: "tac_gia", label: "Tác giả" },
@@ -64,7 +65,7 @@ export default function NewsPage() {
       .then((response) => response.json())
       .then((data) => {
         if (editingNews) {
-          setNews(news.map((n) => (n.id === editingNews.id ? {  ...formData,...n } : n)))
+          setNews(news.map((n) => (n.id === editingNews.id ? { ...formData, ...n } : n)))
         } else {
           setNews([
             // { id: data.data?.id || Date.now(), ...formData, ngay_dang: new Date().toISOString().split("T")[0] },
@@ -78,23 +79,23 @@ export default function NewsPage() {
   }
 
   return (
-  <div className="p-6">
-    <PageHeader title="Quản lý tin tức" buttonText="Thêm tin tức" onButtonClick={handleAdd} />
+    <div className="p-6">
+      <PageHeader title="Quản lý tin tức" buttonText="Thêm tin tức" onButtonClick={handleAdd} />
 
-    {showForm && (
-      <NewsForm
-        news={editingNews}
-        onSubmit={handleSubmit}
-        onCancel={() => setShowForm(false)}
+      {showForm && (
+        <NewsForm
+          news={editingNews}
+          onSubmit={handleSubmit}
+          onCancel={() => setShowForm(false)}
+        />
+      )}
+
+      <Table
+        columns={columns}
+        data={news}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
-    )}
-
-    <Table
-      columns={columns}
-      data={news}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-  </div>
+    </div>
   )
 }

@@ -82,9 +82,8 @@ export default function Contact() {
 
   return (
     <section
-      className={`py-20 px-4 transition-all duration-500 ${
-        isDark ? "bg-slate-900" : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"
-      }`}
+      className={`py-20 px-4 transition-all duration-500 ${isDark ? "bg-slate-900" : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"
+        }`}
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
@@ -109,11 +108,10 @@ export default function Contact() {
           {contacts.map((contact, index) => (
             <div key={index} className="group">
               <div
-                className={`rounded-2xl p-6 border transition-all duration-300 hover:scale-105 text-center h-full ${
-                  isDark
-                    ? "bg-slate-800/50 border-slate-700 hover:bg-slate-800/70"
-                    : "bg-white/80 border-gray-200 hover:bg-white hover:shadow-lg"
-                }`}
+                className={`rounded-2xl p-6 border transition-all duration-300 hover:scale-105 text-center h-full ${isDark
+                  ? "bg-slate-800/50 border-slate-700 hover:bg-slate-800/70"
+                  : "bg-white/80 border-gray-200 hover:bg-white hover:shadow-lg"
+                  }`}
               >
                 <div className="flex justify-center mb-4">
                   <div
@@ -145,12 +143,11 @@ export default function Contact() {
                 🚀 {t("about.freeConsultation")}
               </span>
             </button>
-            <button
-              className={`border-2 px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 group ${
-                isDark
-                  ? "border-slate-600 text-white hover:bg-slate-800/50"
-                  : "border-gray-300 text-gray-900 hover:bg-gray-100"
-              }`}
+            <button hidden
+              className={`border-2 px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 group ${isDark
+                ? "border-slate-600 text-white hover:bg-slate-800/50"
+                : "border-gray-300 text-gray-900 hover:bg-gray-100"
+                }`}
             >
               <span className="group-hover:scale-110 transition-transform inline-block">📂 {t("about.viewPortfolio")}</span>
             </button>

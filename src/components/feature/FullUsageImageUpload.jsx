@@ -1,12 +1,31 @@
 
 import ImageUpload from "./ImageUpload"
+import React, { useState, useEffect } from "react";
+
+
+function FullUsageImageUpload({ fileImageUploadSuccess = "" }) {
+
+    const [uploadedFilename, setUploadedFilename] = useState("");
+
+
+    useEffect(() => {
+        if (uploadedFilename && typeof fileImageUploadSuccess === "function") {
+            console.log("✅ updated uploadedFilename:", uploadedFilename);
+            fileImageUploadSuccess(uploadedFilename);
+        }
+    }, [uploadedFilename]);
 
 
 
-function FullUsageImageUpload() {
+
     const handleUploadSuccess = (uploadedFiles) => {
         console.log('Upload thành công:', uploadedFiles);
         // Có thể gọi API khác, cập nhật state parent, etc.
+
+        setUploadedFilename(uploadedFiles.filename);
+
+
+        console.log(uploadedFilename + " :goij goij :" + uploadedFiles.filename);
     };
 
     const handleUploadError = (error) => {
@@ -33,11 +52,11 @@ function FullUsageImageUpload() {
                 uploadPath="/api/upload"
                 uploadMultiplePath="/api/upload-multiple"
                 imagesPath="/api/images"
-                deletePath="/api/images"
+                deletePath="/api/delete"
 
                 // File Limits
                 maxFileSize={10 * 1024 * 1024} // 10MB
-                maxFiles={1}
+                maxFiles={2}
                 allowedTypes={['image/jpg', 'image/jpeg', 'image/png', 'image/webp']}
 
                 // UI Customization
@@ -67,8 +86,8 @@ function FullUsageImageUpload() {
                     'X-Custom-Header': 'value'
                 }}
 
-                // Thư mục con
-                subfolder="products"
+            // Thư mục con muốn lưu ảnh
+            // subfolder="products"
             />
         </div>
     );

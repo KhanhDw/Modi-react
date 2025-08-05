@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Upload, X, Image, Trash2, Eye, Settings, Info } from 'lucide-react';
 
 export default function ImageUpload({
+    // CẤU HÌNH MẶC ĐỊNH CHO COMPONENT, NẾU CÓ CẤU HÌNH KHÁC TỪ BÊN NGOÀI THÌ SẼ BỊ GHI ĐÈ
     // Cấu hình cơ bản
     apiBaseUrl = 'http://localhost:3000',
     uploadPath = '/api/upload',
     uploadMultiplePath = '/api/upload-multiple',
     imagesPath = '/api/images',
-    deletePath = '/api/images',
+    deletePath = '/api/delete',
 
     // Giới hạn file
     maxFileSize = 5 * 1024 * 1024, // 5MB
@@ -50,6 +51,8 @@ export default function ImageUpload({
     const [dragOver, setDragOver] = useState(false);
     const [uploadProgress, setUploadProgress] = useState({});
     const fileInputRef = useRef();
+
+
 
     // Theme styles
     const themes = {
@@ -212,6 +215,8 @@ export default function ImageUpload({
 
                 // Callbacks
                 onUploadSuccess && onUploadSuccess(result.data);
+
+
 
                 // Auto refresh nếu được bật
                 if (autoRefresh) {

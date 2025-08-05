@@ -6,9 +6,28 @@ import FullUsageImageUpload from "../../feature/FullUsageImageUpload"
 
 
 export default function NewsForm({ news, onSubmit, onCancel }) {
+
+  const [fileImage, setFileImage] = useState(null);
+
+
+  useEffect(() => {
+    console.log("dsds: " + fileImage);
+  })
+
+  useEffect(() => {
+    if (fileImage) {
+      setFormData((prev) => ({
+        ...prev,
+        hinh_anh: "http://localhost:3000/image/" + fileImage
+      }));
+    }
+  }, [fileImage]);
+
+
   const [formData, setFormData] = useState({
     tieu_de: news?.tieu_de || "",
     noi_dung: news?.noi_dung || "",
+    hinh_anh: news?.hinh_anh || "",
     tac_gia: news?.tac_gia || "",
   })
 
@@ -16,6 +35,7 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
     setFormData({
       tieu_de: news?.tieu_de || "",
       noi_dung: news?.noi_dung || "",
+      hinh_anh: fileImage || "",
       tac_gia: news?.tac_gia || "",
     })
   }, [news])
@@ -24,8 +44,8 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
     e.preventDefault()
     // Nếu là sửa, không gửi trường tac_gia
     if (news) {
-      const { tieu_de, noi_dung } = formData
-      onSubmit({ tieu_de, noi_dung })
+      const { tieu_de, noi_dung, hinh_anh } = formData
+      onSubmit({ tieu_de, noi_dung, hinh_anh })
     } else {
       onSubmit(formData)
     }
@@ -37,7 +57,7 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Banner tin tức</label>
           {/* <input type="file" className="border-2 border-gray-500 px-2 py-1 rounded-4xl"></input> */}
-          <FullUsageImageUpload />
+          <FullUsageImageUpload fileImageUploadSuccess={setFileImage} />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Tiêu đề</label>

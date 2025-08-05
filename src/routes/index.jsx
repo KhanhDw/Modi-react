@@ -30,14 +30,23 @@ const publicRoutes = [
     { path: "/", component: Home, layout: DefaultLayout },
     { path: "/about", component: About, layout: DefaultLayout },
     { path: "/services", component: Services, layout: DefaultLayout },
-    { path: "/news", component: News, layout: DefaultLayout },
+    {
+        path: "/news",
+        layout: DefaultLayout,
+        component: News, // hoặc WrapperNews nếu bạn tách riêng
+        children: [
+            { path: "", component: News }, // danh sách bài viết
+            { path: ":id", component: NewsDetail }, // chi tiết bài viết
+        ]
+    },
     { path: "/contact", component: Contact, layout: DefaultLayout },
     { path: "/careers", component: Recruitment, layout: DefaultLayout },
     { path: "/terms-of-services", component: TermsOfServicePage, layout: DefaultLayout },
-    { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
     { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
+    { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
 
-    { path: "/1", component: NewsDetail, layout: DefaultLayout },
+
+    // { path: "/1", component: NewsDetail, layout: DefaultLayout }, // test url
     { path: "/login", component: AdminLoginPage, layout: NoneHeaderFooterLayout },
 ]
 

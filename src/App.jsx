@@ -78,7 +78,7 @@ function App() {
                     } />
                 );
               })}
-              <Route path="/news/:id" element={<NewsDetail />} />
+              <Route path="/news/:id" element={<NewsDetail />} /> {/* sai-ko làm như vầy */}
             </Routes>
           </Suspense>
         </Router>
