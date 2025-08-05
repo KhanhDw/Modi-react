@@ -27,7 +27,7 @@ export default function NewsDetail() {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              <span>{article.ngay_dang}</span>
+              <span>{new Date(article.ngay_dang).toLocaleDateString("vi-VN")}</span>
             </div>
           </div>
           <div className="text-gray-700 dark:text-gray-200 text-lg leading-relaxed">

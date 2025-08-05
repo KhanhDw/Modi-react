@@ -21,6 +21,12 @@ export default function NewsInterface() {
       })
   }, [])
 
+  // Thêm hàm format ngày
+  const formatDate = (dateStr) => {
+    if (!dateStr) return ""
+    return new Date(dateStr).toLocaleDateString("vi-VN")
+  }
+
   if (!newsArticles.length) {
     return <div className="text-center py-20 text-gray-500">Không có tin tức nào.</div>
   }
@@ -69,7 +75,7 @@ export default function NewsInterface() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>{heroArticle.ngay_dang}</span>
+                      <span>{formatDate(heroArticle.ngay_dang)}</span>
                     </div>
                   </div>
                 </div>
@@ -99,7 +105,7 @@ export default function NewsInterface() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    <span>{article.ngay_dang}</span>
+                    <span>{formatDate(article.ngay_dang)}</span>
                   </div>
                 </div>
               </div>
