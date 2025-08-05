@@ -26,12 +26,13 @@ const publicRoutes = [
     { path: "/", component: Home, layout: DefaultLayout },
     { path: "/about", component: About, layout: DefaultLayout },
     { path: "/services", component: Services, layout: DefaultLayout },
+    { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
     { path: "/news", component: News, layout: DefaultLayout },
     { path: "/contact", component: Contact, layout: DefaultLayout },
     { path: "/careers", component: Recruitment, layout: DefaultLayout },
     { path: "/terms-of-services", component: TermsOfServicePage, layout: DefaultLayout },
     { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
-    { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
+
 
     //admin routes
     { path: "/managers/dashboard", component: ManagerDashboard },

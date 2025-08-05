@@ -36,7 +36,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
         : "h-20"
         } w-full bg-transparent flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+          <img src="/logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
         </Link>
 
 
@@ -68,15 +68,15 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
           </div>
 
 
-         
-            <Link
-              to="/news"
-              className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}
-            >
-              {t("header.news.title")}
-            </Link>
 
-            
+          <Link
+            to="/news"
+            className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}
+          >
+            {t("header.news.title")}
+          </Link>
+
+
 
 
 
@@ -109,20 +109,20 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
 function ModalServices() {
   const { t } = useLanguage();
   const services = [
-    {title: t("header.services.listServices.0"), link: "/services"},
-    {title: t("header.services.listServices.1"), link: "/services"},
-    {title: t("header.services.listServices.2"), link: "/services"},
-    {title: t("header.services.listServices.3"), link: "/services"},
-    {title: t("header.services.listServices.4"), link: "/services"},
-    {title: t("header.services.listServices.5"), link: "/services"},
-    {title: t("header.services.listServices.6"), link: "/services"},
-    {title: t("header.services.listServices.7"), link: "/services"},
-    {title: t("header.services.listServices.8"), link: "/services"},
-    {title: t("header.services.listServices.9"), link: "/services"},
-    {title: t("header.services.listServices.10"), link: "/services"},
-    {title: t("header.services.listServices.11"), link: "/services"},
-    {title: t("header.services.listServices.12"), link: "/services"},
-    {title: t("header.services.listServices.13"), link: "/services"},
+    { title: t("header.services.listServices.0"), slug: "online-kickstart" },
+    { title: t("header.services.listServices.1"), slug: "one-me" },
+    { title: t("header.services.listServices.2"), slug: "brand-building" },
+    { title: t("header.services.listServices.3"), slug: "online-store" },
+    { title: t("header.services.listServices.4"), slug: "service-booking" },
+    { title: t("header.services.listServices.5"), slug: "comprehensive-management" },
+    { title: t("header.services.listServices.6"), slug: "website-app" },
+    { title: t("header.services.listServices.7"), slug: "re-vision" },
+    { title: t("header.services.listServices.8"), link: "/services" },
+    { title: t("header.services.listServices.9"), link: "/services" },
+    { title: t("header.services.listServices.10"), link: "/services" },
+    { title: t("header.services.listServices.11"), link: "/services" },
+    { title: t("header.services.listServices.12"), link: "/services" },
+    { title: t("header.services.listServices.13"), link: "/services" },
   ];
 
   return (
@@ -137,7 +137,7 @@ function ModalServices() {
                        hover:translate-x-3 transition-transform duration-200
                        md:text-sm lg:text-md xl:text-md 2xl:text-md font-normal"
             >
-             <Link to={service.link}>{service.title}</Link>
+              <Link to={`/services/${service.slug}`}>{service.title}</Link>
             </li>
           ))}
         </ul>

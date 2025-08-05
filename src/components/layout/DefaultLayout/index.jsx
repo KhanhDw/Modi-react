@@ -23,7 +23,7 @@ function DefaultLayout({ children }) {
     }, [activeSidebarHeader]);
 
     return <>
-                <div className={`
+        <div className={`
                     min-h-screen
                     overflow-auto
                     ${activeSidebarHeader ? 'overflow-hidden' : ''}
@@ -33,16 +33,16 @@ function DefaultLayout({ children }) {
                     mx-auto
                     bg-slate-50 dark:bg-slate-900
                 `}>
-                    <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''} transition-all duration-200`}>
-                        <AnimatedHeader ActiveSideBarHeader={setActiveSidebarHeader} />
-                    </div>
-                    <main className={`${location.pathname === '/' ? 'z-1 ' : 'pt-20'}  w-full h-full overflow-hidden`}>
-                        {React.Children.map(children, child => {
-                            return React.cloneElement(child, { activeSidebarHeader: activeSidebarHeader });
-                        })}
-                    </main>
-                    <div className="w-full"><Footer></Footer></div>
-                </div>
+            <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''} transition-all duration-200`}>
+                <AnimatedHeader ActiveSideBarHeader={setActiveSidebarHeader} />
+            </div>
+            <main className={`${location.pathname === '/' ? 'z-1 ' : 'pt-20'}  w-full h-full overflow-hidden`}>
+                {React.Children.map(children, child => {
+                    return React.cloneElement(child, { activeSidebarHeader: activeSidebarHeader });
+                })}
+            </main>
+            <div className="w-full"><Footer></Footer></div>
+        </div>
     </>;
 }
 
