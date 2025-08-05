@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Clock, User } from "lucide-react"
 
 export default function NewsDetail() {
   const { id } = useParams()
   const [article, setArticle] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/tintuc/${id}`)
@@ -16,6 +17,12 @@ export default function NewsDetail() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-6 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition"
+      >
+        ← Quay lại
+      </button>
       <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
         <img src={article.hinh_anh || "/placeholder.svg"} alt={article.tieu_de} className="w-full h-96 object-cover" />
         <div className="p-8">

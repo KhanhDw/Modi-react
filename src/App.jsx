@@ -39,9 +39,6 @@ function App() {
     };
   }, []);
 
-
-
-
   return (
     <ThemeProvider>
       <LanguageProvider>
