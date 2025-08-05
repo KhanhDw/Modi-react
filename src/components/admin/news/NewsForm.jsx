@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
 import FormButtons from "../common/FormButtons"
+import FullUsageImageUpload from "../../feature/FullUsageImageUpload"
+
 
 export default function NewsForm({ news, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -34,7 +36,8 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Banner tin tức</label>
-          <input type="file" className="border-2 border-gray-500 px-2 py-1 rounded-4xl"></input>
+          {/* <input type="file" className="border-2 border-gray-500 px-2 py-1 rounded-4xl"></input> */}
+          <FullUsageImageUpload />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Tiêu đề</label>
