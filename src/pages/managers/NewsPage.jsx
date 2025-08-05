@@ -2,7 +2,6 @@ import PageHeader from "../../components/admin/common/PageHeader"
 import Table from "../../components/admin/common/Table"
 import NewsForm from "../../components/admin/news/NewsForm"
 import { useState, useEffect } from "react"
-import formatDateTime from "../../utils/formatDate"
 
 
 
@@ -22,6 +21,10 @@ export default function NewsPage() {
   const columns = [
     { key: "id", label: "ID", className: "text-gray-900" },
     { key: "tieu_de", label: "Tiêu đề", className: "font-medium text-gray-900" },
+    { key: "hinh_anh", label: "Hình ảnh", render: (value) => (
+        <img src={value} alt="Hình ảnh" style={{ width: 80, height: 50, objectFit: "cover" }} />
+      )
+    },
     { key: "tac_gia", label: "Tác giả" },
     { key: "ngay_dang", label: "Ngày đăng" },
   ]
@@ -75,18 +78,23 @@ export default function NewsPage() {
   }
 
   return (
-      <div className="p-6">
-        <PageHeader title="Quản lý tin tức" buttonText="Thêm tin tức" onButtonClick={handleAdd} />
+  <div className="p-6">
+    <PageHeader title="Quản lý tin tức" buttonText="Thêm tin tức" onButtonClick={handleAdd} />
 
-        {showForm && (
-          <NewsForm
-            news={editingNews}
-            onSubmit={handleSubmit}
-            onCancel={() => setShowForm(false)}
-          />
-        )}
+    {showForm && (
+      <NewsForm
+        news={editingNews}
+        onSubmit={handleSubmit}
+        onCancel={() => setShowForm(false)}
+      />
+    )}
 
-        <Table columns={columns} data={news} onEdit={handleEdit} onDelete={handleDelete} />
-      </div>
+    <Table
+      columns={columns}
+      data={news}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+    />
+  </div>
   )
 }
