@@ -7,7 +7,6 @@ import React, { useEffect, useRef } from 'react';
 import './App.css';
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import NewsDetail from "./pages/NewsDetail"
 
 function App() {
   const lenis = useRef(null);
@@ -78,7 +77,7 @@ function App() {
                     } />
                 );
               })}
-              <Route path="/news/:id" element={<NewsDetail />} /> {/* sai-ko làm như vầy */}
+
             </Routes>
           </Suspense>
         </Router>
