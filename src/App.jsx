@@ -3,10 +3,11 @@ import { Suspense } from "react"
 import { publicRoutes, privateRoutes } from "./routes";
 import PrivateRoute from "./components/guardRouter/PrivateRoute";
 import Lenis from 'lenis';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './App.css';
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import NewsDetail from "./pages/NewsDetail"
 
 function App() {
   const lenis = useRef(null);
@@ -80,6 +81,7 @@ function App() {
                     } />
                 );
               })}
+              <Route path="/news/:id" element={<NewsDetail />} />
             </Routes>
           </Suspense>
         </Router>
