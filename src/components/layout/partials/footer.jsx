@@ -14,27 +14,28 @@ export default function Footer() {
   const { t } = useLanguage();
 
   const services = [
-    t("footer.listServices.0"),
-    t("footer.listServices.1"),
-    t("footer.listServices.2"),
-    t("footer.listServices.3"),
-    t("footer.listServices.4"),
-    t("footer.listServices.5"),
-    t("footer.listServices.6"),
-    t("footer.listServices.7"),
-    t("footer.listServices.8"),
-    t("footer.listServices.9"),
-    t("footer.listServices.10"),
-    t("footer.listServices.11"),
+    { title: t("footer.listServices.0"), slug: "online-kickstart" },
+    { title: t("footer.listServices.1"), slug: "one-me" },
+    { title: t("footer.listServices.2"), slug: "brand-building" },
+    { title: t("footer.listServices.3"), slug: "online-store" },
+    { title: t("footer.listServices.4"), slug: "service-booking" },
+    { title: t("footer.listServices.5"), slug: "comprehensive-management" },
+    { title: t("footer.listServices.6"), slug: "website-app" },
+    { title: t("footer.listServices.7"), slug: "re-vision" },
+    { title: t("footer.listServices.8"), link: null },
+    { title: t("footer.listServices.9"), link: null },
+    { title: t("footer.listServices.10"), link: null },
+    { title: t("footer.listServices.11"), link: null },
+
   ]
 
 
 
   const privacy_statement = [
-    {link:"/about" ,title: t("footer.privacyStatement.0"), },
-    {link:"/terms-of-services" ,title: t("footer.privacyStatement.1"), },
-    {link:"/contact" ,title: t("footer.privacyStatement.2"), },
-    {link:"/careers" ,title: t("footer.privacyStatement.3"), },
+    { link: "/about", title: t("footer.privacyStatement.0"), },
+    { link: "/terms-of-services", title: t("footer.privacyStatement.1"), },
+    { link: "/contact", title: t("footer.privacyStatement.2"), },
+    { link: "/careers", title: t("footer.privacyStatement.3"), },
   ]
 
 
@@ -46,7 +47,7 @@ export default function Footer() {
           <div className="space-y-6">
             <div>
               <div className='flex items-center justify-center xs:h-10 3xl:h-20 px-3 py-2 mb-3 overflow-hidden rounded-2xl w-fit'>
-                <img src="./logoModi.png" className='xs:h-10 3xl:h-20 w-fit' alt='logo' />
+                <img src="/logoModi.png" className='xs:h-10 3xl:h-20 w-fit' alt='logo' />
               </div>
               <h2 className="mb-6 text-xl font-semibold 3xl:text-5xl">Công ty ?? Mộc Điền</h2>
             </div>
@@ -82,7 +83,12 @@ export default function Footer() {
               <ul className="space-y-3">
                 {services.slice(0, Math.ceil(services.length / 2)).map((service, index) => (
                   <li key={index} className="transition-all duration-200 hover:text-green-400">
-                    <Link to="/" className="xs:text-sm md:text-md 3xl:text-3xl">{service}</Link>
+                    <Link
+                      to={service.slug ? `/services/${service.slug}` : "/services"}
+                      className="xs:text-sm md:text-md 3xl:text-3xl"
+                    >
+                      {service.title}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -90,11 +96,17 @@ export default function Footer() {
               <ul className="space-y-3">
                 {services.slice(Math.ceil(services.length / 2)).map((service, index) => (
                   <li key={index + 100} className="transition-all duration-200 hover:text-green-400">
-                    <Link to="/" className="xs:text-sm md:text-md 3xl:text-3xl">{service}</Link>
+                    <Link
+                      to={service.slug ? `/services/${service.slug}` : "/services"}
+                      className="xs:text-sm md:text-md 3xl:text-3xl"
+                    >
+                      {service.title}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
+
           </div>
 
 
