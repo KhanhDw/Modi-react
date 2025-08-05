@@ -81,7 +81,7 @@ function App() {
                     } />
                 );
               })}
-              <Route path="/news/:id" element={<NewsDetail />} />
+              
             </Routes>
           </Suspense>
         </Router>

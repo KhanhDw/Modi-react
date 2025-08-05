@@ -1,4 +1,3 @@
-
 import { DefaultLayout, HeaderOnlyLayout, NoneHeaderFooterLayout, AdminLayout } from "../components/layout"
 import { Navigate } from "react-router-dom"
 
@@ -11,7 +10,7 @@ import Recruitment from '../pages/recruitmentPage'
 import NotFound from '../pages/notFoundPage'
 
 import AdminLoginPage from '../pages/managers/AdminLoginPage'
-import NewsDetail from '../pages/detailNewsPage'
+import NewsDetail from '../pages/NewsDetail'
 
 //admin
 import ManagerDashboard from "../pages/managers/DashboardPage"
@@ -38,6 +37,10 @@ const publicRoutes = [
     
     { path: "/1", component: NewsDetail, layout: DefaultLayout },
     { path: "/login", component: AdminLoginPage, layout: NoneHeaderFooterLayout },
+    {
+        path: "/news/:id",
+        component: NewsDetail,
+    },
 ]
 
 
