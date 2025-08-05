@@ -57,4 +57,3 @@ const privateRoutes = [
 
 
 export { publicRoutes, privateRoutes }
-export { publicRoutes, privateRoutes }
