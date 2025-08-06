@@ -7,7 +7,7 @@ import Services from "../pages/servicesPage"
 import News from '../pages/newsPage'
 import Contact from '../pages/contactPage'
 import Recruitment from '../pages/recruitmentPage'
-import NotFound from '../pages/notFoundPage'
+import NotFound from '../pages/NotFoundPage'
 import ServiceDetailPage from "../pages/serviceDetailPage";
 
 import AdminLoginPage from '../pages/managers/AdminLoginPage'
