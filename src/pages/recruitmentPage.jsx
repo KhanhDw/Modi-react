@@ -1,37 +1,50 @@
-import { MapPin, Clock, DollarSign, Users, Briefcase } from "lucide-react"
-import { useLanguage } from '../contexts/LanguageContext'
-import { useEffect, useState } from "react"
+// src/components/RecruitmentPage.js
+import { MapPin, Clock, DollarSign, Users, Briefcase } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useEffect, useState } from "react";
+import { recruitmentData } from "../data/MockData"; // Import dữ liệu mẫu
 
 export default function RecruitmentPage() {
-  const [jobs, setJobs] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const pageSize = 5
-  const apiUrl = "http://localhost:3000/api/tuyendung"
-  const { t } = useLanguage()
+  const [jobs, setJobs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+  const apiUrl = "http://localhost:3000/api/tuyendung";
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetch(apiUrl)
       .then((response) => {
-        if (!response.ok) throw new Error("Network response was not ok")
-        return response.json()
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
       })
       .then((data) => {
-        // Sắp xếp theo ngày đăng mới nhất
-        const sorted = [...data].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang))
-        setJobs(sorted)
+        // Kiểm tra dữ liệu từ API
+        if (data && Array.isArray(data) && data.length > 0) {
+          const sorted = [...data].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
+          setJobs(sorted);
+        } else {
+          // Sử dụng dữ liệu mẫu nếu API trả về mảng rỗng
+          const sortedMockData = [...recruitmentData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
+          setJobs(sortedMockData);
+        }
       })
-      .catch((error) => console.error("Lỗi khi lấy dữ liệu:", error))
-  }, [])
+      .catch((error) => {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+        // Sử dụng dữ liệu mẫu khi API thất bại
+        const sortedMockData = [...recruitmentData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
+        setJobs(sortedMockData);
+      });
+  }, []);
 
   // Phân trang
-  const totalPages = Math.ceil(jobs.length / pageSize) || 1
-  const jobsToShow = jobs.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+  const totalPages = Math.ceil(jobs.length / pageSize) || 1;
+  const jobsToShow = jobs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   // Hàm format ngày
   const formatDate = (dateStr) => {
-    if (!dateStr) return ""
-    return new Date(dateStr).toLocaleDateString("vi-VN")
-  }
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleDateString("vi-VN");
+  };
 
   return (
     <div className="min-h-screen transition-colors duration-300 bg-slate-50 dark:bg-gray-900">
@@ -42,7 +55,9 @@ export default function RecruitmentPage() {
           <p className="text-lg text-gray-600 dark:text-gray-300">{t("careers.slogan")}</p>
           <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-500 dark:text-gray-400">
             <Users className="w-4 h-4" />
-            <span>{jobs.length} {t("careers.position")}</span>
+            <span>
+              {jobs.length} {t("careers.position")}
+            </span>
           </div>
         </div>
 
@@ -84,11 +99,15 @@ export default function RecruitmentPage() {
               </div>
               <div className="mb-2 text-gray-700 dark:text-gray-300">
                 <b>Yêu cầu:</b>
-                <div className="whitespace-pre-line mt-1">{job.yeu_cau_ung_vien}</div>
+                <div className="whitespace-pre-line mt-1">{job.yeu_cau_ung_vien || "Không có yêu cầu cụ thể"}</div>
               </div>
               <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-1 mt-2">
-                <span>Hạn nộp: <b>{formatDate(job.han_nop_ho_so)}</b></span>
-                <span>Ngày đăng: <b>{formatDate(job.ngay_dang)}</b></span>
+                <span>
+                  Hạn nộp: <b>{formatDate(job.han_nop_ho_so)}</b>
+                </span>
+                <span>
+                  Ngày đăng: <b>{formatDate(job.ngay_dang)}</b>
+                </span>
               </div>
               <div className="mt-4 text-sm text-gray-700 dark:text-gray-300">
                 <b>Cách ứng tuyển:</b>
@@ -115,7 +134,8 @@ export default function RecruitmentPage() {
           {[...Array(totalPages)].map((_, idx) => (
             <button
               key={idx + 1}
-              className={`px-4 py-2 rounded ${currentPage === idx + 1 ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
+              className={`px-4 py-2 rounded ${currentPage === idx + 1 ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700"
+                }`}
               onClick={() => setCurrentPage(idx + 1)}
             >
               {idx + 1}
@@ -141,5 +161,5 @@ export default function RecruitmentPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,49 +1,63 @@
-import { useEffect, useState } from "react"
-import { Clock, User } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+// src/components/NewsInterface.js
+import { useEffect, useState } from "react";
+import { Clock, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { newsData } from "../data/MockData"; // Import dữ liệu mẫu
 
 export default function NewsInterface() {
-  const [newsArticles, setNewsArticles] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const navigate = useNavigate()
-  const pageSize = 6
+  const [newsArticles, setNewsArticles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
+  const pageSize = 6;
 
   useEffect(() => {
     fetch("http://localhost:3000/api/tintuc")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("API không phản hồi"); // Kiểm tra lỗi HTTP
+        return res.json();
+      })
       .then((data) => {
-        const sorted = [...data].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
-        setNewsArticles(sorted);
+        // Kiểm tra dữ liệu từ API
+        if (data && Array.isArray(data) && data.length > 0) {
+          const sorted = [...data].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
+          setNewsArticles(sorted);
+        } else {
+          // Sử dụng dữ liệu mẫu nếu API trả về mảng rỗng
+          const sortedMockData = [...newsData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
+          setNewsArticles(sortedMockData);
+        }
       })
       .catch((error) => {
-        console.error(error);
-        setNewsArticles([]);
-      })
-  }, [])
+        console.error("Lỗi khi gọi API:", error);
+        // Sử dụng dữ liệu mẫu khi API thất bại
+        const sortedMockData = [...newsData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
+        setNewsArticles(sortedMockData);
+      });
+  }, []);
 
-  // Thêm hàm format ngày
+  // Hàm format ngày
   const formatDate = (dateStr) => {
-    if (!dateStr) return ""
-    return new Date(dateStr).toLocaleDateString("vi-VN")
-  }
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleDateString("vi-VN");
+  };
 
   if (!newsArticles.length) {
-    return <div className="text-center py-20 text-gray-500">Không có tin tức nào.</div>
+    return <div className="text-center py-20 text-gray-500">Không có tin tức nào.</div>;
   }
 
   // Tính toán dữ liệu hiển thị cho từng trang
-  let heroArticle = null
-  let articlesToShow = []
+  let heroArticle = null;
+  let articlesToShow = [];
 
   if (currentPage === 1) {
-    heroArticle = newsArticles[0]
-    articlesToShow = newsArticles.slice(1, 1 + pageSize)
+    heroArticle = newsArticles[0];
+    articlesToShow = newsArticles.slice(1, 1 + pageSize);
   } else {
-    const startIdx = 1 + (currentPage - 2) * pageSize + pageSize
-    articlesToShow = newsArticles.slice(startIdx, startIdx + pageSize)
+    const startIdx = 1 + (currentPage - 2) * pageSize + pageSize;
+    articlesToShow = newsArticles.slice(startIdx, startIdx + pageSize);
   }
 
-  const totalPages = Math.ceil((newsArticles.length - 1) / pageSize) || 1
+  const totalPages = Math.ceil((newsArticles.length - 1) / pageSize) || 1;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -92,7 +106,11 @@ export default function NewsInterface() {
               className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
               onClick={() => navigate(`/news/${article.id}`)}
             >
-              <img src={article.hinh_anh || "/placeholder.svg"} alt={article.tieu_de} className="w-full h-48 object-cover" />
+              <img
+                src={article.hinh_anh || "/placeholder.svg"}
+                alt={article.tieu_de}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white line-clamp-2">
                   {article.tieu_de}
@@ -141,5 +159,5 @@ export default function NewsInterface() {
         </div>
       </div>
     </div>
-  )
+  );
 }
