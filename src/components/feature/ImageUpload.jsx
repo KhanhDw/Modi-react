@@ -42,7 +42,14 @@ export default function ImageUpload({
     headers = {},
 
     // Thư mục con (nếu muốn lưu vào thư mục con)
-    subfolder = null
+    subfolder = null,
+
+    // đang là thêm ảnh mới = false || đang là chỉnh sửa ảnh cũ = true
+    isUploadNewImage = null,
+
+    // fileNameImage = để lấy ảnh khi đó là chỉnh sửa
+    fileNameImage = null
+
 }) {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
@@ -51,6 +58,8 @@ export default function ImageUpload({
     const [dragOver, setDragOver] = useState(false);
     const [uploadProgress, setUploadProgress] = useState({});
     const fileInputRef = useRef();
+
+
 
 
 
@@ -196,6 +205,8 @@ export default function ImageUpload({
                 formData.append('image', selectedFiles[0]);
                 if (subfolder) formData.append('subfolder', subfolder);
 
+                if (fileNameImage) { deleteImage(fileNameImage.split('/').pop()) }
+
                 result = await uploadRequest(apiBaseUrl + uploadPath, formData);
             } else {
                 selectedFiles.forEach(file => {
@@ -220,7 +231,8 @@ export default function ImageUpload({
 
                 // Auto refresh nếu được bật
                 if (autoRefresh) {
-                    await fetchUploadedImages();
+                    // await fetchUploadedImages();
+                    await fetchUploadedImage();
                 }
 
                 alert(result.message || 'Upload thành công!');
@@ -262,22 +274,43 @@ export default function ImageUpload({
     };
 
     // Lấy danh sách ảnh đã upload
-    const fetchUploadedImages = async () => {
+    // const fetchUploadedImages = async () => {
+    //     try {
+    //         const url = subfolder
+    //             ? `${apiBaseUrl}${imagesPath}?subfolder=${subfolder}`
+    //             : `${apiBaseUrl}${imagesPath}`;
+
+    //         const response = await fetch(url, { headers });
+    //         const result = await response.json();
+
+    //         if (result.success) {
+    //             setUploadedImages(result.data || []);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching images:', error);
+    //     }
+    // };
+
+
+    const fetchUploadedImage = async () => {
         try {
-            const url = subfolder
-                ? `${apiBaseUrl}${imagesPath}?subfolder=${subfolder}`
-                : `${apiBaseUrl}${imagesPath}`;
-
-            const response = await fetch(url, { headers });
-            const result = await response.json();
-
-            if (result.success) {
-                setUploadedImages(result.data || []);
+            if (fileNameImage) {
+                const response = await fetch(fileNameImage, { method: 'HEAD' }); // chỉ kiểm tra có tồn tại
+                if (response.ok) {
+                    setUploadedImages([{
+                        url: fileNameImage,
+                        filename: fileNameImage.split('/').pop()
+                    }]);
+                } else {
+                    console.error('Ảnh không tồn tại:', fileNameImage);
+                }
             }
         } catch (error) {
-            console.error('Error fetching images:', error);
+            console.error('Error fetching image:', error);
         }
     };
+
+
 
     // Xóa ảnh
     const deleteImage = async (filename) => {
@@ -315,9 +348,13 @@ export default function ImageUpload({
     };
 
     // Load ảnh khi component mount
+    // useEffect(() => {
+    //     fetchUploadedImages();
+    // }, [apiBaseUrl, imagesPath, subfolder]);
+
     useEffect(() => {
-        fetchUploadedImages();
-    }, [apiBaseUrl, imagesPath, subfolder]);
+        fetchUploadedImage();
+    }, [fileNameImage]);
 
     return (
         <div className="max-w-6xl mx-auto p-6">
@@ -436,15 +473,21 @@ export default function ImageUpload({
             </div>
 
             {/* Uploaded Images Section */}
-            {showUploadedList && (
+            {isUploadNewImage === true && showUploadedList && (
                 <div className={`${currentTheme.container} p-6`}>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold flex items-center">
                             <Image className="mr-2" size={24} />
                             Ảnh đã Upload ({uploadedImages.length})
                         </h2>
-                        <button
+                        {/* <button 
                             onClick={fetchUploadedImages}
+                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
+                        >
+                            Làm mới
+                        </button> */}
+                        <button
+                            onClick={fetchUploadedImage}
                             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
                         >
                             Làm mới

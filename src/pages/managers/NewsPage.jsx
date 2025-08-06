@@ -9,14 +9,26 @@ export default function NewsPage() {
   const [news, setNews] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingNews, setEditingNews] = useState(null)
+  const [isUploadNewImage, setIsUploadNewImage] = useState(true)
 
-  // Lấy danh sách tin tức từ backend khi component mount
+  const fetchNews = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/tintuc');
+      const data = await response.json();
+      setNews(data);
+    } catch (error) {
+      console.error('Lỗi khi lấy dữ liệu:', error);
+    }
+  };
+
+  // Gọi khi component mount
   useEffect(() => {
-    fetch('http://localhost:3000/api/tintuc')
-      .then((response) => response.json())
-      .then((data) => setNews(data))
-      .catch((error) => console.error('Lỗi khi lấy dữ liệu:', error))
-  }, [])
+    fetchNews();
+  }, []);
+
+
+
+
 
   const columns = [
     { key: "id", label: "ID", className: "text-gray-900" },
@@ -30,17 +42,21 @@ export default function NewsPage() {
     { key: "ngay_dang", label: "Ngày đăng" },
   ]
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setEditingNews(null)
     setShowForm(true)
+    setIsUploadNewImage(false)
+    await fetchNews();
   }
 
-  const handleEdit = (item) => {
+  const handleEdit = async (item) => {
     setEditingNews(item)
     setShowForm(true)
+    setIsUploadNewImage(true)
+    await fetchNews();
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("Bạn có chắc muốn xóa tin tức này?")) {
       fetch(`http://localhost:3000/api/tintuc/${id}`, {
         method: 'DELETE',
@@ -49,9 +65,10 @@ export default function NewsPage() {
         .then(() => setNews(news.filter((n) => n.id !== id)))
         .catch((error) => console.error('Lỗi khi xóa:', error))
     }
+    await fetchNews();
   }
 
-  const handleSubmit = (formData) => {
+  const handleSubmit = async (formData) => {
     const method = editingNews ? 'PUT' : 'POST'
     const url = editingNews
       ? `http://localhost:3000/api/tintuc/${editingNews.id}`
@@ -66,12 +83,14 @@ export default function NewsPage() {
       .then((data) => {
         if (editingNews) {
           setNews(news.map((n) => (n.id === editingNews.id ? { ...formData, ...n } : n)))
+          fetchNews()
         } else {
           setNews([
             // { id: data.data?.id || Date.now(), ...formData, ngay_dang: new Date().toISOString().split("T")[0] },
             { id: data.data?.id || Date.now(), ...formData, ngay_dang: new Date().toISOString().split("T")[0] },
             ...news,
           ])
+          fetchNews()
         }
         setShowForm(false)
       })
@@ -87,6 +106,7 @@ export default function NewsPage() {
           news={editingNews}
           onSubmit={handleSubmit}
           onCancel={() => setShowForm(false)}
+          isUploadNewImage={isUploadNewImage}
         />
       )}
 

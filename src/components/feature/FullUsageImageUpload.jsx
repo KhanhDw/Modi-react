@@ -3,7 +3,7 @@ import ImageUpload from "./ImageUpload"
 import React, { useState, useEffect } from "react";
 
 
-function FullUsageImageUpload({ fileImageUploadSuccess = "" }) {
+function FullUsageImageUpload({ fileImageUploadSuccess = "", isUploadNewImage, uploadedFilenameProps }) {
 
     const [uploadedFilename, setUploadedFilename] = useState("");
 
@@ -56,7 +56,7 @@ function FullUsageImageUpload({ fileImageUploadSuccess = "" }) {
 
                 // File Limits
                 maxFileSize={10 * 1024 * 1024} // 10MB
-                maxFiles={2}
+                maxFiles={1}
                 allowedTypes={['image/jpg', 'image/jpeg', 'image/png', 'image/webp']}
 
                 // UI Customization
@@ -86,8 +86,11 @@ function FullUsageImageUpload({ fileImageUploadSuccess = "" }) {
                     'X-Custom-Header': 'value'
                 }}
 
-            // Thư mục con muốn lưu ảnh
-            // subfolder="products"
+                // Thư mục con muốn lưu ảnh
+                // subfolder="products"
+
+                isUploadNewImage={isUploadNewImage}
+                fileNameImage={uploadedFilenameProps}
             />
         </div>
     );

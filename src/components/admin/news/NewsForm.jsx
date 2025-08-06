@@ -5,7 +5,7 @@ import FormButtons from "../common/FormButtons"
 import FullUsageImageUpload from "../../feature/FullUsageImageUpload"
 
 
-export default function NewsForm({ news, onSubmit, onCancel }) {
+export default function NewsForm({ news, onSubmit, onCancel, isUploadNewImage }) {
 
   const [fileImage, setFileImage] = useState(null);
 
@@ -35,7 +35,7 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
     setFormData({
       tieu_de: news?.tieu_de || "",
       noi_dung: news?.noi_dung || "",
-      hinh_anh: fileImage || "",
+      hinh_anh: fileImage || news?.hinh_anh,
       tac_gia: news?.tac_gia || "",
     })
   }, [news])
@@ -57,7 +57,7 @@ export default function NewsForm({ news, onSubmit, onCancel }) {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Banner tin tức</label>
           {/* <input type="file" className="border-2 border-gray-500 px-2 py-1 rounded-4xl"></input> */}
-          <FullUsageImageUpload fileImageUploadSuccess={setFileImage} />
+          <FullUsageImageUpload fileImageUploadSuccess={setFileImage} isUploadNewImage={isUploadNewImage} uploadedFilenameProps={news?.hinh_anh} />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Tiêu đề</label>
