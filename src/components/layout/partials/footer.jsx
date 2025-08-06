@@ -49,7 +49,7 @@ export default function Footer() {
               <div className='flex items-center justify-center xs:h-10 3xl:h-20 px-3 py-2 mb-3 overflow-hidden rounded-2xl w-fit'>
                 <img src="/logoModi.png" className='xs:h-10 3xl:h-20 w-fit' alt='logo' />
               </div>
-              <h2 className="mb-6 text-xl font-semibold 3xl:text-3xl">Công ty ?? Mộc Điền</h2>
+              <h2 className="mb-6 text-xl font-semibold 3xl:text-3xl">{t("footer.nameCompany")}</h2>
             </div>
 
             <div className="space-y-4">

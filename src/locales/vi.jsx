@@ -56,7 +56,9 @@ export default {
             "Điều khoản sử dụng",
             "Liên hệ",
             "Tuyển dụng",
-        ]
+        ],
+        nameCompany: "CÔNG TY TNHH TƯ VẤN THIẾT KẾ PHẦN MỀM MỘC ĐIỀN",
+
     },
     home: {
         // Banner Slider
@@ -346,10 +348,10 @@ export default {
         emailLabel: "Email",
         websiteLabel: "Website",
         fanpageLabel: "Fanpage",
-        phonePlaceholder: "[Số điện thoại]",
-        emailPlaceholder: "[Email liên hệ]",
-        websitePlaceholder: "[Địa chỉ website]",
-        fanpagePlaceholder: "[Link Facebook/Zalo OA]",
+        phonePlaceholder: "0393705863",
+        emailPlaceholder: "modi-company@gmail.com",
+        websitePlaceholder: "modi.com",
+        fanpagePlaceholder: "Modi team",
     },
     TermsOfServicePage: {
         header: {

@@ -53,7 +53,8 @@ export default {
             "Terms of Service",
             "Contact",
             "Careers"
-        ]
+        ],
+        nameCompany: "MOC DIEN SOFTWARE DESIGN CONSULTANCY COMPANY LIMITED",
     },
     home: {
         // Banner Slider
@@ -353,10 +354,10 @@ export default {
         emailLabel: "Email",
         websiteLabel: "Website",
         fanpageLabel: "Fanpage",
-        phonePlaceholder: "[Phone Number]",
-        emailPlaceholder: "[Contact Email]",
-        websitePlaceholder: "[Website Address]",
-        fanpagePlaceholder: "[Facebook/Zalo OA Link]",
+        phonePlaceholder: "0393705863",
+        emailPlaceholder: "modi-company@gmail.com",
+        websitePlaceholder: "modi.com",
+        fanpagePlaceholder: "Modi team",
     },
     TermsOfServicePage: {
         header: {

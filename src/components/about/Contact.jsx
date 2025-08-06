@@ -1,5 +1,6 @@
 import { useTheme } from "../../contexts/ThemeContext"
 import { useLanguage } from "../../contexts/LanguageContext"
+import { Link } from "react-router-dom"
 
 const Phone = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,11 +139,11 @@ export default function Contact() {
 
         <div className="text-center">
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <button className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 group">
+            <Link to="/contact" className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 group">
               <span className="group-hover:scale-110 transition-transform inline-block">
                 🚀 {t("about.freeConsultation")}
               </span>
-            </button>
+            </Link>
             <button hidden
               className={`border-2 px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 group ${isDark
                 ? "border-slate-600 text-white hover:bg-slate-800/50"
