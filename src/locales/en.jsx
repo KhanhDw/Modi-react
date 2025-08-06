@@ -367,7 +367,7 @@ export default {
         sections: {
             generalTerms: {
                 title: "1. General Terms",
-                paragraph1: "Welcome to the Canh Cam Software Design and Consulting Co., Ltd. website (hereinafter referred to as the website). This website and its services are built and owned by Canh Cam Software Design and Consulting Co., Ltd. Your use of the website and its services signifies your agreement to the terms below (Service Agreement). If you do not agree, please do not use the website and its services.",
+                paragraph1: "Welcome to the Moc Đien Software Design and Consulting Co., Ltd. website (hereinafter referred to as the website). This website and its services are built and owned by Moc Đien Software Design and Consulting Co., Ltd. Your use of the website and its services signifies your agreement to the terms below (Service Agreement). If you do not agree, please do not use the website and its services.",
                 paragraph2: "We may change or modify the Service Agreement. You should review the Service Agreement regularly each time you visit the website. If you continue to use the website and its services after we have made adjustments, it means you have agreed to our new Service Agreement."
             },
             ourServices: {
@@ -424,7 +424,7 @@ export default {
         },
         footer: {
             title: "12. Contact Information",
-            companyName: "CANH CAM SOFTWARE DESIGN AND CONSULTING CO., LTD",
+            companyName: "Moc Đien SOFTWARE DESIGN AND CONSULTING CO., LTD",
             addressLabel: "Address:",
             addressValue: "156 Nguyen Van Thu, Da Kao Ward, District 1, Ho Chi Minh City",
             phoneLabel: "Phone:",

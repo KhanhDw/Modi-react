@@ -269,7 +269,7 @@ export default {
     about: {
         // Hero Banner
         whoAreWe: "Chúng Tôi Là Ai?",
-        welcome: "Chào mừng bạn đến với [Tên thương hiệu/công ty bạn] – điểm đến lý tưởng cho mọi ý tưởng số hóa của bạn!",
+        welcome: "Chào mừng bạn đến với Modi – điểm đến lý tưởng cho mọi ý tưởng số hóa của bạn!",
         description:
             "Chúng tôi là đội ngũ trẻ, sáng tạo và chuyên nghiệp trong lĩnh vực lập trình web và ứng dụng theo yêu cầu. Chúng tôi đã và đang đồng hành cùng hàng trăm cá nhân, doanh nghiệp trong việc biến ý tưởng thành giải pháp công nghệ hiệu quả.",
         codeQuality: "Code chất",
@@ -361,7 +361,7 @@ export default {
         sections: {
             generalTerms: {
                 title: "1. Điều khoản chung",
-                paragraph1: "Chào mừng bạn đến website Công ty TNHH Tư Vấn Thiết Kế Phần Mềm Cánh Cam (sau đây gọi tắt là website). Website này và những dịch vụ trên website được xây dựng và thuộc sở hữu của Công ty TNHH Tư Vấn Thiết Kế Phần Mềm Cánh Cam. Việc bạn sử dụng website và các dịch vụ của website đồng nghĩa với việc bạn đã đồng ý với những thoả thuận dưới đây (Thoả thuận sử dụng dịch vụ). Nếu bạn không đồng ý, xin vui lòng không sử dụng website và những dịch vụ của website.",
+                paragraph1: "Chào mừng bạn đến website Công ty TNHH Tư Vấn Thiết Kế Phần Mềm Mộc Điền (sau đây gọi tắt là website). Website này và những dịch vụ trên website được xây dựng và thuộc sở hữu của Công ty TNHH Tư Vấn Thiết Kế Phần Mềm Mộc Điền. Việc bạn sử dụng website và các dịch vụ của website đồng nghĩa với việc bạn đã đồng ý với những thoả thuận dưới đây (Thoả thuận sử dụng dịch vụ). Nếu bạn không đồng ý, xin vui lòng không sử dụng website và những dịch vụ của website.",
                 paragraph2: "Chúng tôi có thể sẽ thay đổi hoặc điều chỉnh Thoả thuận sử dụng dịch vụ. Bạn nên thường xuyên xem Thoả thuận sử dụng dịch vụ mỗi khi vào website. Nếu bạn tiếp tục sử dụng website và những dịch vụ sau khi chúng tôi đã điều chỉnh tức là bạn đã đồng ý với Thoả thuận sử dụng dịch vụ mới của chúng tôi."
             },
             ourServices: {
