@@ -31,7 +31,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
     <>
       <div className={`${location.pathname === "/"
         ? (scrolled
-          ? "xs:h-10 md:h-20 2xl:h-20 3xl:h-30"
+          ? "xs:h-10 md:h-20 2xl:h-20 3xl:h-20"
           : "xs:h-15 md:h-30 2xl:h-30 3xl:h-30")
         : "h-20"
         } w-full bg-transparent flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>

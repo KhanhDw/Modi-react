@@ -116,7 +116,7 @@ function BannerSilder() {
                                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1 }}
-                                        className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start 3xl:text-3xl">
+                                        className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start 3xl:text-xl">
                                         {bannerImagesAndContent[currentIndex].description}
                                     </motion.p>
                                     <motion.button
@@ -125,7 +125,7 @@ function BannerSilder() {
                                         animate={isInView ? { opacity: 1, } : {}}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1, delay: 0.5 }}
-                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 3xl:text-3xl">
+                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 3xl:text-xl">
                                         {bannerImagesAndContent[currentIndex].buttonText}
                                     </motion.button>
                                 </div>
@@ -224,7 +224,7 @@ function BaseModi() {
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={isInView ? { scale: 1, opacity: 1 } : {}}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                        className={`mb-4 xs:text-xl md:text-4xl 3xl:text-8xl font-bold text-center dark:text-white text-black `}
+                        className={`mb-4 xs:text-xl md:text-4xl 3xl:text-6xl font-bold text-center dark:text-white text-black `}
                     >
                         {t("home.baseModi.title")}
                     </motion.p>
@@ -235,7 +235,7 @@ function BaseModi() {
                         initial={{ y: 40, opacity: 0 }}
                         animate={isInView ? { y: 0, opacity: 1 } : {}}
                         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                        className="text-center xs:text-sm md:text-md 3xl:text-3xl dark:text-white text-black"
+                        className="text-center xs:text-sm md:text-md 3xl:text-xl dark:text-white text-black"
                     >
                         {t("home.baseModi.description")}
                     </motion.p>
@@ -296,11 +296,11 @@ function ThreeCardBusiness() {
                     >
                         <div className="flex md:flex-col 3xl:items-start md:items-center justify-between w-full md:gap-1 md:px-1">
                             <img className="w-25" src={item.img} alt={`img-${index}`} />
-                            <div className="flex items-center justify-start w-full md:text-xl font-bold text-center 3xl:text-5xl dark:text-white text-black">
+                            <div className="flex items-center justify-start w-full md:text-xl font-bold text-center 3xl:text-3xl dark:text-white text-black">
                                 <p>{item.title}</p>
                             </div>
                         </div>
-                        <p className="pb-2 mt-4 text-justify text-gray-700 3xl:text-4xl dark:text-white">{item.content}</p>
+                        <p className="pb-2 mt-4 text-justify text-gray-700 3xl:text-xl dark:text-white">{item.content}</p>
                     </motion.div>
                 );
             })}
@@ -346,7 +346,7 @@ function ServiceModi() {
                         transition={{ duration: 0.8 }}
                         className="relative flex flex-col items-center justify-center gap-4"
                     >
-                        <p className="text-4xl 3xl:text-8xl font-bold text-center text-white ">{t("home.serviceModi.title")}</p>
+                        <p className="text-4xl 3xl:text-6xl font-bold text-center text-white ">{t("home.serviceModi.title")}</p>
                     </motion.div>
                 </AnimatePresence>
                 <AnimatePresence mode='await'>
@@ -354,7 +354,7 @@ function ServiceModi() {
                         initial={{ opacity: 0 }}
                         animate={isInView ? { opacity: 1 } : {}}
                         transition={{ duration: 1.2, delay: 0.5 }}
-                        className="relative text-center xs:text-sm md:text-xl 3xl:text-3xl  md:w-1/2 text-white font-semibold"
+                        className="relative text-center xs:text-sm md:text-xl 3xl:text-xl  md:w-1/2 text-white font-semibold"
                     >
                         {t("home.serviceModi.description")}
                     </motion.p>
@@ -372,7 +372,7 @@ function ServiceModi() {
                                         transition={{ duration: 0.5, delay }}
                                         className="backdrop-blur-md bg-black/20"
                                     >
-                                        <p className="px-5 py-6 3xl:text-3xl xs:text-sm md:text-lg font-bold text-center text-white border-2 border-white rounded-2xl">
+                                        <p className="px-5 py-6 3xl:text-xl xs:text-sm md:text-lg font-bold text-center text-white border-2 border-white rounded-2xl">
                                             {item.title}
                                         </p>
                                     </motion.div>
@@ -459,7 +459,7 @@ function BenefitBusiness() {
                     initial={{ x: 100, opacity: 0 }}
                     animate={isInView ? { x: 0, opacity: 1 } : {}}
                     transition={{ duration: 0.8 }}
-                    className='mb-10 md:text-3xl xs:text-xl 3xl:text-8xl font-bold text-center dark:text-white text-black'
+                    className='mb-10 md:text-3xl xs:text-xl 3xl:text-6xl font-bold text-center dark:text-white text-black'
                 >
                     {t("home.benefit.mainTitle")}
                 </motion.p>
@@ -474,7 +474,7 @@ function BenefitBusiness() {
                                 transition={{ duration: 1 }}
                                 whileHover={{ scale: 1.05 }}
                                 onAnimationComplete={() => setShowContent(true)}
-                                className='flex items-center justify-start xs:gap-0 mb-2 xs:text-lg  md:text-md 3xl:text-5xl font-bold text-center transition-all duration-300 cursor-pointer'
+                                className='flex items-center justify-start xs:gap-0 mb-2 xs:text-lg  md:text-md 3xl:text-3xl font-bold text-center transition-all duration-300 cursor-pointer'
                                 type='button'
                             >
                                 <TiArrowSortedDown
@@ -497,7 +497,7 @@ function BenefitBusiness() {
                                 >
                                     <ul>
                                         {item.content.map((contentItem, subIndex) => (
-                                            <li key={subIndex} className='py-1 pl-1 list-disc 3xl:text-3xl dark:text-white text-black'>
+                                            <li key={subIndex} className='py-1 pl-1 list-disc 3xl:text-xl dark:text-white text-black'>
                                                 {contentItem}
                                             </li>
                                         ))}
@@ -520,7 +520,7 @@ function BannerText() {
     return (
 
         <div className="w-full marquee">
-            <div className="xs:text-2xl md:text-6xl 3xl:text-8xl font-bold text-gray-400 marquee-content dark:text-white ">
+            <div className="xs:text-2xl md:text-6xl 3xl:text-6xl font-bold text-gray-400 marquee-content dark:text-white ">
                 {t("home.bannerText")}
             </div>
         </div>
@@ -561,7 +561,7 @@ function Customer() {
                         initial={{ y: -50, opacity: 0 }}
                         animate={isInView ? { y: 0, opacity: 1 } : {}}
                         transition={{ type: "spring", stiffness: 120 }}
-                        className="mb-4 xs:text-2xl  md:text-4xl 2xl:text-6xl 3xl:text-8xl font-bold text-center dark:text-white text-black"
+                        className="mb-4 xs:text-2xl  md:text-4xl 2xl:text-6xl 3xl:text-6xl font-bold text-center dark:text-white text-black"
                     >
                         {t("home.customer.title")}
                     </motion.h2>
@@ -571,7 +571,7 @@ function Customer() {
                         initial={{ opacity: 0 }}
                         animate={isInView ? { opacity: 1 } : {}}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mb-4 text-justify text-gray-700 md:text-sm 2xl:text-lg 3xl:text-3xl dark:text-white "
+                        className="mb-4 text-justify text-gray-700 md:text-sm 2xl:text-lg 3xl:text-xl dark:text-white "
                     >
                         {t("home.customer.description")}
                     </motion.p>
@@ -586,7 +586,7 @@ function Customer() {
                                     ? { rotateX: 0, opacity: 1 }
                                     : {}}
                                 transition={{ duration: 0.5, delay: 0.3 + index * 0.15 }}
-                                className="p-4 text-center bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md shadow-gray-300 dark:shadow-gray-700 3xl:text-3xl 2xl:text-lg dark:text-white text-black"
+                                className="p-4 text-center bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md shadow-gray-300 dark:shadow-gray-700 3xl:text-xl 2xl:text-lg dark:text-white text-black"
                             >
                                 {text}
                             </motion.div>
