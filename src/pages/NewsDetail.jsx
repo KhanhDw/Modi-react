@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Clock, User } from "lucide-react"
+import SlateContentRenderer from '../components/feature/SlateContentRenderer';
 
 export default function NewsDetail1() {
   const { id } = useParams()
@@ -38,7 +39,8 @@ export default function NewsDetail1() {
             </div>
           </div>
           <div className="text-gray-700 dark:text-gray-200 text-lg leading-relaxed">
-            {article.noi_dung}
+            {/* biên dịch json thành html */}
+            <SlateContentRenderer jsonContent={article.noi_dung} />
           </div>
         </div>
       </div>

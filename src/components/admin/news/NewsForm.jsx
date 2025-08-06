@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import FormCard from "../common/FormCard"
 import FormButtons from "../common/FormButtons"
 import FullUsageImageUpload from "../../feature/FullUsageImageUpload"
+import TextEditor from "../../feature/TextEditor"
 
 
 export default function NewsForm({ news, onSubmit, onCancel, isUploadNewImage }) {
@@ -10,9 +11,9 @@ export default function NewsForm({ news, onSubmit, onCancel, isUploadNewImage })
   const [fileImage, setFileImage] = useState(null);
 
 
-  useEffect(() => {
-    console.log("dsds: " + fileImage);
-  })
+  // useEffect(() => {
+  //   console.log("dsds: " + fileImage);
+  // })
 
   useEffect(() => {
     if (fileImage) {
@@ -51,6 +52,7 @@ export default function NewsForm({ news, onSubmit, onCancel, isUploadNewImage })
     }
   }
 
+
   return (
     <FormCard title={news ? "Sửa tin tức" : "Thêm tin tức mới"}>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -71,13 +73,15 @@ export default function NewsForm({ news, onSubmit, onCancel, isUploadNewImage })
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Nội dung</label>
-          <textarea
+          {/* <textarea
             value={formData.noi_dung}
             onChange={(e) => setFormData({ ...formData, noi_dung: e.target.value })}
             rows="4"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-          />
+          /> */}
+
+          <TextEditor valueContextNews={formData.noi_dung} onChange={(e) => setFormData({ ...formData, noi_dung: e.target.value })} />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Tác giả</label>
