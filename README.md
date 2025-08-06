@@ -1,3 +1,5 @@
+# Deploy: https://sweet-starlight-6a5f76.netlify.app/
+
 # React + Vite1
 
 tạo 1 branch mới (đây là tạo local):
