@@ -1,26 +1,41 @@
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
-import { Suspense } from "react"
+import { Routes, Route, BrowserRouter as Router, useLocation } from "react-router-dom";
+import { Suspense, useEffect, useRef } from "react";
 import { publicRoutes, privateRoutes } from "./routes";
 import PrivateRoute from "./components/guardRouter/PrivateRoute";
-import Lenis from 'lenis';
-import React, { useEffect, useRef } from 'react';
-import './App.css';
+import Lenis from "lenis";
+import "./App.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+
+// Component con để theo dõi route thay đổi
+function ScrollHandler({ lenis }) {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Khôi phục Lenis toàn cục khi route thay đổi
+    if (lenis.current) {
+      lenis.current.start(); // Đảm bảo Lenis chạy
+      lenis.current.resize(); // Cập nhật kích thước wrapper/content
+      window.scrollTo(0, 0); // Cuộn về đầu trang
+    }
+  }, [location, lenis]);
+
+  return null;
+}
 
 function App() {
   const lenis = useRef(null);
 
   useEffect(() => {
-    // Initialize Lenis
+    // Khởi tạo Lenis toàn cục
     lenis.current = new Lenis({
-      duration: 0.9, // Control the duration of the scroll
-      easing: (t) => 1 - Math.pow(1 - t, 3), // Cubic easing for smooth stop
+      duration: 0.9,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
       smooth: true,
-      smoothTouch: true, // Enable smooth scrolling on touch devices
-      // orientation: 'vertical',
+      smoothTouch: true,
+      gestureOrientation: "vertical",
+      touchMultiplier: 2,
     });
-
 
     const animate = (time) => {
       lenis.current.raf(time);
@@ -29,25 +44,25 @@ function App() {
 
     requestAnimationFrame(animate);
 
+    window.__lenis = lenis.current; // Gán vào window
 
-    window.__lenis = lenis.current; // 👈 Gán vào window để hook có thể truy cập
-
-    // Cleanup on unmount
+    // Cleanup
     return () => {
       lenis.current.destroy();
+      window.__lenis = null;
     };
   }, []);
 
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <Router >
+        <Router>
+          <ScrollHandler lenis={lenis} /> {/* Theo dõi route thay đổi */}
           <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Đang tải...</div>}>
             <Routes>
               {publicRoutes.map((router, index) => {
                 const Page = router.component;
                 const Layout = router.layout || (({ children }) => <>{children}</>);
-
                 return (
                   <Route
                     key={index}
@@ -63,7 +78,6 @@ function App() {
               {privateRoutes.map((router, index) => {
                 const Page = router.component;
                 const Layout = router.layout || (({ children }) => <>{children}</>);
-
                 return (
                   <Route
                     key={"private" + index}
@@ -74,16 +88,16 @@ function App() {
                           <Page />
                         </Layout>
                       </PrivateRoute>
-                    } />
+                    }
+                  />
                 );
               })}
-
             </Routes>
           </Suspense>
         </Router>
       </LanguageProvider>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

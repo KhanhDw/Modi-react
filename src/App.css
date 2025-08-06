@@ -17,3 +17,15 @@
     background: #a0aec0;
 }
 
+.lenis-local {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+}
+
+html.lenis,
+html.lenis body {
+    height: auto; /* Ngăn chặn chặn cuộn */
+    overflow: auto;
+}
