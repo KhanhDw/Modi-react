@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 // Component Điều khoản Sử dụng
@@ -15,10 +14,10 @@ const TermsOfServicePage = () => {
   return (
     // Nền chính của trang, sử dụng màu slate tối và font chữ mặc định
     <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-300 font-sans min-h-screen p-4 sm:p-6 md:p-8">
-      
+
       {/* Container chính cho nội dung, căn giữa và có chiều rộng tối đa */}
       <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 sm:p-8 md:p-10">
-        
+
         {/* Tiêu đề chính */}
         <header className="text-center mb-10">
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -82,39 +81,39 @@ const TermsOfServicePage = () => {
               </p>
             </section>
           </div>
-          
+
           {/* Mục 6 */}
           <section>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-l-4 border-cyan-400 pl-4">
               {t('TermsOfServicePage.sections.membershipRegistration.title')}
             </h2>
-             <ul className="list-disc list-inside space-y-2 leading-relaxed">
-                {registrationItems.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
+            <ul className="list-disc list-inside space-y-2 leading-relaxed">
+              {registrationItems.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </section>
 
           {/* Mục 7 */}
           <section>
-             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-l-4 border-cyan-400 pl-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-l-4 border-cyan-400 pl-4">
               {t('TermsOfServicePage.sections.memberInfoUpdate.title')}
             </h2>
             <p className="leading-relaxed">
-             {t('TermsOfServicePage.sections.memberInfoUpdate.content')}
+              {t('TermsOfServicePage.sections.memberInfoUpdate.content')}
             </p>
           </section>
 
-           {/* Mục 8 */}
+          {/* Mục 8 */}
           <section>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-l-4 border-cyan-400 pl-4">
               {t('TermsOfServicePage.sections.prohibitions.title')}
             </h2>
             <p className="leading-relaxed mb-3">{t('TermsOfServicePage.sections.prohibitions.intro')}</p>
             <ul className="list-disc list-inside space-y-2 leading-relaxed bg-white dark:bg-slate-900/50 p-4 rounded-lg">
-                {prohibitionItems.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
+              {prohibitionItems.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </section>
 
@@ -127,21 +126,21 @@ const TermsOfServicePage = () => {
               <p className="leading-relaxed">{item.content}</p>
             </section>
           ))}
-          
+
         </main>
 
         {/* Phần chân trang chứa thông tin liên hệ */}
         <footer className="mt-12 border-t border-slate-700 pt-8">
-           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">
-              {t('TermsOfServicePage.footer.title')}
-            </h2>
-            <div className="bg-white dark:bg-slate-900/50 p-6 rounded-lg text-center">
-                <p className="font-bold text-lg text-gray-900 dark:text-white">{t('TermsOfServicePage.footer.companyName')}</p>
-                <p className="mt-2"><strong>{t('TermsOfServicePage.footer.addressLabel')}</strong> {t('TermsOfServicePage.footer.addressValue')}</p>
-                <p><strong>{t('TermsOfServicePage.footer.phoneLabel')}</strong> {t('TermsOfServicePage.footer.phoneValue')}</p>
-                <p><strong>{t('TermsOfServicePage.footer.faxLabel')}</strong> {t('TermsOfServicePage.footer.faxValue')}</p>
-                <p><strong>{t('TermsOfServicePage.footer.emailLabel')}</strong> {t('TermsOfServicePage.footer.emailValue')}</p>
-            </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+            {t('TermsOfServicePage.footer.title')}
+          </h2>
+          <div className="bg-white dark:bg-slate-900/50 p-6 rounded-lg text-center">
+            <p className="font-bold text-lg text-gray-900 dark:text-white">{t('TermsOfServicePage.footer.companyName')}</p>
+            <p className="mt-2"><strong>{t('TermsOfServicePage.footer.addressLabel')}</strong> {t('TermsOfServicePage.footer.addressValue')}</p>
+            <p><strong>{t('TermsOfServicePage.footer.phoneLabel')}</strong> {t('TermsOfServicePage.footer.phoneValue')}</p>
+            <p><strong>{t('TermsOfServicePage.footer.faxLabel')}</strong> {t('TermsOfServicePage.footer.faxValue')}</p>
+            <p><strong>{t('TermsOfServicePage.footer.emailLabel')}</strong> {t('TermsOfServicePage.footer.emailValue')}</p>
+          </div>
         </footer>
 
       </div>
