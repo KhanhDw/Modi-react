@@ -67,13 +67,20 @@ export default function DashboardPage() {
           }]
         },
         options: {
+          maintainAspectRatio: false, // Cho phép điều chỉnh kích thước thủ công
+          responsive: true,
           scales: {
             y: {
               beginAtZero: true,
               title: {
                 display: true,
-                text: 'Số lượng'
-              }
+                text: 'Số lượng',
+                font: { size: 12 } // Giảm kích thước font tiêu đề
+              },
+              ticks: { font: { size: 10 } } // Giảm kích thước font trục y
+            },
+            x: {
+              ticks: { font: { size: 10 } } // Giảm kích thước font trục x
             }
           },
           plugins: {
@@ -118,7 +125,7 @@ export default function DashboardPage() {
       {/* Chart */}
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Thống kê tổng quan</h2>
-        <div className="chart-container">
+        <div className="chart-container" style={{ width: '90%', height: '400px' }}>
           <canvas id="statsChart"></canvas>
         </div>
       </div>
