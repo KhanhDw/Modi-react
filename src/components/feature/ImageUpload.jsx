@@ -4,7 +4,7 @@ import { Upload, X, Image, Trash2, Eye, Settings, Info } from 'lucide-react';
 export default function ImageUpload({
     // CẤU HÌNH MẶC ĐỊNH CHO COMPONENT, NẾU CÓ CẤU HÌNH KHÁC TỪ BÊN NGOÀI THÌ SẼ BỊ GHI ĐÈ
     // Cấu hình cơ bản
-    apiBaseUrl = 'http://localhost:3000',
+    apiBaseUrl = 'MAIN_BE_URL',
     uploadPath = '/api/upload',
     uploadMultiplePath = '/api/upload-multiple',
     imagesPath = '/api/images',

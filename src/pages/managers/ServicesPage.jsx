@@ -11,7 +11,7 @@ export default function ServicesPage() {
 
   // Lấy danh sách dịch vụ từ backend khi component mount
   useEffect(() => {
-    fetch('http://localhost:3000/api/dichvu')
+    fetch('MAIN_BE_URL/api/dichvu')
       .then((response) => response.json())
       .then((data) => setServices(data))
       .catch((error) => console.error('Lỗi khi lấy dữ liệu:', error));
@@ -36,7 +36,7 @@ export default function ServicesPage() {
 
   const handleDelete = (id) => {
     if (confirm("Bạn có chắc muốn xóa dịch vụ này?")) {
-      fetch(`http://localhost:3000/api/dichvu/${id}`, {
+      fetch(`MAIN_BE_URL/api/dichvu/${id}`, {
         method: 'DELETE',
       })
         .then((response) => response.json())
@@ -48,8 +48,8 @@ export default function ServicesPage() {
   const handleSubmit = (formData) => {
     const method = editingService ? 'PUT' : 'POST';
     const url = editingService
-      ? `http://localhost:3000/api/dichvu/${editingService.id}`
-      : 'http://localhost:3000/api/dichvu';
+      ? `MAIN_BE_URL/api/dichvu/${editingService.id}`
+      : 'MAIN_BE_URL/api/dichvu';
 
     fetch(url, {
       method,
@@ -59,11 +59,11 @@ export default function ServicesPage() {
       .then((response) => response.json())
       .then((data) => {
         if (editingService) {
-          setServices(services.map((s) => (s.id === editingService.id ? {  ...formData, ...s, } : s)));
+          setServices(services.map((s) => (s.id === editingService.id ? { ...formData, ...s, } : s)));
         } else {
           setServices([
             { id: data.data?.id || Date.now(), ...formData, ngay_tao: new Date().toISOString().split("T")[0] }],
-            ...services, 
+            ...services,
           );
         }
         setShowForm(false);
@@ -72,16 +72,16 @@ export default function ServicesPage() {
   };
 
   return (
-  
-      <div className="p-6">
-        <PageHeader title="Quản lý dịch vụ" buttonText="Thêm dịch vụ" onButtonClick={handleAdd} />
 
-        {showForm && (
-          <ServiceForm service={editingService} onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
-        )}
+    <div className="p-6">
+      <PageHeader title="Quản lý dịch vụ" buttonText="Thêm dịch vụ" onButtonClick={handleAdd} />
 
-        <Table columns={columns} data={services} onEdit={handleEdit} onDelete={handleDelete} />
-      </div>
+      {showForm && (
+        <ServiceForm service={editingService} onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
+      )}
+
+      <Table columns={columns} data={services} onEdit={handleEdit} onDelete={handleDelete} />
+    </div>
 
   );
 }

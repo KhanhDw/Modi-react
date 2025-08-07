@@ -8,7 +8,7 @@ export default function RecruitmentPage() {
   const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
-  const apiUrl = "http://localhost:3000/api/tuyendung";
+  const apiUrl = "MAIN_BE_URL/api/tuyendung";
   const { t } = useLanguage();
 
   useEffect(() => {

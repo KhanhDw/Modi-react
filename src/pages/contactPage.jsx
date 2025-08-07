@@ -44,8 +44,8 @@ export default function ContactPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    
+
+
     // Thư viện cung cấp hàm xác thực
     if (formData.securityCode.trim().toLowerCase() === captchaText.toLowerCase()) {
       // Xử lý thành công
@@ -58,8 +58,8 @@ export default function ContactPage() {
       setCaptchaText(generateCaptcha());
     }
 
-     try {
-      const response = await fetch('http://localhost:3000/api/lienhe', {
+    try {
+      const response = await fetch('MAIN_BE_URL/api/lienhe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -117,7 +117,7 @@ export default function ContactPage() {
             </h1>
             <p className="text-gray-600 dark:text-slate-400  sm:text-sm leading-relaxed">
               {t("contactPage.description")}
-             
+
             </p>
             {serviceOrderURL && (
               <div className="text-center text-gray-600 dark:text-slate-400 text-base sm:text-lg font-bold leading-relaxed border-2 border-red-500 dark:border-red-400 rounded-lg p-2">
@@ -135,7 +135,7 @@ export default function ContactPage() {
                 <input
                   type="text"
                   name="ho_ten"
-                  placeholder={t("contactPage.inputName")+`(*)`}
+                  placeholder={t("contactPage.inputName") + `(*)`}
                   value={formData.ho_ten}
                   onChange={handleInputChange}
                   required
@@ -144,7 +144,7 @@ export default function ContactPage() {
                 <input
                   type="tel"
                   name="so_dien_thoai"
-                  placeholder={t("contactPage.inputPhoneNumber")+`(*)`}
+                  placeholder={t("contactPage.inputPhoneNumber") + `(*)`}
                   value={formData.so_dien_thoai}
                   onChange={handleInputChange}
                   required
@@ -168,7 +168,7 @@ export default function ContactPage() {
                 <input
                   type="text"
                   name="securityCode"
-                  placeholder={t("contactPage.inputPin")+`(*)`}
+                  placeholder={t("contactPage.inputPin") + `(*)`}
                   value={formData.securityCode}
                   onChange={handleInputChange}
                   required

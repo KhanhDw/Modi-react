@@ -14,18 +14,18 @@ function AdminLoginPage() {
     }
 
     const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+        const { name, value } = e.target;
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
-        try{
-            const response = await fetch('http://localhost:3000/api/admin/login', {
+
+        try {
+            const response = await fetch('MAIN_BE_URL/api/admin/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,11 +39,11 @@ function AdminLoginPage() {
 
             const data = await response.json();
             localStorage.setItem('accessToken', data.accessToken)
-        
+
             navigate("/managers");
         }
-        catch(e){
-            console.log("Đã xảy ra lỗi: "+e.message);
+        catch (e) {
+            console.log("Đã xảy ra lỗi: " + e.message);
         }
     }
 
@@ -51,11 +51,11 @@ function AdminLoginPage() {
     return (
         <>
             <div className="bg-black text-white flex min-h-screen flex-col items-center pt-16 sm:justify-center sm:pt-0">
-                    <div className="text-foreground font-semibold text-2xl tracking-tighter mx-auto flex items-center gap-2">
-                            <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-                                <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
-                            </Link>
-                    </div>
+                <div className="text-foreground font-semibold text-2xl tracking-tighter mx-auto flex items-center gap-2">
+                    <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
+                        <img src="./logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+                    </Link>
+                </div>
                 <div className="relative mt-12 w-full max-w-lg sm:mt-10">
                     <div className="relative -mb-px h-px w-full bg-gradient-to-r from-transparent via-sky-300 to-transparent"
                         bis_skin_checked="1"></div>
@@ -121,7 +121,7 @@ function AdminLoginPage() {
                                 <div className="mt-4 flex items-center justify-end gap-x-2">
                                     <a className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:ring hover:ring-white h-10 px-4 py-2 duration-200"
                                         href="/register">Go Home</a>
-                                    <button 
+                                    <button
                                         className="font-semibold hover:bg-black hover:text-white hover:ring hover:ring-white transition duration-300 inline-flex items-center justify-center rounded-md text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-black h-10 px-4 py-2"
                                         type="submit">Đăng nhập</button>
                                 </div>

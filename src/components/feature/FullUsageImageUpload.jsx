@@ -48,7 +48,7 @@ function FullUsageImageUpload({ fileImageUploadSuccess = "", isUploadNewImage, u
         <div>
             <ImageUpload
                 // API Configuration
-                apiBaseUrl="http://localhost:3000"
+                apiBaseUrl="MAIN_BE_URL"
                 uploadPath="/api/upload"
                 uploadMultiplePath="/api/upload-multiple"
                 imagesPath="/api/images"
