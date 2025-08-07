@@ -9,7 +9,7 @@ export default function ContactPage() {
 
   // Fetch contact data from backend
   useEffect(() => {
-    fetch(`${process.env.MAIN_BE_URL}/api/lienhe`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe`)
       .then((response) => response.json())
       .then((data) => setContacts(data))
       .catch((error) => console.error("Lỗi khi lấy dữ liệu:", error));
@@ -67,7 +67,7 @@ export default function ContactPage() {
 
   const handleDelete = (id) => {
     if (confirm("Bạn có chắc muốn xóa liên hệ này?")) {
-      fetch(`MAIN_BE_URL/api/lienhe/${id}`, {
+      fetch(`VITE_MAIN_BE_URL/api/lienhe/${id}`, {
         method: "DELETE",
       })
         .then((response) => response.json())
@@ -80,7 +80,7 @@ export default function ContactPage() {
   };
 
   const handleStatusChange = (id, newStatus) => {
-    fetch(`MAIN_BE_URL/api/lienhe/${id}`, {
+    fetch(`VITE_MAIN_BE_URL/api/lienhe/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ trang_thai: newStatus }),

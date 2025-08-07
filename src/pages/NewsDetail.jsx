@@ -11,7 +11,7 @@ export default function NewsDetail1() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${process.env.MAIN_BE_URL}/api/tintuc/${id}`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/tintuc/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("API không phản hồi");
         return res.json();

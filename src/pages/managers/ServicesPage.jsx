@@ -11,7 +11,7 @@ export default function ServicesPage() {
 
   // Lấy danh sách dịch vụ từ backend khi component mount
   useEffect(() => {
-    fetch(`${process.env.MAIN_BE_URL}/api/dichvu`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/dichvu`)
       .then((response) => response.json())
       .then((data) => setServices(data))
       .catch((error) => console.error('Lỗi khi lấy dữ liệu:', error));
@@ -36,7 +36,7 @@ export default function ServicesPage() {
 
   const handleDelete = (id) => {
     if (confirm("Bạn có chắc muốn xóa dịch vụ này?")) {
-      fetch(`MAIN_BE_URL/api/dichvu/${id}`, {
+      fetch(`VITE_MAIN_BE_URL/api/dichvu/${id}`, {
         method: 'DELETE',
       })
         .then((response) => response.json())
@@ -48,8 +48,8 @@ export default function ServicesPage() {
   const handleSubmit = (formData) => {
     const method = editingService ? 'PUT' : 'POST';
     const url = editingService
-      ? `MAIN_BE_URL/api/dichvu/${editingService.id}`
-      : 'MAIN_BE_URL/api/dichvu';
+      ? `VITE_MAIN_BE_URL/api/dichvu/${editingService.id}`
+      : 'VITE_MAIN_BE_URL/api/dichvu';
 
     fetch(url, {
       method,

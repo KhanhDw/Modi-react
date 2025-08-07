@@ -8,7 +8,7 @@ export default function RecruitmentPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingJob, setEditingJob] = useState(null)
 
-  const apiUrl = `${process.env.MAIN_BE_URL}/api/tuyendung`
+  const apiUrl = `${import.meta.env.VITE_MAIN_BE_URL}/api/tuyendung`
 
   // Lấy danh sách tin tuyển dụng từ backend khi component mount
   const fetchJobs = () => {

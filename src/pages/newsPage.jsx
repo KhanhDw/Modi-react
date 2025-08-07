@@ -11,7 +11,7 @@ export default function NewsInterface() {
   const pageSize = 6;
 
   useEffect(() => {
-    fetch(`${process.env.MAIN_BE_URL}/api/tintuc`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/tintuc`)
       .then((res) => {
         if (!res.ok) throw new Error("API không phản hồi"); // Kiểm tra lỗi HTTP
         return res.json();

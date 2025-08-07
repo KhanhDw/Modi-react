@@ -59,7 +59,7 @@ export default function ContactPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.MAIN_BE_URL}/api/lienhe`, {
+      const response = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -13,7 +13,7 @@ export default function NewsPage() {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch(`${process.env.MAIN_BE_URL}/api/tintuc`);
+      const response = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/tintuc`);
       const data = await response.json();
       setNews(data);
     } catch (error) {
@@ -58,7 +58,7 @@ export default function NewsPage() {
 
   const handleDelete = async (id) => {
     if (confirm("Bạn có chắc muốn xóa tin tức này?")) {
-      fetch(`MAIN_BE_URL/api/tintuc/${id}`, {
+      fetch(`VITE_MAIN_BE_URL/api/tintuc/${id}`, {
         method: 'DELETE',
       })
         .then((response) => response.json())
@@ -71,8 +71,8 @@ export default function NewsPage() {
   const handleSubmit = async (formData) => {
     const method = editingNews ? 'PUT' : 'POST'
     const url = editingNews
-      ? `MAIN_BE_URL/api/tintuc/${editingNews.id}`
-      : 'MAIN_BE_URL/api/tintuc'
+      ? `VITE_MAIN_BE_URL/api/tintuc/${editingNews.id}`
+      : 'VITE_MAIN_BE_URL/api/tintuc'
 
     fetch(url, {
       method,

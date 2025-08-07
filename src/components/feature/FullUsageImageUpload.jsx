@@ -48,7 +48,7 @@ function FullUsageImageUpload({ fileImageUploadSuccess = "", isUploadNewImage, u
         <div>
             <ImageUpload
                 // API Configuration
-                apiBaseUrl={`${process.env.MAIN_BE_URL}`}
+                apiBaseUrl={`${import.meta.env.VITE_MAIN_BE_URL}`}
                 uploadPath="/api/upload"
                 uploadMultiplePath="/api/upload-multiple"
                 imagesPath="/api/images"
