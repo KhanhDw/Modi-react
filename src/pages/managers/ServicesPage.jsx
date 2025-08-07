@@ -11,7 +11,7 @@ export default function ServicesPage() {
 
   // Lấy danh sách dịch vụ từ backend khi component mount
   useEffect(() => {
-    fetch('MAIN_BE_URL/api/dichvu')
+    fetch(`${process.env.MAIN_BE_URL}/api/dichvu`)
       .then((response) => response.json())
       .then((data) => setServices(data))
       .catch((error) => console.error('Lỗi khi lấy dữ liệu:', error));

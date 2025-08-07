@@ -13,7 +13,7 @@ export default function NewsPage() {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch('MAIN_BE_URL/api/tintuc');
+      const response = await fetch(`${process.env.MAIN_BE_URL}/api/tintuc`);
       const data = await response.json();
       setNews(data);
     } catch (error) {

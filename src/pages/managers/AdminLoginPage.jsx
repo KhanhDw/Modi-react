@@ -25,7 +25,7 @@ function AdminLoginPage() {
         e.preventDefault();
 
         try {
-            const response = await fetch('MAIN_BE_URL/api/admin/login', {
+            const response = await fetch(`${process.env.MAIN_BE_URL}/api/admin/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

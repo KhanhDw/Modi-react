@@ -19,7 +19,7 @@ export default function NewsForm({ news, onSubmit, onCancel, isUploadNewImage })
     if (fileImage) {
       setFormData((prev) => ({
         ...prev,
-        hinh_anh: "MAIN_BE_URL/image/" + fileImage
+        hinh_anh: `${process.env.MAIN_BE_URL}/image/` + fileImage
       }));
     }
   }, [fileImage]);

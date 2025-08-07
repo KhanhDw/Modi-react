@@ -9,7 +9,7 @@ export default function ContactPage() {
 
   // Fetch contact data from backend
   useEffect(() => {
-    fetch("MAIN_BE_URL/api/lienhe")
+    fetch(`${process.env.MAIN_BE_URL}/api/lienhe`)
       .then((response) => response.json())
       .then((data) => setContacts(data))
       .catch((error) => console.error("Lỗi khi lấy dữ liệu:", error));

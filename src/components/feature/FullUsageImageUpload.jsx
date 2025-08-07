@@ -48,7 +48,7 @@ function FullUsageImageUpload({ fileImageUploadSuccess = "", isUploadNewImage, u
         <div>
             <ImageUpload
                 // API Configuration
-                apiBaseUrl="MAIN_BE_URL"
+                apiBaseUrl={`${process.env.MAIN_BE_URL}`}
                 uploadPath="/api/upload"
                 uploadMultiplePath="/api/upload-multiple"
                 imagesPath="/api/images"
