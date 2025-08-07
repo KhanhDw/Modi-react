@@ -29,6 +29,9 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
           <table className="min-w-full ">
             <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
+                <th key={1}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase bg-gray-50"
+                >STT</th>
                 {columns.map((column) => (
                   <th
                     key={column.key}
