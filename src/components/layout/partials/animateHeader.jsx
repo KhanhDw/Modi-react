@@ -53,7 +53,7 @@ function AnimationHeader({ ActiveSideBarHeader }) {
                 backgroundColor: animatedBackgroundColor,
                 height: location.pathname === "/"
                     ? (scrolled
-                        ? (isMobile ? 40 : (isTablet ? 80 : (isDesktop ? 80 : 80))) : 80) : 80,
+                        ? (isMobile ? 80 : (isTablet ? 80 : (isDesktop ? 80 : 80))) : 80) : 120,
                 opacity: scrolled ? 1 : 1,
                 boxShadow: scrolled ? "0 2px 12px rgba(255, 255, 255, 0.2)" : "0 0 0 rgba(0, 0, 0, 0)",
             }}

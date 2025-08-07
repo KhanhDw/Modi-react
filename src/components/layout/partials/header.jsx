@@ -31,12 +31,12 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
     <>
       <div className={`${location.pathname === "/"
         ? (scrolled
-          ? "xs:h-10 md:h-20 2xl:h-20 3xl:h-20"
-          : "xs:h-15 md:h-30 2xl:h-30 3xl:h-30")
+          ? "xs:h-20 md:h-20 2xl:h-20 3xl:h-20"
+          : "xs:h-20 md:h-30 2xl:h-30 3xl:h-30")
         : "h-20"
         } w-full bg-transparent flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="/logoModi.png" className='xs:h-5 sm:h-6 md:h-7 lg:h-7 xl:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+          <img src="/logoModi.png" className='xs:h-8  2xl:h-8 3xl:h-12 w-fit' alt='logo' />
         </Link>
 
 
