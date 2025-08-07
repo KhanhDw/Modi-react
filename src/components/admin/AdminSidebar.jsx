@@ -3,8 +3,8 @@
 import { Link, useLocation } from "react-router-dom"
 
 const menuItems = [
-  { name: "Tổng quan", path: "/managers/dashboard", icon: "📊" },
-  { name: "Dịch vụ", path: "/managers/services", icon: "🛠️" },
+  // { name: "Tổng quan", path: "/managers/dashboard", icon: "📊" },
+  // { name: "Dịch vụ", path: "/managers/services", icon: "🛠️" },
   { name: "Tin tức", path: "/managers/news", icon: "📰" },
   { name: "Tuyển dụng", path: "/managers/recruitment", icon: "💼" },
   { name: "Liên hệ", path: "/managers/contact", icon: "📞" },
