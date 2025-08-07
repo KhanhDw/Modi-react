@@ -36,7 +36,7 @@ export default function ServicesPage() {
 
   const handleDelete = (id) => {
     if (confirm("Bạn có chắc muốn xóa dịch vụ này?")) {
-      fetch(`VITE_MAIN_BE_URL/api/dichvu/${id}`, {
+      fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/dichvu/${id}`, {
         method: 'DELETE',
       })
         .then((response) => response.json())
@@ -48,8 +48,8 @@ export default function ServicesPage() {
   const handleSubmit = (formData) => {
     const method = editingService ? 'PUT' : 'POST';
     const url = editingService
-      ? `VITE_MAIN_BE_URL/api/dichvu/${editingService.id}`
-      : 'VITE_MAIN_BE_URL/api/dichvu';
+      ? `${import.meta.env.VITE_MAIN_BE_URL}/api/dichvu/${editingService.id}`
+      : `${import.meta.env.VITE_MAIN_BE_URL}/api/dichvu`;
 
     fetch(url, {
       method,
