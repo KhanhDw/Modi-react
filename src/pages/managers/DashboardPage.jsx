@@ -7,6 +7,7 @@ export default function DashboardPage() {
     tinTuc: 0,
     tuyenDung: 0,
     lienHe: 0,
+    dailyContacts: Array(31).fill(0), // Mảng 31 ngày, khởi tạo với 0
   });
 
   const chartRef = useRef(null);
@@ -26,18 +27,54 @@ export default function DashboardPage() {
           lienHeRes.json(),
         ]);
 
-        setStats({
+        console.log('Dữ liệu lienHe:', lienHeData); // Debug dữ liệu từ API
+
+        setStats((prevStats) => ({
+          ...prevStats,
           tinTuc: tinTucData.length,
           tuyenDung: tuyenDungData.length,
           lienHe: lienHeData.length,
-        });
+          dailyContacts: calculateDailyContacts(lienHeData),
+        }));
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu:', error);
       }
     };
 
     fetchStats();
+    // Cập nhật lại mỗi 5 giây để kiểm tra thay đổi
+    const interval = setInterval(fetchStats, 5000);
+
+    return () => clearInterval(interval); // Dọn dẹp interval
   }, []);
+
+  // Hàm tính số lượng khách hàng liên hệ theo ngày trong tháng hiện tại
+  const calculateDailyContacts = (data) => {
+    const dailyCounts = Array(31).fill(0);
+    const currentMonth = new Date().getMonth() + 1; // Tháng 8
+    const currentYear = new Date().getFullYear(); // 2025
+
+    data.forEach((item) => {
+      const itemDate = new Date(item.ngay_gui); // Sử dụng ngay_gui thay vì ngay_dang
+      if (itemDate && !isNaN(itemDate.getTime())) { // Kiểm tra ngày hợp lệ
+        console.log('Ngày gửi:', item.ngay_gui, 'Parsed:', itemDate); // Debug ngày
+        if (
+          itemDate.getMonth() + 1 === currentMonth &&
+          itemDate.getFullYear() === currentYear
+        ) {
+          const day = itemDate.getDate() - 1; // Index mảng (0-30)
+          if (day >= 0 && day < 31) {
+            dailyCounts[day]++;
+          }
+        }
+      } else {
+        console.log('Ngày không hợp lệ:', item.ngay_gui); // Debug lỗi parse
+      }
+    });
+
+    console.log('Daily Counts:', dailyCounts); // Debug mảng kết quả
+    return dailyCounts;
+  };
 
   useEffect(() => {
     const ctx = document.getElementById('statsChart')?.getContext('2d');
@@ -49,38 +86,35 @@ export default function DashboardPage() {
       chartRef.current = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Tin tức', 'Tuyển dụng', 'Liên hệ'],
+          labels: Array.from({ length: 31 }, (_, i) => i + 1), // Nhãn từ 1 đến 31
           datasets: [{
-            label: 'Số lượng',
-            data: [stats.tinTuc, stats.tuyenDung, stats.lienHe],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.6)',
-              'rgba(54, 162, 235, 0.6)',
-              'rgba(255, 206, 86, 0.6)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)'
-            ],
+            label: 'Số khách hàng liên hệ',
+            data: stats.dailyContacts,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1
           }]
         },
         options: {
-          maintainAspectRatio: false, // Cho phép điều chỉnh kích thước thủ công
+          maintainAspectRatio: false,
           responsive: true,
           scales: {
             y: {
               beginAtZero: true,
               title: {
                 display: true,
-                text: 'Số lượng',
-                font: { size: 12 } // Giảm kích thước font tiêu đề
+                text: 'Số lượng khách hàng',
+                font: { size: 12 }
               },
-              ticks: { font: { size: 10 } } // Giảm kích thước font trục y
+              ticks: { font: { size: 10 } }
             },
             x: {
-              ticks: { font: { size: 10 } } // Giảm kích thước font trục x
+              title: {
+                display: true,
+                text: 'Ngày trong tháng',
+                font: { size: 12 }
+              },
+              ticks: { font: { size: 10 } }
             }
           },
           plugins: {
@@ -97,7 +131,7 @@ export default function DashboardPage() {
         chartRef.current.destroy();
       }
     };
-  }, [stats]);
+  }, [stats.dailyContacts]);
 
   return (
     <div className="p-6">
@@ -125,7 +159,7 @@ export default function DashboardPage() {
       {/* Chart */}
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Thống kê tổng quan</h2>
-        <div className="chart-container" style={{ width: '90%', height: '400px' }}>
+        <div className="chart-container" style={{ width: '100%', height: '200px' }}>
           <canvas id="statsChart"></canvas>
         </div>
       </div>
