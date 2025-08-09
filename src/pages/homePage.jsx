@@ -5,6 +5,8 @@ import { TiArrowSortedDown } from "react-icons/ti";
 import "../assets/css/MarqueeBanner.css"
 import { useLanguage } from '../contexts/LanguageContext';
 import PricingPage from '../components/home/pricingPage';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 
 function HomePage({ activeSidebarHeader }) {
@@ -29,7 +31,7 @@ function BannerSilder() {
     const bannerImagesAndContent = [
         {
             title: t("home.banner.goal.title"),
-            img: "/images/banner1.jpg",
+            img: "/images/banner3.jpg",
             description: t("home.banner.goal.description"),
             buttonText: t("home.banner.goal.buttonText"),
         },
@@ -107,7 +109,7 @@ function BannerSilder() {
                                         animate={isInView ? { opacity: 1, x: 0 } : {}}
                                         exit={{ opacity: 0, x: -100 }}
                                         transition={{ duration: 0.8 }}
-                                        className="mb-4 xs:text-2xl md:text-5xl  2xl:text-6xl font-bold bg-transparent text-start ">
+                                        className="mb-4 xs:text-2xl md:text-7xl  2xl:text-7xl font-bold bg-transparent text-start ">
                                         {bannerImagesAndContent[currentIndex].title}
                                     </motion.h2>
                                     <motion.p
@@ -116,7 +118,7 @@ function BannerSilder() {
                                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1 }}
-                                        className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start 3xl:text-xl">
+                                        className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start md:text-xl 2xl:text-3xl">
                                         {bannerImagesAndContent[currentIndex].description}
                                     </motion.p>
                                     <motion.button
@@ -125,8 +127,8 @@ function BannerSilder() {
                                         animate={isInView ? { opacity: 1, } : {}}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1, delay: 0.5 }}
-                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 3xl:text-xl">
-                                        {bannerImagesAndContent[currentIndex].buttonText}
+                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 md:text-xl  2xl:text-2xl">
+                                        <Link to={"/about"}>{bannerImagesAndContent[currentIndex].buttonText}</Link>
                                     </motion.button>
                                 </div>
                             </motion.div>
@@ -166,8 +168,8 @@ function BannerSilder() {
                                         animate={isInView ? { opacity: 1, } : {}}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 1 }}
-                                        className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700">
-                                        {bannerImagesAndContent[currentIndex].buttonText}
+                                        className="text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700">
+                                        <Link to={"/about"} className='px-6 py-3'>{bannerImagesAndContent[currentIndex].buttonText}</Link>
                                     </motion.button>
                                 </div>
                             </motion.div>
@@ -308,83 +310,196 @@ function ThreeCardBusiness() {
     );
 }
 
-function shuffleArray(array) {
-    return [...array].sort(() => Math.random() - 0.5);
-}
-
 function ServiceModi() {
 
-    const { t } = useLanguage();
-
     const services = [
-        { title: t("home.serviceModi.services.0.title") },
-        { title: t("home.serviceModi.services.1.title") },
-        { title: t("home.serviceModi.services.2.title") },
-        { title: t("home.serviceModi.services.3.title") },
-        { title: t("home.serviceModi.services.4.title") },
-        { title: t("home.serviceModi.services.5.title") },
-    ]
+        {
+            id: 1,
+            title: "Thiết Kế Website",
+            description:
+                "Khám phá cách Công ty thiết kế website chuyên nghiệp Cánh Cam giúp khách hàng bán hàng trực tuyến hiệu quả và tạo ấn tượng thương hiệu tốt hơn thông qua chiến lược ưu việt dưới đây.",
+            href: "thiet-ke-website.htm",
+            imgSrc: "https://www.canhcam.vn/wp-content/uploads/2024/10/wwebdesign-640x640.jpg",
+            imgAlt: "Thiết Kế Website",
+        },
+        {
+            id: 2,
+            title: "Thiết Kế Website E-Commerce",
+            description:
+                "Gia tăng doanh số bán hàng trên kênh online cũng như xây dựng vị thế trên thị trường của bạn với những giải pháp thương mại điện tử (TMĐT) hàng đầu. Đó là những gì dịch vụ thiết kế website của Cánh Cam mang lại.",
+            href: "e-commerce.htm",
+            imgSrc: "https://www.canhcam.vn/wp-content/uploads/2024/08/ecomerce-webdesign-640x640.jpeg",
+            imgAlt: "Thiết Kế Website E-Commerce",
+        },
+        {
+            id: 3,
+            title: "Thiết Kế App Mobile",
+            description:
+                "Thiết kế và lập trình chuyên nghiệp các ứng dụng di động và ứng dụng web (MVP), cung cấp các sản phẩm phần mềm phù hợp với nhu cầu chuyển đổi số và trải nghiệm thân thiện với người dùng.",
+            href: "thiet-ke-app-mobile.htm",
+            imgSrc: "https://www.canhcam.vn/wp-content/uploads/2024/10/wordpress-640x640.jpg",
+            imgAlt: "Thiết Kế App Mobile",
+        },
+        {
+            id: 4,
+            title: "Sáng Tạo Nội Dung",
+            description:
+                "Xây dựng nội dung website sáng tạo, thu hút và giữ chân khách hàng hiệu quả, đặc biệt từ khóa, nội dung được tối ưu chuẩn SEO giúp gia tăng thứ hạng trên công cụ tìm kiếm, bởi đội ngũ Copywriter dày dặn kinh nghiệm.",
+            href: "sang-tao-noi-dung.htm",
+            imgSrc: "https://www.canhcam.vn/wp-content/uploads/2024/10/mobileapp-640x640.jpg",
+            imgAlt: "Sáng Tạo Nội Dung",
+        },
+        {
+            id: 5,
+            title: "Chiến Dịch Quảng Cáo",
+            description:
+                "Chiến dịch quảng cáo bám sát mục tiêu kinh doanh sẽ mang bạn đến gần khách hàng tiềm năng một cách nhanh chóng.",
+            href: "chien-dich-quang-cao.htm",
+            imgSrc: "https://www.canhcam.vn/wp-content/uploads/2024/08/onlinemarketing-640x640.jpg",
+            imgAlt: "Chiến Dịch Quảng Cáo",
+        },
+    ];
 
 
-    // Random thứ tự delay cho mỗi lần render
-    const randomizedIndexes = useMemo(() => shuffleArray(services.map((_, i) => i)), []);
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, threshold: 0.8 });
+    const [hoveredItemId, setHoveredItemId] = useState(null);
+    const [isMobileView, setIsMobileView] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobileView(window.innerWidth < 768);
+        };
+
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+
+        return () => {
+            window.removeEventListener("resize", checkMobile);
+        };
+    }, []);
+
+    const handleMouseEnter = (id) => {
+        if (!isMobileView) {
+            setHoveredItemId(id);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (!isMobileView) {
+            setHoveredItemId(null);
+        }
+    };
+
+    const getItemWidth = (id) => {
+        if (hoveredItemId === null) {
+            return "20%";
+        }
+        if (hoveredItemId === id) {
+            return "40%";
+        }
+        return "15%";
+    };
+
     return (
-        <div ref={ref} className="pb-20 w-full">
-            <div className="relative flex flex-col  items-center justify-center w-full gap-4 py-20 md:rounded-2xl xs:px-2">
-                <div
-                    style={{
-                        backgroundImage: `url(${modiservicesImage})`,
-                    }}
-                    className="absolute w-full h-full bg-center bg-no-repeat bg-cover brightness-40 md:rounded-2xl"
-                />
-                <AnimatePresence mode='await'>
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.8 }}
-                        className="relative flex flex-col items-center justify-center gap-4"
-                    >
-                        <p className="text-4xl 3xl:text-6xl font-bold text-center text-white ">{t("home.serviceModi.title")}</p>
-                    </motion.div>
-                </AnimatePresence>
-                <AnimatePresence mode='await'>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1 } : {}}
-                        transition={{ duration: 1.2, delay: 0.5 }}
-                        className="relative text-center xs:text-sm md:text-xl 3xl:text-xl  md:w-1/2 text-white font-semibold"
-                    >
-                        {t("home.serviceModi.description")}
-                    </motion.p>
-                </AnimatePresence>
-                <div className="flex items-center justify-center w-full gap-4 pt-10">
-                    <div className="relative grid md:grid-cols-3 xs:grid-cols-2  gap-8">
-                        {services.map((item, index) => {
-                            const delay = randomizedIndexes[index] * 0.2;
-
-                            return (
-                                <AnimatePresence key={`btnservices-${index}`}>
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                        transition={{ duration: 0.5, delay }}
-                                        className="backdrop-blur-md bg-black/20"
-                                    >
-                                        <p className="px-5 py-6 3xl:text-xl xs:text-sm md:text-lg font-bold text-center text-white border-2 border-white rounded-2xl">
-                                            {item.title}
-                                        </p>
-                                    </motion.div>
-                                </AnimatePresence>
-                            );
-                        })}
-                    </div>
+        <section className="py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
+            <div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
+                <h3 className="text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
+                    Dịch vụ
+                </h3>
+                <div className="text-lg xs:text-xl sm:text-2xl text-gray-600 dark:text-[#D1D5DB]">
+                    <p>Cánh Cam Agency chuyên cung cấp đầy đủ các dịch vụ được thiết kế riêng cho doanh nghiệp của bạn.</p>
                 </div>
             </div>
-        </div>
+
+            <div className="relative z-20 mt-6 xs:mt-8 sm:mt-10 md:mt-12 container mx-auto w-full">
+                {isMobileView ? (
+                    <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 px-4 sm:px-6 md:px-0 scrollbar-hide">
+                        {services.map((service) => (
+                            <div key={service.id} className="flex-shrink-0 w-full snap-center px-2">
+                                <div className="item-service-main relative overflow-hidden rounded-lg shadow-lg h-[400px] sm:h-[450px] md:h-auto">
+                                    <a
+                                        className="img img-full full-link block w-full h-full"
+                                        href={service.href}
+                                        title={service.title}
+                                    >
+                                        <img
+                                            src={service.imgSrc || "/placeholder.svg"}
+                                            alt={service.imgAlt}
+                                            className="w-full h-full object-cover xs:opacity-50 md:opacity-100"
+                                        />
+                                    </a>
+                                    <div className="content absolute bottom-0 left-0 right-0 px-4 xs:px-6 sm:px-8 md:px-10 py-4 xs:py-6 sm:py-7 md:py-8 text-white z-10 bg-gradient-to-t from-black/80 dark:from-[#1F2937]/90 to-transparent">
+                                        <h4 className="text-xl xs:text-xs sm:text-xl md:text-2xl font-bold mb-2 xs:mb-3 sm:mb-4">
+                                            {service.title}
+                                        </h4>
+                                        <div className="wrap-desc">
+                                            <div className="desc-service text-base xs:text-sm sm:text-sm md:text-xl mb-2 xs:mb-3 sm:mb-4 font-light">
+                                                <p>{service.description}</p>
+                                            </div>
+                                            <a
+                                                className="inline-flex items-center justify-center px-4 xs:px-5 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] dark:hover:bg-[#3B82F6] dark:hover:text-[#F3F4F6] transition-colors"
+                                                href={service.href}
+                                                title={`Tìm hiểu thêm - ${service.title}`}
+                                            >
+                                                Tìm hiểu thêm
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex w-full h-[450px] overflow-hidden rounded-lg shadow-lg">
+                        {services.map((service) => (
+                            <div
+                                key={service.id}
+                                className="item-service-main relative overflow-hidden cursor-pointer"
+                                onMouseEnter={() => handleMouseEnter(service.id)}
+                                onMouseLeave={handleMouseLeave}
+                                style={{
+                                    width: getItemWidth(service.id),
+                                    transition: "width 0.5s ease-in-out",
+                                }}
+                            >
+                                <a className="img img-full full-link block w-full h-full" href={service.href} title={service.title}>
+                                    <img
+                                        src={service.imgSrc || "/placeholder.svg"}
+                                        alt={service.imgAlt}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </a>
+                                <div className=" content absolute bottom-0 left-0 right-0 px-6 md:px-10 py-8 text-white z-10 bg-gradient-to-t from-black/80 dark:from-[#1F2937]/90 to-transparent">
+                                    <h4 className="text-2xl 3xl:text-5xl  font-bold mb-4 ">{service.title}</h4>
+                                    <div
+                                        className={`wrap-desc transition-all duration-300 ease-in-out ${hoveredItemId === service.id ? "max-h-screen opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                                            }`}
+                                    >
+                                        <div className="desc-service text-xl mb-4 font-light">
+                                            <p>{service.description}</p>
+                                        </div>
+                                        <a
+                                            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] dark:hover:bg-[#3B82F6] dark:hover:text-[#F3F4F6] transition-colors"
+                                            href={service.href}
+                                            title={`Tìm hiểu thêm - ${service.title}`}
+                                        >
+                                            Tìm hiểu thêm
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                {isMobileView && (
+                    <div className="text-center text-gray-500 dark:text-gray-400 mt-4 text-sm sm:text-base">
+                        Vuốt sang ngang để xem thêm dịch vụ
+                    </div>
+                )}
+            </div>
+        </section>
     );
 }
+
 
 function BenefitBusiness() {
     const { t } = useLanguage();
@@ -417,7 +532,7 @@ function BenefitBusiness() {
     const [hovered, setHovered] = useState(false);
     const [showContent, setShowContent] = useState(false);
     return (
-        <div ref={ref} className='flex items-center justify-center w-full md:gap-2 xs:pb-1 md:pb-10 xs:px-2'>
+        <div ref={ref} className='flex items-center justify-center w-full mx-auto md:gap-2 xs:pb-1 md:pb-10 xs:px-2'>
             {/* Left Images */}
             <div className='flex items-center justify-end md:w-1/2 xs:hidden md:flex md:gap-3 '>
                 {/* Image 1 - Từ trái sang phải */}
@@ -513,8 +628,6 @@ function BenefitBusiness() {
 }
 
 
-
-
 function BannerText() {
     const { t } = useLanguage();
     return (
@@ -527,75 +640,81 @@ function BannerText() {
     )
 }
 
+
 function Customer() {
-    const { t } = useLanguage();
+    const { t } = useLanguage()
+    const ref = useRef(null)
+    const isInView = useInView(ref, { once: true, threshold: 0.8 })
 
-    const customerCards = [
-        t("home.customer.cards.0"),
-        t("home.customer.cards.1"),
-        t("home.customer.cards.2"),
-        t("home.customer.cards.3"),
-        t("home.customer.cards.4"),
-        t("home.customer.cards.5"),
-    ]
-
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, threshold: 0.8 });
     return (
-        <div ref={ref}>
-            <div className="flex flex-col items-center justify-center w-full xs:gap-2 md:p-4 xs:px-3 xs:py-6 md:px-3 mb-10 bg-transparent rounded-lg md:flex-row">
-                {/* Hình ảnh khách hàng */}
-                <motion.div
-                    initial={{ x: -100, scale: 0.8, opacity: 0 }}
-                    animate={isInView ? { x: 0, scale: 1, opacity: 1 } : {}}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="md:p-4 xs:p-2 overflow-hidden shadow-sm md:w-1/2 shadow-black rounded-2xl"
-                >
-                    <img src="./images/customer-support.jpg" alt={t("home.customer.alt")} className="rounded-lg" />
-                </motion.div>
-
-                {/* Nội dung */}
-                <div className="p-4 md:w-1/2 xs:w-full gap-5">
-                    {/* Tiêu đề */}
-                    <motion.h2
-                        initial={{ y: -50, opacity: 0 }}
-                        animate={isInView ? { y: 0, opacity: 1 } : {}}
-                        transition={{ type: "spring", stiffness: 120 }}
-                        className="mb-4 xs:text-2xl  md:text-4xl 2xl:text-6xl 3xl:text-6xl font-bold text-center dark:text-white text-black"
+        <div className="w-full  rounded-lg bg-transparent p-6 shadow-lg md:p-10">
+            <div ref={ref}>
+                <div className="flex flex-col items-center justify-center w-full xs:gap-2 md:p-4 xs:px-3 xs:py-6 md:px-3 mb-10 bg-transparent rounded-lg md:flex-row">
+                    {/* Hình ảnh khách hàng cho màn hình nhỏ (ẩn trên md:) */}
+                    <motion.div
+                        initial={{ x: -100, scale: 0.8, opacity: 0 }}
+                        animate={isInView ? { x: 0, scale: 1, opacity: 1 } : {}}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="md:hidden md:p-2 xs:p-2 overflow-hidden shadow-sm md:w-1/2 shadow-black rounded-2xl"
                     >
-                        {t("home.customer.title")}
-                    </motion.h2>
+                        <img
+                            src="./images/What-Customers-Want.jpg"
+                            alt={t("home.customer.alt")}
+                            className="rounded-lg w-full h-auto"
+                        />
+                    </motion.div>
 
-                    {/* Mô tả */}
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1 } : {}}
-                        transition={{ duration: 1, delay: 0.2 }}
-                        className="mb-4 text-justify text-gray-700 md:text-sm 2xl:text-lg 3xl:text-xl dark:text-white "
-                    >
-                        {t("home.customer.description")}
-                    </motion.p>
+                    {/* Nội dung với hình ảnh nền (hiển thị từ md:) */}
+                    <div className="border-2 border-slate-700 relative  xs:w-full md:w-full md:min-h-[400px]  flex flex-col justify-center items-center md:items-start rounded-lg overflow-hidden">
+                        {/* Hình ảnh nền (ẩn trên xs:, hiển thị từ md:) */}
+                        <div className="absolute inset-0 hidden md:block  w-full">
+                            <img
+                                src="./images/What-Customers-Want.jpg" // Sử dụng hình ảnh phù hợp làm nền
+                                alt="Background image of customer support"
+                                className="object-cover opacity-3 rounded-lg  w-full" // Che phủ, độ mờ nhẹ
+                            />
+                        </div>
+                        {/* Lớp phủ để đảm bảo chữ dễ đọc */}
+                        <div className="absolute inset-0 hidden md:block bg-black/30 rounded-lg "></div>
+                        <div className='flex justify-between items-center gap-3 px-3'>
 
-                    {/* Grid thẻ khách hàng */}
-                    <div className="grid grid-cols-2 gap-4 mt-10">
-                        {customerCards.map((text, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ rotateX: 90, opacity: 0 }}
-                                animate={isInView
-                                    ? { rotateX: 0, opacity: 1 }
-                                    : {}}
-                                transition={{ duration: 0.5, delay: 0.3 + index * 0.15 }}
-                                className="p-4 text-center bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md shadow-gray-300 dark:shadow-gray-700 3xl:text-xl 2xl:text-lg dark:text-white text-black"
-                            >
-                                {text}
-                            </motion.div>
-                        ))}
+                            {/* Nội dung văn bản (tiêu đề, mô tả, nút) */}
+                            <div className="relative z-10 text-center md:text-left text-black md:text-white md:w-1/2 md:px-10">
+                                <motion.h2
+                                    initial={{ y: -50, opacity: 0 }}
+                                    animate={isInView ? { y: 0, opacity: 1 } : {}}
+                                    transition={{ type: "spring", stiffness: 120 }}
+                                    className="mb-4 xs:text-2xl md:text-4xl 2xl:text-8xl 3xl:text-9xl font-bold xs:py-2 md:py-10 dark:text-slate-100"
+                                >
+                                    {t("home.customer.title")}
+                                </motion.h2>
+                                <motion.p
+                                    initial={{ opacity: 0 }}
+                                    animate={isInView ? { opacity: 1 } : {}}
+                                    transition={{ duration: 1, delay: 0.2 }}
+                                    className="mb-4 text-justify text-gray-700 dark:text-gray-300 md:text-sm 2xl:text-lg 3xl:text-3xl xs:py-2 md:py-5"
+                                >
+                                    {t("home.customer.description")}
+                                </motion.p>
+                                <div className="flex justify-center md:justify-start py-5">
+                                    <Button size={"lg"} className="bg-[#2C3E50] hover:bg-[#415263] text-white px-6 xs:py-2  rounded-md text-lg ">
+                                        {t("home.customer.btn")}
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="hidden md:block bg-black/30 rounded-lg w-1/2 ">
+                                <img
+                                    src="./images/What-Customers-Want.jpg"
+                                    alt={t("home.customer.alt")}
+                                    className="rounded-lg w-full h-auto"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
 export default HomePage;

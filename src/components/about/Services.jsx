@@ -51,7 +51,7 @@ export default function Services() {
     {
       icon: <Code className="w-12 h-12" />,
       title: t("about.websiteDesign"),
-      emoji: "🌐",
+      emoji: "",
       items: [t("about.websiteItem1"), t("about.websiteItem2"), t("about.websiteItem3")],
       color: "from-cyan-500 to-blue-500",
       link: "/services/website-development",
@@ -59,7 +59,7 @@ export default function Services() {
     {
       icon: <Smartphone className="w-12 h-12" />,
       title: t("about.mobileApp"),
-      emoji: "📱",
+      emoji: "",
       items: [t("about.mobileItem1"), t("about.mobileItem2"), t("about.mobileItem3")],
       color: "from-purple-500 to-pink-500",
       link: "/services/mobile-app-development",
@@ -67,7 +67,7 @@ export default function Services() {
     {
       icon: <Cog className="w-12 h-12" />,
       title: t("about.additionalServices"),
-      emoji: "🛠️",
+      emoji: "",
       items: [t("about.additionalItem1"), t("about.additionalItem2"), t("about.additionalItem3")],
       color: "from-green-500 to-teal-500",
       link: "/services/additional-services",
@@ -83,7 +83,7 @@ export default function Services() {
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            🧩 {t("about.whatWeBring")}
+             {t("about.whatWeBring")}
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-6"></div>
           <p

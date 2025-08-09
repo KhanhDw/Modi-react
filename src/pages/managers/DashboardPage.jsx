@@ -140,9 +140,9 @@ export default function DashboardPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {[
-          { label: "Tin tức", value: stats.tinTuc, icon: "📰" },
-          { label: "Tuyển dụng", value: stats.tuyenDung, icon: "💼" },
-          { label: "Liên hệ", value: stats.lienHe, icon: "📞" },
+          { label: "Tin tức", value: stats.tinTuc, icon: "" },
+          { label: "Tuyển dụng", value: stats.tuyenDung, icon: "" },
+          { label: "Liên hệ", value: stats.lienHe, icon: "" },
         ].map((stat, index) => (
           <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
             <div className="flex items-center">

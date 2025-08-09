@@ -55,28 +55,28 @@ export default function Contact() {
       icon: <Phone className="w-7 h-7" />,
       label: t("about.phoneLabel"),
       value: t("about.phonePlaceholder"),
-      emoji: "📱",
+      emoji: "",
       color: "from-green-500 to-teal-500",
     },
     {
       icon: <Mail className="w-7 h-7" />,
       label: t("about.emailLabel"),
       value: t("about.emailPlaceholder"),
-      emoji: "📧",
+      emoji: "",
       color: "from-blue-500 to-cyan-500",
     },
     {
       icon: <Globe className="w-7 h-7" />,
       label: t("about.websiteLabel"),
       value: t("about.websitePlaceholder"),
-      emoji: "🌐",
+      emoji: "",
       color: "from-purple-500 to-pink-500",
     },
     {
       icon: <MessageCircle className="w-7 h-7" />,
       label: t("about.fanpageLabel"),
       value: t("about.fanpagePlaceholder"),
-      emoji: "💬",
+      emoji: "",
       color: "from-orange-500 to-red-500",
     },
   ]
@@ -91,7 +91,7 @@ export default function Contact() {
           <h2
             className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900"}`}
           >
-            📞 {t("about.contactUs")}
+            {t("about.contactUs")}
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-8"></div>
 
@@ -141,7 +141,7 @@ export default function Contact() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link to="/contact" className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 group">
               <span className="group-hover:scale-110 transition-transform inline-block">
-                🚀 {t("about.freeConsultation")}
+                 {t("about.freeConsultation")}
               </span>
             </Link>
             <button hidden

@@ -90,7 +90,7 @@ export default function WhyChooseUs() {
           <h2
             className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900"}`}
           >
-            🚀 {t("about.whyChooseUs")}
+           {t("about.whyChooseUs")}
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full mb-6"></div>
         </div>

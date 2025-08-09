@@ -263,6 +263,7 @@ export default {
             alt: "Customer Support",
             title: "Customers",
             description: "We always listen to customer feedback to improve and enhance the quality of our services throughout your shopping journey. We are always ready to assist you with shopping, consulting, answering questions, or handling your complaints. Please contact us for the best support!",
+            btn: 'Contact now',
             cards: [
                 "Customer A?",
                 "Customer B?",

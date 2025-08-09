@@ -48,7 +48,7 @@ export default function Customers() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center space-x-3 mb-6">
-            <span className="text-4xl">🌐</span>
+            <span className="text-4xl"></span>
             <h2
               className={`text-4xl md:text-5xl font-bold transition-colors duration-500 ${
                 isDark ?  "text-white":"text-gray-900"

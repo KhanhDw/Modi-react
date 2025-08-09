@@ -256,6 +256,7 @@ export default {
             alt: "Hỗ trợ khách hàng",
             title: "Khách hàng",
             description: "Chúng tôi luôn lắng nghe ý kiến khách hàng để hoàn thiện, nâng cao chất lượng dịch vụ trong suốt hành trình mua sắm của quý khách. Chúng tôi luôn sẵn sàng hỗ trợ quý khách trong việc mua sắm, tư vấn, giải đáp thắc mắc hoặc khiếu nại của quý khách. Hãy liên hệ với chúng tôi để được hỗ trợ tốt nhất!",
+            btn: 'Liên hệ ngay',
             cards: [
                 "Khách hàng A?",
                 "Khách hàng B?",
