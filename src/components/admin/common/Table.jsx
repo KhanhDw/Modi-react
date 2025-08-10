@@ -2,7 +2,7 @@
 import useLenisLocal from '../../../hook/useLenisLocal';
 
 
-export default function Table({ columns, data, onEdit, onDelete, onView }) {
+export default function Table({ columns, data, onEdit, onDelete, onView, h_table=`h-[80vh]` }) {
   useLenisLocal();
 
   const isDate = (value) => {
@@ -23,7 +23,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-      <div className="lenis-local scroll-container max-h-[80vh] overflow-y-auto flex flex-col">
+      <div className={`lenis-local scroll-container  overflow-y-auto flex flex-col ${h_table}`}>
         <table className="min-w-full">
           <thead className="bg-gray-50 sticky top-0 z-10">
             <tr>

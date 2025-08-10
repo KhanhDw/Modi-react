@@ -86,11 +86,11 @@ function BannerSilder() {
                         initial={{ opacity: 1, filter: 'brightness(100%)', }}
                         animate={isInView ? { opacity: showNext ? 0 : 1, filter: showNext ? 'brightness(100%)' : 'brightness(50%)' } : {}}
                         transition={{ duration: 1 }}
-                        className="absolute top-0 left-0 w-full h-full object-cover  md:rounded-[40px] z-20 border-2 border-gray-300 "
+                        className="absolute top-0 left-0 w-full h-full object-cover  md:rounded-[40px] z-20 xl:border-2 xl:border-gray-300 "
                         alt="banner"
                     />
                     {/* --- Nội dung nằm trên ảnh --- */}
-                    <div className="relative top-0 left-0 w-full h-full border-red-600" >
+                    <div className="relative top-0 left-0 w-full h-full " >
                         {/* nội dung nằm trên - đây là cái người dùng nhìn thấy*/}
 
                         <AnimatePresence >
@@ -436,7 +436,7 @@ function ServiceModi() {
                                                 <p>{service.description}</p>
                                             </div>
                                             <a
-                                                className="inline-flex items-center justify-center px-4 xs:px-5 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] dark:hover:bg-[#3B82F6] dark:hover:text-[#F3F4F6] transition-colors"
+                                                className="inline-flex items-center justify-center px-4 xs:px-5 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-full  text-white hover:bg-[#3B82F6] hover:text-[#1F2937] dark:hover:bg-[#3B82F6] dark:hover:text-[#F3F4F6] transition-colors"
                                                 href={service.href}
                                                 title={`Tìm hiểu thêm - ${service.title}`}
                                             >

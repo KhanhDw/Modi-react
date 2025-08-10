@@ -106,21 +106,21 @@ export default function ContactPage() {
 
       {/* Statistics Cards */}
       <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="border-2 border-slate-300 bg-white shadow-lg rounded-lg p-6 text-center">
+        <div className="border-2 border-slate-300 bg-white shadow-lg rounded-lg p-2 text-center">
           <h3 className="text-lg font-semibold text-gray-900">Hôm nay</h3>
           <p className="text-3xl font-bold text-blue-600">{dailyCount}</p>
         </div>
-        <div className="border-2 border-slate-300 bg-white shadow-lg rounded-lg p-6 text-center">
+        <div className="border-2 border-slate-300 bg-white shadow-lg rounded-lg p-2 text-center">
           <h3 className="text-lg font-semibold text-gray-900">Tuần này</h3>
           <p className="text-3xl font-bold text-blue-600">{weeklyCount}</p>
         </div>
-        <div className="border-2 border-slate-300 bg-white shadow-lg rounded-lg p-6 text-center">
+        <div className="border-2 border-slate-300 bg-white shadow-lg rounded-lg p-2 text-center">
           <h3 className="text-lg font-semibold text-gray-900">Tháng này</h3>
           <p className="text-3xl font-bold text-blue-600">{monthlyCount}</p>
         </div>
       </div>
 
-      <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} />
+      <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} h_table="h-[70vh]"/>
       <ContactDetail
         contact={showDetail}
         isOpen={!!showDetail}

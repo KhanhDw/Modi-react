@@ -7,18 +7,19 @@ export default function DashboardPage() {
     tinTuc: 0,
     tuyenDung: 0,
     lienHe: 0,
-    dailyContacts: Array(31).fill(0), // Mảng 31 ngày, khởi tạo với 0
+    dailyContacts: Array(31).fill(0),
   });
 
   const chartRef = useRef(null);
+  const canvasRef = useRef(null); // Add ref for canvas to ensure it exists
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const [tinTucRes, tuyenDungRes, lienHeRes] = await Promise.all([
-          fetch('http://localhost:3000/api/tintuc'),
-          fetch('http://localhost:3000/api/tuyendung'),
-          fetch('http://localhost:3000/api/lienhe'),
+          fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/tintuc`),
+          fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/tuyendung`),
+          fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe`),
         ]);
 
         const [tinTucData, tuyenDungData, lienHeData] = await Promise.all([
@@ -27,73 +28,89 @@ export default function DashboardPage() {
           lienHeRes.json(),
         ]);
 
-        console.log('Dữ liệu lienHe:', lienHeData); // Debug dữ liệu từ API
+        console.log("Dữ liệu lienHe:", lienHeData);
 
-        setStats((prevStats) => ({
-          ...prevStats,
-          tinTuc: tinTucData.length,
-          tuyenDung: tuyenDungData.length,
-          lienHe: lienHeData.length,
-          dailyContacts: calculateDailyContacts(lienHeData),
-        }));
+        setStats((prevStats) => {
+          const newDailyContacts = calculateDailyContacts(lienHeData);
+          const isDailyContactsEqual = prevStats.dailyContacts.every(
+            (value, index) => value === newDailyContacts[index]
+          );
+
+          if (
+            prevStats.tinTuc === tinTucData.length &&
+            prevStats.tuyenDung === tuyenDungData.length &&
+            prevStats.lienHe === lienHeData.length &&
+            isDailyContactsEqual
+          ) {
+            return prevStats;
+          }
+
+          return {
+            tinTuc: tinTucData.length,
+            tuyenDung: tuyenDungData.length,
+            lienHe: lienHeData.length,
+            dailyContacts: newDailyContacts,
+          };
+        });
       } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu:', error);
+        console.error("Lỗi khi lấy dữ liệu:", error);
       }
     };
 
     fetchStats();
-    // Cập nhật lại mỗi 5 giây để kiểm tra thay đổi
-    const interval = setInterval(fetchStats, 5000);
+    // Optional: Add setInterval for periodic updates
+    // const interval = setInterval(fetchStats, 30000);
+    // return () => clearInterval(interval);
+  }, []); // Empty dependency array
 
-    return () => clearInterval(interval); // Dọn dẹp interval
-  }, []);
-
-  // Hàm tính số lượng khách hàng liên hệ theo ngày trong tháng hiện tại
   const calculateDailyContacts = (data) => {
     const dailyCounts = Array(31).fill(0);
-    const currentMonth = new Date().getMonth() + 1; // Tháng 8
+    const currentMonth = new Date().getMonth() + 1; // August is 8
     const currentYear = new Date().getFullYear(); // 2025
 
     data.forEach((item) => {
-      const itemDate = new Date(item.ngay_gui); // Sử dụng ngay_gui thay vì ngay_dang
-      if (itemDate && !isNaN(itemDate.getTime())) { // Kiểm tra ngày hợp lệ
-        console.log('Ngày gửi:', item.ngay_gui, 'Parsed:', itemDate); // Debug ngày
+      const itemDate = new Date(item.ngay_gui);
+      if (itemDate && !isNaN(itemDate.getTime())) {
+        console.log("Ngày gửi:", item.ngay_gui, "Parsed:", itemDate);
         if (
           itemDate.getMonth() + 1 === currentMonth &&
           itemDate.getFullYear() === currentYear
         ) {
-          const day = itemDate.getDate() - 1; // Index mảng (0-30)
+          const day = itemDate.getDate() - 1; // 0-based index
           if (day >= 0 && day < 31) {
             dailyCounts[day]++;
           }
         }
       } else {
-        console.log('Ngày không hợp lệ:', item.ngay_gui); // Debug lỗi parse
+        console.log("Ngày không hợp lệ:", item.ngay_gui);
       }
     });
 
-    console.log('Daily Counts:', dailyCounts); // Debug mảng kết quả
+    console.log("Daily Counts:", JSON.stringify(dailyCounts)); // Improved logging
     return dailyCounts;
   };
 
   useEffect(() => {
-    const ctx = document.getElementById('statsChart')?.getContext('2d');
-    if (ctx) {
-      if (chartRef.current) {
-        chartRef.current.destroy();
-      }
+    // Ensure canvas exists before initializing chart
+    if (!canvasRef.current) return;
 
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return;
+
+    if (!chartRef.current) {
       chartRef.current = new Chart(ctx, {
-        type: 'bar',
+        type: "bar",
         data: {
-          labels: Array.from({ length: 31 }, (_, i) => i + 1), // Nhãn từ 1 đến 31
-          datasets: [{
-            label: 'Số khách hàng liên hệ',
-            data: stats.dailyContacts,
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-          }]
+          labels: Array.from({ length: 31 }, (_, i) => i + 1),
+          datasets: [
+            {
+              label: "Số khách hàng liên hệ",
+              data: stats.dailyContacts,
+              backgroundColor: "rgba(54, 162, 235, 0.6)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1,
+            },
+          ],
         },
         options: {
           maintainAspectRatio: false,
@@ -101,34 +118,28 @@ export default function DashboardPage() {
           scales: {
             y: {
               beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Số lượng khách hàng',
-                font: { size: 12 }
-              },
-              ticks: { font: { size: 10 } }
+              title: { display: true, text: "Số lượng khách hàng", font: { size: 12 } },
+              ticks: { font: { size: 10 } },
             },
             x: {
-              title: {
-                display: true,
-                text: 'Ngày trong tháng',
-                font: { size: 12 }
-              },
-              ticks: { font: { size: 10 } }
-            }
+              title: { display: true, text: "Ngày trong tháng", font: { size: 12 } },
+              ticks: { font: { size: 10 } },
+            },
           },
           plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
+            legend: { display: false },
+          },
+        },
       });
+    } else {
+      chartRef.current.data.datasets[0].data = stats.dailyContacts;
+      chartRef.current.update();
     }
 
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
+        chartRef.current = null; // Ensure chart is fully cleared
       }
     };
   }, [stats.dailyContacts]);
@@ -136,8 +147,6 @@ export default function DashboardPage() {
   return (
     <div className="p-6">
       <PageHeader title="Tổng quan hệ thống" />
-
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {[
           { label: "Tin tức", value: stats.tinTuc, icon: "" },
@@ -155,16 +164,12 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
-
-      {/* Chart */}
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Thống kê tổng quan</h2>
-        <div className="chart-container" style={{ width: '100%', height: '200px' }}>
-          <canvas id="statsChart"></canvas>
+        <div className="chart-container" style={{ width: "100%", height: "200px" }}>
+          <canvas id="statsChart" ref={canvasRef}></canvas>
         </div>
       </div>
-
-      {/* Quick Actions */}
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Thao tác nhanh</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
