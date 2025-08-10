@@ -74,7 +74,7 @@ function AdminLoginPage() {
                                             className="group relative rounded-lg border focus-within:border-sky-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                                             <div className="flex justify-between">
                                                 <label
-                                                    className="text-xs font-medium text-muted-foreground group-focus-within:text-white text-gray-400">Tài khoản</label>
+                                                    className="text-xs font-medium  group-focus-within:text-white text-gray-400">Tài khoản</label>
                                                 <div className="absolute right-3 translate-y-2 text-green-200">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                         fill="currentColor" className="w-6 h-6">
@@ -96,7 +96,7 @@ function AdminLoginPage() {
                                             className="group relative rounded-lg border focus-within:border-sky-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                                             <div className="flex justify-between">
                                                 <label
-                                                    className="text-xs font-medium text-muted-foreground group-focus-within:text-white text-gray-400">Mật khẩu</label>
+                                                    className="text-xs font-medium  group-focus-within:text-white text-gray-400">Mật khẩu</label>
                                             </div>
                                             <div className="flex items-center">
                                                 <input type={isShowPassword ? "text" : "password"} name="password" placeholder="Nhập mật khẩu (1234)"

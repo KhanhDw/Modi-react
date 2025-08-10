@@ -36,10 +36,7 @@ const publicRoutes = [
     { path: "/careers", component: Recruitment, layout: DefaultLayout },
     { path: "/terms-of-services", component: TermsOfServicePage, layout: DefaultLayout },
     { path: "/login", component: AdminLoginPage, layout: NoneHeaderFooterLayout },
-    {
-        path: "/news/:id",
-        component: NewsDetail, layout: DefaultLayout
-    },
+    {path: "/news/:id", component: NewsDetail, layout: DefaultLayout},
     { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
 ]
 
