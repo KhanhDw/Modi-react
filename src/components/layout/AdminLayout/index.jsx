@@ -49,7 +49,7 @@ const AdminLayout = ({ children }) => {
         <main
           className={cn(
             "flex-1 overflow-y-auto overflow-x-hidden bg-white rounded-lg shadow-sm p-4 mt-2",
-            isHeaderSticky && "mt-22"
+            isHeaderSticky && "mt-23"
           )}
         >
           <div className="p-4">
