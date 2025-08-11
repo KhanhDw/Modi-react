@@ -71,7 +71,7 @@ export default function DashboardPage() {
     data.forEach((item) => {
       const itemDate = new Date(item.ngay_gui);
       if (itemDate && !isNaN(itemDate.getTime())) {
-        console.log("Ngày gửi:", item.ngay_gui, "Parsed:", itemDate);
+        // console.log("Ngày gửi:", item.ngay_gui, "Parsed:", itemDate);
         if (
           itemDate.getMonth() + 1 === currentMonth &&
           itemDate.getFullYear() === currentYear
@@ -86,7 +86,7 @@ export default function DashboardPage() {
       }
     });
 
-    console.log("Daily Counts:", JSON.stringify(dailyCounts)); // Improved logging
+    // console.log("Daily Counts:", JSON.stringify(dailyCounts)); // Improved logging
     return dailyCounts;
   };
 

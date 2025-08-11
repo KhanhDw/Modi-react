@@ -1,40 +1,69 @@
-import { useState } from "react"
-import AdminSidebar from "../../admin/AdminSidebar"
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminHeader from "./partials/AdminHeader";
+import { cn } from "@/lib/utils";
 
-export default function AdminLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+const AdminLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Ban đầu là mở rộng
+  const [isHeaderSticky, setIsHeaderSticky] = useState(false);
+
+  useEffect(() => {
+    const savedHeaderSticky = localStorage.getItem("headerSticky");
+    if (savedHeaderSticky) {
+      setIsHeaderSticky(savedHeaderSticky === "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("headerSticky", isHeaderSticky.toString());
+  }, [isHeaderSticky]);
 
   return (
     <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        isCollapsed={sidebarCollapsed}
+        toggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col  lg:ml-64">
-        {/* Mobile menu button */}
-        <div className="lg:hidden p-4 bg-white flex items-center justify-between">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <div>
-            <Link to={"/"} className="text-xl font-bold text-gray-900 bg-green-100 border-1 rounded-xl p-2">Về trang chủ</Link>
-          </div>
-        </div>
+      {/* Main Content Container */}
+      <div
+        className={cn(
+          "flex-1 overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-amber-400 lg:py-2",
+          sidebarCollapsed ? "lg:pl-20 lg:py-2 lg:pr-2" : "lg:pl-68 lg:pr-2" // Dùng padding-left thay vì margin-left
+        )}
+      >
+        {/* Header */}
+        <AdminHeader
+          isSidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          isHeaderSticky={isHeaderSticky}
+          setIsHeaderSticky={setIsHeaderSticky}
+          sidebarCollapsed={sidebarCollapsed} // Truyền nếu cần
+        />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-white">{children}</main>
+        <main
+          className={cn(
+            "flex-1 overflow-y-auto overflow-x-hidden bg-white rounded-lg shadow-sm p-4 mt-2"
+          )}
+        >
+          {children}
+        </main>
       </div>
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ease-in-out"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
     </div>
-  )
-}
+  );
+};
+
+export default AdminLayout;
