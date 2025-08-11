@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { User, Bell, Settings, AlignJustify, ArrowLeft } from "lucide-react";
+import { User, Bell, Settings, AlignJustify, ArrowLeft, Moon, Sun, LogOut, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -46,13 +48,24 @@ const AdminHeader = ({
   const pageTitle = breadcrumbMap[currentPath] || "Tổng quan";
   const breadcrumb = `Admin / ${pageTitle}`;
 
+  const headerStyle = isHeaderSticky
+    ? {
+      width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
+      left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
+    }
+    : {};
+
+
+
+
   return (
     <header
       className={cn(
         "w-full bg-white shadow-sm rounded-3xl transition-all duration-300 ease-in-out",
-        isHeaderSticky && "sticky top-2 z-50",
+        isHeaderSticky && "fixed left-0 right-0 z-50",
         "flex-shrink-0" // Đảm bảo header không bị co lại
       )}
+      style={headerStyle}
     >
       <div className="flex items-center justify-between p-4 mx-auto max-w-full">
         {/* Left */}
@@ -115,6 +128,7 @@ const AdminHeader = ({
                 variant="ghost"
                 size="icon"
                 className="text-gray-600 hover:bg-gray-100 flex-shrink-0"
+                aria-label="Cài đặt"
               >
                 <Settings className="h-5 w-5" />
               </Button>
@@ -122,21 +136,66 @@ const AdminHeader = ({
             <DropdownMenuContent
               align="end"
               className={cn(
-                "w-56 p-2", // Giảm chiều rộng để tránh vượt quá header
-                "absolute right-0 mt-2" // Đảm bảo dropdown nằm trong giới hạn
+                "w-64 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200 ease-in-out",
+                "absolute right-0 mt-2 min-w-[16rem] max-w-none", // bỏ giới hạn max-w cũ
+                "animate-in fade-in-0 zoom-in-95 duration-200"
               )}
             >
-              <DropdownMenuItem className="flex items-center justify-between space-x-2 p-2">
-                <Label htmlFor="sticky-header">Giữ header cố định</Label>
-                <Switch
-                  id="sticky-header"
-                  checked={isHeaderSticky}
-                  onCheckedChange={(checked) =>
-                    setIsHeaderSticky(Boolean(checked))
-                  }
-                />
+
+              <DropdownMenuLabel className="px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                Cài đặt
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-600" />
+
+              <DropdownMenuItem
+                className="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer transition-colors duration-150"
+                asChild
+              >
+                <div>
+                  <Label htmlFor="sticky-header" className="flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    Giữ header cố định
+                  </Label>
+                  <Switch
+                    id="sticky-header"
+                    checked={isHeaderSticky}
+                    onCheckedChange={(checked) => setIsHeaderSticky(Boolean(checked))}
+                    className="data-[state=checked]:bg-blue-600"
+                  />
+                </div>
               </DropdownMenuItem>
-              <DropdownMenuItem className="p-2 cursor-pointer">
+
+              {/* <DropdownMenuItem
+                className="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer transition-colors duration-150"
+                onClick={toggleTheme}
+              >
+                <div className="flex items-center gap-2">
+                  {theme === "light" ? (
+                    <Moon className="h-4 w-4" />
+                  ) : (
+                    <Sun className="h-4 w-4" />
+                  )}
+                  {theme === "light" ? "Chế độ tối" : "Chế độ sáng"}
+                </div>
+              </DropdownMenuItem> */}
+
+              <DropdownMenuItem
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer transition-colors duration-150"
+                asChild
+              >
+                <NavLink to="/profile">
+                  <UserCircle className="h-4 w-4" />
+                  Hồ sơ
+                </NavLink>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-600" />
+
+              <DropdownMenuItem
+                className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50 rounded-md cursor-pointer transition-colors duration-150"
+                onClick={() => console.log("Logout clicked")} // Replace with actual logout logic
+              >
+                <LogOut className="h-4 w-4" />
                 Đăng xuất
               </DropdownMenuItem>
             </DropdownMenuContent>

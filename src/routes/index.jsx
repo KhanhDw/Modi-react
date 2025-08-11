@@ -24,6 +24,9 @@ import AllComponentsPageAdmin from "../pages/managers/AllComponent"
 import TermsOfServicePage from "../pages/TermsOfServicePage"
 
 
+import ChartAreaGradient from "../components/adminComponent/chart"
+
+
 
 
 const publicRoutes = [
@@ -52,6 +55,9 @@ const privateRoutes = [
     { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
     { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },
+   
+    { path: "/managers/components/chart", component: ChartAreaGradient, layout: AdminLayout },
+
 
 ]
 
