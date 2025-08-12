@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AdminThemeProvider, useAdminTheme } from "@/contexts/ThemeLocalContext";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminSidebar from "@/components/layout/AdminLayout/partials/AdminSidebar";
 import AdminHeader from "./partials/AdminHeader";
 import { cn } from "@/lib/utils";
 
