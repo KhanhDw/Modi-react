@@ -1,9 +1,9 @@
 
-import useLenisLocal from '../../../hook/useLenisLocal';
+import useLenisLocal from '@/hook/useLenisLocal';
 
 
 export default function Table({ columns, data, onEdit, onDelete, onView, h_table=`h-[80vh]` }) {
-  useLenisLocal();
+  useLenisLocal(".lenis-local");
 
   const isDate = (value) => {
     if (typeof value !== 'string') return false;

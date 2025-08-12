@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
+import { AdminThemeProvider, useAdminTheme } from "@/contexts/ThemeLocalContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "./partials/AdminHeader";
 import { cn } from "@/lib/utils";
 
-const AdminLayout = ({ children }) => {
+const AdminLayoutInner = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Ban đầu là mở rộng
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
+  const { theme } = useAdminTheme(); // Lấy theme từ context, ví dụ: "light" | "dark"
 
   useEffect(() => {
     const savedHeaderSticky = localStorage.getItem("headerSticky");
@@ -20,7 +22,7 @@ const AdminLayout = ({ children }) => {
   }, [isHeaderSticky]);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className={cn("flex min-h-screen bg-slate-50", theme === "dark" && "admin-dark")}>
       {/* Sidebar */}
       <AdminSidebar
         isOpen={sidebarOpen}
@@ -33,17 +35,17 @@ const AdminLayout = ({ children }) => {
       <div
         className={cn(
           "flex-1 overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-amber-400 lg:py-2 pt-2",
-          sidebarCollapsed ? "lg:pl-20 lg:py-2 lg:pr-2" : "lg:pl-68 lg:pr-2" // Dùng padding-left thay vì margin-left
+          sidebarCollapsed ? "lg:pl-20 lg:py-2 lg:pr-2" : "lg:pl-68 lg:pr-2"
         )}
       >
         {/* Header */}
-          <AdminHeader
-            isSidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            isHeaderSticky={isHeaderSticky}
-            setIsHeaderSticky={setIsHeaderSticky}
-            sidebarCollapsed={sidebarCollapsed} // Truyền nếu cần
-          />
+        <AdminHeader
+          isSidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          isHeaderSticky={isHeaderSticky}
+          setIsHeaderSticky={setIsHeaderSticky}
+          sidebarCollapsed={sidebarCollapsed}
+        />
 
         {/* Page Content */}
         <main
@@ -66,6 +68,14 @@ const AdminLayout = ({ children }) => {
         />
       )}
     </div>
+  );
+};
+
+const AdminLayout = ({ children }) => {
+  return (
+    <AdminThemeProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </AdminThemeProvider>
   );
 };
 

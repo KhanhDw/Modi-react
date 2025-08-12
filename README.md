@@ -1,6 +1,11 @@
 # Deploy: https://sweet-starlight-6a5f76.netlify.app/
 
-# React + Vite1
+# Lỗi không thể scroll được trong cục bộ, vui lòng thêm class sau:
+```
+className="lenis-local"
+```
+
+# Một số kiến thức git cho dự án
 
 tạo 1 branch mới (đây là tạo local):
 
