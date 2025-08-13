@@ -100,22 +100,22 @@ const AdminHeader = ({
           <NavLink to="/">
             <Button
               variant="ghost"
-              className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-100 admin-dark:hover:bg-gray-700 flex-shrink-0"
+              className="flex items-center space-x-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />
-              <span className="hidden md:inline text-sm">Xem Website</span>
+              <span className="hidden md:inline text-sm ">Xem Website</span>
             </Button>
           </NavLink>
-
 
           {/* Notifications */}
           <NotificationBell />
 
           {/* Avatar */}
           <Button
+          theme="admin"
             variant="ghost"
-            className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-100 admin-dark:hover:bg-gray-700 flex-shrink-0 rounded-full"
+            className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full"
           >
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />

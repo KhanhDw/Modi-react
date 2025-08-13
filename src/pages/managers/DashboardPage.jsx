@@ -204,9 +204,9 @@ function TaskList() {
   return (
   <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
     <CardHeader>
-      <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Việc cần làm</CardTitle>
+      <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Chiến dịch truyền thông và marketing</CardTitle>
       <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-        Danh sách công việc ưu tiên hôm nay
+        Danh sách quảng cáo đang chạy
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-3">
@@ -226,7 +226,7 @@ function TaskList() {
           >
             {t.text}
           </span>
-          <Badge theme="admin" variant={t.variant} className="ml-auto">
+          <Badge theme="admin" variant={t.variant} className={`ml-auto ${t.variant === "destructive" ? "text-black" : ""}`}>
             {t.badge}
           </Badge>
         </div>

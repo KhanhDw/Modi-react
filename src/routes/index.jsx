@@ -21,8 +21,10 @@ import ManagerRecruitment from "../pages/managers/RecruitmentPage"
 import ManagerContact from "../pages/managers/ContactPage"
 import AllComponentsPageAdmin from "../pages/managers/AllComponent"
 
-import TermsOfServicePage from "../pages/TermsOfServicePage"
+import WebsiteTemplatePage from "@/pages/managers/listWebDesign"    
 
+
+import TermsOfServicePage from "../pages/TermsOfServicePage"
 
 import ChartAreaGradient from "../components/adminComponent/chart"
 
@@ -55,7 +57,10 @@ const privateRoutes = [
     { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
     { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },
+    
+    { path: "/managers/website-templates", component: WebsiteTemplatePage, layout: AdminLayout },
    
+
     { path: "/managers/components/chart", component: ChartAreaGradient, layout: AdminLayout },
 
 

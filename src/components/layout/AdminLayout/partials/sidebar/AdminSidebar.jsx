@@ -4,7 +4,7 @@ import {
   X, ChevronLeft, ChevronRight,
   Palette,
   Info,
-  Megaphone
+  Megaphone, Columns3Cog 
   } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -13,6 +13,7 @@ import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 
 const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
+  { name: "Cấu hình trang chủ", path: "/managers/home-config", icon: Columns3Cog },
   { name: "Marketing & Truyền thông", path: "/managers/marketing", icon: Megaphone }, // loa thông báo
   { name: "Thiết kế Website", path: "/managers/website-design", icon: Palette }, // biểu tượng bảng màu, thiết kế
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
