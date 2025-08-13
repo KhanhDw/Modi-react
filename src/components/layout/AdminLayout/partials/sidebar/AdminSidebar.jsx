@@ -1,8 +1,11 @@
 import { useLocation, Link } from "react-router-dom";
 import {
   LayoutDashboard, Handshake, Newspaper, Users, Mail, Puzzle, Moon, SunMedium,
-  X, ChevronLeft, ChevronRight
-} from "lucide-react";
+  X, ChevronLeft, ChevronRight,
+  Palette,
+  Info,
+  Megaphone
+  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -10,10 +13,13 @@ import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 
 const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
-  { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
+  { name: "Marketing & Truyền thông", path: "/managers/marketing", icon: Megaphone }, // loa thông báo
+  { name: "Thiết kế Website", path: "/managers/website-design", icon: Palette }, // biểu tượng bảng màu, thiết kế
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
-  { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
+  // { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
   { name: "Liên hệ", path: "/managers/contact", icon: Mail },
+  { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
+  { name: "Giới thiệu", path: "/managers/about", icon: Info }, // icon chữ "i"
   { name: "Component", path: "/managers/components", icon: Puzzle },
 ];
 

@@ -1,6 +1,8 @@
 .scroll-container {
     touch-action: pan-y;
 }
+
+/* Light mode */
 .scroll-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -16,6 +18,29 @@
 .scroll-container::-webkit-scrollbar-thumb:hover {
     background: #a0aec0;
 }
+
+/* Dark mode */
+.dark .scroll-container::-webkit-scrollbar-track {
+    background: #1f2937; /* bg-gray-800 */
+}
+.dark .scroll-container::-webkit-scrollbar-thumb {
+    background: #4b5563; /* gray-600 */
+}
+.dark .scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; /* gray-500 */
+}
+
+/* Admin-dark mode */
+.admin-dark .scroll-container::-webkit-scrollbar-track {
+    background: #1f2937; /* bg-gray-800 */
+}
+.admin-dark .scroll-container::-webkit-scrollbar-thumb {
+    background: #4b5563; /* gray-600 */
+}
+.admin-dark .scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; /* gray-500 */
+}
+
 
 .lenis-local {
     overflow-y: auto;

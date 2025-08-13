@@ -11,7 +11,7 @@ const badgeVariants = cva(
       theme: {
         light: "",
         dark: "dark:aria-invalid:ring-destructive/40",
-        admin: "admin-dark:aria-invalid:ring-destructive/40",
+        admin: "admin-dark:aria-invalid:ring-destructive/40 admin-dark:text-foreground",
       },
       variant: {
         default:
@@ -21,7 +21,7 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 admin-dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 admin-dark:bg-destructive/60",
         outline:
-          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+          "border-green-600 text-gray-800 [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
       },
     },
     defaultVariants: {

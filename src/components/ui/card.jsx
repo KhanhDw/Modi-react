@@ -52,8 +52,8 @@ const cardHeaderVariants = cva(
     variants: {
       theme: {
         light: "",
-        dark: "dark:[.border-b]:border-border/60",
-        admin: "admin-dark:[.border-b]:border-border/60",
+        dark: "dark:[.border-b]:border-border/60 ",
+        admin: "admin-dark:[.border-b]:border-border/60 ",
       },
     },
     defaultVariants: {
@@ -76,7 +76,7 @@ function CardTitle({ className, ...props }) {
   return (
     <div
       data-slot="card-title"
-      className={cn("leading-none font-semibold", className)}
+      className={cn("leading-none font-semibold text-gray-800", className)}
       {...props}
     />
   )

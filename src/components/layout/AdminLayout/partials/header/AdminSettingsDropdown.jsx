@@ -23,7 +23,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
           className="text-gray-600 hover:bg-gray-100 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-150"
           aria-label="Cài đặt"
         >
-          <Settings className="h-5 w-5" />
+          <Settings color={isDark? '#ffffff':'#000000'} className="h-5 w-5" />
         </Button>
       }
       align="end"

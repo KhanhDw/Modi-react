@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AlignJustify } from "lucide-react";
 import { cn } from "@/lib/utils";
-import AdminSettingsDropdown from "@/components/layout/AdminLayout/partials/AdminSettingsDropdown";
-import { NotificationBell } from "@/components/layout/AdminLayout/partials/NotificationBell";
+import AdminSettingsDropdown from "@/components/layout/AdminLayout/partials/header/AdminSettingsDropdown";
+import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSearch"
 
 const breadcrumbMap = {
   "/managers/dashboard": "Tổng quan",
   "/managers/services": "Dịch vụ",
   "/managers/news": "Tin tức",
-  "/managers/recruitment": "Tuyển dụng",
+  // "/managers/recruitment": "Tuyển dụng",
   "/managers/contact": "Liên hệ",
   "/managers/components": "Component",
 };
@@ -89,8 +90,12 @@ const AdminHeader = ({
           </div>
         </div>
 
+       
         {/* Right */}
         <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
+          
+        <AdminSearch/>
+          
           {/* Website link */}
           <NavLink to="/">
             <Button
@@ -103,12 +108,6 @@ const AdminHeader = ({
             </Button>
           </NavLink>
 
-          {/* Search */}
-          <Input
-            type="search"
-            placeholder="Tìm kiếm..."
-            className="min-w-0 w-32 sm:w-40 md:w-48 lg:w-64 max-w-64 rounded-md border border-gray-200 admin-dark:border-gray-700 bg-gray-50 admin-dark:bg-slate-800 px-3 py-2 text-sm focus:border-gray-400 focus:ring-gray-400"
-          />
 
           {/* Notifications */}
           <NotificationBell />
