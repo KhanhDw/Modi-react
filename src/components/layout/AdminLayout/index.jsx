@@ -8,7 +8,7 @@ const AdminLayoutInner = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
-  const { theme } = useAdminTheme(); // Lấy theme từ context, ví dụ: "light" | "dark"
+  const { theme } = useAdminTheme(); // "light" | "dark"
 
   useEffect(() => {
     const savedHeaderSticky = localStorage.getItem("headerSticky");
@@ -22,7 +22,12 @@ const AdminLayoutInner = ({ children }) => {
   }, [isHeaderSticky]);
 
   return (
-    <div className={cn("flex min-h-screen bg-slate-50", theme === "dark" && "admin-dark")}>
+    <div
+      className={cn(
+        "flex min-h-screen bg-slate-50 text-slate-900 admin-dark:bg-slate-900 admin-dark:text-slate-100",
+        theme === "dark" && "admin-dark"
+      )}
+    >
       {/* Sidebar */}
       <AdminSidebar
         isOpen={sidebarOpen}
@@ -31,10 +36,10 @@ const AdminLayoutInner = ({ children }) => {
         toggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
-      {/* Main Content Container */}
+      {/* Main Content */}
       <div
         className={cn(
-          "flex-1 overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-amber-400 lg:py-2 pt-2",
+          "flex-1 overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-gray-100 admin-dark:bg-gray-700 lg:py-2 pt-2",
           sidebarCollapsed ? "lg:pl-20 lg:py-2 lg:pr-2" : "lg:pl-68 lg:pr-2"
         )}
       >
@@ -50,13 +55,11 @@ const AdminLayoutInner = ({ children }) => {
         {/* Page Content */}
         <main
           className={cn(
-            "flex-1 overflow-y-auto overflow-x-hidden bg-white rounded-lg shadow-sm p-4 mt-2",
+            "flex-1 overflow-y-auto overflow-x-hidden rounded-lg shadow-sm  mt-2 bg-white text-slate-900 admin-dark:bg-slate-800 admin-dark:text-slate-100",
             isHeaderSticky && "mt-23"
           )}
         >
-          <div className="p-4">
-            {children}
-          </div>
+          <div className="">{children}</div>
         </main>
       </div>
 

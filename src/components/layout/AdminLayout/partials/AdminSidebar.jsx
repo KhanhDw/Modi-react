@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import {
-  LayoutDashboard, Handshake, Newspaper, Users, Mail, Puzzle,
+  LayoutDashboard, Handshake, Newspaper, Users, Mail, Puzzle, Moon, SunMedium,
   X, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   const isActive = (path) => pathname === path;
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
+    <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
       {/* Header */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 admin-dark:border-gray-700">
         <h1
@@ -38,9 +38,10 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
         {/* Collapse Button */}
         {!isMobile && (
           <Button
+            theme={isDark ? "admin" : "light"}
             variant="ghost"
             size="icon"
-            className="h-8 w-8 transition-transform duration-200 hover:scale-110"
+            className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100"
             onClick={toggleCollapse}
             aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
           >
@@ -91,14 +92,21 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
       </nav>
 
       {/* Theme Toggle */}
-      <div className="p-3 border-t border-gray-200 admin-dark:border-gray-700">
+      <div className="p-3 border-t border-gray-200 admin-dark:border-gray-600 overflow-hidden">
         <Button
+          theme={isDark ? "admin" : "light"}
           onClick={toggleTheme}
           variant="outline"
           size="sm"
-          className="w-full text-xs"
+          className="w-full text-xs border-gray-700  bg-gray-200 text-slate-800 admin-dark:text-slate-100"
         >
-          {isDark ? "Chế độ sáng" : "Chế độ tối"}
+          <>
+            {/* Icon (luôn hiện trừ khi mobile và thu gọn) */}
+            {!(isCollapsed && isMobile) && (isDark ? <SunMedium /> : <Moon />)}
+            {/* Chữ (chỉ hiện khi không thu gọn) */}
+            {!isCollapsed && (isDark ? "Chế độ sáng" : "Chế độ tối")}
+          </>
+
         </Button>
       </div>
     </div>

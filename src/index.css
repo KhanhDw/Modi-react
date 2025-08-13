@@ -65,6 +65,59 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* ===================== */
+/* Admin dark mode (cục bộ) */
+/* ===================== */
+.admin-dark {
+    /* Kế thừa tone dark nhưng tối ưu hơn cho dashboard admin */
+    --background: oklch(0.13 0 0); /* Tối hơn 1 chút */
+    --foreground: oklch(0.96 0 0);
+    --card: oklch(0.18 0 0);
+    --card-foreground: oklch(0.96 0 0);
+    --popover: oklch(0.18 0 0);
+    --popover-foreground: oklch(0.96 0 0);
+
+    /* Màu chủ đạo xanh dương thay vì vàng/xám */
+    --primary: oklch(0.75 0.17 265);
+    --primary-foreground: oklch(0.96 0 0);
+
+    /* Secondary mềm hơn */
+    --secondary: oklch(0.25 0 0);
+    --secondary-foreground: oklch(0.96 0 0);
+
+    /* Màu accent xanh đậm */
+    --accent: oklch(0.6 0.14 250);
+    --accent-foreground: oklch(0.98 0 0);
+
+    /* Giữ destructive nổi bật */
+    --destructive: oklch(0.65 0.18 25);
+    --destructive-foreground: oklch(0.98 0 0);
+
+    /* Input và border rõ hơn */
+    --border: oklch(1 0 0 / 15%);
+    --input: oklch(1 0 0 / 20%);
+
+    /* Ring màu xanh admin */
+    --ring: oklch(0.65 0.14 250);
+
+    /* Chart màu chuyên nghiệp hơn */
+    --chart-1: oklch(0.55 0.18 250);
+    --chart-2: oklch(0.68 0.16 170);
+    --chart-3: oklch(0.72 0.17 60);
+    --chart-4: oklch(0.6 0.2 300);
+    --chart-5: oklch(0.62 0.19 20);
+
+    /* Sidebar tối ưu cho admin */
+    --sidebar: oklch(0.17 0 0);
+    --sidebar-foreground: oklch(0.96 0 0);
+    --sidebar-primary: oklch(0.55 0.18 250);
+    --sidebar-primary-foreground: oklch(0.98 0 0);
+    --sidebar-accent: oklch(0.25 0 0);
+    --sidebar-accent-foreground: oklch(0.96 0 0);
+    --sidebar-border: oklch(1 0 0 / 15%);
+    --sidebar-ring: oklch(0.65 0.14 250);
+}
+
 a {
     text-decoration: inherit;
 }
