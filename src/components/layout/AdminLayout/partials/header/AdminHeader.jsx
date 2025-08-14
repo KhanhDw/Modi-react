@@ -11,14 +11,25 @@ import { NotificationBell } from "@/components/layout/AdminLayout/partials/heade
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSearch"
 
+
 const breadcrumbMap = {
-  "/managers/dashboard": "Tổng quan",
-  "/managers/services": "Dịch vụ",
-  "/managers/news": "Tin tức",
-  // "/managers/recruitment": "Tuyển dụng",
-  "/managers/contact": "Liên hệ",
-  "/managers/components": "Component",
+   "/managers/dashboard" :"Tổng quan", 
+   "/managers/home-config" :"Cấu hình trang chủ", 
+   "/managers/marketing" :"Marketing & Truyền thông", 
+   "/managers/website-templates" :"Thiết kế Website",
+   "/managers/news" :"Tin tức", 
+   "/managers/contact" :"Liên hệ", 
+   "/managers/services" :"Dịch vụ", 
+   "/managers/about-config" :"Giới thiệu", 
+   "/managers/admin-zone" :"Khu vực quản trị",
+   "/managers/components" :"Component", 
 };
+
+
+
+
+
+
 
 const AdminHeader = ({
   isSidebarOpen,
@@ -49,7 +60,7 @@ const AdminHeader = ({
   }, [isHeaderSticky]);
 
   const currentPath = location.pathname;
-  const pageTitle = breadcrumbMap[currentPath] || "Tổng quan";
+  const pageTitle = breadcrumbMap[currentPath] || "NUll";
   const breadcrumb = `Admin / ${pageTitle}`;
 
   const headerStyle = isHeaderSticky

@@ -72,7 +72,17 @@ function App() {
                         <Page />
                       </Layout>
                     }
-                  />
+                  >
+                     {/* Thêm xử lý các route con */}
+                    {router.children &&
+                      router.children.map((childRoute, childIndex) => (
+                        <Route
+                          key={"child" + childIndex}
+                          path={childRoute.path}
+                          element={<childRoute.component />}
+                        />
+                      ))}
+                  </Route>
                 );
               })}
               {privateRoutes.map((router, index) => {
@@ -89,7 +99,18 @@ function App() {
                         </Layout>
                       </PrivateRoute>
                     }
-                  />
+                  >
+ {/* Thêm xử lý các route con */}
+                    {router.children &&
+                      router.children.map((childRoute, childIndex) => (
+                        <Route
+                          key={"child" + childIndex}
+                          path={childRoute.path}
+                          element={<childRoute.component />}
+                        />
+                      ))}
+                  </Route>
+                  
                 );
               })}
             </Routes>

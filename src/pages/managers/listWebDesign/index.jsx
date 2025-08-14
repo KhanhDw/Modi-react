@@ -1,19 +1,12 @@
-// export {default as WebsiteTemplateDetail} from "./DetailWebsite" 
-// export {default as WebsiteTemplateEdit} from "./EditWebsite" 
-// export {default as WebsiteTemplateList} from "./ListWebsite" 
-
 
 import { useState } from "react"
-import  WebsiteTemplateList from "./ListWebsite"
-import  WebsiteTemplateEdit from "./EditWebsite"
-import  WebsiteTemplateDetail from "./DetailWebsite"
+import { Outlet } from "react-router-dom";
 
 
 
 // export type ViewMode = "list" | "edit" | "detail"
 
 export default function WebsiteTemplatePage() {
-  const [viewMode, setViewMode] = useState("list")
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [templates, setTemplates] = useState([
     {
@@ -24,6 +17,7 @@ export default function WebsiteTemplatePage() {
       category: "E-commerce",
       tags: [".jsx", "TailwindCSS"],
       exportState: true,
+      urlGitHub: "https://github.com/shadcn/ui",
       createdAt: "2024-01-15",
       updatedAt: "2024-01-20",
     },
@@ -35,6 +29,7 @@ export default function WebsiteTemplatePage() {
       category: "Portfolio",
       tags: [".jsx", "TailwindCSS"],
       exportState: false,
+      urlGitHub: "https://github.com/shadcn/ui",
       createdAt: "2024-01-10",
       updatedAt: "2024-01-18",
     },
@@ -46,6 +41,7 @@ export default function WebsiteTemplatePage() {
       category: "Business",
       tags: [".jsx", "TailwindCSS"],
       exportState: true,
+      urlGitHub: "https://github.com/shadcn/ui",
       createdAt: "2024-01-05",
       updatedAt: "2024-01-15",
     },
@@ -57,6 +53,7 @@ export default function WebsiteTemplatePage() {
       category: "Blog",
       tags: [".jsx", "TailwindCSS"],
       exportState: false,
+      urlGitHub: "https://github.com/shadcn/ui",
       createdAt: "2024-01-12",
       updatedAt: "2024-01-22",
     },
@@ -98,36 +95,27 @@ export default function WebsiteTemplatePage() {
   const handleBack = () => {
     setViewMode("list")
     setSelectedTemplate(null)
-  }
+  }  
 
   const handleAddNew = () => {
     setSelectedTemplate(null)
     setViewMode("edit")
   }
-
   return (
-    <div className="">
-      {viewMode === "list" && (
-        <WebsiteTemplateList
-          templates={templates}
-          onEdit={handleEdit}
-          onView={handleView}
-          onDelete={handleDelete}
-          onAddNew={handleAddNew}
-        />
-      )}
-
-      {viewMode === "edit" && (
-        <WebsiteTemplateEdit template={selectedTemplate} onSave={handleSave} onAdd={handleAdd} onBack={handleBack} />
-      )}
-
-      {viewMode === "detail" && selectedTemplate && (
-        <WebsiteTemplateDetail
-          template={selectedTemplate}
-          onBack={handleBack}
-          onEdit={() => handleEdit(selectedTemplate)}
-        />
-      )}
+    <div>
+      <Outlet
+        context={{
+    templates,
+    handleSave,
+    handleAdd,
+    handleDelete,
+    handleEdit,
+    handleView,
+    handleBack,
+    handleAddNew,
+    selectedTemplate,
+  }}
+      />
     </div>
-  )
+  );
 }

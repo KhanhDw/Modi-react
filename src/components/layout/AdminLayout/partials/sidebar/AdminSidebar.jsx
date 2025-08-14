@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import {
-  LayoutDashboard, Handshake, Newspaper, Users, Mail, Puzzle, Moon, SunMedium,
+  LayoutDashboard, Handshake, Newspaper, Users, ShieldMinus, Mail, Puzzle, Moon, SunMedium,
   X, ChevronLeft, ChevronRight,
   Palette,
   Info,
@@ -20,7 +20,8 @@ const menuItems = [
   // { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
   { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
-  { name: "Giới thiệu", path: "/managers/about", icon: Info }, // icon chữ "i"
+  { name: "Giới thiệu", path: "/managers/about-config", icon: Info }, // icon chữ "i"
+  { name: "Khu vực quản trị", path: "/managers/admin-zone", icon: ShieldMinus }, // icon chữ "i"
   { name: "Component", path: "/managers/components", icon: Puzzle },
 ];
 

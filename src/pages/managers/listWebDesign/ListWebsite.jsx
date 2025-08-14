@@ -1,6 +1,5 @@
-"use client"
-
 import { useState } from "react"
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { Search, Plus, Trash2, SquarePen, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,18 +16,72 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import FilterModalListTemplateWebAdmin from "@/components/admin/templateWebsite/filterModalListTemplateWeb"
 
 
-export default function WebsiteTemplateList({ templates, onEdit, onView, onDelete, onAddNew }) {
+
+// export default function WebsiteTemplateList({ templates, onEdit, onView, onDelete, onAddNew }) {
+export default function WebsiteTemplateList() {
+  const { templates, handleDelete } = useOutletContext();
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("")
+
+  if (!templates || templates.length === 0) {
+    return <div>Không có dữ liệu mẫu để hiển thị</div>;
+  }
+ const [filters, setFilters] = useState({
+    technologies: [],
+    tags: [],
+    authors: [],
+    dateRange: "",
+    publishStatus: "",
+  })
+
+   const availableTags = [...new Set(templates.flatMap((t) => t.tags))]
+  const availableAuthors = [...new Set(templates.map((t) => "Admin"))] // Placeholder since all templates have same author
 
   const filteredTemplates = templates.filter(
     (template) =>
+    {
+         // Search term filter
+    const matchesSearch =
+      searchTerm === "" ||
       template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      template.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase())),
+      template.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    // Technology filter
+    const matchesTechnology =
+      filters.technologies.length === 0 ||
+      filters.technologies.some(
+        (tech) =>
+          template.name.toLowerCase().includes(tech.toLowerCase()) ||
+          template.description.toLowerCase().includes(tech.toLowerCase()),
+      )
+
+    // Tags filter
+    const matchesTags = filters.tags.length === 0 || filters.tags.some((tag) => template.tags.includes(tag))
+
+    // Author filter (placeholder logic)
+    const matchesAuthor = filters.authors.length === 0 || filters.authors.includes("Admin")
+
+    // Date range filter (placeholder logic)
+    const matchesDate = filters.dateRange === "" || true // Implement based on your date logic
+
+    // Publish status filter (placeholder logic)
+    const matchesStatus =
+      filters.publishStatus === "" ||
+      (filters.publishStatus === "published" && template.id) || // Assuming all have id means published
+      (filters.publishStatus === "draft" && !template.id)
+
+    return matchesSearch && matchesTechnology && matchesTags && matchesAuthor && matchesDate && matchesStatus
+
+    }
+      
   )
+
 
   return (
     <div className="mx-auto p-4">
@@ -36,22 +89,32 @@ export default function WebsiteTemplateList({ templates, onEdit, onView, onDelet
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Quản lý mẫu Website</h1>
-          <Button onClick={onAddNew} className="flex items-center gap-2">
+          <Button onClick={() => navigate("new")} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Thêm mẫu mới
           </Button>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder="Tìm kiếm mẫu website..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
-          />
-        </div>
+<div className="flex items-center gap-4">
+  
+   <FilterModalListTemplateWebAdmin
+              filters={filters}
+              onFiltersChange={setFilters}
+              availableTags={availableTags}
+              availableAuthors={availableAuthors}
+            />
+          {/* Search Bar */}
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Tìm kiếm mẫu website..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
+            />
+          </div>
+         
+</div>
       </div>
 
       {/* Templates List */}
@@ -134,10 +197,10 @@ export default function WebsiteTemplateList({ templates, onEdit, onView, onDelet
                     </div>
 
                     <Button
-                    theme={"admin"}
+                      theme={"admin"}
                       size="sm"
                       variant="outline"
-                      onClick={() => onEdit(template)}
+                      onClick={() => navigate(`${template.id}/edit`)}
                       className="h-8 w-8 p-0  hover:bg-transparent hover:border-slate-500 border-2 bg-white"
                       title="Chỉnh sửa"
                     >
@@ -164,7 +227,7 @@ export default function WebsiteTemplateList({ templates, onEdit, onView, onDelet
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Hủy</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => onDelete(template.id)}>Xóa</AlertDialogAction>
+                          <AlertDialogAction onClick={() => handleDelete(template.id)}>Xóa</AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
@@ -188,7 +251,7 @@ export default function WebsiteTemplateList({ templates, onEdit, onView, onDelet
 
                   <Button
                     size="sm"
-                    onClick={() => onView(template)}
+                    onClick={() => navigate(`${template.id}`)}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     Xem mẫu
@@ -207,7 +270,7 @@ export default function WebsiteTemplateList({ templates, onEdit, onView, onDelet
           <div className="text-muted-foreground mb-4">
             {searchTerm ? "Không tìm thấy mẫu website nào phù hợp" : "Chưa có mẫu website nào"}
           </div>
-          {!searchTerm && <Button onClick={onAddNew}>Thêm mẫu đầu tiên</Button>}
+          {!searchTerm && <Button onClick={()=> navigate("new")}>Thêm mẫu đầu tiên</Button>}
         </div>
       )}
     </div>
