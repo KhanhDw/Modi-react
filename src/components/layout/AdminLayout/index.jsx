@@ -39,7 +39,7 @@ const AdminLayoutInner = ({ children }) => {
       {/* Main Content */}
       <div
         className={cn(
-          "flex-1 overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-gray-100 admin-dark:bg-gray-700 lg:py-2 pt-2",
+          "flex-1 min-h-screen  overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-gray-300 admin-dark:bg-gray-700 lg:py-2 pt-2",
           sidebarCollapsed ? "lg:pl-20 lg:py-2 lg:pr-2" : "lg:pl-68 lg:pr-2"
         )}
       >
@@ -55,11 +55,11 @@ const AdminLayoutInner = ({ children }) => {
         {/* Page Content */}
         <main
           className={cn(
-            "flex-1 overflow-y-auto overflow-x-hidden rounded-lg shadow-sm  mt-2 bg-white text-slate-900 admin-dark:bg-slate-800 admin-dark:text-slate-100",
+            "flex-1 h-full overflow-y-auto overflow-x-hidden rounded-lg shadow-sm  mt-2 bg-white text-slate-900 admin-dark:bg-slate-800 admin-dark:text-slate-100",
             isHeaderSticky && "mt-23"
           )}
         >
-          <div className="bg-gray-50 admin-dark:bg-gray-900 p-4" >{children}</div>
+          <div className="bg-white admin-dark:bg-gray-900 p-4 h-full" >{children}</div>
         </main>
       </div>
 

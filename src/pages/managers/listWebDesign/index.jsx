@@ -20,9 +20,10 @@ export default function WebsiteTemplatePage() {
       id: "1",
       name: "E-commerce Modern",
       description: "Mẫu website thương mại điện tử hiện đại với giao diện sạch sẽ",
-      imageUrl: "/placeholder.svg?height=300&width=400",
+      imageUrl: "https://github.com/shadcn.png",
       category: "E-commerce",
-      tags: ["modern", "clean", "responsive"],
+      tags: [".jsx", "TailwindCSS"],
+      exportState: true,
       createdAt: "2024-01-15",
       updatedAt: "2024-01-20",
     },
@@ -30,9 +31,10 @@ export default function WebsiteTemplatePage() {
       id: "2",
       name: "Portfolio Creative",
       description: "Mẫu portfolio sáng tạo cho designer và developer",
-      imageUrl: "/placeholder.svg?height=300&width=400",
+      imageUrl: "https://github.com/shadcn.png",
       category: "Portfolio",
-      tags: ["creative", "portfolio", "dark"],
+      tags: [".jsx", "TailwindCSS"],
+      exportState: false,
       createdAt: "2024-01-10",
       updatedAt: "2024-01-18",
     },
@@ -40,9 +42,10 @@ export default function WebsiteTemplatePage() {
       id: "3",
       name: "Corporate Business",
       description: "Mẫu website doanh nghiệp chuyên nghiệp",
-      imageUrl: "/placeholder.svg?height=300&width=400",
+      imageUrl: "https://github.com/shadcn.png",
       category: "Business",
-      tags: ["professional", "corporate", "blue"],
+      tags: [".jsx", "TailwindCSS"],
+      exportState: true,
       createdAt: "2024-01-05",
       updatedAt: "2024-01-15",
     },
@@ -50,9 +53,10 @@ export default function WebsiteTemplatePage() {
       id: "4",
       name: "Blog Minimal",
       description: "Mẫu blog tối giản, tập trung vào nội dung",
-      imageUrl: "/placeholder.svg?height=300&width=400",
+      imageUrl: "https://github.com/shadcn.png",
       category: "Blog",
-      tags: ["minimal", "blog", "typography"],
+      tags: [".jsx", "TailwindCSS"],
+      exportState: false,
       createdAt: "2024-01-12",
       updatedAt: "2024-01-22",
     },
@@ -102,7 +106,7 @@ export default function WebsiteTemplatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="">
       {viewMode === "list" && (
         <WebsiteTemplateList
           templates={templates}

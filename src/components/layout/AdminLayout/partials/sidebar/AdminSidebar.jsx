@@ -15,7 +15,7 @@ const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
   { name: "Cấu hình trang chủ", path: "/managers/home-config", icon: Columns3Cog },
   { name: "Marketing & Truyền thông", path: "/managers/marketing", icon: Megaphone }, // loa thông báo
-  { name: "Thiết kế Website", path: "/managers/website-design", icon: Palette }, // biểu tượng bảng màu, thiết kế
+  { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette }, // biểu tượng bảng màu, thiết kế
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
   // { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
   { name: "Liên hệ", path: "/managers/contact", icon: Mail },

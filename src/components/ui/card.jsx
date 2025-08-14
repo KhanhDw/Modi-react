@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 
 // Card styles
 const cardVariants = cva(
-  "flex flex-col gap-6 rounded-xl border py-6 shadow-sm transition-all",
+  "flex flex-col gap-6 rounded-xl border py-4 shadow-sm transition-all",
   {
     variants: {
       theme: {

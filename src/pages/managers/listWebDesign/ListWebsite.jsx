@@ -1,8 +1,10 @@
+"use client"
+
 import { useState } from "react"
-import { Search, Plus, Edit, Eye, Trash2 } from "lucide-react"
+import { Search, Plus, Trash2, SquarePen, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
   AlertDialog,
@@ -17,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog"
 
 
-export default  function WebsiteTemplateList({ templates, onEdit, onView, onDelete, onAddNew }) {
+export default function WebsiteTemplateList({ templates, onEdit, onView, onDelete, onAddNew }) {
   const [searchTerm, setSearchTerm] = useState("")
 
   const filteredTemplates = templates.filter(
@@ -29,7 +31,7 @@ export default  function WebsiteTemplateList({ templates, onEdit, onView, onDele
   )
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto p-4">
       {/* Header */}
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex items-center justify-between">
@@ -47,80 +49,154 @@ export default  function WebsiteTemplateList({ templates, onEdit, onView, onDele
             placeholder="Tìm kiếm mẫu website..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
           />
         </div>
       </div>
 
-      {/* Templates Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {/* Templates List */}
+      <div className="space-y-4">
         {filteredTemplates.map((template) => (
-          <Card key={template.id} className="group hover:shadow-lg transition-shadow duration-200">
-            <CardContent className="p-0">
-              {/* Template Image */}
-              <div className="relative overflow-hidden rounded-t-lg">
-                <img
-                  src={template.imageUrl || "/placeholder.svg"}
-                  alt={template.name}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
-                />
+          <Card key={template.id} className="group border-2 border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800">
+            <CardContent className="px-4 ">
+              <div className="flex min-h-[200px]">
+                {/* Left Section: Image + Basic Information */}
+                <div className="flex flex-1">
+                  {/* Template Image width=480px */}
+                  <div className="relative w-120 h-50 flex-shrink-0">
+                    <img
+                      src={template.imageUrl || "/placeholder.svg?height=192&width=288&query=website template preview"}
+                      alt={template.name}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    {/* Category Badge */}
+                    <div className="absolute top-3 left-3">
+                      <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
+                        {template.category}
+                      </Badge>
+                    </div>
+                  </div>
 
-                {/* Action Buttons Overlay */}
-                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Button size="sm" variant="secondary" onClick={() => onView(template)} className="h-8 w-8 p-0">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="secondary" onClick={() => onEdit(template)} className="h-8 w-8 p-0">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive" className="h-8 w-8 p-0">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Bạn có chắc chắn muốn xóa mẫu "{template.name}"? Hành động này không thể hoàn tác.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Hủy</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => onDelete(template.id)}>Xóa</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  {/* Basic Information */}
+                  <div className="flex-1 px-6 pr-0">
+                    {/* Title and Author */}
+                    <div className="mb-3">
+                      <h3 className="font-semibold text-xl text-gray-900 admin-dark:text-gray-100 mb-1 line-clamp-2">
+                        {template.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 admin-dark:text-gray-400">
+                        by <span className="text-blue-600 admin-dark:text-blue-400 font-medium">Admin</span> in {template.category}
+                      </p>
+                    </div>
+
+                    {/* Software Version */}
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-700 admin-dark:text-gray-300">
+                        <span className="font-medium">Công nghệ:</span>{" "}
+                        <span className="text-blue-600 admin-dark:text-blue-400">React 18.x</span>,{" "}
+                        <span className="text-gray-600 admin-dark:text-gray-400">TypeScript</span>
+                      </p>
+                    </div>
+
+                    {/* File Types Included */}
+                    <div>
+                      <p className="text-sm text-gray-700 admin-dark:text-gray-300 font-medium mb-2">Các loại File:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {template.tags.slice(0, 6).map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="text-xs bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 border-gray-300 admin-dark:border-gray-600"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                        {template.tags.length > 6 && (
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-gray-50 admin-dark:bg-gray-800 text-gray-500 admin-dark:text-gray-400"
+                          >
+                            +{template.tags.length - 6} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
 
-                {/* Category Badge */}
-                <div className="absolute top-2 left-2">
-                  <Badge variant="secondary">{template.category}</Badge>
+                {/* Right Section: Price, Date & Actions */}
+                <div className="w-56 border-l-2 border-gray-300 admin-dark:border-gray-700 bg-gray-50/30 admin-dark:bg-gray-800/30 p-2 flex flex-col justify-between">
+                  {/* Top: Action Icons */}
+                  <div className="flex  items-center justify-end gap-1 mb-4">
+                    <div className={`${template.exportState ? "bg-green-600 text-gray-100" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-lg `}>
+                      <p>{template.exportState ? "Đã xuất bản" : "Chưa xuất bản"}</p>
+                    </div>
+
+                    <Button
+                    theme={"admin"}
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onEdit(template)}
+                      className="h-8 w-8 p-0  hover:bg-transparent hover:border-slate-500 border-2 bg-white"
+                      title="Chỉnh sửa"
+                    >
+                      <SquarePen className="h-4 w-4 text-gray-900 admin-dark:text-gray-100" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          theme="admin"
+                          size="sm"
+                          variant="outline"
+                          className="h-8 w-8 p-0 bg-white text-red-500 hover:text-red-700 hover:bg-transparent hover:border-slate-500 border-2"
+                          title="Xóa"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Bạn có chắc chắn muốn xóa mẫu "{template.name}"? Hành động này không thể hoàn tác.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Hủy</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => onDelete(template.id)}>Xóa</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+
+
+                  <div className="text-right ">
+                    <div className="text-3xl font-bold text-gray-900 admin-dark:text-gray-200 mb-2">$29</div>
+                    <div className="text-xs text-gray-700 admin-dark:text-gray-200 leading-relaxed">
+                      Cập nhật:
+                      <span className="ml-2 font-medium">
+                        {new Date(template.updatedAt).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "short",
+                          year: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+
+                  <Button
+                    size="sm"
+                    onClick={() => onView(template)}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Xem mẫu
+                  </Button>
+
                 </div>
               </div>
             </CardContent>
-
-            <CardFooter className="p-4">
-              <div className="w-full">
-                <h3 className="font-semibold text-lg mb-2">{template.name}</h3>
-                <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{template.description}</p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {template.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-
-                {/* Date */}
-                <p className="text-xs text-muted-foreground">
-                  Cập nhật: {new Date(template.updatedAt).toLocaleDateString("vi-VN")}
-                </p>
-              </div>
-            </CardFooter>
           </Card>
         ))}
       </div>
