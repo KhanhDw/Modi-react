@@ -14,8 +14,9 @@
 
 /*  dark toàn bộ */
 @custom-variant dark (&:where(.dark, .dark *));
-/*  dark cục bộ - có thể dùng cùng với toàn cục */
-@custom-variant admin-dark (&:where(.admin-dark, .admin-dark *)); 
+/*  dark cục bộ - có thể dùng cùng với toàn cục - nhưng admin-dark được ưu tiên cao hơn,  */
+@custom-variant admin-dark (.admin-dark &, .dark.admin-dark &);
+
 
 
 :root {
@@ -64,7 +65,7 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
      --tooltip-bg: oklch(0.1 0 0); /* nền tối */
-  --tooltip-text: oklch(0.95 0 0); /* chữ sáng */
+    --tooltip-text: oklch(0.95 0 0); /* chữ sáng */
 }
 
 /* ===================== */

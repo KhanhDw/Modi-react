@@ -25,27 +25,17 @@ import ConfigHomePage from "@/pages/managers/ConfigHomePage"
 import AboutConfig from "@/pages/managers/AboutConfig"
 import AdminZonePage from "@/pages/managers/AdminZonePage"
 
-
 import WebsiteTemplatePage from "@/pages/managers/WebsiteTemplatePage"
 import WebsiteTemplateList from "@/components/admin/listWebDesign/ListWebsite"
 import WebsiteTemplateDetail from "@/components/admin/listWebDesign/DetailWebsite";
 import WebsiteTemplateEdit from "@/components/admin/listWebDesign/EditWebsite";
 
 import MarketingPage from "@/pages/managers/MarketingPage"
-import OverviewPage from "@/pages/managers/Marketing/OverviewPage"
-import CampaignsPage from "@/pages/managers/Marketing/CampaignsPage"
-import EmailPage from "@/pages/managers/Marketing/EmailPage"
-import SEOPage from "@/pages/managers/Marketing/SEOPage"
-import SocialPage from "@/pages/managers/Marketing/SocialPage"
-// import  CampaignForm  from "@/components/admin/marketing/campaigns/campaign-form";
-// import  CampaignDetailModal  from "@/components/admin/marketing/campaigns/campaign-detail-modal";
-// import  CampaignsTable  from "@/components/admin/marketing/campaigns/campaigns-table";
-// import  KeywordForm  from "@/components/admin/marketing/seo/keyword-form";
-// import  SEOAnalytics  from "@/components/admin/marketing/seo/seo-analytics";
-// import  SocialCalendar  from "@/components/admin/marketing/social/social-calendar";
-// import  SocialAnalytics  from "@/components/admin/marketing/social/social-analytics";
-
-
+import OverviewPage from "@/pages/managers/marketing/OverviewPage"
+import CampaignsPage from "@/pages/managers/marketing/CampaignsPage"
+import EmailPage from "@/pages/managers/marketing/EmailPage"
+import SEOPage from "@/pages/managers/marketing/SEOPage"
+import SocialPage from "@/pages/managers/marketing/SocialPage"
 
 import TermsOfServicePage from "../pages/TermsOfServicePage"
 
@@ -67,7 +57,6 @@ const publicRoutes = [
     { path: "/news/:id", component: NewsDetail, layout: DefaultLayout },
     { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
 ]
-
 
 const privateRoutes = [
     // redirect /managers -> /managers/dashboard

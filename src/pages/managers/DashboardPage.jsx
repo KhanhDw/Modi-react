@@ -81,7 +81,7 @@ function RevenueChart() {
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={revenueData}>
             <CartesianGrid
-              strokeDasharray="3 3"
+              strokeDasharray="3 3" 
               stroke="currentColor"
               className="opacity-20"
             />

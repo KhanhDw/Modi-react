@@ -101,13 +101,19 @@ export default function CampaignsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-gray-900 admin-dark:text-gray-100">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Quản lý chiến dịch</h2>
-          <p className="text-muted-foreground">Theo dõi và quản lý các chiến dịch marketing</p>
+          <p className="text-muted-foreground admin-dark:text-gray-400">
+            Theo dõi và quản lý các chiến dịch marketing
+          </p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowCampaignForm(true)}>
+        <Button
+          theme="admin"
+          className="bg-primary hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500"
+          onClick={() => setShowCampaignForm(true)}
+        >
           <Plus className="h-4 w-4 mr-2" />
           Tạo chiến dịch mới
         </Button>
@@ -124,7 +130,7 @@ export default function CampaignsPage() {
 
       {/* Campaign Modals */}
       <Dialog open={showCampaignForm} onOpenChange={setShowCampaignForm}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white admin-dark:bg-gray-800">
           <CampaignForm
             onSubmit={editingCampaign ? handleUpdateCampaign : handleCreateCampaign}
             onCancel={() => {

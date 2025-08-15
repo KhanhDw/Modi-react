@@ -65,6 +65,32 @@ export default function SEOPage() {
     },
   ])
 
+  const handleCreatePost = (data) => {
+    const newPost = {
+      id: posts.length + 1,
+      ...data,
+      views: 0,
+      keywordId: Number.parseInt(data.keywordId) || null,
+    };
+    setPosts([...posts, newPost]);
+    setShowPostForm(false);
+  };
+
+  const handleEditPost = (post) => {
+    setEditingPost(post);
+    setShowPostForm(true);
+  };
+
+  const handleUpdatePost = (data) => {
+    setPosts(
+      posts.map((p) =>
+        p.id === editingPost.id ? { ...p, ...data, keywordId: Number.parseInt(data.keywordId) || null } : p
+      )
+    );
+    setShowPostForm(false);
+    setEditingPost(null);
+  };
+
   const handleCreateKeyword = (data) => {
     const newKeyword = {
       id: keywords.length + 1,
@@ -99,18 +125,27 @@ export default function SEOPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-black admin-dark:bg-gray-900 admin-dark:text-gray-100">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">SEO & Content</h2>
-          <p className="text-muted-foreground">Quản lý từ khóa và nội dung SEO</p>
+          <h2 className="text-2xl font-bold text-black admin-dark:text-white">SEO & Content</h2>
+          <p className="text-muted-black admin-dark:text-gray-400">Quản lý từ khóa và nội dung SEO</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowKeywordForm(true)}>
+          <Button
+          theme="admin"
+            variant="outline"
+            onClick={() => setShowKeywordForm(true)}
+            className="  text-black hover:text-gray-200 bg-gray-200  hover:bg-gray-600 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+          >
             <Hash className="h-4 w-4 mr-2" />
             Thêm từ khóa
           </Button>
-          <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowPostForm(true)}>
+          <Button
+          theme={"admin"}
+            className="bg-primary hover:text-gray-200  hover:bg-gray-600  text-primary-black admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 admin-dark:text-white"
+            onClick={() => setShowPostForm(true)}
+          >
             <FileText className="h-4 w-4 mr-2" />
             Tạo bài viết
           </Button>
@@ -120,14 +155,20 @@ export default function SEOPage() {
       <SEOAnalytics keywords={keywords} posts={posts} />
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="bg-white border border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Từ khóa đang theo dõi</CardTitle>
-                <CardDescription>{keywords.length} từ khóa chính</CardDescription>
+                <CardTitle className="text-black admin-dark:text-white hover:bg-gray-50 admin-dark:hover:bg-gray-700">Từ khóa đang theo dõi</CardTitle>
+                <CardDescription className="text-gray-500 admin-dark:text-gray-400">{keywords.length} từ khóa chính</CardDescription>
               </div>
-              <Button variant="outline" size="sm" onClick={() => setShowKeywordForm(true)}>
+              <Button
+                theme="admin"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowKeywordForm(true)} 
+                className="border border-gray-300 text-black bg-slate-200 hover:bg-gray-100 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+              >
                 <Plus className="h-4 w-4 mr-1" />
                 Thêm
               </Button>
@@ -135,10 +176,13 @@ export default function SEOPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {keywords.slice(0, 4).map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 border rounded-lg border-gray-200 bg-gray-50 admin-dark:border-gray-700 admin-dark:bg-gray-800"
+              >
                 <div className="space-y-1">
-                  <p className="font-medium">{item.keyword}</p>
-                  <p className="text-sm text-muted-foreground">{item.searchVolume?.toLocaleString()} tìm kiếm/tháng</p>
+                  <p className="font-medium text-black admin-dark:text-gray-100">{item.keyword}</p>
+                  <p className="text-sm text-gray-50 admin-dark:text-gray-400">{item.searchVolume?.toLocaleString()} tìm kiếm/tháng</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge
@@ -149,14 +193,27 @@ export default function SEOPage() {
                           ? "default"
                           : "secondary"
                     }
+                    className={
+                      item.competition === "high"
+                        ? "bg-red-500 text-white admin-dark:bg-red-600"
+                        : item.competition === "medium"
+                          ? "bg-blue-500 text-white admin-dark:bg-blue-600"
+                          : "bg-gray-200 text-gray-800 admin-dark:bg-gray-600 admin-dark:text-gray-200"
+                    }
                   >
                     {item.competition === "high" ? "Cao" : item.competition === "medium" ? "Trung bình" : "Thấp"}
                   </Badge>
                   <div className="text-right">
-                    <p className="text-sm font-medium">#{item.position}</p>
-                    <p className="text-xs text-muted-foreground">Vị trí</p>
+                    <p className="text-sm font-medium text-black admin-dark:text-gray-100">#{item.position}</p>
+                    <p className="text-xs text-gray-700 bg-slate-200 admin-dark:text-gray-400">Vị trí</p>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => handleEditKeyword(item)}>
+                  <Button
+                  theme={"admin"}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleEditKeyword(item)}
+                    className="text-black bg-gray-300 hover:bg-gray-100 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+                  >
                     Sửa
                   </Button>
                 </div>
@@ -165,14 +222,20 @@ export default function SEOPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white border border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Bài viết gần đây</CardTitle>
-                <CardDescription>Content đã xuất bản</CardDescription>
+                <CardTitle className="text-black admin-dark:text-white">Bài viết gần đây</CardTitle>
+                <CardDescription className="text-muted-black admin-dark:text-gray-400">Content đã xuất bản</CardDescription>
               </div>
-              <Button variant="outline" size="sm" onClick={() => setShowPostForm(true)}>
+              <Button
+              theme={"admin"}
+                variant="outline"
+                size="sm"
+                onClick={() => setShowPostForm(true)}
+                className="border bg-gray-300 border-gray-300 text-black hover:bg-gray-100 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+              >
                 <Plus className="h-4 w-4 mr-1" />
                 Tạo
               </Button>
@@ -180,17 +243,27 @@ export default function SEOPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {posts.slice(0, 4).map((post, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 border rounded-lg border-gray-200 bg-gray-50 admin-dark:border-gray-700 admin-dark:bg-gray-800"
+              >
                 <div className="space-y-1 flex-1">
-                  <p className="font-medium text-sm">{post.title}</p>
-                  <p className="text-xs text-muted-foreground">{post.publishDate}</p>
+                  <p className="font-medium text-sm text-black admin-dark:text-gray-100">{post.title}</p>
+                  <p className="text-xs text-muted-black admin-dark:text-gray-400">{post.publishDate}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="text-right">
-                    <p className="text-sm font-medium">{post.views?.toLocaleString()}</p>
-                    <p className="text-xs text-muted-foreground">lượt xem</p>
+                    <p className="text-sm font-medium text-black admin-dark:text-gray-100">{post.views?.toLocaleString()}</p>
+                    <p className="text-xs text-muted-black admin-dark:text-gray-400">lượt xem</p>
                   </div>
-                  <Badge variant={post.status === "published" ? "default" : "secondary"}>
+                  <Badge
+                    variant={post.status === "published" ? "default" : "secondary"}
+                    className={
+                      post.status === "published"
+                        ? "bg-blue-500 text-white admin-dark:bg-blue-600"
+                        : "bg-gray-200 text-gray-800 admin-dark:bg-gray-600 admin-dark:text-gray-200"
+                    }
+                  >
                     {post.status === "published" ? "Đã xuất bản" : "Nháp"}
                   </Badge>
                 </div>
@@ -202,7 +275,7 @@ export default function SEOPage() {
 
       {/* SEO Modals */}
       <Dialog open={showKeywordForm} onOpenChange={setShowKeywordForm}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
           <KeywordForm
             onSubmit={editingKeyword ? handleUpdateKeyword : handleCreateKeyword}
             onCancel={() => {

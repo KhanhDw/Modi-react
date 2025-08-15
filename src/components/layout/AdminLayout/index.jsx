@@ -59,7 +59,7 @@ const AdminLayoutInner = ({ children }) => {
             isHeaderSticky && "mt-23"
           )}
         >
-          <div className="bg-white admin-dark:bg-gray-900 p-4 h-full" >{children}</div>
+          <div className="bg-slate-50 admin-dark:bg-gray-900 p-4 h-full" >{children}</div>
         </main>
       </div>
 

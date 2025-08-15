@@ -149,88 +149,126 @@ export default function SocialPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Quản lý mạng xã hội</h2>
-          <p className="text-muted-foreground">Kết nối và quản lý các tài khoản mạng xã hội</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowSocialAccountForm(true)}>
-            <Link className="h-4 w-4 mr-2" />
-            Kết nối tài khoản
-          </Button>
-          <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowPostSchedulerForm(true)}>
-            <Calendar className="h-4 w-4 mr-2" />
-            Lên lịch đăng bài
-          </Button>
-        </div>
+  <div className="space-y-6">
+    {/* Header */}
+    <div className="flex items-center justify-between">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+          Quản lý mạng xã hội
+        </h2>
+        <p className="text-gray-500 admin-dark:text-gray-400">
+          Kết nối và quản lý các tài khoản mạng xã hội
+        </p>
       </div>
-
-      <SocialAnalytics socialAccounts={socialAccounts} posts={scheduledPosts} />
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {socialAccounts.map((social, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <social.icon className="h-5 w-5" />
-                  <CardTitle>{social.platform}</CardTitle>
-                </div>
-                <Badge variant={social.connected ? "default" : "secondary"}>
-                  {social.connected ? "Đã kết nối" : "Chưa kết nối"}
-                </Badge>
-              </div>
-              <CardDescription>{social.account}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Followers</p>
-                  <p className="font-bold text-lg">{social.followers}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Bài đăng</p>
-                  <p className="font-bold text-lg">{social.posts}</p>
-                </div>
-              </div>
-
-              {social.connected ? (
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 bg-transparent"
-                    onClick={() => setShowPostSchedulerForm(true)}
-                  >
-                    <Calendar className="h-4 w-4 mr-1" />
-                    Lên lịch
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleEditSocialAccount(social)}>
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <Button className="w-full" size="sm" onClick={() => handleEditSocialAccount(social)}>
-                  Kết nối tài khoản
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+      <div className="flex gap-2">
+        <Button
+          theme="admin"
+          variant="outline"
+          className="bg-gray-300 border-gray-300 text-gray-900 font-semibold hover:bg-gray-100 admin-dark:border-gray-700 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800"
+          onClick={() => setShowSocialAccountForm(true)}
+        >
+          <Link className="h-4 w-4 mr-2" />
+          Kết nối tài khoản
+        </Button>
+        <Button
+          theme="admin"
+          className="bg-blue-600 hover:bg-blue-700 text-white admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
+          onClick={() => setShowPostSchedulerForm(true)}
+        >
+          <Calendar className="h-4 w-4 mr-2" />
+          Lên lịch đăng bài
+        </Button>
       </div>
-
-      <SocialCalendar
-        posts={scheduledPosts}
-        socialAccounts={socialAccounts}
-        onEditPost={handleEditScheduledPost}
-        onDeletePost={handleDeleteScheduledPost}
-        onViewPost={(post) => console.log("View post:", post)}
-      />
-
-      {/* Social Media Modals would go here */}
-      {/* These would use the existing social components */}
     </div>
-  )
+
+    {/* Analytics */}
+    <SocialAnalytics socialAccounts={socialAccounts} posts={scheduledPosts} />
+
+    {/* Card list */}
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {socialAccounts.map((social, index) => (
+        <Card
+        theme="admin"
+          key={index}
+          className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 shadow-sm"
+        >
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <social.icon className="h-5 w-5" />
+                <CardTitle >{social.platform}</CardTitle>
+              </div>
+              <Badge
+                variant={social.connected ? "default" : "secondary"}
+                className={
+                  social.connected
+                    ? "bg-green-500 text-white admin-dark:bg-green-600"
+                    : "bg-gray-200 text-gray-800 admin-dark:bg-gray-700 admin-dark:text-gray-300"
+                }
+              >
+                {social.connected ? "Đã kết nối" : "Chưa kết nối"}
+              </Badge>
+            </div>
+            <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+              {social.account}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500 admin-dark:text-gray-400">Followers</p>
+                <p className="font-bold text-lg">{social.followers}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 admin-dark:text-gray-400">Bài đăng</p>
+                <p className="font-bold text-lg">{social.posts}</p>
+              </div>
+            </div>
+
+            {social.connected ? (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-transparent border-gray-300 text-gray-700 hover:bg-gray-100 admin-dark:border-gray-700 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800"
+                  onClick={() => setShowPostSchedulerForm(true)}
+                >
+                  <Calendar className="h-4 w-4 mr-1" />
+                  Lên lịch
+                </Button>
+                <Button
+                theme={"admin"}
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-300 bg-gray-300 text-gray-700 hover:bg-gray-700 admin-dark:border-gray-700 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800"
+                  onClick={() => handleEditSocialAccount(social)}
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
+                size="sm"
+                onClick={() => handleEditSocialAccount(social)}
+              >
+                Kết nối tài khoản
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+
+    {/* Calendar */}
+    <SocialCalendar
+      posts={scheduledPosts}
+      socialAccounts={socialAccounts}
+      onEditPost={handleEditScheduledPost}
+      onDeletePost={handleDeleteScheduledPost}
+      onViewPost={(post) => console.log("View post:", post)}
+    />
+  </div>
+);
+
 }
