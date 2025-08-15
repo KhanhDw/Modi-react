@@ -26,10 +26,24 @@ import AboutConfig from "@/pages/managers/AboutConfig"
 import AdminZonePage from "@/pages/managers/AdminZonePage"
 
 
-import WebsiteTemplatePage from "@/pages/managers/listWebDesign"    
-import WebsiteTemplateList from "@/pages/managers/listWebDesign/ListWebsite"    
-import WebsiteTemplateDetail from "@/pages/managers/listWebDesign/DetailWebsite";
-import WebsiteTemplateEdit from "@/pages/managers/listWebDesign/EditWebsite";
+import WebsiteTemplatePage from "@/pages/managers/WebsiteTemplatePage"
+import WebsiteTemplateList from "@/components/admin/listWebDesign/ListWebsite"
+import WebsiteTemplateDetail from "@/components/admin/listWebDesign/DetailWebsite";
+import WebsiteTemplateEdit from "@/components/admin/listWebDesign/EditWebsite";
+
+import MarketingPage from "@/pages/managers/MarketingPage"
+import OverviewPage from "@/pages/managers/Marketing/OverviewPage"
+import CampaignsPage from "@/pages/managers/Marketing/CampaignsPage"
+import EmailPage from "@/pages/managers/Marketing/EmailPage"
+import SEOPage from "@/pages/managers/Marketing/SEOPage"
+import SocialPage from "@/pages/managers/Marketing/SocialPage"
+// import  CampaignForm  from "@/components/admin/marketing/campaigns/campaign-form";
+// import  CampaignDetailModal  from "@/components/admin/marketing/campaigns/campaign-detail-modal";
+// import  CampaignsTable  from "@/components/admin/marketing/campaigns/campaigns-table";
+// import  KeywordForm  from "@/components/admin/marketing/seo/keyword-form";
+// import  SEOAnalytics  from "@/components/admin/marketing/seo/seo-analytics";
+// import  SocialCalendar  from "@/components/admin/marketing/social/social-calendar";
+// import  SocialAnalytics  from "@/components/admin/marketing/social/social-analytics";
 
 
 
@@ -58,11 +72,23 @@ const publicRoutes = [
 const privateRoutes = [
     // redirect /managers -> /managers/dashboard
     { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
+    { path: "/managers/marketing", component: () => <Navigate to="/managers/marketing/overview" replace={true} /> },
 
     //admin routes
     { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
     { path: "/managers/home-config", component: ConfigHomePage, layout: AdminLayout },
-    { path: "/managers/marketing", component: ConfigHomePage, layout: AdminLayout },
+    {
+        path: "/managers/marketing", 
+        component: MarketingPage, 
+        layout: AdminLayout,
+        children: [
+            { path: "overview", component: OverviewPage },
+            { path: "campaigns", component: CampaignsPage },
+            { path: "seo", component: SEOPage },
+            { path: "social", component: SocialPage },
+            { path: "email", component: EmailPage },
+        ],
+    },
     { path: "/managers/services", component: ManagerServices, layout: AdminLayout },
     { path: "/managers/news", component: ManagerNews, layout: AdminLayout },
     { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
@@ -71,8 +97,8 @@ const privateRoutes = [
     { path: "/managers/about-config", component: AboutConfig, layout: AdminLayout },
     { path: "/managers/admin-zone", component: AdminZonePage, layout: AdminLayout },
     {
-        path: "/managers/website-templates", 
-        component: WebsiteTemplatePage, 
+        path: "/managers/website-templates",
+        component: WebsiteTemplatePage,
         layout: AdminLayout,
         children: [
             { path: "", component: WebsiteTemplateList },

@@ -11,13 +11,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 import { cn } from "@/lib/utils";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 
+// { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
 const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
   { name: "Cấu hình trang chủ", path: "/managers/home-config", icon: Columns3Cog },
   { name: "Marketing & Truyền thông", path: "/managers/marketing", icon: Megaphone }, // loa thông báo
   { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette }, // biểu tượng bảng màu, thiết kế
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
-  // { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
   { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
   { name: "Giới thiệu", path: "/managers/about-config", icon: Info }, // icon chữ "i"
@@ -28,8 +28,7 @@ const menuItems = [
 const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false }) => {
   const { pathname } = useLocation();
   const { isDark, toggleTheme } = useAdminTheme();
-  const isActive = (path) => pathname === path;
-
+  const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
       {/* Header */}

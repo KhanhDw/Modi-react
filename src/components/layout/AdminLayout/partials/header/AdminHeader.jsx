@@ -111,7 +111,7 @@ const AdminHeader = ({
           <NavLink to="/">
             <Button
               variant="ghost"
-              className="flex items-center space-x-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0"
+              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />
