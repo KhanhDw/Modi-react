@@ -24,6 +24,7 @@ import AllComponentsPageAdmin from "../pages/managers/AllComponent"
 import ConfigHomePage from "@/pages/managers/ConfigHomePage"
 import AboutConfig from "@/pages/managers/AboutConfig"
 import AdminZonePage from "@/pages/managers/AdminZonePage"
+import ProfilePage from "@/pages/managers/ProfilePage"
 
 
 import WebsiteTemplatePage from "@/pages/managers/WebsiteTemplatePage"
@@ -78,8 +79,8 @@ const privateRoutes = [
     { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
     { path: "/managers/home-config", component: ConfigHomePage, layout: AdminLayout },
     {
-        path: "/managers/marketing", 
-        component: MarketingPage, 
+        path: "/managers/marketing",
+        component: MarketingPage,
         layout: AdminLayout,
         children: [
             { path: "overview", component: OverviewPage },
@@ -96,6 +97,7 @@ const privateRoutes = [
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },
     { path: "/managers/about-config", component: AboutConfig, layout: AdminLayout },
     { path: "/managers/admin-zone", component: AdminZonePage, layout: AdminLayout },
+    { path: "/managers/profile", component: ProfilePage, layout: AdminLayout },
     {
         path: "/managers/website-templates",
         component: WebsiteTemplatePage,

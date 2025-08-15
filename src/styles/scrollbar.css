@@ -1,0 +1,40 @@
+/* Scrollbar chung (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+    background: transparent;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #c0c0c0;
+    /* xám nhạt */
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+/* Dark mode */
+/* Bỏ khoảng cách để áp dụng đúng */
+.admin-dark::-webkit-scrollbar-thumb {
+    background-color: #666;
+}
+
+.admin-dark::-webkit-scrollbar-track {
+    background-color: #222;
+    /* hoặc màu tối phù hợp */
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #c0c0c0 transparent;
+}
+
+.admin-dark * {
+    scrollbar-color: #666 #222;
+    /* Màu thumb và track */
+}

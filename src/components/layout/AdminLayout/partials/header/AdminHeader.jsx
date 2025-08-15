@@ -13,16 +13,17 @@ import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSe
 
 
 const breadcrumbMap = {
-   "/managers/dashboard" :"Tổng quan", 
-   "/managers/home-config" :"Cấu hình trang chủ", 
-   "/managers/marketing" :"Marketing & Truyền thông", 
-   "/managers/website-templates" :"Thiết kế Website",
-   "/managers/news" :"Tin tức", 
-   "/managers/contact" :"Liên hệ", 
-   "/managers/services" :"Dịch vụ", 
-   "/managers/about-config" :"Giới thiệu", 
-   "/managers/admin-zone" :"Khu vực quản trị",
-   "/managers/components" :"Component", 
+  "/managers/dashboard": "Tổng quan",
+  "/managers/home-config": "Cấu hình trang chủ",
+  "/managers/marketing": "Marketing & Truyền thông",
+  "/managers/website-templates": "Thiết kế Website",
+  "/managers/news": "Tin tức",
+  "/managers/contact": "Liên hệ",
+  "/managers/services": "Dịch vụ",
+  "/managers/about-config": "Giới thiệu",
+  "/managers/admin-zone": "Khu vực quản trị",
+  "/managers/components": "Component",
+  "/managers/profile": "Component",
 };
 
 
@@ -65,9 +66,9 @@ const AdminHeader = ({
 
   const headerStyle = isHeaderSticky
     ? {
-        width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
-        left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
-      }
+      width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
+      left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
+    }
     : {};
 
   return (
@@ -101,17 +102,17 @@ const AdminHeader = ({
           </div>
         </div>
 
-       
+
         {/* Right */}
         <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
-          
-        <AdminSearch/>
-          
+
+          <AdminSearch />
+
           {/* Website link */}
           <NavLink to="/">
             <Button
               variant="ghost"
-              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0"
+              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />
@@ -123,17 +124,20 @@ const AdminHeader = ({
           <NotificationBell />
 
           {/* Avatar */}
-          <Button
-          theme="admin"
-            variant="ghost"
-            className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full"
-          >
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <span className="hidden md:inline text-sm font-bold">ADMIN</span>
-          </Button>
+          <NavLink to="/managers/profile">
+            <Button
+              theme="admin"
+              variant="ghost"
+              className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer"
+            >
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <span className="hidden md:inline text-sm font-bold">ADMIN</span>
+            </Button>
+          </NavLink>
+
 
           {/* Settings */}
           <AdminSettingsDropdown
