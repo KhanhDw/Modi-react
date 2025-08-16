@@ -50,7 +50,33 @@ import SocialPage from "@/pages/managers/Marketing/SocialPage"
 
 import TermsOfServicePage from "../pages/TermsOfServicePage"
 
+
+// tất cả components
 import ChartAreaGradient from "../components/adminComponent/chart"
+import TopSellingProducts from "../components/adminComponent/TopSellingProducts"
+import BuyersProfile from "../components/adminComponent/BuyersProfile"
+import CarStatistics from "../components/adminComponent/CarStatistics"
+import CheckRadioSwitch from "../components/adminComponent/CheckRadioSwitch"
+import DefaultInputs from "../components/adminComponent/DefaultInputs"
+import Dropzone from "../components/adminComponent/Dropzone"
+import ForgotPassword from "../components/adminComponent/ForgotPassword"
+import LatestTransactions from "../components/adminComponent/LatestTransactions"
+import Login from "../components/adminComponent/Login"
+import SignIn from "../components/adminComponent/SignIn"
+import MilesStatistics from "../components/adminComponent/MilesStatistics"
+import NewCustomersDropdown from "../components/adminComponent/NewCustomersDropdown"
+import RecentOrders from "../components/adminComponent/RecentOrders"
+import ReminderTable from "../components/adminComponent/ReminderTable"
+import ResetPassword from "../components/adminComponent/ResetPassword"
+import RevenueChart from "../components/adminComponent/RevenueChart"
+import SelectInputs from "../components/adminComponent/SelectInputs"
+import Signup from "../components/adminComponent/Signup"
+import SignUp1 from "../components/adminComponent/SignUp1"
+import TodaySales from "../components/adminComponent/TodaySales"
+import TopProducts from "../components/adminComponent/TopProducts"
+import TotalRevenueChart from "../components/adminComponent/TotalRevenueChart"
+import VisitorInsights from "../components/adminComponent/VisitorInsights"
+import WebsiteVisitorsDonut from "../components/adminComponent/WebsiteVisitorsDonut"
 
 
 
@@ -114,8 +140,32 @@ const privateRoutes = [
     //   { path: "/managers/website-templates/:id/edit", component: WebsiteTemplateEdit, layout: AdminLayout },
 
 
-
+    // admin components
     { path: "/managers/components/chart", component: ChartAreaGradient, layout: AdminLayout },
+    { path: "/managers/components/topsellingproducts", component: TopSellingProducts, layout: AdminLayout },
+    { path: "/managers/components/BuyersProfile", component: BuyersProfile, layout: AdminLayout },
+    { path: "/managers/components/CarStatistics", component: CarStatistics, layout: AdminLayout },
+    { path: "/managers/components/CheckRadioSwitch", component: CheckRadioSwitch, layout: AdminLayout },
+    { path: "/managers/components/DefaultInputs", component: DefaultInputs, layout: AdminLayout },
+    { path: "/managers/components/Dropzone", component: Dropzone, layout: AdminLayout },
+    { path: "/managers/components/ForgotPassword", component: ForgotPassword, layout: AdminLayout },
+    { path: "/managers/components/LatestTransactions", component: LatestTransactions, layout: AdminLayout },
+    { path: "/managers/components/Login", component: Login, layout: AdminLayout },
+    { path: "/managers/components/SignIn", component: SignIn, layout: AdminLayout },
+    { path: "/managers/components/MilesStatistics", component: MilesStatistics, layout: AdminLayout },
+    { path: "/managers/components/NewCustomersDropdown", component: NewCustomersDropdown, layout: AdminLayout },
+    { path: "/managers/components/RecentOrders", component: RecentOrders, layout: AdminLayout },
+    { path: "/managers/components/ReminderTable", component: ReminderTable, layout: AdminLayout },
+    { path: "/managers/components/ResetPassword", component: ResetPassword, layout: AdminLayout },
+    { path: "/managers/components/RevenueChart", component: RevenueChart, layout: AdminLayout },
+    { path: "/managers/components/SelectInputs", component: SelectInputs, layout: AdminLayout },
+    { path: "/managers/components/Signup", component: Signup, layout: AdminLayout },
+    { path: "/managers/components/SignUp1", component: SignUp1, layout: AdminLayout },
+    { path: "/managers/components/TodaySales", component: TodaySales, layout: AdminLayout },
+    { path: "/managers/components/TopProducts", component: TopProducts, layout: AdminLayout },
+    { path: "/managers/components/TotalRevenueChart", component: TotalRevenueChart, layout: AdminLayout },
+    { path: "/managers/components/VisitorInsights", component: VisitorInsights, layout: AdminLayout },
+    { path: "/managers/components/WebsiteVisitorsDonut", component: WebsiteVisitorsDonut, layout: AdminLayout },
 
 
 ]

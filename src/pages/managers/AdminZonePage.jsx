@@ -142,7 +142,7 @@ export default function AdminZonePage() {
                         className="bg-blue-600 hover:bg-blue-700 text-white border border-transparent
     admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 
     admin-dark:text-gray-200 admin-dark:border-gray-600
-    px-4 py-2 rounded-lg transition flex-shrink-0 cursor-pointer text-sm sm:text-base min-w-[90px] whitespace-nowrap"
+    px-2 py-2 rounded-lg transition flex-shrink-0 cursor-pointer text-sm sm:text-base min-w-[90px] whitespace-nowrap"
                         type="button"
                     >
                         + Thêm mới
