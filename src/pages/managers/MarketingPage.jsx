@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -26,13 +32,13 @@ import {
   Link,
 } from "lucide-react";
 
-import  CampaignForm from "@/components/admin/marketing/campaigns/campaign-form";
-import  CampaignDetailModal from "@/components/admin/marketing/campaigns/campaign-detail-modal";
-import  CampaignsTable from "@/components/admin/marketing/campaigns/campaigns-table";
-import  KeywordForm from "@/components/admin/marketing/seo/keyword-form";
-import  SEOAnalytics from "@/components/admin/marketing/seo/seo-analytics";
-import  SocialCalendar from "@/components/admin/marketing/social/social-calendar";
-import  SocialAnalytics from "@/components/admin/marketing/social/social-analytics";
+import CampaignForm from "@/components/admin/marketing/campaigns/campaign-form";
+import CampaignDetailModal from "@/components/admin/marketing/campaigns/campaign-detail-modal";
+import CampaignsTable from "@/components/admin/marketing/campaigns/campaigns-table";
+import KeywordForm from "@/components/admin/marketing/seo/keyword-form";
+import SEOAnalytics from "@/components/admin/marketing/seo/seo-analytics";
+import SocialCalendar from "@/components/admin/marketing/social/social-calendar";
+import SocialAnalytics from "@/components/admin/marketing/social/social-analytics";
 
 // Child Components for Each Route
 const Overview = ({ campaigns }) => (
@@ -70,7 +76,9 @@ const Overview = ({ campaigns }) => (
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Email subscribers</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Email subscribers
+          </CardTitle>
           <Mail className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -84,7 +92,8 @@ const Overview = ({ campaigns }) => (
         <CardHeader>
           <CardTitle>Chiến dịch đang chạy</CardTitle>
           <CardDescription>
-            {campaigns.filter((c) => c.status === "running").length} chiến dịch đang hoạt động
+            {campaigns.filter((c) => c.status === "running").length} chiến dịch
+            đang hoạt động
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -92,16 +101,25 @@ const Overview = ({ campaigns }) => (
             .filter((c) => c.status === "running")
             .slice(0, 3)
             .map((campaign, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 border rounded-lg"
+              >
                 <div className="space-y-1">
                   <p className="font-medium">{campaign.name}</p>
-                  <p className="text-sm text-muted-foreground">{campaign.budget.toLocaleString()}₫</p>
+                  <p className="text-sm text-muted-foreground">
+                    {campaign.budget.toLocaleString()}₫
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+                  <Badge
+                    variant="secondary"
+                    className="bg-primary/10 text-primary"
+                  >
                     +
                     {(
-                      ((Number.parseInt(campaign.revenue.replace(/[₫,]/g, "")) - campaign.spent) /
+                      ((Number.parseInt(campaign.revenue.replace(/[₫,]/g, "")) -
+                        campaign.spent) /
                         campaign.spent) *
                       100
                     ).toFixed(0)}
@@ -120,10 +138,30 @@ const Overview = ({ campaigns }) => (
         </CardHeader>
         <CardContent className="space-y-4">
           {[
-            { action: "Tạo chiến dịch mới", item: "Holiday Campaign", time: "2 giờ trước", icon: Target },
-            { action: "Đăng bài SEO", item: "Top 10 Marketing Tips", time: "4 giờ trước", icon: FileText },
-            { action: "Gửi email campaign", item: "Weekly Newsletter", time: "6 giờ trước", icon: Mail },
-            { action: "Đăng Facebook", item: "Product Showcase", time: "8 giờ trước", icon: Facebook },
+            {
+              action: "Tạo chiến dịch mới",
+              item: "Holiday Campaign",
+              time: "2 giờ trước",
+              icon: Target,
+            },
+            {
+              action: "Đăng bài SEO",
+              item: "Top 10 Marketing Tips",
+              time: "4 giờ trước",
+              icon: FileText,
+            },
+            {
+              action: "Gửi email campaign",
+              item: "Weekly Newsletter",
+              time: "6 giờ trước",
+              icon: Mail,
+            },
+            {
+              action: "Đăng Facebook",
+              item: "Product Showcase",
+              time: "8 giờ trước",
+              icon: Facebook,
+            },
           ].map((activity, index) => {
             const Icon = activity.icon;
             return (
@@ -133,7 +171,9 @@ const Overview = ({ campaigns }) => (
                 </div>
                 <div className="flex-1 space-y-1">
                   <p className="text-sm font-medium">{activity.action}</p>
-                  <p className="text-xs text-muted-foreground">{activity.item}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {activity.item}
+                  </p>
                 </div>
                 <p className="text-xs text-muted-foreground">{activity.time}</p>
               </div>
@@ -145,23 +185,46 @@ const Overview = ({ campaigns }) => (
   </div>
 );
 
-const Campaigns = ({ campaigns, onView, onEdit, onDelete, setShowCampaignForm }) => (
+const Campaigns = ({
+  campaigns,
+  onView,
+  onEdit,
+  onDelete,
+  setShowCampaignForm,
+}) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
         <h2 className="text-2xl font-bold">Quản lý chiến dịch</h2>
-        <p className="text-muted-foreground">Theo dõi và quản lý các chiến dịch marketing</p>
+        <p className="text-muted-foreground">
+          Theo dõi và quản lý các chiến dịch marketing
+        </p>
       </div>
-      <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowCampaignForm(true)}>
+      <Button
+        className="bg-primary hover:bg-primary/90"
+        onClick={() => setShowCampaignForm(true)}
+      >
         <Plus className="h-4 w-4 mr-2" />
         Tạo chiến dịch mới
       </Button>
     </div>
-    <CampaignsTable campaigns={campaigns} onView={onView} onEdit={onEdit} onDelete={onDelete} />
+    <CampaignsTable
+      campaigns={campaigns}
+      onView={onView}
+      onEdit={onEdit}
+      onDelete={onDelete}
+    />
   </div>
 );
 
-const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditKeyword, handleEditPost }) => (
+const SEO = ({
+  keywords,
+  posts,
+  setShowKeywordForm,
+  setShowPostForm,
+  handleEditKeyword,
+  handleEditPost,
+}) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
@@ -173,7 +236,10 @@ const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditK
           <Hash className="h-4 w-4 mr-2" />
           Thêm từ khóa
         </Button>
-        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowPostForm(true)}>
+        <Button
+          className="bg-primary hover:bg-primary/90"
+          onClick={() => setShowPostForm(true)}
+        >
           <FileText className="h-4 w-4 mr-2" />
           Tạo bài viết
         </Button>
@@ -186,9 +252,16 @@ const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditK
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Từ khóa đang theo dõi</CardTitle>
-              <CardDescription> {keywords.length} từ khóa chính</CardDescription>
+              <CardDescription>
+                {" "}
+                {keywords.length} từ khóa chính
+              </CardDescription>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setShowKeywordForm(true)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowKeywordForm(true)}
+            >
               <Plus className="h-4 w-4 mr-1" />
               Thêm
             </Button>
@@ -196,22 +269,41 @@ const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditK
         </CardHeader>
         <CardContent className="space-y-3">
           {keywords.slice(0, 4).map((item, index) => (
-            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="space-y-1">
                 <p className="font-medium">{item.keyword}</p>
-                <p className="text-sm text-muted-foreground">{item.searchVolume?.toLocaleString()} tìm kiếm/tháng</p>
+                <p className="text-sm text-muted-foreground">
+                  {item.searchVolume?.toLocaleString()} tìm kiếm/tháng
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge
-                  variant={item.competition === "high" ? "destructive" : item.competition === "medium" ? "default" : "secondary"}
+                  variant={
+                    item.competition === "high"
+                      ? "destructive"
+                      : item.competition === "medium"
+                      ? "default"
+                      : "secondary"
+                  }
                 >
-                  {item.competition === "high" ? "Cao" : item.competition === "medium" ? "Trung bình" : "Thấp"}
+                  {item.competition === "high"
+                    ? "Cao"
+                    : item.competition === "medium"
+                    ? "Trung bình"
+                    : "Thấp"}
                 </Badge>
                 <div className="text-right">
                   <p className="text-sm font-medium">#{item.position}</p>
                   <p className="text-xs text-muted-foreground">Vị trí</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => handleEditKeyword(item)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleEditKeyword(item)}
+                >
                   Sửa
                 </Button>
               </div>
@@ -226,7 +318,11 @@ const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditK
               <CardTitle>Bài viết gần đây</CardTitle>
               <CardDescription>Content đã xuất bản</CardDescription>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setShowPostForm(true)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowPostForm(true)}
+            >
               <Plus className="h-4 w-4 mr-1" />
               Tạo
             </Button>
@@ -234,20 +330,35 @@ const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditK
         </CardHeader>
         <CardContent className="space-y-3">
           {posts.slice(0, 4).map((post, index) => (
-            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="space-y-1 flex-1">
                 <p className="font-medium text-sm">{post.title}</p>
-                <p className="text-xs text-muted-foreground">{post.publishDate}</p>
+                <p className="text-xs text-muted-foreground">
+                  {post.publishDate}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <div className="text-right">
-                  <p className="text-sm font-medium">{post.views?.toLocaleString()}</p>
+                  <p className="text-sm font-medium">
+                    {post.views?.toLocaleString()}
+                  </p>
                   <p className="text-xs text-muted-foreground">lượt xem</p>
                 </div>
-                <Badge variant={post.status === "published" ? "default" : "secondary"}>
+                <Badge
+                  variant={
+                    post.status === "published" ? "default" : "secondary"
+                  }
+                >
                   {post.status === "published" ? "Đã xuất bản" : "Nháp"}
                 </Badge>
-                <Button variant="ghost" size="sm" onClick={() => handleEditPost(post)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleEditPost(post)}
+                >
                   Sửa
                 </Button>
               </div>
@@ -259,19 +370,35 @@ const SEO = ({ keywords, posts, setShowKeywordForm, setShowPostForm, handleEditK
   </div>
 );
 
-const Social = ({ socialAccounts, scheduledPosts, setShowSocialAccountForm, setShowPostSchedulerForm, handleEditSocialAccount, handleEditScheduledPost, handleDeleteScheduledPost }) => (
+const Social = ({
+  socialAccounts,
+  scheduledPosts,
+  setShowSocialAccountForm,
+  setShowPostSchedulerForm,
+  handleEditSocialAccount,
+  handleEditScheduledPost,
+  handleDeleteScheduledPost,
+}) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
         <h2 className="text-2xl font-bold">Quản lý mạng xã hội</h2>
-        <p className="text-muted-foreground">Kết nối và quản lý các tài khoản mạng xã hội</p>
+        <p className="text-muted-foreground">
+          Kết nối và quản lý các tài khoản mạng xã hội
+        </p>
       </div>
       <div className="flex gap-2">
-        <Button variant="outline" onClick={() => setShowSocialAccountForm(true)}>
+        <Button
+          variant="outline"
+          onClick={() => setShowSocialAccountForm(true)}
+        >
           <Link className="h-4 w-4 mr-2" />
           Kết nối tài khoản
         </Button>
-        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowPostSchedulerForm(true)}>
+        <Button
+          className="bg-primary hover:bg-primary/90"
+          onClick={() => setShowPostSchedulerForm(true)}
+        >
           <Calendar className="h-4 w-4 mr-2" />
           Lên lịch đăng bài
         </Button>
@@ -315,12 +442,20 @@ const Social = ({ socialAccounts, scheduledPosts, setShowSocialAccountForm, setS
                   <Calendar className="h-4 w-4 mr-1" />
                   Lên lịch
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleEditSocialAccount(social)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleEditSocialAccount(social)}
+                >
                   <Settings className="h-4 w-4" />
                 </Button>
               </div>
             ) : (
-              <Button className="w-full" size="sm" onClick={() => handleEditSocialAccount(social)}>
+              <Button
+                className="w-full"
+                size="sm"
+                onClick={() => handleEditSocialAccount(social)}
+              >
                 Kết nối tài khoản
               </Button>
             )}
@@ -343,7 +478,9 @@ const Email = () => (
     <div className="flex items-center justify-between">
       <div>
         <h2 className="text-2xl font-bold">Email Marketing</h2>
-        <p className="text-muted-foreground">Quản lý danh sách email và chiến dịch gửi mail</p>
+        <p className="text-muted-foreground">
+          Quản lý danh sách email và chiến dịch gửi mail
+        </p>
       </div>
       <div className="flex gap-2">
         <Button variant="outline">
@@ -359,7 +496,9 @@ const Email = () => (
     <div className="grid gap-6 md:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Tổng subscribers</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Tổng subscribers
+          </CardTitle>
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -406,27 +545,60 @@ const Email = () => (
         </CardHeader>
         <CardContent className="space-y-3">
           {[
-            { name: "Weekly Newsletter #45", sent: 8924, opened: 2186, clicked: 339, date: "15/12/2024" },
-            { name: "Black Friday Sale", sent: 8924, opened: 3124, clicked: 487, date: "29/11/2024" },
-            { name: "Product Update November", sent: 8924, opened: 1967, clicked: 298, date: "25/11/2024" },
-            { name: "Customer Survey", sent: 8924, opened: 1543, clicked: 234, date: "20/11/2024" },
+            {
+              name: "Weekly Newsletter #45",
+              sent: 8924,
+              opened: 2186,
+              clicked: 339,
+              date: "15/12/2024",
+            },
+            {
+              name: "Black Friday Sale",
+              sent: 8924,
+              opened: 3124,
+              clicked: 487,
+              date: "29/11/2024",
+            },
+            {
+              name: "Product Update November",
+              sent: 8924,
+              opened: 1967,
+              clicked: 298,
+              date: "25/11/2024",
+            },
+            {
+              name: "Customer Survey",
+              sent: 8924,
+              opened: 1543,
+              clicked: 234,
+              date: "20/11/2024",
+            },
           ].map((campaign, index) => (
-            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="space-y-1 flex-1">
                 <p className="font-medium text-sm">{campaign.name}</p>
                 <p className="text-xs text-muted-foreground">{campaign.date}</p>
               </div>
               <div className="grid grid-cols-3 gap-4 text-xs text-center">
                 <div>
-                  <p className="font-medium">{campaign.sent.toLocaleString()}</p>
+                  <p className="font-medium">
+                    {campaign.sent.toLocaleString()}
+                  </p>
                   <p className="text-muted-foreground">Gửi</p>
                 </div>
                 <div>
-                  <p className="font-medium">{campaign.opened.toLocaleString()}</p>
+                  <p className="font-medium">
+                    {campaign.opened.toLocaleString()}
+                  </p>
                   <p className="text-muted-foreground">Mở</p>
                 </div>
                 <div>
-                  <p className="font-medium">{campaign.clicked.toLocaleString()}</p>
+                  <p className="font-medium">
+                    {campaign.clicked.toLocaleString()}
+                  </p>
                   <p className="text-muted-foreground">Click</p>
                 </div>
               </div>
@@ -441,18 +613,41 @@ const Email = () => (
         </CardHeader>
         <CardContent className="space-y-3">
           {[
-            { name: "Main Newsletter", count: 8924, growth: "+201", active: true },
+            {
+              name: "Main Newsletter",
+              count: 8924,
+              growth: "+201",
+              active: true,
+            },
             { name: "VIP Customers", count: 1245, growth: "+45", active: true },
-            { name: "Product Updates", count: 3456, growth: "+89", active: true },
-            { name: "Promotional Offers", count: 5678, growth: "+123", active: false },
+            {
+              name: "Product Updates",
+              count: 3456,
+              growth: "+89",
+              active: true,
+            },
+            {
+              name: "Promotional Offers",
+              count: 5678,
+              growth: "+123",
+              active: false,
+            },
           ].map((list, index) => (
-            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="space-y-1">
                 <p className="font-medium">{list.name}</p>
-                <p className="text-sm text-muted-foreground">{list.count.toLocaleString()} subscribers</p>
+                <p className="text-sm text-muted-foreground">
+                  {list.count.toLocaleString()} subscribers
+                </p>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-primary/10 text-primary">
+                <Badge
+                  variant="secondary"
+                  className="bg-primary/10 text-primary"
+                >
                   {list.growth}
                 </Badge>
                 <Badge variant={list.active ? "default" : "secondary"}>
@@ -525,10 +720,38 @@ export default function MarketingPage() {
   ]);
 
   const [keywords, setKeywords] = useState([
-    { id: 1, keyword: "marketing digital", searchVolume: 8900, competition: "high", position: 3, targetUrl: "/marketing-digital" },
-    { id: 2, keyword: "quảng cáo facebook", searchVolume: 5400, competition: "medium", position: 7, targetUrl: "/quang-cao-facebook" },
-    { id: 3, keyword: "seo website", searchVolume: 12000, competition: "high", position: 5, targetUrl: "/seo-website" },
-    { id: 4, keyword: "email marketing", searchVolume: 3200, competition: "low", position: 2, targetUrl: "/email-marketing" },
+    {
+      id: 1,
+      keyword: "marketing digital",
+      searchVolume: 8900,
+      competition: "high",
+      position: 3,
+      targetUrl: "/marketing-digital",
+    },
+    {
+      id: 2,
+      keyword: "quảng cáo facebook",
+      searchVolume: 5400,
+      competition: "medium",
+      position: 7,
+      targetUrl: "/quang-cao-facebook",
+    },
+    {
+      id: 3,
+      keyword: "seo website",
+      searchVolume: 12000,
+      competition: "high",
+      position: 5,
+      targetUrl: "/seo-website",
+    },
+    {
+      id: 4,
+      keyword: "email marketing",
+      searchVolume: 3200,
+      competition: "low",
+      position: 2,
+      targetUrl: "/email-marketing",
+    },
   ]);
 
   const [posts, setPosts] = useState([
@@ -611,7 +834,8 @@ export default function MarketingPage() {
     {
       id: 1,
       socialAccountId: 1,
-      content: "Giới thiệu sản phẩm mới - iPhone 15 Pro Max với nhiều tính năng đột phá",
+      content:
+        "Giới thiệu sản phẩm mới - iPhone 15 Pro Max với nhiều tính năng đột phá",
       scheduledTime: "2024-12-16T09:00",
       status: "scheduled",
       mediaType: "image",
@@ -669,7 +893,9 @@ export default function MarketingPage() {
   const handleUpdateCampaign = (data) => {
     setCampaigns(
       campaigns.map((c) =>
-        c.id === editingCampaign.id ? { ...c, ...data, budget: Number.parseInt(data.budget) } : c
+        c.id === editingCampaign.id
+          ? { ...c, ...data, budget: Number.parseInt(data.budget) }
+          : c
       )
     );
     setShowCampaignForm(false);
@@ -688,7 +914,8 @@ export default function MarketingPage() {
 
   const handleToggleCampaignStatus = () => {
     if (selectedCampaign) {
-      const newStatus = selectedCampaign.status === "running" ? "paused" : "running";
+      const newStatus =
+        selectedCampaign.status === "running" ? "paused" : "running";
       setCampaigns(
         campaigns.map((c) =>
           c.id === selectedCampaign.id ? { ...c, status: newStatus } : c
@@ -718,7 +945,12 @@ export default function MarketingPage() {
     setKeywords(
       keywords.map((k) =>
         k.id === editingKeyword.id
-          ? { ...k, ...data, searchVolume: Number.parseInt(data.searchVolume) || 0, position: Number.parseInt(data.currentPosition) || 0 }
+          ? {
+              ...k,
+              ...data,
+              searchVolume: Number.parseInt(data.searchVolume) || 0,
+              position: Number.parseInt(data.currentPosition) || 0,
+            }
           : k
       )
     );
@@ -745,7 +977,13 @@ export default function MarketingPage() {
   const handleUpdatePost = (data) => {
     setPosts(
       posts.map((p) =>
-        p.id === editingPost.id ? { ...p, ...data, keywordId: Number.parseInt(data.keywordId) || null } : p
+        p.id === editingPost.id
+          ? {
+              ...p,
+              ...data,
+              keywordId: Number.parseInt(data.keywordId) || null,
+            }
+          : p
       )
     );
     setShowPostForm(false);
@@ -779,7 +1017,9 @@ export default function MarketingPage() {
 
   const handleUpdateSocialAccount = (data) => {
     setSocialAccounts(
-      socialAccounts.map((acc) => (acc.id === editingSocialAccount.id ? { ...acc, ...data } : acc))
+      socialAccounts.map((acc) =>
+        acc.id === editingSocialAccount.id ? { ...acc, ...data } : acc
+      )
     );
     setShowSocialAccountForm(false);
     setEditingSocialAccount(null);
@@ -803,7 +1043,13 @@ export default function MarketingPage() {
   const handleUpdateScheduledPost = (data) => {
     setScheduledPosts(
       scheduledPosts.map((p) =>
-        p.id === editingScheduledPost.id ? { ...p, ...data, socialAccountId: Number.parseInt(data.socialAccountId) } : p
+        p.id === editingScheduledPost.id
+          ? {
+              ...p,
+              ...data,
+              socialAccountId: Number.parseInt(data.socialAccountId),
+            }
+          : p
       )
     );
     setShowPostSchedulerForm(false);
@@ -825,7 +1071,9 @@ export default function MarketingPage() {
               to="overview"
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive || (location.pathname === "/marketing" && "overview" === "overview")
+                  isActive ||
+                  (location.pathname === "/marketing" &&
+                    "overview" === "overview")
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted hover:bg-muted/80"
                 }`
@@ -838,7 +1086,9 @@ export default function MarketingPage() {
               to="campaigns"
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-muted/80"
                 }`
               }
             >
@@ -849,7 +1099,9 @@ export default function MarketingPage() {
               to="seo"
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-muted/80"
                 }`
               }
             >
@@ -860,7 +1112,9 @@ export default function MarketingPage() {
               to="social"
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-muted/80"
                 }`
               }
             >
@@ -871,7 +1125,9 @@ export default function MarketingPage() {
               to="email"
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-muted/80"
                 }`
               }
             >
@@ -907,7 +1163,9 @@ export default function MarketingPage() {
         <Dialog open={showCampaignForm} onOpenChange={setShowCampaignForm}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <CampaignForm
-              onSubmit={editingCampaign ? handleUpdateCampaign : handleCreateCampaign}
+              onSubmit={
+                editingCampaign ? handleUpdateCampaign : handleCreateCampaign
+              }
               onCancel={() => {
                 setShowCampaignForm(false);
                 setEditingCampaign(null);
@@ -935,7 +1193,9 @@ export default function MarketingPage() {
         <Dialog open={showKeywordForm} onOpenChange={setShowKeywordForm}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <KeywordForm
-              onSubmit={editingKeyword ? handleUpdateKeyword : handleCreateKeyword}
+              onSubmit={
+                editingKeyword ? handleUpdateKeyword : handleCreateKeyword
+              }
               onCancel={() => {
                 setShowKeywordForm(false);
                 setEditingKeyword(null);
@@ -951,13 +1211,19 @@ export default function MarketingPage() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={showSocialAccountForm} onOpenChange={setShowSocialAccountForm}>
+        <Dialog
+          open={showSocialAccountForm}
+          onOpenChange={setShowSocialAccountForm}
+        >
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             {/* Add SocialAccountForm component here if needed */}
           </DialogContent>
         </Dialog>
 
-        <Dialog open={showPostSchedulerForm} onOpenChange={setShowPostSchedulerForm}>
+        <Dialog
+          open={showPostSchedulerForm}
+          onOpenChange={setShowPostSchedulerForm}
+        >
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             {/* Add PostSchedulerForm component here if needed */}
           </DialogContent>

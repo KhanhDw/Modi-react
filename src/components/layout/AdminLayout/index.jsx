@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { AdminThemeProvider, useAdminTheme } from "@/contexts/ThemeLocalContext";
+import {
+  AdminThemeProvider,
+  useAdminTheme,
+} from "@/contexts/ThemeLocalContext";
 import AdminSidebar from "@/components/layout/AdminLayout/partials/sidebar/AdminSidebar";
 import AdminHeader from "./partials/header/AdminHeader";
 import { cn } from "@/lib/utils";
@@ -59,7 +62,9 @@ const AdminLayoutInner = ({ children }) => {
             isHeaderSticky && "mt-23"
           )}
         >
-          <div className="bg-white admin-dark:bg-gray-900 p-4 h-full" >{children}</div>
+          <div className="bg-white admin-dark:bg-gray-900 p-4 h-full">
+            {children}
+          </div>
         </main>
       </div>
 
