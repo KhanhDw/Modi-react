@@ -249,28 +249,28 @@ export default function SEOAnalytics({ keywords, posts }) {
                 <span className="text-sm font-medium">Technical SEO</span>
                 <span className="text-sm ">85/100</span>
               </div>
-              <Progress value={85} className="h-2" />
+              <Progress value={85} indicatorClassName="bg-violet-500" className="bg-slate-300 h-2" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm font-medium">Content Quality</span>
                 <span className="text-sm">92/100</span>
               </div>
-              <Progress value={92} className="h-2" />
+              <Progress value={92} indicatorClassName="bg-violet-500" className="bg-slate-300 h-2" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm font-medium">Backlinks</span>
                 <span className="text-sm">78/100</span>
               </div>
-              <Progress value={78} className="h-2" />
+              <Progress value={78} indicatorClassName="bg-violet-500" className="bg-slate-300 h-2" />
             </div>
           </div>
           <div className="pt-4 border-t border-gray-200 admin-dark:border-gray-700">
             <div className="flex items-center justify-between">
-              <span className="text-lg font-medium">Điểm tổng thể</span>
+              <span className="text-lg font-medium ">Điểm tổng thể</span>
               <div className="text-right">
-                <span className="text-3xl font-bold text-black">85</span>
+                <span className="text-3xl font-bold text-black admin-dark:text-gray-100">85</span>
                 <span className={mutedClass}>/100</span>
               </div>
             </div>

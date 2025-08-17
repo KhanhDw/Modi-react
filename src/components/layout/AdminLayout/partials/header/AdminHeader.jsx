@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, Link  } from "react-router-dom";
 import { CgWebsite } from "react-icons/cg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,23 +13,17 @@ import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSe
 
 
 const breadcrumbMap = {
-   "/managers/dashboard" :"Tổng quan", 
-   "/managers/home-config" :"Cấu hình trang chủ", 
-   "/managers/marketing" :"Marketing & Truyền thông", 
-   "/managers/website-templates" :"Thiết kế Website",
-   "/managers/news" :"Tin tức", 
-   "/managers/contact" :"Liên hệ", 
-   "/managers/services" :"Dịch vụ", 
-   "/managers/about-config" :"Giới thiệu", 
-   "/managers/admin-zone" :"Khu vực quản trị",
-   "/managers/components" :"Component", 
+  "/managers/dashboard": "Tổng quan",
+  "/managers/home-config": "Cấu hình trang chủ",
+  "/managers/marketing": "Marketing & Truyền thông",
+  "/managers/website-templates": "Thiết kế Website",
+  "/managers/news": "Tin tức",
+  "/managers/contact": "Liên hệ",
+  "/managers/services": "Dịch vụ",
+  "/managers/about-config": "Giới thiệu",
+  "/managers/admin-zone": "Khu vực quản trị",
+  "/managers/components": "Component",
 };
-
-
-
-
-
-
 
 const AdminHeader = ({
   isSidebarOpen,
@@ -61,13 +55,15 @@ const AdminHeader = ({
 
   const currentPath = location.pathname;
   const pageTitle = breadcrumbMap[currentPath] || "NUll";
-  const breadcrumb = `Admin / ${pageTitle}`;
+  // const breadcrumb = `Admin / ${pageTitle}`;
+
+  const pathnames  = location.pathname.split("/").filter(Boolean);
 
   const headerStyle = isHeaderSticky
     ? {
-        width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
-        left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
-      }
+      width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
+      left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
+    }
     : {};
 
   return (
@@ -92,8 +88,26 @@ const AdminHeader = ({
             <AlignJustify className="h-6 w-6 text-gray-600 admin-dark:text-gray-300" />
           </Button>
           <div className="flex flex-col min-w-0">
-            <div className="text-sm text-gray-500 admin-dark:text-gray-400 truncate">
-              {breadcrumb}
+            <div className="flex text-sm text-gray-500 admin-dark:text-gray-400 truncate">
+                 <span>Admin</span>
+            
+             {pathnames.slice(1).map((value, index) => {
+              const to = `/${pathnames.slice(0, index + 2).join("/")}`;
+              const isLast = index === pathnames.slice(1).length - 1;
+
+              return (
+                <li key={to} className="block">
+               
+                  <span className="mx-1">/</span>
+                  {isLast ? (
+                    <span className="font-semibold capitalize">{value}</span>
+                  ) : (
+                    <Link to={to} className="hover:underline capitalize">
+                      {value}
+                    </Link>
+                  )}
+                </li>);
+            })}
             </div>
             <h1 className="text-xl font-bold text-gray-800 admin-dark:text-gray-100 md:text-2xl truncate">
               {pageTitle}
@@ -101,12 +115,12 @@ const AdminHeader = ({
           </div>
         </div>
 
-       
+
         {/* Right */}
         <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
-          
-        <AdminSearch/>
-          
+
+          <AdminSearch />
+
           {/* Website link */}
           <NavLink to="/">
             <Button
@@ -124,7 +138,7 @@ const AdminHeader = ({
 
           {/* Avatar */}
           <Button
-          theme="admin"
+            theme="admin"
             variant="ghost"
             className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full"
           >

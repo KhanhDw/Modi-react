@@ -140,7 +140,7 @@ export default function EmailPage() {
           <p className="text-muted-foreground">Quản lý danh sách email và chiến dịch gửi mail</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowListForm(true)}>
+          <Button theme={'admin'} variant="outline" onClick={() => setShowListForm(true)}>
             <Users className="h-4 w-4 mr-2" />
             Quản lý danh sách
           </Button>
@@ -152,9 +152,9 @@ export default function EmailPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-4">
-        <Card>
+        <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tổng subscribers</CardTitle>
+            <CardTitle  className="text-sm font-medium text-black admin-dark:text-foreground">Tổng subscribers</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -163,9 +163,9 @@ export default function EmailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tỷ lệ mở email</CardTitle>
+            <CardTitle className="text-sm font-medium text-black admin-dark:text-foreground">Tỷ lệ mở email</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -174,9 +174,9 @@ export default function EmailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tỷ lệ click</CardTitle>
+            <CardTitle className="text-sm font-medium text-black admin-dark:text-foreground">Tỷ lệ click</CardTitle>
             <MousePointer className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -185,9 +185,9 @@ export default function EmailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Email đã gửi</CardTitle>
+            <CardTitle className="text-sm font-medium text-black admin-dark:text-foreground">Email đã gửi</CardTitle>
             <Send className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -198,11 +198,11 @@ export default function EmailPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Chiến dịch email gần đây</CardTitle>
+                <CardTitle className={`text-black admin-dark:text-foreground`}>Chiến dịch email gần đây</CardTitle>
                 <CardDescription>Kết quả các chiến dịch đã gửi</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={() => setShowCampaignForm(true)}>
@@ -249,7 +249,7 @@ export default function EmailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -270,7 +270,7 @@ export default function EmailPage() {
                   <p className="text-sm text-muted-foreground">{list.count.toLocaleString()} subscribers</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+                  <Badge variant="secondary" className="admin-dark:text-foreground text-primary">
                     {list.growth}
                   </Badge>
                   <Badge variant={list.active ? "default" : "secondary"}>
@@ -287,11 +287,11 @@ export default function EmailPage() {
       </div>
 
       {/* Email Templates Section */}
-      <Card>
+      <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Templates email</CardTitle>
+              <CardTitle className={`text-black admin-dark:text-foreground`}>Templates email</CardTitle>
               <CardDescription>Mẫu email có sẵn để sử dụng</CardDescription>
             </div>
             <Button variant="outline" size="sm">
@@ -310,18 +310,18 @@ export default function EmailPage() {
               { name: "Event Invitation", description: "Lời mời tham gia sự kiện", usage: 4 },
               { name: "Survey Request", description: "Yêu cầu khảo sát khách hàng", usage: 3 },
             ].map((template, index) => (
-              <div key={index} className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer">
-                <div className="space-y-2">
+              <div key={index} className="p-4  rounded-lg hover:bg-muted/10 cursor-pointer border-2 border-gray-300 admin-dark:border-gray-700">
+                <div className="space-y-2 ">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">{template.name}</h4>
-                    <Badge variant="outline">{template.usage} lần</Badge>
+                    <h4 className="font-medium ">{template.name}</h4>
+                    <Badge theme={"admin"} variant="outline">{template.usage} lần</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{template.description}</p>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                  <p className="text-sm text-muted-foreground admin-dark:text-foreground">{template.description}</p>
+                  <div className="flex gap-2 ">
+                    <Button theme={`admin`} variant="outline" size="sm" className="flex-1 bg-transparent text-black admin-dark:text-foreground border border-gray-400">
                       Xem trước
                     </Button>
-                    <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                    <Button theme={`admin`} variant="outline" size="sm" className="flex-1 bg-transparent text-black admin-dark:text-foreground border border-gray-400">
                       Sử dụng
                     </Button>
                   </div>
@@ -356,9 +356,9 @@ export default function EmailPage() {
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Danh sách gửi</label>
                 <select className="px-3 py-2 border rounded-md">
-                  <option>Chọn danh sách...</option>
+                  <option className="text-black admin-dark:text-foreground">Chọn danh sách...</option>
                   {emailLists.map((list) => (
-                    <option key={list.id} value={list.id}>
+                    <option key={list.id} value={list.id} className="text-black admin-dark:text-foreground">
                       {list.name} ({list.count} subscribers)
                     </option>
                   ))}

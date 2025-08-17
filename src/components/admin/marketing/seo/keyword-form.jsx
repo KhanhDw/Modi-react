@@ -29,7 +29,7 @@ export default function KeywordForm({ onSubmit, onCancel, initialData }) {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white border border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
+    <Card theme={"admin"} className="w-full max-w-2xl mx-auto bg-white border border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground admin-dark:text-white">
           <Hash className="h-5 w-5 text-foreground admin-dark:text-gray-200" />

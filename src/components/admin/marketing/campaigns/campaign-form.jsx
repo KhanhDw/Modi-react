@@ -35,7 +35,7 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-gray-800 admin-dark:text-gray-100">
           <Target className="h-5 w-5" />
           {initialData ? "Chỉnh sửa chiến dịch" : "Tạo chiến dịch mới"}
         </CardTitle>

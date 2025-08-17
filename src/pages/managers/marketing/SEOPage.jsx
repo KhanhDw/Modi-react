@@ -1,17 +1,23 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Hash, FileText, Plus } from "lucide-react"
 import KeywordForm from "@/components/admin/marketing/seo/keyword-form"
 import SEOAnalytics from "@/components/admin/marketing/seo/seo-analytics"
+import {useLenisToggle} from "@/contexts/LenisContext"
 
 export default function SEOPage() {
+  const lenisContext = useLenisToggle(); 
+  const { enabled, setEnabled } = lenisContext || {};// để nữa cấu lại , giờ chưa rành
+ 
+
   const [showKeywordForm, setShowKeywordForm] = useState(false)
   const [showPostForm, setShowPostForm] = useState(false)
   const [editingKeyword, setEditingKeyword] = useState(null)
   const [editingPost, setEditingPost] = useState(null)
+
 
   // Sample data
   const [keywords, setKeywords] = useState([
@@ -112,11 +118,11 @@ export default function SEOPage() {
       keywords.map((k) =>
         k.id === editingKeyword.id
           ? {
-              ...k,
-              ...data,
-              searchVolume: Number.parseInt(data.searchVolume) || 0,
-              position: Number.parseInt(data.currentPosition) || 0,
-            }
+            ...k,
+            ...data,
+            searchVolume: Number.parseInt(data.searchVolume) || 0,
+            position: Number.parseInt(data.currentPosition) || 0,
+          }
           : k,
       ),
     )
@@ -124,7 +130,7 @@ export default function SEOPage() {
     setEditingKeyword(null)
   }
 
-  return (
+  return ( 
     <div className="space-y-6 text-black admin-dark:bg-gray-900 admin-dark:text-gray-100">
       <div className="flex items-center justify-between">
         <div>
@@ -133,7 +139,7 @@ export default function SEOPage() {
         </div>
         <div className="flex gap-2">
           <Button
-          theme="admin"
+            theme="admin"
             variant="outline"
             onClick={() => setShowKeywordForm(true)}
             className="  text-black hover:text-gray-200 bg-gray-200  hover:bg-gray-600 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
@@ -142,7 +148,7 @@ export default function SEOPage() {
             Thêm từ khóa
           </Button>
           <Button
-          theme={"admin"}
+            theme={"admin"}
             className="bg-primary hover:text-gray-200  hover:bg-gray-600  text-primary-black admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 admin-dark:text-white"
             onClick={() => setShowPostForm(true)}
           >
@@ -154,7 +160,7 @@ export default function SEOPage() {
 
       <SEOAnalytics keywords={keywords} posts={posts} />
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 m-0">
         <Card className="bg-white border border-gray-200 admin-dark:bg-gray-800 admin-dark:border-gray-700">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -166,8 +172,8 @@ export default function SEOPage() {
                 theme="admin"
                 variant="outline"
                 size="sm"
-                onClick={() => setShowKeywordForm(true)} 
-                className="border border-gray-300 text-black bg-slate-200 hover:bg-gray-100 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+                onClick={() => setShowKeywordForm(true)}
+                className="border border-gray-300   text-black bg-slate-200 hover:bg-gray-800 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
               >
                 <Plus className="h-4 w-4 mr-1" />
                 Thêm
@@ -208,11 +214,11 @@ export default function SEOPage() {
                     <p className="text-xs text-gray-700 bg-slate-200 admin-dark:text-gray-400">Vị trí</p>
                   </div>
                   <Button
-                  theme={"admin"}
+                    theme={"admin"}
                     variant="ghost"
                     size="sm"
                     onClick={() => handleEditKeyword(item)}
-                    className="text-black bg-gray-300 hover:bg-gray-100 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+                    className="text-black admin-dark:bg-gray-700 bg-gray-300 hover:text-gray-100 hover:bg-gray-700 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
                   >
                     Sửa
                   </Button>
@@ -230,11 +236,11 @@ export default function SEOPage() {
                 <CardDescription className="text-muted-black admin-dark:text-gray-400">Content đã xuất bản</CardDescription>
               </div>
               <Button
-              theme={"admin"}
+                theme={"admin"}
                 variant="outline"
                 size="sm"
                 onClick={() => setShowPostForm(true)}
-                className="border bg-gray-300 border-gray-300 text-black hover:bg-gray-100 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+                className="border bg-gray-300 border-gray-300 text-black hover:bg-gray-800 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
               >
                 <Plus className="h-4 w-4 mr-1" />
                 Tạo
@@ -249,7 +255,7 @@ export default function SEOPage() {
               >
                 <div className="space-y-1 flex-1">
                   <p className="font-medium text-sm text-black admin-dark:text-gray-100">{post.title}</p>
-                  <p className="text-xs text-muted-black admin-dark:text-gray-400">{post.publishDate}</p>
+                  <p className="text-xs text-gray-800 admin-dark:text-muted-black admin-dark:text-gray-400">{post.publishDate}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="text-right">
