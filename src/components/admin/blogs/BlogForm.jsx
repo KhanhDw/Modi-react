@@ -109,7 +109,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
           className="w-full px-3 py-2 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
-      <div>
+      {blog ? <div>
         <label className="block text-sm font-medium text-green-800">Ngày đăng</label>
         <input
           type="datetime-local"
@@ -118,7 +118,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
           onChange={handleChange}
           className="w-full px-3 py-2 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         />
-      </div>
+      </div> : ""}
       <div className="flex space-x-2">
         <button
           type="submit"
@@ -134,6 +134,6 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
           Hủy
         </button>
       </div>
-    </form>
+    </form >
   );
 }
