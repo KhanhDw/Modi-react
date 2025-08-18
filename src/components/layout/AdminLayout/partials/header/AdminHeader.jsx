@@ -55,8 +55,17 @@ const AdminHeader = ({
   }, [isHeaderSticky]);
 
   const currentPath = location.pathname;
-  const pageTitle = breadcrumbMap[currentPath] || "NUll";
+  // const pageTitle = breadcrumbMap[currentPath] || "NUll";
   // const breadcrumb = `Admin / ${pageTitle}`;
+
+  // Tách các segment
+  const pathSegments = currentPath.split("/").filter(Boolean); // ["home", "alog", "test", "extra"]
+
+  // Luôn lấy cấp 2 nếu có
+  const titleLevel2 = pathSegments.length >= 2 ? pathSegments[1] : null;
+  const titleLevel3 = pathSegments.length >= 3 ? pathSegments[2] : null;
+
+  const pageTitle = breadcrumbMap[currentPath] || titleLevel2 || "Null";
 
   const pathnames = location.pathname.split("/").filter(Boolean);
 
@@ -111,7 +120,7 @@ const AdminHeader = ({
               })}
             </div>
             <h1 className="text-xl font-bold text-gray-800 admin-dark:text-gray-100 md:text-2xl truncate">
-              {pageTitle}
+              {pageTitle}{titleLevel3 ? ` - ${titleLevel3}` : ""}
             </h1>
           </div>
         </div>
