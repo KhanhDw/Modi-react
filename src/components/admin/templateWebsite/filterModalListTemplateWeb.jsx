@@ -60,7 +60,7 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button theme="admin" variant="outline" className="flex items-center gap-2 relative bg-[#d0e09f]">
+                <Button theme="admin" variant="outline" className="flex items-center gap-2 relative bg-[#525252]">
                     <Filter className="  h-4 w-4 " />
                     <p className=" font-bold">Lọc</p>
                     {getActiveFiltersCount() > 0 && (
