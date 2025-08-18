@@ -16,7 +16,7 @@ import NewsDetail from '../pages/NewsDetail'
 //admin
 import ManagerDashboard from "../pages/managers/DashboardPage"
 import ManagerServices from "../pages/managers/ServicesPage"
-import ManagerNews from "../pages/managers/NewsPage"
+import ManagerBlogs from "../pages/managers/BlogsPage"
 import ManagerRecruitment from "../pages/managers/RecruitmentPage"
 import ManagerContact from "../pages/managers/ContactPage"
 import AllComponentsPageAdmin from "../pages/managers/AllComponent"
@@ -79,7 +79,7 @@ const privateRoutes = [
         ],
     },
     { path: "/managers/services", component: ManagerServices, layout: AdminLayout },
-    { path: "/managers/news", component: ManagerNews, layout: AdminLayout },
+    { path: "/managers/news", component: ManagerBlogs, layout: AdminLayout },
     { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
     { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },
