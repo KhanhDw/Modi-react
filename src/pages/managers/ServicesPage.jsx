@@ -21,6 +21,8 @@ import {
   Settings,
   Plus,
   Link,
+  ShoppingCart,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -105,11 +107,11 @@ export default function ServicesPage() {
                 }`
               }
             >
-              <Target className="h-4 w-4" />
+              <ShoppingCart className="h-4 w-4" />
               Đơn đặt
             </NavLink>
             <NavLink
-              to="ServiceCustomer"
+              to="service_customer"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
                   isActive
@@ -118,11 +120,11 @@ export default function ServicesPage() {
                 }`
               }
             >
-              <Target className="h-4 w-4" />
+              <Users className="h-4 w-4" />
               Khách hàng
             </NavLink>
             <NavLink
-              to="ServiceReview"
+              to="service_review"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
                   isActive

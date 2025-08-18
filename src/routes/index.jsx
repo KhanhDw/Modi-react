@@ -26,7 +26,7 @@ import ManagerServices from "../pages/managers/ServicesPage";
 import ServiceOverview from "../pages/managers/service/ServiceOverview";
 import ServiceList from "../pages/managers/service/ServiceList";
 import ServiceBooking from "@/pages/managers/service/ServiceBookings";
-// import ServiceCustomer from "@/pages/managers/service/ServiceCustomers";
+import ServiceCustomer from "@/pages/managers/service/ServiceCustomers";
 // import ServiceReview from "@/pages/managers/service/ServiceReviews";
 
 import ManagerNews from "../pages/managers/NewsPage";
@@ -130,6 +130,7 @@ const privateRoutes = [
       { path: "service_overview", component: ServiceOverview },
       { path: "service_list", component: ServiceList },
       { path: "service_booking", component: ServiceBooking },
+      { path: "service_customer", component: ServiceCustomer },
     ],
   },
 

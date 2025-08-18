@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardContent,
@@ -19,19 +17,7 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  Heart,
-  MessageCircle,
-  Share,
-  Eye,
-} from "lucide-react";
 const rankColors = [
   "bg-yellow-100 text-yellow-600",
   "bg-green-100 text-green-600",
@@ -125,6 +111,12 @@ export default function ServiceBookingAnalytics({ services }) {
                   <Tooltip
                     formatter={(value) => `${value} lượt`}
                     labelFormatter={(label) => `Dịch vụ: ${label}`}
+                    labelStyle={{ color: "red", fontWeight: "bold" }} // màu label
+                    itemStyle={{ color: "blue" }} // màu value
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      borderRadius: "8px",
+                    }} // khung
                   />
                   <Bar dataKey="orders" fill="#3b82f6" radius={[8, 8, 0, 0]} />
                 </BarChart>
@@ -146,10 +138,22 @@ export default function ServiceBookingAnalytics({ services }) {
                 <BarChart data={topRevenueServices}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                  <YAxis />
+                  <YAxis
+                    tickFormatter={(value) => {
+                      if (value >= 1000000) return value / 1000000 + "M";
+                      if (value >= 1000) return value / 1000 + "K";
+                      return value;
+                    }}
+                  />
                   <Tooltip
                     formatter={(value) => `${value.toLocaleString()} VNĐ`}
                     labelFormatter={(label) => `Dịch vụ: ${label}`}
+                    labelStyle={{ color: "red", fontWeight: "bold" }} // màu label
+                    itemStyle={{ color: "blue" }} // màu value
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      borderRadius: "8px",
+                    }} // khung
                   />
                   <Bar dataKey="revenue" fill="#f97316" radius={[8, 8, 0, 0]} />
                 </BarChart>

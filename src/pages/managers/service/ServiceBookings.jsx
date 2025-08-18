@@ -2,6 +2,24 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceBookingTable from "@/components/admin/services/booking/ServiceBookingTable";
 import ServiceBookingAnalytics from "@/components/admin/services/booking/service-booking-analytics";
+import { useLocation } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Target,
+  BadgeCheck,
+  Users,
+  Star,
+  Trash2,
+  Package,
+  Layers,
+} from "lucide-react";
 export default function ServiceBooking() {
   const serviceBookings = [
     {
@@ -120,11 +138,66 @@ export default function ServiceBooking() {
           Tạo đơn mới
         </Button>
       </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium">
+              Số lượng đơn đặt
+            </CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-black">
+              {services.length}
+            </div>
+            <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium">Đã hoàn thành</CardTitle>
+            <BadgeCheck className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-black">
+              {services.length}
+            </div>
+            <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium">
+              Chưa hoàn thành
+            </CardTitle>
+            <Target className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-black">
+              {services.length}
+            </div>
+            <p className="text-xs text-[#ac9a00]">
+              +{services.length} từ tháng trước
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium">Đơn bị hủy</CardTitle>
+            <Trash2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-black">
+              {services.length}
+            </div>
+            <p className="text-xs text-[#d62727]">
+              +{services.length} từ tháng trước
+            </p>
+          </CardContent>
+        </Card>
+      </div>
       <ServiceBookingTable bookings={serviceBookings} />
       <ServiceBookingAnalytics services={services} />
-      <div className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6"></div>
-      </div>
     </div>
   );
 }
