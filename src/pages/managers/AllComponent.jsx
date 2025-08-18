@@ -50,8 +50,13 @@ function AllComponentsPageAdmin() {
                     <ComponentLink to="Signup" label="Signup" />
                     <ComponentLink to="SignIn" label="Sign In" />
                     <ComponentLink to="SignUp1" label="SignUp1" />
-
                 </Section>
+
+                {/* Other */}
+                <Section title="Other">
+                    <ComponentLink to="tacklist" label="Task List" />
+                </Section>
+
             </div>
         </div>
     );

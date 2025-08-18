@@ -67,6 +67,7 @@ import TopProducts from "../components/adminComponent/TopProducts"
 import TotalRevenueChart from "../components/adminComponent/TotalRevenueChart"
 import VisitorInsights from "../components/adminComponent/VisitorInsights"
 import WebsiteVisitorsDonut from "../components/adminComponent/WebsiteVisitorsDonut"
+import TaskList from "../components/adminComponent/TaskList"
 
 
 
@@ -155,6 +156,7 @@ const privateRoutes = [
     { path: "/managers/components/TotalRevenueChart", component: TotalRevenueChart, layout: AdminLayout },
     { path: "/managers/components/VisitorInsights", component: VisitorInsights, layout: AdminLayout },
     { path: "/managers/components/WebsiteVisitorsDonut", component: WebsiteVisitorsDonut, layout: AdminLayout },
+    { path: "/managers/components/tacklist", component: TaskList, layout: AdminLayout },
 
 
 ]

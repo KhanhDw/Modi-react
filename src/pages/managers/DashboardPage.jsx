@@ -81,7 +81,7 @@ function RevenueChart() {
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={revenueData}>
             <CartesianGrid
-              strokeDasharray="3 3" 
+              strokeDasharray="3 3"
               stroke="currentColor"
               className="opacity-20"
             />
@@ -164,78 +164,80 @@ function RecentActivities() {
     { color: "bg-red-500", title: "Phản hồi khách hàng", desc: "Yêu cầu chỉnh sửa giao diện - 2 giờ trước" },
   ]
   return (
-  <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
-    <CardHeader>
-      <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Hoạt động gần đây</CardTitle>
-      <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-        Các hoạt động mới nhất trong hệ thống
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      {activities.map((a, i) => (
-        <div key={i} className="flex items-start gap-3">
-          <div
-            className={`w-2 h-2 ${a.color} rounded-full mt-2`}
-          ></div>
-          <div className="flex-1">
-            <p className="text-sm font-medium">{a.title}</p>
-            <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-              {a.desc}
-            </p>
+    <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Hoạt động gần đây</CardTitle>
+        <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+          Các hoạt động mới nhất trong hệ thống
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {activities.map((a, i) => (
+          <div key={i} className="flex items-start gap-3">
+            <div
+              className={`w-2 h-2 ${a.color} rounded-full mt-2`}
+            ></div>
+            <div className="flex-1">
+              <p className="text-sm font-medium">{a.title}</p>
+              <p className="text-xs text-gray-500 admin-dark:text-gray-400">
+                {a.desc}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
-    </CardContent>
-  </Card>
-);
+        ))}
+      </CardContent>
+    </Card>
+  );
 
 }
 
-// 5. Task List
-function TaskList() {
-  const tasks = [
-    { done: true, text: "Gọi điện cho khách hàng XYZ", badge: "Hoàn thành", variant: "secondary" },
-    { done: false, text: "Cập nhật template mới cho trang chủ", badge: "Khẩn cấp", variant: "destructive" },
-    { done: false, text: "Trả lời email khách hàng về báo giá", badge: "Hôm nay", variant: "outline" },
-    { done: false, text: "Họp team về dự án website mới", badge: "14:00", variant: "outline" },
-    { done: false, text: "Review và phê duyệt thiết kế", badge: "Tuần này", variant: "secondary" },
-    { done: false, text: "Chuẩn bị báo cáo tháng", badge: "Tuần này", variant: "secondary" },
-  ]
+const sampleProducts = [
+  { id: 1, name: "iPhone 15 Pro", views: 1200 },
+  { id: 2, name: "Samsung Galaxy S24", views: 950 },
+  { id: 3, name: "MacBook Air M3", views: 800 },
+  { id: 4, name: "Apple Watch Ultra 2", views: 600 },
+];
+
+
+// 5. sản phẩm được xem nhiều
+const MostViewedProducts = ({ products }) => {
+  // Sắp xếp giảm dần theo lượt xem
+  const sortedProducts = [...products].sort((a, b) => b.views - a.views);
+
   return (
-  <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
-    <CardHeader>
-      <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Chiến dịch truyền thông và marketing</CardTitle>
-      <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-        Danh sách quảng cáo đang chạy
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="space-y-3">
-      {tasks.map((t, i) => (
-        <div key={i} className="flex items-center gap-3">
-          {t.done ? (
-            <CheckCircle className="w-4 h-4 text-green-500" />
-          ) : (
-            <div className="w-4 h-4 border-2 border-gray-300 admin-dark:border-gray-600 rounded-full"></div>
-          )}
-          <span
-            className={`text-sm ${
-              t.done
-                ? "line-through text-gray-500 admin-dark:text-gray-400"
-                : ""
-            }`}
-          >
-            {t.text}
-          </span>
-          <Badge theme="admin" variant={t.variant} className={`ml-auto ${t.variant === "destructive" ? "text-black" : ""}`}>
-            {t.badge}
-          </Badge>
-        </div>
-      ))}
-    </CardContent>
-  </Card>
-);
+    <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
+          🔥 Sản phẩm được xem nhiều nhất
+        </CardTitle>
+        <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+          Danh sách Top sản phẩm theo lượt xem
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {sortedProducts.map((p, i) => (
+          <div key={i} className="flex items-center gap-3 border-b py-1">
+            {/* Vòng tròn màu + số thứ tự */}
+            <div
+              className={`w-6 h-6 flex items-center justify-center text-xs font-bold text-white ${p.color} rounded-full `}
+            >
+              {i + 1}
+            </div>
 
-}
+            {/* Thông tin sản phẩm */}
+            <div className="flex justify-between w-full items-center">
+              <p className="text-sm font-medium">{p.name}</p>
+              <p className="text-xs text-gray-500 admin-dark:text-gray-400">
+                {p.views.toLocaleString()} lượt xem
+              </p>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+};
+
 
 // 6. Main Dashboard Page
 export default function DashboardPage() {
@@ -250,7 +252,7 @@ export default function DashboardPage() {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <RecentActivities />
-            <TaskList />
+            <MostViewedProducts products={sampleProducts} />
           </div>
         </main>
       </div>
