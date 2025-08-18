@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, NavLink, Link  } from "react-router-dom";
+import { useLocation, NavLink, Link } from "react-router-dom";
 import { CgWebsite } from "react-icons/cg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ const breadcrumbMap = {
   "/managers/about-config": "Giới thiệu",
   "/managers/admin-zone": "Khu vực quản trị",
   "/managers/components": "Component",
+  "/managers/profile": "Component",
 };
 
 const AdminHeader = ({
@@ -57,7 +58,7 @@ const AdminHeader = ({
   const pageTitle = breadcrumbMap[currentPath] || "NUll";
   // const breadcrumb = `Admin / ${pageTitle}`;
 
-  const pathnames  = location.pathname.split("/").filter(Boolean);
+  const pathnames = location.pathname.split("/").filter(Boolean);
 
   const headerStyle = isHeaderSticky
     ? {
@@ -89,25 +90,25 @@ const AdminHeader = ({
           </Button>
           <div className="flex flex-col min-w-0">
             <div className="flex text-sm text-gray-500 admin-dark:text-gray-400 truncate">
-                 <span>Admin</span>
-            
-             {pathnames.slice(1).map((value, index) => {
-              const to = `/${pathnames.slice(0, index + 2).join("/")}`;
-              const isLast = index === pathnames.slice(1).length - 1;
+              <span>Admin</span>
 
-              return (
-                <li key={to} className="block">
-               
-                  <span className="mx-1">/</span>
-                  {isLast ? (
-                    <span className="font-semibold capitalize">{value}</span>
-                  ) : (
-                    <Link to={to} className="hover:underline capitalize">
-                      {value}
-                    </Link>
-                  )}
-                </li>);
-            })}
+              {pathnames.slice(1).map((value, index) => {
+                const to = `/${pathnames.slice(0, index + 2).join("/")}`;
+                const isLast = index === pathnames.slice(1).length - 1;
+
+                return (
+                  <li key={to} className="block">
+
+                    <span className="mx-1">/</span>
+                    {isLast ? (
+                      <span className="font-semibold capitalize">{value}</span>
+                    ) : (
+                      <Link to={to} className="hover:underline capitalize">
+                        {value}
+                      </Link>
+                    )}
+                  </li>);
+              })}
             </div>
             <h1 className="text-xl font-bold text-gray-800 admin-dark:text-gray-100 md:text-2xl truncate">
               {pageTitle}
@@ -125,7 +126,7 @@ const AdminHeader = ({
           <NavLink to="/">
             <Button
               variant="ghost"
-              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0"
+              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />
@@ -137,17 +138,20 @@ const AdminHeader = ({
           <NotificationBell />
 
           {/* Avatar */}
-          <Button
-            theme="admin"
-            variant="ghost"
-            className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full"
-          >
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <span className="hidden md:inline text-sm font-bold">ADMIN</span>
-          </Button>
+          <NavLink to="/managers/profile">
+            <Button
+              theme="admin"
+              variant="ghost"
+              className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer"
+            >
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <span className="hidden md:inline text-sm font-bold">ADMIN</span>
+            </Button>
+          </NavLink>
+
 
           {/* Settings */}
           <AdminSettingsDropdown

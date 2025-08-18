@@ -6,41 +6,53 @@
 .scroll-container::-webkit-scrollbar {
     width: 8px;
 }
+
 .scroll-container::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 4px;
 }
+
 .scroll-container::-webkit-scrollbar-thumb {
     background: #cbd5e0;
     border-radius: 4px;
     cursor: pointer;
 }
+
 .scroll-container::-webkit-scrollbar-thumb:hover {
     background: #a0aec0;
 }
 
 /* Dark mode */
 .dark .scroll-container::-webkit-scrollbar-track {
-    background: #1f2937; /* bg-gray-800 */
+    background: #1f2937;
+    /* bg-gray-800 */
 }
+
 .dark .scroll-container::-webkit-scrollbar-thumb {
-    background: #4b5563; /* gray-600 */
+    background: #4b5563;
+    /* gray-600 */
 }
+
 .dark .scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #6b7280; /* gray-500 */
+    background: #6b7280;
+    /* gray-500 */
 }
 
 /* Admin-dark mode */
 .admin-dark .scroll-container::-webkit-scrollbar-track {
-    background: #1f2937; /* bg-gray-800 */
-}
-.admin-dark .scroll-container::-webkit-scrollbar-thumb {
-    background: #4b5563; /* gray-600 */
-}
-.admin-dark .scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #6b7280; /* gray-500 */
+    background: #1f2937;
+    /* bg-gray-800 */
 }
 
+.admin-dark .scroll-container::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    /* gray-600 */
+}
+
+.admin-dark .scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+    /* gray-500 */
+}
 
 .lenis-local {
     overflow-y: auto;
@@ -51,27 +63,24 @@
 
 html.lenis,
 html.lenis body {
-    height: auto; /* Ngăn chặn chặn cuộn */
+    height: auto;
+    /* Ngăn chặn chặn cuộn */
     overflow: auto;
 }
 
 /* Optional: Animation keyframes for dropdown */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .animate-in.fade-in-0.zoom-in-95 {
-  animation: fadeIn 0.2s ease-out;
+    animation: fadeIn 0.2s ease-out;
 }
-
-
-
-
-

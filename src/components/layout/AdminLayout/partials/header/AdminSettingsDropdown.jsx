@@ -20,10 +20,10 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
         <Button
           variant="ghost"
           size="icon"
-          className="text-gray-600 hover:bg-gray-100 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-150"
+          className="text-gray-600 hover:bg-gray-100 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-150 cursor-pointer"
           aria-label="Cài đặt"
         >
-          <Settings color={isDark? '#ffffff':'#000000'} className="h-5 w-5" />
+          <Settings color={isDark ? '#ffffff' : '#000000'} className="h-5 w-5" />
         </Button>
       }
       align="end"
@@ -45,7 +45,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
             id="sticky-header"
             checked={isHeaderSticky}
             onCheckedChange={(checked) => setIsHeaderSticky(Boolean(checked))}
-            className="data-[state=checked]:bg-red-600 "
+            className="data-[state=checked]:bg-red-600 cursor-pointer"
           />
         </div>
       </CustomDropdownItem>
@@ -65,7 +65,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
             id="change-theme-admin"
             checked={isDark}
             onCheckedChange={toggleTheme}
-            className="data-[state=checked]:bg-blue-600"
+            className="data-[state=checked]:bg-blue-600 cursor-pointer"
           />
         </div>
       </CustomDropdownItem>
@@ -73,8 +73,8 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
       {/* Profile Link */}
       <CustomDropdownItem asChild>
         <NavLink
-          to="/profile"
-          className="flex items-center gap-2 hover:underline underline-offset-4"
+          to="/managers/profile"
+          className="flex items-center font-medium gap-2 hover:underline underline-offset-4"
         >
           <UserCircle className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
           Hồ sơ
