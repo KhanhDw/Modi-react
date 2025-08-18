@@ -3,7 +3,7 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { BarChart3, Mail, Search, Share2, Target } from "lucide-react";
 
 //------------------------------------------
-export default function MarketingPageV1() {
+export default function MarketingPageFull() {
     const location = useLocation();
 
     // class cho trạng thái active

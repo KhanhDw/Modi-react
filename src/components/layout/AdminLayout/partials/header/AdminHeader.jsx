@@ -119,7 +119,7 @@ const AdminHeader = ({
                   </li>);
               })}
             </div>
-            <h1 className="text-xl font-bold text-gray-800 admin-dark:text-gray-100 md:text-2xl truncate">
+            <h1 className="text-xl flex items-center font-bold text-gray-800 admin-dark:text-gray-100 md:text-2xl truncate">
               {pageTitle}{titleLevel3 ? ` - ${titleLevel3}` : ""}
             </h1>
           </div>
