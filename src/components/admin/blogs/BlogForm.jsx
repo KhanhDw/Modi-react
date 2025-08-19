@@ -6,7 +6,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
     content: "",
     author_id: "",
     published_at: "",
-    img: "",
+    image: "",
   });
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
@@ -19,9 +19,9 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
         content: blog.content || "",
         author_id: blog.author_id || "",
         published_at: blog.published_at || "",
-        img: blog.img || "",
+        image: blog.image || "",
       });
-      setPreview(blog.img ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.img}` : "");
+      setPreview(blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : "");
       setFile(null); // Reset file input
     } else {
       setFormData({
@@ -29,7 +29,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
         content: "",
         author_id: "",
         published_at: "",
-        img: "",
+        image: "",
       });
       setPreview("");
       setFile(null);
@@ -49,7 +49,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
       setPreview(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
     } else {
-      setPreview(formData.img ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.img}` : "");
+      setPreview(formData.image ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image}` : "");
     }
   };
 

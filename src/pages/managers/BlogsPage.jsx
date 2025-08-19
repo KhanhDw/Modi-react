@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState([]);
+  const [columns, setColumns] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,13 +43,21 @@ export default function BlogsPage() {
     try {
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/blogs`);
       if (!res.ok) throw new Error("Không thể tải dữ liệu");
-      let data = await res.json();
-      data = Array.isArray(data) ? data.sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-        return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
-      }) : [];
-      setBlogs(data);
+      let result = await res.json();
+
+      // lấy riêng ra
+      const columns = result.colums;
+      let blogsData = Array.isArray(result.data)
+        ? result.data.sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+        })
+        : [];
+
+      // set state
+      setBlogs(blogsData);
+      setColumns(columns); // bạn cần khai báo state columns ở trên
       setError(null);
     } catch (err) {
       console.error("Lỗi khi lấy dữ liệu:", err);
@@ -57,6 +66,7 @@ export default function BlogsPage() {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchBlogs();
@@ -153,13 +163,18 @@ export default function BlogsPage() {
   if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
 
   return (
-    <div className="rounded-lg p-2 sm:p-4 md:p-6 min-h-screen bg-gray-100">
-      <PageHeader
-        title="Quản lý bài viết"
-        buttonText="Thêm bài viết"
-        onButtonClick={handleAdd}
-        className="mb-4 sm:mb-6"
-      />
+    <div className="rounded-lg p-2  ">
+      <div className="flex justify-between items-center mb-6">
+        <PageHeader
+          title="Quản lý bài viết"
+          buttonText="Thêm bài viết"
+          onButtonClick={handleAdd}
+          toggleSortOrder={toggleSortOrder}
+          sortOrder={sortOrder}
+          className="mb-4 sm:mb-6 w-full "
+        />
+
+      </div>
 
       {showForm ?
         <div className="mb-4 sm:mb-6 bg-white p-4 sm:p-6 rounded-lg shadow-md border border-green-200">
@@ -172,49 +187,96 @@ export default function BlogsPage() {
         :
         <div className="flex flex-col">
 
-          <div className="mb-4">
-            <button
-              onClick={toggleSortOrder}
-              className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
-            >
-              Sắp xếp theo ngày ({sortOrder === "asc" ? "Cũ nhất" : "Mới nhất"})
-            </button>
-          </div>
 
-          <div className="bg-white rounded-xl shadow-lg overflow-x-auto border border-green-200">
+
+          <div className=" rounded-xl shadow-lg overflow-x-auto border border-green-200">
             <table className="min-w-full divide-y divide-green-200">
-              <thead className="bg-green-100 text-green-800 uppercase text-xs sm:text-sm">
+              <thead className="bg-green-100 admin-dark:bg-slate-700 text-green-800 uppercase text-xs sm:text-sm">
                 <tr>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold rounded-tl-xl">ID</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">Tiêu đề</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold hidden sm:table-cell">Ảnh</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold hidden md:table-cell">Ngày đăng</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold rounded-tr-xl">Hành động</th>
+                  {columns.map(col => (
+                    <th key={col.name} className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold text-gray-800 admin-dark:text-gray-200">{col.label}</th>
+                  ))}
+                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold rounded-tr-xl text-gray-800 admin-dark:text-gray-200">Hành động</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-green-200">
+              <tbody className="divide-y divide-green-200 admin-dark:bg-slate-800">
                 {paginatedBlogs.map((blog, index) => (
                   <tr
                     key={blog.id || index}
-                    className="hover:bg-green-50 transition-colors duration-200"
+                    className="hover:bg-green-50 transition-colors duration-200 text-gray-800 admin-dark:text-gray-200"
                   >
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-green-900 text-xs sm:text-sm">
-                      {blog.id}
-                    </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-green-900 text-xs sm:text-sm">
-                      {blog.title}
-                    </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-green-800 text-xs sm:text-sm hidden sm:table-cell">
-                      {blog.img ? (
-                        <img src={`${import.meta.env.VITE_MAIN_BE_URL}${blog.img}`} alt="blog" className="h-12 w-12 object-cover rounded" />
-                      ) : (
-                        "Không có ảnh"
-                      )}
-                    </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-green-800 text-xs sm:text-sm hidden md:table-cell">
-                      {blog.published_at ? new Date(blog.published_at).toLocaleDateString("vi-VN") : "Chưa đăng"}
-                    </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                    {/* để hiển thị được nội dung vui lòng: (BE) src\config\columns.config.js phải có name chính xác */}
+                    {columns.map((col) => {
+                      let value = blog[col.name];
+
+                      if (col.name === "id") {
+                        return (
+                          <td key={index} className="px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                            {/* công thức số thứ tự nối tiếp */}
+                            {(currentPage - 1) * itemsPerPage + (index + 1)}
+                          </td>
+                        );
+                      }
+
+                      // xử lý theo type
+                      if (col.type === "image") {
+                        return (
+                          <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                            {value ? (
+                              <img
+                                src={`${import.meta.env.VITE_MAIN_BE_URL}${value}`}
+                                alt="blog"
+                                className="h-12 w-12 object-cover rounded"
+                              />
+                            ) : (
+                              "Không có ảnh"
+                            )}
+                          </td>
+                        );
+                      }
+
+                      if (col.name === "title") {
+                        return (
+                          <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                            {value}
+                          </td>
+                        );
+                      }
+
+
+                      if (col.name === "content") {
+                        return (
+                          <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                            {value}
+                          </td>
+                        );
+                      }
+
+                      if (col.type === "date") {
+                        return (
+                          <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                            {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
+                          </td>
+                        );
+                      }
+
+                      if (col.type === "enum") {
+                        return (
+                          <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                            {value === "draft" ? "Nháp" : value === "published" ? "Đã công bố" : value}
+                          </td>
+                        );
+                      }
+
+                      return (
+                        <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                          {value}
+                        </td>
+                      );
+                    })}
+
+                    {/* Cột hành động */}
+                    <td className="px-2 sm:px-4 py-2 text-center">
                       <div className="flex justify-center space-x-1 sm:space-x-2">
                         <button
                           onClick={() => handleEdit(blog)}
