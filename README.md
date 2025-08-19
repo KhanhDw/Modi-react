@@ -1,6 +1,7 @@
 # Deploy: https://sweet-starlight-6a5f76.netlify.app/
 
 # Lỗi không thể scroll được trong cục bộ, vui lòng thêm class sau:
+
 ```
 className="lenis-local"
 ```
@@ -32,6 +33,12 @@ git clone --branch <tên-nhánh> --single-branch <url-repo>
 
 ```
 git clone --branch develop --single-branch https://github.com/user/repo.git
+```
+
+# đứng trên nhánh của người khác mà push
+
+```
+git push origin HEAD:<Branch Name đang đứng>
 ```
 
 # cách 2 Clone bình thường rồi checkout nhánh sau
