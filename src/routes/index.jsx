@@ -16,7 +16,13 @@ import NewsDetail from '../pages/NewsDetail'
 //admin
 import ManagerDashboard from "../pages/managers/DashboardPage"
 import ManagerServices from "../pages/managers/ServicesPage"
+
 import ManagerBlogs from "../pages/managers/BlogsPage"
+import BlogsListPage from "../pages/managers/blogs/blogList"
+import BlogViewPage from "../pages/managers/blogs/blogView"
+import BlogsNewPage from "../pages/managers/blogs/blogNew"
+
+
 import ManagerRecruitment from "../pages/managers/RecruitmentPage"
 import ManagerContact from "../pages/managers/ContactPage"
 import AllComponentsPageAdmin from "../pages/managers/AllComponent"
@@ -67,8 +73,8 @@ const privateRoutes = [
     { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
     { path: "/managers/home-config", component: ConfigHomePage, layout: AdminLayout },
     {
-        path: "/managers/marketing", 
-        component: MarketingPage, 
+        path: "/managers/marketing",
+        component: MarketingPage,
         layout: AdminLayout,
         children: [
             { path: "overview", component: OverviewPage },
@@ -79,7 +85,15 @@ const privateRoutes = [
         ],
     },
     { path: "/managers/services", component: ManagerServices, layout: AdminLayout },
-    { path: "/managers/news", component: ManagerBlogs, layout: AdminLayout },
+    {
+        path: "/managers/news", component: ManagerBlogs, layout: AdminLayout,
+        children: [
+            { path: "", component: BlogsListPage },
+            { path: "new", component: BlogsNewPage },
+            { path: ":id/view", component: BlogViewPage },
+            { path: ":id/edit", component: BlogsNewPage },
+        ]
+    },
     { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
     { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },

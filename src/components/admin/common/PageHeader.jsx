@@ -1,5 +1,5 @@
 
-export default function PageHeader({ title, buttonText, onButtonClick, extra, toggleSortOrder, sortOrder }) {
+export default function PageHeader({ title, buttonText, onButtonClick, isHiddenFilter = false, extra, toggleSortOrder, sortOrder }) {
 
 
 
@@ -9,16 +9,18 @@ export default function PageHeader({ title, buttonText, onButtonClick, extra, to
       <h1 className="text-2xl font-bold text-gray-900 admin-dark:text-gray-200">{title}</h1>
       <div className="flex items-center justify-between">
         {extra && <div className="text-sm text-gray-500">{extra}</div>}
-        <input type="text" placeholder="Tìm kiếm bài viết..." className="mr-10 w-100 border-2 border-gray-300 py-2 px-3 rounded-xl shadow focus:border-green-500 focus:outline-none" />
+        {
+          !isHiddenFilter && <input type="text" placeholder="Tìm kiếm bài viết..." className="mr-10 w-100 border-2 border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow focus:border-green-500 focus:outline-none" />
+        }
         <div className="flex items-center space-x-2">
           {buttonText && (
             <div className="flex items-center space-x-2">
-              <button
+              {!isHiddenFilter && <button
                 onClick={toggleSortOrder}
                 className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
               >
                 Sắp xếp theo ngày ({sortOrder === "asc" ? "Cũ nhất" : "Mới nhất"})
-              </button>
+              </button>}
 
               <button onClick={onButtonClick} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                 {buttonText}

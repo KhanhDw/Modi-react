@@ -22,12 +22,11 @@ export default function MarketingPage() {
             <NavLink
               to="overview"
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ||
+                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ||
                   (location.pathname === "/marketing" &&
                     "overview" === "overview")
-                    ? activeClass
-                    : normalClass
+                  ? activeClass
+                  : normalClass
                 }`
               }
             >
@@ -38,8 +37,7 @@ export default function MarketingPage() {
             <NavLink
               to="campaigns"
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? activeClass : normalClass
+                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ? activeClass : normalClass
                 }`
               }
             >
@@ -50,8 +48,7 @@ export default function MarketingPage() {
             <NavLink
               to="seo"
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? activeClass : normalClass
+                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ? activeClass : normalClass
                 }`
               }
             >
@@ -62,8 +59,7 @@ export default function MarketingPage() {
             <NavLink
               to="social"
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? activeClass : normalClass
+                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ? activeClass : normalClass
                 }`
               }
             >
@@ -74,8 +70,7 @@ export default function MarketingPage() {
             <NavLink
               to="email"
               className={({ isActive }) =>
-                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive ? activeClass : normalClass
+                `flex items-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ? activeClass : normalClass
                 }`
               }
             >
