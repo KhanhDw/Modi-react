@@ -23,6 +23,12 @@ import BlogsListPage from "../pages/managers/blogs/blogList"
 import BlogViewPage from "../pages/managers/blogs/blogView"
 import BlogsNewPage from "../pages/managers/blogs/blogNew"
 
+//admin-zone
+import AdminZonePage from "@/pages/managers/AdminZonePage"
+import AdminZoneListPage from "../pages/managers/admin-zone/adminZoneList"
+import AdminZoneNewPage from "../pages/managers/admin-zone/adminZoneNew";
+import AdminZoneEditPage from "../pages/managers/admin-zone/adminZoneEdit"
+
 //admin 
 import ManagerRecruitment from "../pages/managers/RecruitmentPage"
 
@@ -35,7 +41,6 @@ import AllComponentsPageAdmin from "../pages/managers/AllComponent"
 //admin 
 import ConfigHomePage from "@/pages/managers/ConfigHomePage"
 import AboutConfig from "@/pages/managers/AboutConfig"
-import AdminZonePage from "@/pages/managers/AdminZonePage"
 import ProfilePage from "@/pages/managers/ProfilePage"
 
 //admin 
@@ -83,6 +88,7 @@ import TotalRevenueChart from "../components/adminComponent/TotalRevenueChart"
 import VisitorInsights from "../components/adminComponent/VisitorInsights"
 import WebsiteVisitorsDonut from "../components/adminComponent/WebsiteVisitorsDonut"
 import TaskList from "../components/adminComponent/TaskList"
+import { Children } from "react"
 
 
 
@@ -136,7 +142,17 @@ const privateRoutes = [
     { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },
     { path: "/managers/about-config", component: AboutConfig, layout: AdminLayout },
-    { path: "/managers/admin-zone", component: AdminZonePage, layout: AdminLayout },
+    {
+        path: "/managers/admin-zone",
+        component: AdminZonePage,
+        layout: AdminLayout,
+        children: [
+            { path: "", component: AdminZoneListPage },
+            { path: "new", component: AdminZoneNewPage },
+            { path: "edit", component: AdminZoneEditPage },
+        ],
+    },
+
     { path: "/managers/profile", component: ProfilePage, layout: AdminLayout },
     {
         path: "/managers/website-templates",
