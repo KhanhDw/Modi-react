@@ -70,7 +70,7 @@ export default function BlogsNewPage() {
                 />
             </div>
 
-            <div className="mb-4 sm:mb-6 bg-white p-4 sm:p-6 rounded-lg shadow-md border border-green-200">
+            <div className="mb-4 sm:mb-6 bg-white admin-dark:bg-slate-800 p-4 sm:p-6 rounded-lg shadow-md ">
                 <BlogForm
                     blog={editingBlog}
                     onSubmit={handleSubmit}

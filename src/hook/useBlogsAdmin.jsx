@@ -99,22 +99,22 @@ export default function useBlogs() {
         }
     };
 
+
     const handleSubmit = async (formData, file) => {
         try {
-            let imageUrl = formData.img || editingBlog?.img || "";
+
+            // Chuẩn bị FormData
+            const formDataUpload = new FormData();
+            // Gắn dữ liệu blog (title, content, status...)
+            Object.keys(formData).forEach((key) => {
+                formDataUpload.append(key, formData[key]);
+            });
+
+            // Gắn file ảnh nếu có
             if (file) {
-                const formDataUpload = new FormData();
                 formDataUpload.append("image", file);
-                const uploadRes = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/upload`, {
-                    method: "POST",
-                    body: formDataUpload,
-                });
-                if (!uploadRes.ok) throw new Error("Upload ảnh thất bại");
-                const uploadData = await uploadRes.json();
-                imageUrl = uploadData.url;
             }
 
-            const blogData = { ...formData, img: imageUrl };
             const method = editingBlog ? "PUT" : "POST";
             const url = editingBlog
                 ? `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs/${editingBlog.id}`
@@ -122,21 +122,23 @@ export default function useBlogs() {
 
             const res = await fetch(url, {
                 method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(blogData),
+                body: formDataUpload, // 👈 Không set Content-Type, browser tự set multipart/form-data
             });
 
             if (!res.ok) throw new Error("Thao tác không thành công");
             await res.json();
+
             fetchBlogs();
             setShowForm(false);
-            setEditingBlog(null); // Reset sau khi submit
+            setEditingBlog(null);
             setError(null);
+            navigate(-1);
         } catch (err) {
             console.error("Lỗi khi submit:", err);
             setError("Thao tác thất bại. Vui lòng kiểm tra dữ liệu.");
         }
     };
+
 
     const handleCancel = () => {
         setShowForm(false);
@@ -171,11 +173,14 @@ export default function useBlogs() {
         paginatedBlogs,
         itemsPerPage,
         sortOrder,
+        fetchBlogs,
+        setBlogs,
         handleAdd,
         handleEdit,
         handleDelete,
         handleSubmit,
         handleCancel,
+        setLoading,
         toggleSortOrder,
         setCurrentPage,
         handlePageChange,

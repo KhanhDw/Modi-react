@@ -1,12 +1,15 @@
 import PageHeader from "@/components/admin/common/PageHeader";
 import BlogForm from "@/components/admin/blogs/BlogForm";
 import useBlogs from "@/hook/useBlogsAdmin";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function BlogsListPage() {
 
     const navigate = useNavigate();
     const location = useLocation();
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     const {
         blogs,
@@ -20,6 +23,7 @@ export default function BlogsListPage() {
         paginatedBlogs,
         itemsPerPage,
         sortOrder,
+        setBlogs,
         handleAdd,
         handleEdit,
         handleDelete,
@@ -27,10 +31,40 @@ export default function BlogsListPage() {
         handleCancel,
         toggleSortOrder,
         handlePageChange,
+        setLoading,
+        setEditingBlog,
+        fetchBlogs,
     } = useBlogs();
 
-    if (loading) return <div className="p-4 text-center text-green-800">Đang tải...</div>;
-    if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
+
+    // Search API
+    const handleSearch = async (keyword) => {
+        setLoading(true);
+        try {
+            if (!keyword) {
+                await fetchBlogs(); // nếu rỗng load tất cả
+                return;
+            } else if (keyword.trim() === "") {
+                await fetchBlogs(); // nếu rỗng load tất cả
+                return;
+            } else if (keyword.trim().toLowerCase() === "nháp") {
+                keyword = "draft";
+            } else if (keyword.trim().toLowerCase() === "công khai") {
+                keyword = "published";
+            }
+
+            const response = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs/search?term=${encodeURIComponent(keyword)}`
+            );
+            if (!response.ok) throw new Error("API error");
+            const data = await response.json();
+            setBlogs(data);
+        } catch (err) {
+            console.error("Search error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
 
@@ -38,16 +72,24 @@ export default function BlogsListPage() {
         return <div>Đang tải...</div>;  // ✅ return sau hook
     }
 
+
+    if (loading) return <div className="p-4 text-center text-green-800">Đang tải...</div>;
+    if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
+
+
+
     return (
         <div className="p-2">
             <div className="flex justify-between items-center mb-6">
                 <PageHeader
-                    // title="Quản lý tin tức"
                     title={showForm ? "Sửa tin tức" : "Quản lý tin tức"}
                     buttonText="Thêm tin tức"
                     onButtonClick={handleAdd}
                     toggleSortOrder={toggleSortOrder}
                     sortOrder={sortOrder}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    APISearch={handleSearch}
                     className="mb-4 sm:mb-6 w-full "
                 />
 
@@ -59,7 +101,7 @@ export default function BlogsListPage() {
 
 
                 <div className=" rounded-xl shadow-lg overflow-x-auto border-2 border-green-200 admin-dark:border-gray-700">
-                    <table className="min-w-full divide-y divide-green-200">
+                    <table className="min-w-full divide-y divide-green-200 admin-dark:divide-slate-600">
                         <thead className="bg-green-100 admin-dark:bg-slate-700 text-green-800 uppercase text-xs sm:text-sm">
                             <tr>
                                 {columns.map(col => (
@@ -68,7 +110,7 @@ export default function BlogsListPage() {
                                 <th className="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold rounded-tr-xl text-gray-800 admin-dark:text-gray-200">Hành động</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-green-200 admin-dark:bg-slate-800">
+                        <tbody className="divide-y divide-green-200 admin-dark:divide-slate-600 admin-dark:bg-slate-800">
                             {paginatedBlogs.map((blog, index) => (
                                 <tr
                                     key={blog.id || index}
@@ -107,7 +149,7 @@ export default function BlogsListPage() {
 
                                         if (col.name === "title") {
                                             return (
-                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                                                <td onClick={() => navigate(`${location.pathname} / ${blog.id} / view`)} key={col.name} className="hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
                                                     {value}
                                                 </td>
                                             );
@@ -133,7 +175,7 @@ export default function BlogsListPage() {
                                         if (col.type === "enum") {
                                             return (
                                                 <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
-                                                    {value === "draft" ? "Nháp" : value === "published" ? "Đã công bố" : value}
+                                                    {value === "draft" ? "Nháp" : value === "published" ? "Công khai" : value}
                                                 </td>
                                             );
                                         }
@@ -168,8 +210,8 @@ export default function BlogsListPage() {
                             {paginatedBlogs.length === 0 && (
                                 <tr>
                                     <td
-                                        colSpan="5"
-                                        className="px-2 sm:px-4 py-2 sm:py-3 text-center text-green-600 italic text-xs sm:text-sm"
+                                        colSpan={columns.length + 1}
+                                        className="px-2 w-full sm:px-4 py-2 sm:py-3 text-center text-green-600 italic text-xs sm:text-sm"
                                     >
                                         Không có bài viết nào
                                     </td>
