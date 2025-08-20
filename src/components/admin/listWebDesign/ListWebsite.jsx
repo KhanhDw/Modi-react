@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { Search, Plus, Trash2, SquarePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,15 @@ export default function WebsiteTemplateList() {
     dateRange: "",
     publishStatus: "",
   });
+
+  // Phân trang (paginate 5 / trang)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Reset về trang 1 khi search/filter thay đổi
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filters]);
 
   const availableTags = templates ? [...new Set(templates.flatMap((t) => t.tags))] : [];
   const availableAuthors = templates ? [...new Set(templates.map((t) => "Admin"))] : [];
@@ -65,6 +74,11 @@ export default function WebsiteTemplateList() {
       })
     : [];
 
+  // Tính trang hiện tại
+  const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentTemplates = filteredTemplates.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className="mx-auto p-4">
       <div className="flex flex-col gap-6 mb-8">
@@ -96,7 +110,7 @@ export default function WebsiteTemplateList() {
       </div>
 
       <div className="space-y-4">
-        {filteredTemplates.length === 0 ? (
+        {currentTemplates.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-muted-foreground mb-4">
               {searchTerm ? "Không tìm thấy mẫu website nào phù hợp" : "Chưa có mẫu website nào"}
@@ -106,7 +120,7 @@ export default function WebsiteTemplateList() {
             )}
           </div>
         ) : (
-          filteredTemplates.map((template) => (
+          currentTemplates.map((template) => (
             <Card
               key={template.id}
               className="group border-2 border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800"
@@ -251,6 +265,31 @@ export default function WebsiteTemplateList() {
           ))
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
+            Prev
+          </Button>
+          <span className="text-sm">
+            Trang {currentPage} / {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
