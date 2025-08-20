@@ -21,6 +21,20 @@ export default {
                 "Logo Design"
             ],
         },
+        designweb: { 
+            title: "Website Design",
+            listDesign :[
+                "Introductory website",
+                "E-commerce website ",
+                "Service website ",
+                "News website ",
+                "Real estate website ",
+                "Tourism website ",
+                "Education website ",
+                "Personal website "
+            ]
+        },
+        marketing:{title: "Media & Marketing"},
         news: { title: "News", },
         contact: { title: "Contact", },
         recruitment: { title: "Careers", },
@@ -128,7 +142,7 @@ export default {
                     "Enhancing corporate value",
                     "Increasing the business's reputation with consumers",
                     "Supported with trade promotion, product sales output",
-                    "Supported across all traditional, online, etc., sales channels"
+                   "Supported across all traditional, online, etc., sales channels"
                 ]
             },
             forConsumer: {

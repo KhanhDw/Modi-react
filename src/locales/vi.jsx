@@ -3,7 +3,7 @@ import { title } from "framer-motion/client";
 export default {
     header: {
         home: { title: "Trang Chủ" },
-        about: { title: "Về Chúng Tôi" },
+        about: { title: "Giới Thiệu" },
         services: {
             title: "Dịch Vụ",
             listServices: [
@@ -23,6 +23,20 @@ export default {
                 "Thiết kế Logo",
             ],
         },
+        designweb: { 
+            title: "Thiết Kế Website",
+            listDesign :[
+                " Website giới thiệu",
+                " Website bán hàng",
+                " Website dịch vụ",
+                " Website tin tức",
+                " Website bất động sản",
+                " Website du lịch",
+                " Website giáo dục",
+                " Website cá nhân"
+            ]
+        },
+        marketing:{title: "Truyền Thông & Marketing"},
         news: { title: "Tin Tức" },
         contact: { title: "Liên Hệ" },
         recruitment: { title: "Tuyển Dụng" },

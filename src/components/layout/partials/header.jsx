@@ -1,21 +1,17 @@
-import react, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
+import { HiX } from "react-icons/hi";
 import ThemeToggle from './ThemeToggle';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
-
-
-
 function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
-
   const { t } = useLanguage();
   const location = useLocation();
 
   const [isHoverServices, setIsHoverServices] = useState(false);
-  const [isHoverNews, setIsHoverNews] = useState(false);
-
+  const [isHoverDesignWeb, setIsHoverDesignWeb] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -24,9 +20,6 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
     setActiveScoll_open_HeaderSideBar(next);
   };
 
-
-
-
   return (
     <>
       <div className={`${location.pathname === "/"
@@ -34,170 +27,631 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
           ? "xs:h-20 md:h-20 2xl:h-20 3xl:h-20"
           : "xs:h-20 md:h-30 2xl:h-30 3xl:h-30")
         : "h-20"
-        } w-full bg-transparent flex justify-between items-center  transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20`}>
+        } w-full bg-transparent flex justify-between items-center transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20 fixed top-0 left-0 z-40`}>
+        {/* Logo Section */}
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="/logoModi.png" className='xs:h-8  2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+          <img src="/logoModi.png" className='xs:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
         </Link>
 
+        {/* Desktop Navigation - Hidden on mobile and tablet */}
+        <nav className='items-center justify-center xs:hidden text-lg font-bold md:flex md:gap-6 lg:gap-8 xl:gap-10'>
+          <Link 
+            to={'/'} 
+            className={`flex text-lg justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}
+          >
+            {t("header.home.title")}
+          </Link>
 
-        <div className='items-center justify-center xs:hidden text-base font-bold md:flex md:text-xs md:gap-6 lg:gap-8 xl:gap-10 lg:text-md xl:text-xl'>
+          <Link 
+            to={'/about'} 
+            className={`text-lg flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}
+          >
+            {t("header.about.title")}
+          </Link>
 
-          <Link to={'/'} className={`flex 2xl:text-xl lg:text-md  justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}>{t("header.home.title")}</Link>
+          {/* Design Web Dropdown */}
+          <div
+            onMouseEnter={() => setIsHoverDesignWeb(true)}
+            onMouseLeave={() => setIsHoverDesignWeb(false)}
+            className="relative h-full flex items-center"
+          >
+            <Link
+              to="/design-website"
+              className={`flex justify-center items-center text-lg h-full ${location.pathname.startsWith('/design-website') ? 'text-green-400' : 'text-white'}`}
+            >
+              {t("header.designweb.title")} 
+              <IoMdArrowDropdown className={`ml-1 ${isHoverDesignWeb ? 'rotate-180' : ''}`} />
+            </Link>
 
-          <Link to={'/about'} className={`2xl:text-xl lg:text-md  flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}>{t("header.about.title")}</Link>
+            {isHoverDesignWeb && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 z-50 min-w-max pt-2">
+                <ModalDesignWeb />
+              </div>
+            )}
+          </div>
 
           <div
             onMouseEnter={() => setIsHoverServices(true)}
             onMouseLeave={() => setIsHoverServices(false)}
-            className="relative h-full flex items-center "
+            className="relative h-full flex items-center"
           >
             <Link
               to="/services"
-              className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}
+              className={`flex justify-center items-center text-lg h-full ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}
             >
-              {t("header.services.title")} <IoMdArrowDropdown />
+              {t("header.services.title")} 
+              <IoMdArrowDropdown className={`ml-1 ${isHoverServices ? 'rotate-180' : ''}`} />
             </Link>
 
             {isHoverServices && (
-              <div
-                className="absolute top-full left-1/2 -translate-x-1/2 z-50 min-w-max"
-              >
+              <div className="absolute top-full left-1/2 -translate-x-1/2 z-50 min-w-max pt-2">
                 <ModalServices />
               </div>
             )}
           </div>
 
-
+          <Link 
+            to={'/marketing'} 
+            className={`flex justify-center items-center text-lg ${location.pathname === '/marketing' ? 'text-green-400' : 'text-white'}`}
+          >
+            {t("header.marketing.title")}
+          </Link>
 
           <Link
             to="/news"
-            className={`flex justify-center items-center lg:text-md  2xl:text-xl h-full ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}
+            className={`flex justify-center items-center text-lg h-full ${location.pathname === '/news' ? 'text-green-400' : 'text-white'}`}
           >
             {t("header.news.title")}
           </Link>
 
+          <Link 
+            to={'/contact'} 
+            className={`flex justify-center items-center text-lg ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'}`}
+          >
+            {t("header.contact.title")}
+          </Link>
+        </nav>
 
-
-
-
-          <Link to={'/contact'} className={`flex justify-center items-center lg:text-md  ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.contact.title")}</Link>
-          <Link to={'/careers'} className={`flex justify-center items-center lg:text-md  ${location.pathname === '/recruitment' ? 'text-green-400' : 'text-white'} 2xl:text-xl`}>{t("header.recruitment.title")}</Link>
-        </div>
-
-        <div >
-          <div className='hidden md:flex'><ThemeToggle /></div>
-          {/* Menu for mobi and tablet */}
-          <button type="button" onClick={toggleSidebar} className='flex md:hidden transtion-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'><TiThMenu /></button>
+        {/* Right Side Controls */}
+        <div className="flex items-center gap-2">
+          {/* Theme Toggle - Hidden on small screens */}
+          <div className='hidden md:flex'>
+            <ThemeToggle />
+          </div>
+          
+          {/* Mobile Menu Button - Show on mobile and tablet */}
+          <button 
+            type="button" 
+            onClick={toggleSidebar} 
+            className='flex md:hidden transition-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'
+          >
+            <TiThMenu className="text-base" />
+          </button>
         </div>
       </div>
-      {/* Sidebar - mobi*/}
-      <div >
-        <div
-          onClick={toggleSidebar}
-          className={`
-            fixed top-0 left-0 w-full h-full z-30 md:hidden
-            transition-opacity duration-300 ease-in-out
-            ${isSidebarOpen ? 'opacity-100 pointer-events-auto bg-gray-900/80' : 'opacity-0 pointer-events-none'}
-          `}
-        />
-        <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-      </div>
+
+      {/* Mobile Sidebar Overlay */}
+      <div
+        onClick={toggleSidebar}
+        className={`
+          fixed top-0 left-0 w-full h-full z-30 md:hidden
+          transition-opacity duration-300 ease-in-out
+          ${isSidebarOpen ? 'opacity-100 pointer-events-auto bg-gray-900/80' : 'opacity-0 pointer-events-none'}
+        `}
+      />
+      <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
     </>
-  )
+  );
 }
 
 function ModalServices() {
   const { t } = useLanguage();
   const services = [
-    { title: t("header.services.listServices.0"), slug: "online-kickstart" },
+    {
+      title: t("header.services.listServices.0"),
+      slug: "online-kickstart",
+      subItems: [
+        { title: "Tư Vấn Cơ Bản", slug: "advise" },
+        { title: "Thiết Kế Gói Dịch Vụ", slug: "design-service-package" },
+        { title: "Hỗ Trợ Triển Khai", slug: "support-implementation" },
+      ],
+    },
     { title: t("header.services.listServices.1"), slug: "one-me" },
-    { title: t("header.services.listServices.2"), slug: "brand-building" },
+    {
+      title: t("header.services.listServices.2"),
+      slug: "brand-building",
+      subItems: [
+        { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
+        { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
+        { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
+      ],
+    },
     { title: t("header.services.listServices.3"), slug: "online-store" },
     { title: t("header.services.listServices.4"), slug: "service-booking" },
-    { title: t("header.services.listServices.5"), slug: "comprehensive-management" },
+    { title: t("header.services.listServices.5"), 
+      slug: "comprehensive-management",
+      subItems: [
+        { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
+        { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
+        { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
+      ],
+     },
     { title: t("header.services.listServices.6"), slug: "website-app" },
     { title: t("header.services.listServices.7"), slug: "re-vision" },
     { title: t("header.services.listServices.8"), link: "/services" },
     { title: t("header.services.listServices.9"), link: "/services" },
     { title: t("header.services.listServices.10"), link: "/services" },
-    { title: t("header.services.listServices.11"), link: "/services" },
+    { title: t("header.services.listServices.11"), link: "/services",
+      subItems: [
+        { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
+        { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
+        { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
+      ],
+     },
     { title: t("header.services.listServices.12"), link: "/services" },
     { title: t("header.services.listServices.13"), link: "/services" },
   ];
 
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [hoveredColumn, setHoveredColumn] = useState(null);
+
+  const getColumnsData = () => {
+    const itemsPerColumn = Math.ceil(services.length / 3);
+    return [
+      services.slice(0, itemsPerColumn),
+      services.slice(itemsPerColumn, itemsPerColumn * 2),
+      services.slice(itemsPerColumn * 2),
+    ];
+  };
+
+  const columns = getColumnsData();
+
+  const handleMouseEnterItem = (originalIndex, columnIndex) => {
+    setHoveredItem(originalIndex);
+    setHoveredColumn(columnIndex);
+  };
+
+  const handleMouseLeaveContainer = () => {
+    setHoveredItem(null);
+    setHoveredColumn(null);
+  };
+
+  const getSubMenuPosition = (columnIndex) => {
+    switch (columnIndex) {
+      case 0:
+        return {
+          left: 'calc(33.333% + 12px)',
+          transform: 'translateX(0)',
+        };
+      case 1:
+        return {
+          left: 'calc(66.666% + 24px)',
+          transform: 'translateX(0)',
+        };
+      case 2:
+        return {
+          right: 'calc(33.333% + 12px)',
+          transform: 'translateX(0)',
+        };
+      default:
+        return {
+          left: 'calc(33.333% + 12px)',
+          transform: 'translateX(0)',
+        };
+    }
+  };
+
   return (
-    <div className="w-fit">
-      <div className="rounded-lg bg-linear-to-b from-indigo-500 to-teal-400 w-fit h-fit">
-        <ul className="list-none rounded-tr-lg rounded-br-lg overflow-hidden">
-          {services.map((service, index) => (
-            <li
-              key={index}
-              className="cursor-default first:rounded-tl-xl last:rounded-bl-xl bg-white px-3 py-1 border-l-4 text-gray-700
-                       border-transparent hover:bg-green-900 hover:text-white
-                       hover:translate-x-3 transition-transform duration-200
-                       md:text-sm lg:text-md xl:text-md 2xl:text-md font-normal"
-            >
-              <Link to={`/services/${service.slug}`}>{service.title}</Link>
-            </li>
+    <div
+      className="w-fit animate-in slide-in-from-top-2 duration-200 relative"
+      onMouseLeave={handleMouseLeaveContainer}
+    >
+      <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl p-4 relative">
+        <div className="grid grid-cols-3 gap-4 lg:gap-6 min-w-[700px] lg:min-w-[900px] xl:min-w-[900px] relative">
+          {columns.map((column, colIndex) => (
+            <div key={colIndex} className="space-y-1">
+              {column.map((service, index) => {
+                const originalIndex = colIndex * Math.ceil(services.length / 3) + index;
+                const isActive = hoveredItem === originalIndex;
+
+                return (
+                  <div
+                    key={originalIndex}
+                    className={`
+                      group cursor-pointer transition-all duration-300 ease-in-out transform
+                      px-3 py-2 rounded-lg border-l-4 relative
+                      ${
+                        isActive && service.subItems
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
+                          : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
+                      }
+                    `}
+                    onMouseEnter={() => handleMouseEnterItem(originalIndex, colIndex)}
+                  >
+                    <div
+                      className={`
+                        absolute inset-0 rounded-lg transition-opacity duration-300
+                        ${
+                          isActive && service.subItems
+                            ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
+                            : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
+                        }
+                      `}
+                    ></div>
+
+                    <div className="flex items-center justify-between relative z-10">
+                      <Link
+                        to={service.slug ? `/services/${service.slug}` : service.link}
+                        className={`
+                          flex-1 text-xs lg:text-sm transition-all duration-300
+                          ${isActive && service.subItems ? 'font-bold' : 'font-medium group-hover:font-semibold'}
+                        `}
+                      >
+                        {service.title}
+                      </Link>
+                      {service.subItems && (
+                        <IoMdArrowDropdown
+                          className={`
+                            ml-2 text-xs transition-transform duration-300
+                            ${isActive ? 'rotate-90' : 'group-hover:rotate-90'}
+                          `}
+                        />
+                      )}
+                    </div>
+
+                    {/* Invisible bridge for smooth hover transition - chỉ cho cột giữa */}
+                    {service.subItems && colIndex === 1 && isActive && (
+                      <div 
+                        className="absolute top-0 -right-4 w-8 h-full z-30 bg-transparent"
+                        onMouseEnter={() => setHoveredItem(originalIndex)}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           ))}
-        </ul>
+        </div>
+
+        {hoveredItem !== null && services[hoveredItem]?.subItems && hoveredColumn !== null && (
+          <div
+            className="absolute top-4 z-70 min-w-[250px] lg:min-w-[280px] animate-in slide-in-from-top-2 duration-200"
+            style={getSubMenuPosition(hoveredColumn)}
+            onMouseEnter={() => setHoveredItem(hoveredItem)}
+            onMouseLeave={() => {
+              // Delay để tránh flicker khi di chuyển chuột
+              setTimeout(() => {
+                setHoveredItem(null);
+                setHoveredColumn(null);
+              }, 50);
+            }}
+          >
+            {/* Bridge element để kết nối với menu cha - chỉ cho cột giữa */}
+            {hoveredColumn === 1 && (
+              <div 
+                className="absolute -left-4 top-0 w-4 h-full bg-transparent z-10"
+                onMouseEnter={() => setHoveredItem(hoveredItem)}
+              />
+            )}
+            
+            {/* Menu cấp 3 với bo góc */}
+            <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl overflow-hidden">
+              <ul className="list-none py-3">
+                {services[hoveredItem].subItems.map((sub, subIndex) => (
+                  <li
+                    key={subIndex}
+                    className={`
+                      px-4 py-3 text-gray-700 dark:text-gray-200 
+                      hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white 
+                      transition-all duration-300 cursor-pointer
+                      ${subIndex === 0 ? 'rounded-t-xl' : ''}
+                      ${subIndex === services[hoveredItem].subItems.length - 1 ? 'rounded-b-xl' : ''}
+                      mx-2 mb-1 last:mb-0 rounded-lg
+                    `}
+                  >
+                    <Link
+                      to={`/services/${services[hoveredItem].slug}/${sub.slug}`}
+                      className="text-xs lg:text-sm font-medium hover:font-semibold transition-all duration-300 whitespace-nowrap flex items-center"
+                    >
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 opacity-60 transition-all duration-300 group-hover:opacity-100 group-hover:scale-110"></span>
+                      {sub.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
+function ModalDesignWeb() {
+  const { t } = useLanguage();
+  const designItems = [
+    { title: t("header.designweb.listDesign.0"), slug: "introductory-website-design" },
+    { title: t("header.designweb.listDesign.1"), slug: "e-commerce-website-design" },
+    { title: t("header.designweb.listDesign.2"), slug: "service-website-design" },
+    { title: t("header.designweb.listDesign.3"), slug: "news-website-design" },
+    { title: t("header.designweb.listDesign.4"), slug: "real-estate-website-design" },
+    { title: t("header.designweb.listDesign.5"), slug: "tourism-website-design" },
+    { title: t("header.designweb.listDesign.6"), slug: "education-website-design" },
+    { title: t("header.designweb.listDesign.7"), slug: "personal-website-design" },
+  ];
 
+  const [hoveredItem, setHoveredItem] = useState(null);
+
+  const handleMouseEnterItem = (index) => {
+    setHoveredItem(index);
+  };
+
+  const handleMouseLeaveContainer = () => {
+    setHoveredItem(null);
+  };
+
+  return (
+    <div
+      className="w-fit animate-in slide-in-from-top-2 duration-200 relative"
+      onMouseLeave={handleMouseLeaveContainer}
+    >
+      <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl p-4 relative">
+        <div className="min-w-[300px] lg:min-w-[400px] xl:min-w-[200px] relative">
+          <div className="space-y-1">
+            {designItems.map((item, index) => {
+              const isActive = hoveredItem === index;
+
+              return (
+                <div
+                  key={index}
+                  className={`
+                    group cursor-pointer transition-all duration-300 ease-in-out transform
+                    px-3 py-2 rounded-lg border-l-4 relative
+                    ${
+                      isActive
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
+                        : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
+                    }
+                  `}
+                  onMouseEnter={() => handleMouseEnterItem(index)}
+                >
+                  <div
+                    className={`
+                      absolute inset-0 rounded-lg transition-opacity duration-300
+                      ${
+                        isActive
+                          ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
+                          : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
+                      }
+                    `}
+                  ></div>
+
+                  <div className="flex items-center justify-between relative z-10">
+                    <Link
+                      to={`/design-website/${item.slug}`}
+                      className={`
+                        flex-1 text-xs lg:text-sm transition-all duration-300
+                        ${isActive ? 'font-bold' : 'font-medium group-hover:font-semibold'}
+                      `}
+                    >
+                      {item.title}
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const { t } = useLanguage();
   const MenuHeader = [
     { id: 1, name: t("header.home.title"), link: '/' },
     { id: 2, name: t("header.about.title"), link: '/about' },
-    { id: 3, name: t("header.services.title"), link: '/services' },
-    { id: 4, name: t("header.news.title"), link: '/news' },
-    { id: 5, name: t("header.contact.title"), link: '/contact' },
-    { id: 6, name: t("header.recruitment.title"), link: '/careers' },
+    {
+      id: 3,
+      name: t("header.designweb.title"),
+      link: '/design-website',
+      subItems: [
+        { title: t("header.designweb.listDesign.0"), slug: "introductory-website-design" },
+        { title: t("header.designweb.listDesign.1"), slug: "e-commerce-website-design" },
+        { title: t("header.designweb.listDesign.2"), slug: "service-website-design" },
+        { title: t("header.designweb.listDesign.3"), slug: "news-website-design" },
+        { title: t("header.designweb.listDesign.4"), slug: "real-estate-website-design" },
+        { title: t("header.designweb.listDesign.5"), slug: "tourism-website-design" },
+        { title: t("header.designweb.listDesign.6"), slug: "education-website-design" },
+        { title: t("header.designweb.listDesign.7"), slug: "personal-website-design" },
+      ],
+    },
+    { id: 4, name: t("header.marketing.title"), link: '/marketing' },
+    {
+      id: 5,
+      name: t("header.services.title"),
+      link: '/services',
+      subItems: [
+        {
+          title: t("header.services.listServices.0"),
+          slug: "online-kickstart",
+          subSubItems: [
+            { title: "Tư Vấn Cơ Bản", slug: "advise" },
+            { title: "Thiết Kế Gói Dịch Vụ", slug: "design-service-package" },
+            { title: "Hỗ Trợ Triển Khai", slug: "support-implementation" },
+          ],
+        },
+        { title: t("header.services.listServices.1"), slug: "one-me" },
+        {
+          title: t("header.services.listServices.2"),
+          slug: "brand-building",
+          subSubItems: [
+            { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
+            { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
+            { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
+          ],
+        },
+        { title: t("header.services.listServices.3"), slug: "online-store" },
+        { title: t("header.services.listServices.4"), slug: "service-booking" },
+        // { title: t("header.services.listServices.5"), slug: "comprehensive-management" },
+        {
+          title: t("header.services.listServices.5"),
+          slug: "brand-building",
+          subSubItems: [
+            { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
+            { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
+            { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
+          ],
+        },
+        { title: t("header.services.listServices.6"), slug: "website-app" },
+        { title: t("header.services.listServices.7"), slug: "re-vision" },
+        { title: t("header.services.listServices.8"), link: "/services" },
+        { title: t("header.services.listServices.9"), link: "/services" },
+        { title: t("header.services.listServices.10"), link: "/services" },
+        { title: t("header.services.listServices.11"), link: "/services" },
+        { title: t("header.services.listServices.12"), link: "/services" },
+        { title: t("header.services.listServices.13"), link: "/services" },
+      ],
+    },
+    { id: 6, name: t("header.news.title"), link: '/news' },
+    { id: 7, name: t("header.contact.title"), link: '/contact' },
+    { id: 8, name: t("header.recruitment.title"), link: '/careers' },
   ];
 
+  const [openItems, setOpenItems] = useState({});
+  const [openSubItems, setOpenSubItems] = useState({});
+
+  const toggleItem = (id) => {
+    setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleSubItem = (parentId, subIndex) => {
+    setOpenSubItems((prev) => ({
+      ...prev,
+      [`${parentId}-${subIndex}`]: !prev[`${parentId}-${subIndex}`],
+    }));
+  };
+
   return (
-    <div id="drawer-navigation" className={`fixed top-0 left-0 z-40 w-64 flex h-screen p-4 overflow-y-auto bg-white dark:bg-gray-800 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-      <div className='flex items-start justify-between flex-col w-full'>
+    <aside 
+      className={`
+        fixed top-0 left-0 z-50 w-72 sm:w-80 h-screen p-0 overflow-y-auto 
+        bg-white dark:bg-gray-900 shadow-2xl border-r border-gray-200 dark:border-gray-700
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}
+    >
+      <div className='flex items-start justify-between flex-col w-full h-full'>
+        {/* Header */}
         <div className='flex items-start justify-start flex-col w-full'>
-          <div className='flex items-center justify-between mb-4'>
-            <div className='flex items-center justify-start xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-              <img src="/logoModi.png" className='xs:h-5 sm:h-10 md:h-7 lg:h-7 xl:h-8 2xl:h-12 3xl:h-15 w-fit' alt='logo' />
+          <div className='flex items-center justify-between mb-4 sm:mb-6 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-800'>
+            <div className='flex items-center justify-start'>
+              <img 
+                src="/logoModi.png" 
+                className='h-6 sm:h-8 w-fit' 
+                alt='logo' 
+              />
             </div>
-            <button onClick={() => setIsSidebarOpen(false)} type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
-              <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-              <span className="sr-only">Close menu</span>
+            <button 
+              onClick={() => setIsSidebarOpen(false)} 
+              type="button"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-2 transition-all duration-300 hover:scale-110"
+            >
+              <HiX className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
-          <div className="py-4 overflow-y-auto w-full">
-            <ul className="space-y-2 font-medium w-full">
-              {MenuHeader.map((item) => {
-                return (
-                  <li key={item.id}>
-                    <Link to={item.link} onClick={() => setIsSidebarOpen(false)}
-                      className="flex items-center p-2 text-gray-900 rounded-lg  w-full
-                    dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                      <span className="ml-3">{item.name}</span>
+
+          {/* Navigation Menu */}
+          <div className="px-3 sm:px-4 overflow-y-auto w-full flex-1">
+            <ul className="space-y-1 sm:space-y-2 font-medium w-full">
+              {MenuHeader.map((item) => (
+                <li key={item.id}>
+                  <div
+                    className="flex items-center p-2 sm:p-3 text-gray-900 dark:text-white rounded-lg hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all duration-300 cursor-pointer group"
+                    onClick={() => {
+                      if (item.subItems) {
+                        toggleItem(item.id);
+                      } else {
+                        setIsSidebarOpen(false);
+                      }
+                    }}
+                  >
+                    <Link 
+                      to={item.link} 
+                      onClick={(e) => { if (item.subItems) e.preventDefault(); }}
+                      className="flex-1 text-sm sm:text-base font-medium group-hover:font-semibold transition-all duration-300"
+                    >
+                      {item.name}
                     </Link>
-                  </li>
-                )
-              })}
+                    {item.subItems && (
+                      <IoMdArrowDropdown className={`ml-auto transition-transform duration-300 ${openItems[item.id] ? 'rotate-180' : ''}`} />
+                    )}
+                  </div>
+
+                  {/* Sub Items */}
+                  {item.subItems && openItems[item.id] && (
+                    <ul className="ml-3 sm:ml-4 space-y-1 mt-2 animate-in slide-in-from-top-2 duration-200">
+                      {item.subItems.map((sub, subIndex) => (
+                        <li key={subIndex}>
+                          <div
+                            className="flex items-center p-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 cursor-pointer group"
+                            onClick={() => {
+                              if (sub.subSubItems) {
+                                toggleSubItem(item.id, subIndex);
+                              } else {
+                                setIsSidebarOpen(false);
+                              }
+                            }}
+                          >
+                            <Link 
+                              to={sub.slug ? `${item.link}/${sub.slug}` : sub.link} 
+                              onClick={(e) => { if (sub.subSubItems) e.preventDefault(); }}
+                              className="flex-1 text-xs sm:text-sm group-hover:font-medium transition-all duration-300"
+                            >
+                              {sub.title}
+                            </Link>
+                            {sub.subSubItems && (
+                              <IoMdArrowDropdown className={`ml-auto transition-transform duration-300 ${openSubItems[`${item.id}-${subIndex}`] ? 'rotate-180' : ''}`} />
+                            )}
+                          </div>
+
+                          {/* Sub Sub Items */}
+                          {sub.subSubItems && openSubItems[`${item.id}-${subIndex}`] && (
+                            <ul className="ml-4 sm:ml-6 space-y-1 animate-in slide-in-from-top-2 duration-200">
+                              {sub.subSubItems.map((subSub, subSubIndex) => (
+                                <li 
+                                  key={subSubIndex} 
+                                  className="p-2 text-gray-600 dark:text-gray-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-700 dark:hover:text-teal-300 rounded-lg transition-all duration-300 cursor-pointer"
+                                >
+                                  <Link 
+                                    to={`${item.link}/${sub.slug}/${subSub.slug}`} 
+                                    onClick={() => setIsSidebarOpen(false)}
+                                    className="text-xs hover:font-medium transition-all duration-300"
+                                  >
+                                    {subSub.title}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <div className='flex items-center justify-center w-full mt-4'>
+
+        {/* Theme Toggle Footer */}
+        <div className='flex items-center justify-center w-full p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'>
           <ThemeToggle />
         </div>
       </div>
-    </div>
-
-  )
+    </aside>
+  );
 }
 
-
-
-export default Header
+export default Header;
