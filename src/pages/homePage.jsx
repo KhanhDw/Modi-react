@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 
 function HomePage({ activeSidebarHeader }) {
     return (
-        <div className={`${activeSidebarHeader ? 'overflow-hidden' : ''}  w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 pt-16 sm:pt-20 md:pt-24 lg:pt-28 xl:pt-32`}>
+        <div className={`${activeSidebarHeader ? 'overflow-hidden' : ''}  w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900`}>
             <BannerSilder />
             <BaseModi />
             <ThreeCardBusiness />
