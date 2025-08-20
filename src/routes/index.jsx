@@ -13,30 +13,38 @@ import ServiceDetailPage from "../pages/serviceDetailPage";
 import AdminLoginPage from '../pages/managers/AdminLoginPage'
 import NewsDetail from '../pages/NewsDetail'
 
-//admin
+//admin dashboard
 import ManagerDashboard from "../pages/managers/DashboardPage"
+//admin services
 import ManagerServices from "../pages/managers/ServicesPage"
-
+//admin blogs
 import ManagerBlogs from "../pages/managers/BlogsPage"
 import BlogsListPage from "../pages/managers/blogs/blogList"
 import BlogViewPage from "../pages/managers/blogs/blogView"
 import BlogsNewPage from "../pages/managers/blogs/blogNew"
 
-
+//admin 
 import ManagerRecruitment from "../pages/managers/RecruitmentPage"
+
+//admin 
 import ManagerContact from "../pages/managers/ContactPage"
+
+//admin 
 import AllComponentsPageAdmin from "../pages/managers/AllComponent"
 
+//admin 
 import ConfigHomePage from "@/pages/managers/ConfigHomePage"
 import AboutConfig from "@/pages/managers/AboutConfig"
 import AdminZonePage from "@/pages/managers/AdminZonePage"
 import ProfilePage from "@/pages/managers/ProfilePage"
 
+//admin 
 import WebsiteTemplatePage from "@/pages/managers/WebsiteTemplatePage"
 import WebsiteTemplateList from "@/components/admin/listWebDesign/ListWebsite"
 import WebsiteTemplateDetail from "@/components/admin/listWebDesign/DetailWebsite";
 import WebsiteTemplateEdit from "@/components/admin/listWebDesign/EditWebsite";
 
+//admin 
 import MarketingPage from "@/pages/managers/MarketingPage"
 import OverviewPage from "@/pages/managers/marketing/OverviewPage"
 import CampaignsPage from "@/pages/managers/marketing/CampaignsPage"
@@ -44,6 +52,7 @@ import EmailPage from "@/pages/managers/marketing/EmailPage"
 import SEOPage from "@/pages/managers/marketing/SEOPage"
 import SocialPage from "@/pages/managers/marketing/SocialPage"
 
+//admin 
 import TermsOfServicePage from "../pages/TermsOfServicePage"
 
 
@@ -95,7 +104,6 @@ const publicRoutes = [
 const privateRoutes = [
     // redirect /managers -> /managers/dashboard
     { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
-    { path: "/managers/marketing", component: () => <Navigate to="/managers/marketing/overview" replace={true} /> },
 
     //admin routes
     { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
@@ -114,7 +122,9 @@ const privateRoutes = [
     },
     { path: "/managers/services", component: ManagerServices, layout: AdminLayout },
     {
-        path: "/managers/news", component: ManagerBlogs, layout: AdminLayout,
+        path: "/managers/news",
+        component: ManagerBlogs,
+        layout: AdminLayout,
         children: [
             { path: "", component: BlogsListPage },
             { path: "new", component: BlogsNewPage },
@@ -139,10 +149,6 @@ const privateRoutes = [
             { path: ":id/edit", component: WebsiteTemplateEdit },
         ],
     },
-    //   { path: "/managers/website-templates/new", component: WebsiteTemplateEdit, layout: AdminLayout },
-    //   { path: "/managers/website-templates/:id", component: WebsiteTemplateDetail, layout: AdminLayout },
-    //   { path: "/managers/website-templates/:id/edit", component: WebsiteTemplateEdit, layout: AdminLayout },
-
 
     // admin components
     { path: "/managers/components/chart", component: ChartAreaGradient, layout: AdminLayout },

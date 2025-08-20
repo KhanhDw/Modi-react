@@ -109,15 +109,11 @@ export default function AdminZonePage() {
 
     return (
         <div>
-            <h2 className="text-2xl p-6 font-bold text-gray-900 admin-dark:text-white">
-                Quản lý nhân viên
-            </h2>
-
-            <div className="max-w-6xl mx-auto rounded-xl shadow-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 p-6 transition-all duration-500 ease-in-out">
+            <div className="mx-auto rounded-xl border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 p-6 transition-all duration-500 ease-in-out">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
                     <h2 className="text-xl font-semibold text-gray-900 admin-dark:text-white flex-shrink-0 whitespace-nowrap">
-                        Tài khoản
+                        Quản lý Tài khoản nhân viên
                     </h2>
 
                     <div className="relative w-full max-w-xs flex-grow">
@@ -171,7 +167,7 @@ export default function AdminZonePage() {
                                 paginatedData.map((item) => (
                                     <tr
                                         key={item.id}
-                                        className="hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition duration-150 cursor-pointer border-b border-gray-100 admin-dark:border-gray-700"
+                                        className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition duration-150 cursor-pointer border-b border-gray-100 admin-dark:border-gray-700"
                                     >
                                         <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300">{item.name}</td>
                                         <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300">{item.email}</td>

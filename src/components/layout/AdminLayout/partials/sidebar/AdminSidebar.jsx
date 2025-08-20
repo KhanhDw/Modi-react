@@ -4,8 +4,8 @@ import {
   X, ChevronLeft, ChevronRight,
   Palette,
   Info,
-  Megaphone, Columns3Cog 
-  } from "lucide-react";
+  Megaphone, Columns3Cog
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
