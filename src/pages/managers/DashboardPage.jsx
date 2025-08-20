@@ -58,7 +58,7 @@ function KpiCards() {
           <CardContent>
             <div className="text-2xl font-bold text-gray-800 admin-dark:text-gray-100">{value}</div>
             <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-              <span className="text-green-600 admin-dark:text-green-400">{change}</span>
+              <span className="text-green-600 admin-dark:text-green-400">{change} so với tháng trước</span>
             </p>
           </CardContent>
         </Card>
@@ -72,9 +72,9 @@ function RevenueChart() {
   return (
     <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Doanh thu 12 tháng</CardTitle>
+        <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Website bán ra trong 12 tháng</CardTitle>
         <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-          Biểu đồ doanh thu theo tháng (VNĐ)
+          Biểu đồ đơn đặt hàng website theo tháng (Website)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -96,8 +96,8 @@ function RevenueChart() {
                 color: "var(--tooltip-text)",
               }}
               formatter={(value) => [
-                `${value.toLocaleString()} VNĐ`,
-                "Doanh thu",
+                `${value.toLocaleString()} Website`,
+                "Số lượng",
               ]}
             />
             <Line
@@ -113,8 +113,54 @@ function RevenueChart() {
   );
 }
 
+// function RevenueChart() {
+//   return (
+//     <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+//       <CardHeader>
+//         <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">Doanh thu 12 tháng</CardTitle>
+//         <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+//           Biểu đồ doanh thu theo tháng (VNĐ)
+//         </CardDescription>
+//       </CardHeader>
+//       <CardContent>
+//         <ResponsiveContainer width="100%" height={300}>
+//           <LineChart data={revenueData}>
+//             <CartesianGrid
+//               strokeDasharray="3 3"
+//               stroke="currentColor"
+//               className="opacity-20"
+//             />
+//             <XAxis dataKey="month" stroke="currentColor" />
+//             <YAxis
+//               tickFormatter={(v) => `${v / 1000000}M`}
+//               stroke="currentColor"
+//             />
+//             <Tooltip
+//               contentStyle={{
+//                 backgroundColor: "var(--tooltip-bg)",
+//                 color: "var(--tooltip-text)",
+//               }}
+//               formatter={(value) => [
+//                 `${value.toLocaleString()} VNĐ`,
+//                 "Doanh thu",
+//               ]}
+//             />
+//             <Line
+//               type="monotone"
+//               dataKey="revenue"
+//               stroke="#3b82f6"
+//               strokeWidth={2}
+//             />
+//           </LineChart>
+//         </ResponsiveContainer>
+//       </CardContent>
+//     </Card>
+//   );
+// }
+
 
 // 3. Visitor Chart
+
 function VisitorChart() {
   return (
     <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">

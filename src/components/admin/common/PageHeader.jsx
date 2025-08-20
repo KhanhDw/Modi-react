@@ -39,7 +39,7 @@ export default function PageHeader({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Tìm kiếm bài viết..."
+              placeholder="Tìm kiếm..."
               className="mr-10 w-100 border-2 border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow focus:border-green-500 focus:outline-none"
             />
             <button hidden type="submit"></button>

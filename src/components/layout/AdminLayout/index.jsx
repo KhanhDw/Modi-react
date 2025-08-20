@@ -24,7 +24,7 @@ const AdminLayoutInner = ({ children }) => {
   return (
     <div
       className={cn(
-        "flex min-h-screen bg-slate-50 text-slate-900 admin-dark:bg-slate-900 admin-dark:text-slate-100",
+        "scroll-container flex min-h-screen bg-slate-50 text-slate-900 admin-dark:bg-slate-900 admin-dark:text-slate-100",
         theme === "dark" && "admin-dark"
       )}
     >
