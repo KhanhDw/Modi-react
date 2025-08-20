@@ -1,4 +1,4 @@
-import { Trash2, AppWindow, LogOut, ArrowLeft, Edit, Calendar, Tag, Folder } from "lucide-react"
+import { Trash2, AppWindow, LogOut, ArrowLeft, Calendar, Tag, Folder } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -16,14 +16,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-// export default  function WebsitetemplatesDetail({ templates, onBack, onEdit }) {
 export default function WebsitetemplatesDetail() {
   const { id } = useParams();
 
-  const { templates, handleEdit, handleDelete } = useOutletContext();
+  const { templates, handleDelete } = useOutletContext();
   const template = templates.find(t => String(t.id) === id);
 
   const navigate = useNavigate();
+
+  if (!template) {
+    return <div>Không tìm thấy mẫu website</div>;
+  }
 
   return (
     <div className=" mx-auto px-4 py-8 max-w-6xl">
@@ -42,7 +45,7 @@ export default function WebsitetemplatesDetail() {
         </div>
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => handleEdit(template.id)}
+            onClick={() => navigate('edit')}
             className="flex items-center gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900"
           >
             <AppWindow className="h-4 w-4" />
@@ -50,7 +53,7 @@ export default function WebsitetemplatesDetail() {
           </Button>
 
           <Button
-            onClick={() => handleEdit(template.id)}
+            onClick={() => navigate('edit')}
             className="flex items-center gap-2 bg-primary hover:text-white hover:bg-black admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500"
           >
             Xuất bản
@@ -143,7 +146,7 @@ export default function WebsitetemplatesDetail() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Hủy</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDelete(template.id)}>Xóa</AlertDialogAction>
+                <AlertDialogAction onClick={() => { handleDelete(template.id); navigate(-1); }}>Xóa</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -224,10 +227,9 @@ export default function WebsitetemplatesDetail() {
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
-                onClick={() => navigate(`${template.id}/edit`)}
+                onClick={() => navigate(`edit`)}
                 className="w-full bg-primary hover:bg-primary/90 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-500"
               >
-                <Edit className="h-4 w-4 mr-2" />
                 Chỉnh sửa mẫu
               </Button>
               <Link to={template.urlGitHub}>
@@ -251,11 +253,6 @@ export default function WebsitetemplatesDetail() {
                 <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Lượt xem</span>
                 <span className="font-medium text-gray-900 admin-dark:text-gray-100">1,234</span>
               </div>
-              {/* <Separator className="admin-dark:bg-gray-700" />
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Lượt tải</span>
-              <span className="font-medium text-gray-900 admin-dark:text-gray-100">89</span>
-            </div> */}
               <Separator className="admin-dark:bg-gray-700" />
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Đánh giá</span>

@@ -1,120 +1,119 @@
-
-import { useState } from "react"
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-
-
-// export type ViewMode = "list" | "edit" | "detail"
+const baseUrl = import.meta.env.VITE_MAIN_BE_URL || 'http://localhost:3000';
 
 export default function WebsiteTemplatePage() {
-  const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const [templates, setTemplates] = useState([
-    {
-      id: "1",
-      name: "E-commerce Modern",
-      description: "Mẫu website thương mại điện tử hiện đại với giao diện sạch sẽ",
-      imageUrl: "https://github.com/shadcn.png",
-      category: "E-commerce",
-      tags: [".jsx", "TailwindCSS"],
-      exportState: true,
-      urlGitHub: "https://github.com/shadcn/ui",
-      createdAt: "2024-01-15",
-      updatedAt: "2024-01-20",
-    },
-    {
-      id: "2",
-      name: "Portfolio Creative",
-      description: "Mẫu portfolio sáng tạo cho designer và developer",
-      imageUrl: "https://github.com/shadcn.png",
-      category: "Portfolio",
-      tags: [".jsx", "TailwindCSS"],
-      exportState: false,
-      urlGitHub: "https://github.com/shadcn/ui",
-      createdAt: "2024-01-10",
-      updatedAt: "2024-01-18",
-    },
-    {
-      id: "3",
-      name: "Corporate Business",
-      description: "Mẫu website doanh nghiệp chuyên nghiệp",
-      imageUrl: "https://github.com/shadcn.png",
-      category: "Business",
-      tags: [".jsx", "TailwindCSS"],
-      exportState: true,
-      urlGitHub: "https://github.com/shadcn/ui",
-      createdAt: "2024-01-05",
-      updatedAt: "2024-01-15",
-    },
-    {
-      id: "4",
-      name: "Blog Minimal",
-      description: "Mẫu blog tối giản, tập trung vào nội dung",
-      imageUrl: "https://github.com/shadcn.png",
-      category: "Blog",
-      tags: [".jsx", "TailwindCSS"],
-      exportState: false,
-      urlGitHub: "https://github.com/shadcn/ui",
-      createdAt: "2024-01-12",
-      updatedAt: "2024-01-22",
-    },
-  ])
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [templates, setTemplates] = useState([]);
+
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
+
+  const fetchTemplates = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/api/web-samples`);
+      if (!response.ok) throw new Error('Failed to fetch templates');
+      const data = await response.json();
+      // Ensure tags are parsed correctly from JSON
+      const parsedData = data.map(item => ({
+        ...item,
+        tags: typeof item.tags === 'string' ? JSON.parse(item.tags) : item.tags,
+      }));
+      setTemplates(parsedData);
+    } catch (error) {
+      console.error("Error fetching templates:", error);
+    }
+  };
 
   const handleEdit = (template) => {
-    setSelectedTemplate(template)
-    setViewMode("edit")
-  }
+    setSelectedTemplate(template);
+  };
 
   const handleView = (template) => {
-    setSelectedTemplate(template)
-    setViewMode("detail")
-  }
+    setSelectedTemplate(template);
+  };
 
-  const handleSave = (updatedTemplate) => {
-    setTemplates((prev) => prev.map((t) => (t.id === updatedTemplate.id ? updatedTemplate : t)))
-    setViewMode("list")
-    setSelectedTemplate(null)
-  }
-
-//   const handleAdd = (newTemplate: Omit<WebsiteTemplate, "id" | "createdAt" | "updatedAt">) => {
-  const handleAdd = (newTemplate) => {
-    const template = {
-      ...newTemplate,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString().split("T")[0],
-      updatedAt: new Date().toISOString().split("T")[0],
+  const handleSave = async (updatedTemplate) => {
+    try {
+      const response = await fetch(`${baseUrl}/api/web-samples/${updatedTemplate.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...updatedTemplate,
+          tags: Array.isArray(updatedTemplate.tags) ? updatedTemplate.tags : [],
+          export_state: updatedTemplate.exportState ? 1 : 0, // Map to export_state
+          url_github: updatedTemplate.urlGitHub, // Map to url_github
+          updated_at: updatedTemplate.updated_at, // Use updated_at
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to update template');
+      await fetchTemplates();
+      setSelectedTemplate(null);
+    } catch (error) {
+      console.error("Error saving template:", error);
+      throw error;
     }
-    setTemplates((prev) => [...prev, template])
-    setViewMode("list")
-    setSelectedTemplate(null)
-  }
+  };
 
-  const handleDelete = (templateId) => {
-    setTemplates((prev) => prev.filter((t) => t.id !== templateId))
-  }
+  const handleAdd = async (newTemplate) => {
+    try {
+      const response = await fetch(`${baseUrl}/api/web-samples`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newTemplate,
+          tags: Array.isArray(newTemplate.tags) ? newTemplate.tags : [],
+          export_state: newTemplate.exportState ? 1 : 0, // Map to export_state
+          url_github: newTemplate.urlGitHub, // Map to url_github
+          created_at: newTemplate.created_at, // Use created_at
+          updated_at: newTemplate.updated_at, // Use updated_at
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to add template');
+      await fetchTemplates();
+      setSelectedTemplate(null);
+    } catch (error) {
+      console.error("Error adding template:", error);
+      throw error;
+    }
+  };
+
+  const handleDelete = async (templateId) => {
+    try {
+      const response = await fetch(`${baseUrl}/api/web-samples/${templateId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete template');
+      await fetchTemplates();
+    } catch (error) {
+      console.error("Error deleting template:", error);
+    }
+  };
 
   const handleBack = () => {
-    setViewMode("list")
-    setSelectedTemplate(null)
-  }  
+    setSelectedTemplate(null);
+  };
 
   const handleAddNew = () => {
-    setSelectedTemplate(null)
-    setViewMode("edit")
-  }
+    setSelectedTemplate(null);
+  };
+
   return (
     <div>
       <Outlet
         context={{
-    templates,
-    handleSave,
-    handleAdd,
-    handleDelete,
-    handleEdit,
-    handleView,
-    handleBack,
-    handleAddNew,
-    selectedTemplate,
-  }}
+          templates,
+          handleSave,
+          handleAdd,
+          handleDelete,
+          handleEdit,
+          handleView,
+          handleBack,
+          handleAddNew,
+          selectedTemplate,
+        }}
       />
     </div>
   );
