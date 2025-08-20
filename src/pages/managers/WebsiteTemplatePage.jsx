@@ -16,10 +16,10 @@ export default function WebsiteTemplatePage() {
       const response = await fetch(`${baseUrl}/api/web-samples`);
       if (!response.ok) throw new Error('Failed to fetch templates');
       const data = await response.json();
-      // Ensure tags are parsed correctly from JSON
       const parsedData = data.map(item => ({
         ...item,
         tags: typeof item.tags === 'string' ? JSON.parse(item.tags) : item.tags,
+        export_state: !!item.export_state,
       }));
       setTemplates(parsedData);
     } catch (error) {
@@ -43,9 +43,9 @@ export default function WebsiteTemplatePage() {
         body: JSON.stringify({
           ...updatedTemplate,
           tags: Array.isArray(updatedTemplate.tags) ? updatedTemplate.tags : [],
-          export_state: updatedTemplate.exportState ? 1 : 0, // Map to export_state
-          url_github: updatedTemplate.urlGitHub, // Map to url_github
-          updated_at: updatedTemplate.updated_at, // Use updated_at
+          export_state: updatedTemplate.export_state ? 1 : 0,
+          url_github: updatedTemplate.url_github,
+          updated_at: updatedTemplate.updated_at,
         }),
       });
       if (!response.ok) throw new Error('Failed to update template');
@@ -65,10 +65,10 @@ export default function WebsiteTemplatePage() {
         body: JSON.stringify({
           ...newTemplate,
           tags: Array.isArray(newTemplate.tags) ? newTemplate.tags : [],
-          export_state: newTemplate.exportState ? 1 : 0, // Map to export_state
-          url_github: newTemplate.urlGitHub, // Map to url_github
-          created_at: newTemplate.created_at, // Use created_at
-          updated_at: newTemplate.updated_at, // Use updated_at
+          export_state: newTemplate.export_state ? 1 : 0,
+          url_github: newTemplate.url_github,
+          created_at: newTemplate.created_at,
+          updated_at: newTemplate.updated_at,
         }),
       });
       if (!response.ok) throw new Error('Failed to add template');

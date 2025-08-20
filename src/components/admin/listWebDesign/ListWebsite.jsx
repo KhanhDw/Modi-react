@@ -58,8 +58,8 @@ export default function WebsiteTemplateList() {
 
         const matchesStatus =
           filters.publishStatus === "" ||
-          (filters.publishStatus === "published" && template.id) ||
-          (filters.publishStatus === "draft" && !template.id);
+          (filters.publishStatus === "published" && template.export_state) ||
+          (filters.publishStatus === "draft" && !template.export_state);
 
         return matchesSearch && matchesTechnology && matchesTags && matchesAuthor && matchesDate && matchesStatus;
       })
@@ -139,11 +139,7 @@ export default function WebsiteTemplateList() {
                           {template.name}
                         </h3>
                         <p className="text-sm text-gray-600 admin-dark:text-gray-400">
-                          by{" "}
-                          <span className="text-blue-600 admin-dark:text-blue-400 font-medium">
-                            Admin
-                          </span>{" "}
-                          in {template.category}
+                          by <span className="text-blue-600 admin-dark:text-blue-400 font-medium">Admin</span> in {template.category}
                         </p>
                       </div>
 
@@ -156,9 +152,7 @@ export default function WebsiteTemplateList() {
                       </div>
 
                       <div>
-                        <p className="text-sm text-gray-700 admin-dark:text-gray-300 font-medium mb-2">
-                          Các loại File:
-                        </p>
+                        <p className="text-sm text-gray-700 admin-dark:text-gray-300 font-medium mb-2">Các loại File:</p>
                         <div className="flex flex-wrap gap-2">
                           {template.tags.slice(0, 6).map((tag) => (
                             <Badge
@@ -186,10 +180,10 @@ export default function WebsiteTemplateList() {
                     <div className="flex items-center justify-end gap-1 mb-4">
                       <div
                         className={`${
-                          template.exportState ? "bg-green-600 text-gray-100" : "bg-gray-400 text-gray-900"
-                        } flex mr-4 items-center gap-1 px-2 py-1 rounded-lg `}
+                          template.export_state ? "bg-green-600 text-gray-100" : "bg-gray-400 text-gray-900"
+                        } flex mr-4 items-center gap-1 px-2 py-1 rounded-lg`}
                       >
-                        <p>{template.exportState ? "Đã xuất bản" : "Chưa xuất bản"}</p>
+                        <p>{template.export_state ? "Đã xuất bản" : "Chưa xuất bản"}</p>
                       </div>
 
                       <Button
@@ -223,22 +217,18 @@ export default function WebsiteTemplateList() {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Hủy</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(template.id)}>
-                              Xóa
-                            </AlertDialogAction>
+                            <AlertDialogAction onClick={() => handleDelete(template.id)}>Xóa</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
 
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-gray-900 admin-dark:text-gray-200 mb-2">
-                        $29
-                      </div>
+                      <div className="text-3xl font-bold text-gray-900 admin-dark:text-gray-200 mb-2">$29</div>
                       <div className="text-xs text-gray-700 admin-dark:text-gray-200 leading-relaxed">
                         Cập nhật:
                         <span className="ml-2 font-medium">
-                          {new Date(template.updatedAt).toLocaleDateString("en-US", {
+                          {new Date(template.updated_at).toLocaleDateString("en-US", {
                             day: "numeric",
                             month: "short",
                             year: "2-digit",

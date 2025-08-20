@@ -14,34 +14,51 @@ const categories = ["E-commerce", "Portfolio", "Business", "Blog", "Landing Page
 export default function WebsiteTemplateEdit() {
   const { id } = useParams();
   const { templates, handleSave, handleAdd } = useOutletContext();
-  const template = id !== "new" ? templates.find(t => String(t.id) === id) : null;
+  const template = id !== "new" ? templates.find((t) => String(t.id) === id) : null;
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    imageUrl: "",
-    urlGitHub: "",
-    category: "",
-    tags: [],
-    exportState: false,
-  });
-  const [newTag, setNewTag] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
+  const [formData, setFormData] = useState(() => {
     if (template) {
-      setFormData({
+      const categoryValue = (template.category ?? "").trim();
+      return {
         name: template.name || "",
         description: template.description || "",
         imageUrl: template.imageUrl || "",
-        urlGitHub: template.url_github || "", // Changed from urlGitHub to url_github
-        category: template.category || "",
+        url_github: template.url_github || "",
+        category: categoryValue,
         tags: Array.isArray(template.tags) ? template.tags : [],
-        exportState: template.export_state || false, // Changed from exportState to export_state
-      });
+        export_state: !!template.export_state,
+      };
     }
-  }, [template]);
+    return {
+      name: "",
+      description: "",
+      imageUrl: "",
+      url_github: "",
+      category: "",
+      tags: [],
+      export_state: false,
+    };
+  });
+
+  const [newTag, setNewTag] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [localExportState, setLocalExportState] = useState(!!template?.export_state);
+
+  useEffect(() => {
+    if (!template) return;
+    const categoryValue = (template.category ?? "").trim();
+    setFormData({
+      name: template.name || "",
+      description: template.description || "",
+      imageUrl: template.imageUrl || "",
+      url_github: template.url_github || "",
+      category: categoryValue,
+      tags: Array.isArray(template.tags) ? template.tags : [],
+      export_state: !!template.export_state,
+    });
+    setLocalExportState(!!template.export_state);
+  }, [template, id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,13 +69,13 @@ export default function WebsiteTemplateEdit() {
         await handleSave({
           ...template,
           ...formData,
-          updated_at: new Date().toISOString().split("T")[0], // Changed to updated_at
+          updated_at: new Date().toISOString().split("T")[0],
         });
       } else {
         await handleAdd({
           ...formData,
-          created_at: new Date().toISOString().split("T")[0], // Changed to created_at
-          updated_at: new Date().toISOString().split("T")[0], // Changed to updated_at
+          created_at: new Date().toISOString().split("T")[0],
+          updated_at: new Date().toISOString().split("T")[0],
         });
       }
       navigate(-1);
@@ -66,6 +83,26 @@ export default function WebsiteTemplateEdit() {
       console.error("Error submitting form:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleExportState = async () => {
+    if (isLoading) return;
+    const newExportState = !localExportState;
+    setLocalExportState(newExportState);
+    setFormData((prev) => ({ ...prev, export_state: newExportState }));
+    if (template) {
+      try {
+        await handleSave({
+          ...template,
+          ...formData,
+          export_state: newExportState,
+          updated_at: new Date().toISOString().split("T")[0],
+        });
+      } catch (error) {
+        console.error("Error toggling export state:", error);
+        setLocalExportState(!newExportState);
+      }
     }
   };
 
@@ -92,6 +129,12 @@ export default function WebsiteTemplateEdit() {
       addTag();
     }
   };
+
+  // Bảo đảm option luôn chứa giá trị hiện tại từ CSDL (kể cả khi không có trong mảng categories)
+  const categoryOptions = [
+    ...(formData.category && !categories.includes(formData.category) ? [formData.category] : []),
+    ...categories,
+  ];
 
   return (
     <div className="mx-auto px-4 w-fit">
@@ -144,14 +187,14 @@ export default function WebsiteTemplateEdit() {
               <div className="space-y-2">
                 <Label htmlFor="category" className="text-gray-800 admin-dark:text-gray-200">Danh mục *</Label>
                 <Select
-                  value={formData.category}
+                  value={formData.category || ""}
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
                 >
                   <SelectTrigger className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100">
                     <SelectValue placeholder="Chọn danh mục" />
                   </SelectTrigger>
                   <SelectContent className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border border-gray-300 admin-dark:border-gray-600">
-                    {categories.map((category) => (
+                    {categoryOptions.map((category) => (
                       <SelectItem key={category} value={category}>
                         {category}
                       </SelectItem>
@@ -187,11 +230,23 @@ export default function WebsiteTemplateEdit() {
                   <Input
                     id="urlGitHub"
                     className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500"
-                    value={formData.urlGitHub}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, urlGitHub: e.target.value }))}
+                    value={formData.url_github}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, url_github: e.target.value }))}
                     placeholder="https://github.com/<userName>/<Repo>"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-800 admin-dark:text-gray-200">Trạng thái xuất bản</Label>
+                <Button
+                  type="button"
+                  onClick={toggleExportState}
+                  className={`w-full ${localExportState ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 hover:bg-gray-500"} text-white`}
+                  disabled={isLoading}
+                >
+                  {localExportState ? "Đã xuất bản" : "Chưa xuất bản"}
+                </Button>
               </div>
 
               <div className="space-y-2">
@@ -256,7 +311,7 @@ export default function WebsiteTemplateEdit() {
                   </div>
                   <div className="absolute top-2 left-2">
                     <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300">
-                      Chưa có danh mục
+                      {formData.category || "Chưa có danh mục"}
                     </Badge>
                   </div>
                 </div>
@@ -273,13 +328,11 @@ export default function WebsiteTemplateEdit() {
                       }}
                     />
                   </div>
-                  {formData.category && (
-                    <div className="absolute top-2 left-2">
-                      <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300">
-                        {formData.category}
-                      </Badge>
-                    </div>
-                  )}
+                  <div className="absolute top-2 left-2">
+                    <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300">
+                      {formData.category || "Chưa có danh mục"}
+                    </Badge>
+                  </div>
                 </div>
               )}
 
