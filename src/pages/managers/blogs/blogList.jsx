@@ -149,7 +149,7 @@ export default function BlogsListPage() {
 
                                         if (col.name === "title") {
                                             return (
-                                                <td onClick={() => navigate(`${location.pathname} / ${blog.id} / view`)} key={col.name} className="hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
                                                     {value}
                                                 </td>
                                             );

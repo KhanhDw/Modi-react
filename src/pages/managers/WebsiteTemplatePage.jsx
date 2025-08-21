@@ -19,7 +19,8 @@ export default function WebsiteTemplatePage() {
       const parsedData = data.map(item => ({
         ...item,
         tags: typeof item.tags === 'string' ? JSON.parse(item.tags) : item.tags,
-        export_state: !!item.export_state,
+        tech: typeof item.tech === 'string' ? JSON.parse(item.tech) : item.tech,
+        export_state: item.export_state ? 1 : 0,
       }));
       setTemplates(parsedData);
     } catch (error) {
@@ -35,18 +36,11 @@ export default function WebsiteTemplatePage() {
     setSelectedTemplate(template);
   };
 
-  const handleSave = async (updatedTemplate) => {
+  const handleSave = async (updatedTemplate, id) => {
     try {
-      const response = await fetch(`${baseUrl}/api/web-samples/${updatedTemplate.id}`, {
+      const response = await fetch(`${baseUrl}/api/web-samples/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...updatedTemplate,
-          tags: Array.isArray(updatedTemplate.tags) ? updatedTemplate.tags : [],
-          export_state: updatedTemplate.export_state ? 1 : 0,
-          url_github: updatedTemplate.url_github,
-          updated_at: updatedTemplate.updated_at,
-        }),
+        body: updatedTemplate,
       });
       if (!response.ok) throw new Error('Failed to update template');
       await fetchTemplates();
@@ -61,15 +55,7 @@ export default function WebsiteTemplatePage() {
     try {
       const response = await fetch(`${baseUrl}/api/web-samples`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...newTemplate,
-          tags: Array.isArray(newTemplate.tags) ? newTemplate.tags : [],
-          export_state: newTemplate.export_state ? 1 : 0,
-          url_github: newTemplate.url_github,
-          created_at: newTemplate.created_at,
-          updated_at: newTemplate.updated_at,
-        }),
+        body: newTemplate,
       });
       if (!response.ok) throw new Error('Failed to add template');
       await fetchTemplates();

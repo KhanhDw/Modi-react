@@ -44,40 +44,72 @@ export default function WebsiteTemplateList() {
 
   const filteredTemplates = templates
     ? templates.filter((template) => {
-        const matchesSearch =
-          searchTerm === "" ||
-          template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          template.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesSearch =
+        searchTerm === "" ||
+        template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-        const matchesTechnology =
-          filters.technologies.length === 0 ||
-          filters.technologies.some(
-            (tech) =>
-              template.name.toLowerCase().includes(tech.toLowerCase()) ||
-              template.description.toLowerCase().includes(tech.toLowerCase())
-          );
+      const matchesTechnology =
+        filters.technologies.length === 0 ||
+        filters.technologies.some(
+          (tech) =>
+            template.name.toLowerCase().includes(tech.toLowerCase()) ||
+            template.description.toLowerCase().includes(tech.toLowerCase())
+        );
 
-        const matchesTags = filters.tags.length === 0 || filters.tags.some((tag) => template.tags.includes(tag));
+      const matchesTags = filters.tags.length === 0 || filters.tags.some((tag) => template.tags.includes(tag));
 
-        const matchesAuthor = filters.authors.length === 0 || filters.authors.includes("Admin");
+      const matchesAuthor = filters.authors.length === 0 || filters.authors.includes("Admin");
 
-        const matchesDate = filters.dateRange === "" || true;
+      const matchesDate = filters.dateRange === "" || true;
 
-        const matchesStatus =
-          filters.publishStatus === "" ||
-          (filters.publishStatus === "published" && template.export_state) ||
-          (filters.publishStatus === "draft" && !template.export_state);
+      const matchesStatus =
+        filters.publishStatus === "" ||
+        (filters.publishStatus === "published" && template.export_state) ||
+        (filters.publishStatus === "draft" && !template.export_state);
 
-        return matchesSearch && matchesTechnology && matchesTags && matchesAuthor && matchesDate && matchesStatus;
-      })
+      return matchesSearch && matchesTechnology && matchesTags && matchesAuthor && matchesDate && matchesStatus;
+    })
     : [];
 
   // Tính trang hiện tại
   const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentTemplates = filteredTemplates.slice(startIndex, startIndex + itemsPerPage);
+
+  // Format date function for displaying last updated date
+  // This function formats the date to "DD/MM/YYYY"
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+
+  const ProductPrice = ({ price }) => {
+    if (price === null || price === undefined) {
+      return <span className="text-gray-500 text-xs">Chưa cập nhật giá</span>;
+    }
+
+    if (typeof price !== 'number') {
+      return <span>{price}</span>;
+    }
+
+    const formattedPrice = price.toLocaleString('vi-VN', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+
+    return (
+      <span>{formattedPrice}</span>
+    );
+  };
+
 
   return (
     <div className="mx-auto p-4">
@@ -129,14 +161,17 @@ export default function WebsiteTemplateList() {
                 <div className="flex min-h-[200px]">
                   <div className="flex flex-1">
                     <div className="relative w-120 h-50 flex-shrink-0">
-                      <img
-                        src={
-                          template.imageUrl ||
-                          "/placeholder.svg?height=192&width=288&query=website template preview"
-                        }
+                      {template.image_url ? <img
+                        src={`
+                         ${import.meta.env.VITE_MAIN_BE_URL}${template.image_url}
+                        `}
                         alt={template.name}
                         className="w-full h-full object-cover rounded-lg"
-                      />
+                      /> :
+                        <div className="w-full h-full rounded-lg flex items-center justify-center">
+                          <span className="text-gray-500">Không có hình ảnh</span>
+                        </div>
+                      }
                       <div className="absolute top-3 left-3">
                         <Badge
                           variant="secondary"
@@ -152,17 +187,44 @@ export default function WebsiteTemplateList() {
                         <h3 className="font-semibold text-xl text-gray-900 admin-dark:text-gray-100 mb-1 line-clamp-2">
                           {template.name}
                         </h3>
-                        <p className="text-sm text-gray-600 admin-dark:text-gray-400">
-                          by <span className="text-blue-600 admin-dark:text-blue-400 font-medium">Admin</span> in {template.category}
-                        </p>
+                        <div className="text-sm text-gray-600 admin-dark:text-gray-400">
+                          Người đăng:{" "}
+                          <span className="text-blue-600 admin-dark:text-blue-400 font-medium">Admin</span>
+                          <br />
+                          <span>Thuộc danh mục: </span><p className="text-sm text-gray-600 admin-dark:text-yellow-400"> {template.category}</p>
+                        </div>
                       </div>
 
                       <div className="mb-4">
-                        <p className="text-sm text-gray-700 admin-dark:text-gray-300">
-                          <span className="font-medium">Công nghệ:</span>{" "}
-                          <span className="text-blue-600 admin-dark:text-blue-400">React 18.x</span>,{" "}
-                          <span className="text-gray-600 admin-dark:text-gray-400">TypeScript</span>
-                        </p>
+                        <div className="text-sm text-gray-700 admin-dark:text-gray-300">
+                          <span className="font-medium">Công nghệ:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {template.tech !== null && template.tech.length > 0 &&
+                              template.tech.slice(0, template.tech.length + 1).map((item) => (
+                                <Badge
+                                  key={item}
+                                  variant="outline"
+                                  className="text-xs bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 border-gray-300 admin-dark:border-gray-600"
+                                >
+                                  {item}
+                                </Badge>
+                              ))}
+                            {/* {template.tech !== null && template.tech.length > 2 && (
+                              <button type="button" className="text-xs bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 border-gray-300 admin-dark:border-gray-600 hover:bg-gray-200 admin-dark:hover:bg-gray-700 px-2 py-1 rounded">
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-gray-50 admin-dark:bg-gray-800 text-gray-500 admin-dark:text-green-400 focus:border-gray-900 admin-dark:border-gray-600"
+                                >
+                                  +{template.tech.length - 2} more
+                                </Badge>
+                              </button>
+                            )} */}
+                          </div>
+                        </div>
+                        {/* <span className="text-blue-600 admin-dark:text-blue-400">React 18.x</span>,{" "} */}
+                        {/* <span className="text-gray-600 admin-dark:text-gray-400">TypeScript</span> */}
+                        {/* </div> */}
+                        {/* </p> */}
                       </div>
 
                       <div>
@@ -193,11 +255,10 @@ export default function WebsiteTemplateList() {
                   <div className="w-56 border-l-2 border-gray-300 admin-dark:border-gray-700 bg-gray-50/30 admin-dark:bg-gray-800/30 p-2 flex flex-col justify-between">
                     <div className="flex items-center justify-end gap-1 mb-4">
                       <div
-                        className={`${
-                          template.export_state ? "bg-green-600 text-gray-100" : "bg-gray-400 text-gray-900"
-                        } flex mr-4 items-center gap-1 px-2 py-1 rounded-lg`}
+                        className={`${template.export_state === 1 ? "bg-green-600 text-gray-100" : "bg-gray-400 text-gray-900"
+                          } flex mr-4 items-center gap-1 px-2 py-1 rounded-lg`}
                       >
-                        <p>{template.export_state ? "Đã xuất bản" : "Chưa xuất bản"}</p>
+                        <p>{template.export_state === 1 ? "Đã xuất bản" : "Chưa xuất bản"}</p>
                       </div>
 
                       <Button
@@ -238,15 +299,11 @@ export default function WebsiteTemplateList() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-gray-900 admin-dark:text-gray-200 mb-2">$29</div>
+                      <div className="text-3xl font-bold text-gray-900 admin-dark:text-gray-200 mb-2">{template.price ? <ProductPrice price={template.price} /> : 0}<span className="text-xs text-gray-700 admin-dark:text-gray-500 ml-1">Vnđ</span></div>
                       <div className="text-xs text-gray-700 admin-dark:text-gray-200 leading-relaxed">
                         Cập nhật:
                         <span className="ml-2 font-medium">
-                          {new Date(template.updated_at).toLocaleDateString("en-US", {
-                            day: "numeric",
-                            month: "short",
-                            year: "2-digit",
-                          })}
+                          {formatDate(template.updated_at)}
                         </span>
                       </div>
                     </div>
@@ -267,29 +324,31 @@ export default function WebsiteTemplateList() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-6">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-          >
-            Prev
-          </Button>
-          <span className="text-sm">
-            Trang {currentPage} / {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((p) => p + 1)}
-          >
-            Next
-          </Button>
-        </div>
-      )}
-    </div>
+      {
+        totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-6">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Prev
+            </Button>
+            <span className="text-sm">
+              Trang {currentPage} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Next
+            </Button>
+          </div>
+        )
+      }
+    </div >
   );
 }
