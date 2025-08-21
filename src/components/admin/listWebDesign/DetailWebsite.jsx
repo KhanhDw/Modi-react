@@ -1,8 +1,8 @@
-import { Trash2, AppWindow, LogOut, ArrowLeft, Edit, Calendar, Tag, Folder } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Trash2, AppWindow, ArrowLeft, Calendar, Tag, Folder } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { useOutletContext, useNavigate, useParams, Link } from "react-router-dom";
 import {
   AlertDialog,
@@ -14,26 +14,52 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
-// export default  function WebsitetemplatesDetail({ templates, onBack, onEdit }) {
-export default function WebsitetemplatesDetail() {
+export default function WebsiteTemplatesDetail() {
   const { id } = useParams();
-
-  const { templates, handleEdit, handleDelete } = useOutletContext();
+  const { templates, handleDelete, handleSave } = useOutletContext();
   const template = templates.find(t => String(t.id) === id);
-
   const navigate = useNavigate();
+  const [localExportState, setLocalExportState] = useState(template ? !!template.export_state : false);
+  const [isToggling, setIsToggling] = useState(false);
+
+  const toggleExportState = async () => {
+    if (isToggling) return;
+    setIsToggling(true);
+    const newExportState = !localExportState;
+    setLocalExportState(newExportState);
+    if (template) {
+      try {
+        await handleSave({
+          ...template,
+          export_state: newExportState,
+          updated_at: new Date().toISOString().split("T")[0],
+        });
+      } catch (error) {
+        console.error("Error toggling export state:", error);
+        setLocalExportState(!newExportState); // Revert on error
+      } finally {
+        setIsToggling(false);
+      }
+    } else {
+      setIsToggling(false);
+    }
+  };
+
+  if (!template) {
+    return <div>Không tìm thấy mẫu website</div>;
+  }
 
   return (
-    <div className=" mx-auto px-4 py-8 max-w-6xl">
-      {/* Header */}
+    <div className="mx-auto px-4 py-8 max-w-6xl">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
-            onClick={() => { navigate(-1) }}
-            className="flex items-center gap-2  text-gray-700 hover:text-gray-900 admin-dark:hover:text-gray-100 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 admin-dark:hover:text-gray-100 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800"
           >
             <ArrowLeft className="h-4 w-4 text-gray-900 admin-dark:text-gray-100" />
             Quay lại
@@ -42,7 +68,7 @@ export default function WebsitetemplatesDetail() {
         </div>
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => handleEdit(template.id)}
+            onClick={() => navigate('edit')}
             className="flex items-center gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900"
           >
             <AppWindow className="h-4 w-4" />
@@ -50,19 +76,17 @@ export default function WebsitetemplatesDetail() {
           </Button>
 
           <Button
-            onClick={() => handleEdit(template.id)}
-            className="flex items-center gap-2 bg-primary hover:text-white hover:bg-black admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500"
+            onClick={toggleExportState}
+            className={`flex items-center gap-2 ${localExportState ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 hover:bg-gray-500"} text-white`}
+            disabled={isToggling}
           >
-            Xuất bản
-            <LogOut className="h-4 w-4" />
+            {localExportState ? "Đã xuất bản" : "Chưa xuất bản"}
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* template Image */}
           <Card className="py-0 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardContent className="p-0">
               <div className="relative overflow-hidden rounded-lg">
@@ -83,7 +107,6 @@ export default function WebsitetemplatesDetail() {
             </CardContent>
           </Card>
 
-          {/* Description */}
           <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">Mô tả chi tiết</CardTitle>
@@ -95,7 +118,6 @@ export default function WebsitetemplatesDetail() {
             </CardContent>
           </Card>
 
-          {/* Features Section */}
           <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">Tính năng nổi bật</CardTitle>
@@ -110,7 +132,7 @@ export default function WebsitetemplatesDetail() {
                 ].map((feature) => (
                   <div
                     key={feature}
-                    className="flex items-center gap-3 p-3  bg-muted/20 admin-dark:bg-gray-800 rounded-lg"
+                    className="flex items-center gap-3 p-3 bg-muted/20 admin-dark:bg-gray-800 rounded-lg"
                   >
                     <div className="w-2 h-2 bg-primary rounded-full"></div>
                     <span className="text-sm text-gray-800 admin-dark:text-gray-200">{feature}</span>
@@ -120,7 +142,6 @@ export default function WebsitetemplatesDetail() {
             </CardContent>
           </Card>
 
-          {/* button delete template */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
@@ -143,21 +164,18 @@ export default function WebsitetemplatesDetail() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Hủy</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDelete(template.id)}>Xóa</AlertDialogAction>
+                <AlertDialogAction onClick={() => { handleDelete(template.id); navigate(-1); }}>Xóa</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* template Info */}
           <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">Thông tin mẫu</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Category */}
               <div className="flex items-center gap-3">
                 <Folder className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <div>
@@ -168,33 +186,30 @@ export default function WebsitetemplatesDetail() {
 
               <Separator className="admin-dark:bg-gray-700" />
 
-              {/* Created Date */}
               <div className="flex items-center gap-3">
                 <Calendar className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <div>
                   <p className="text-sm font-medium text-gray-800 admin-dark:text-gray-200">Ngày tạo</p>
                   <p className="text-sm text-muted-foreground admin-dark:text-gray-400">
-                    {new Date(template.createdAt).toLocaleDateString("vi-VN")}
+                    {new Date(template.created_at).toLocaleDateString("vi-VN")}
                   </p>
                 </div>
               </div>
 
               <Separator className="admin-dark:bg-gray-700" />
 
-              {/* Updated Date */}
               <div className="flex items-center gap-3">
                 <Calendar className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <div>
                   <p className="text-sm font-medium text-gray-800 admin-dark:text-gray-200">Cập nhật lần cuối</p>
                   <p className="text-sm text-muted-foreground admin-dark:text-gray-400">
-                    {new Date(template.updatedAt).toLocaleDateString("vi-VN")}
+                    {new Date(template.updated_at).toLocaleDateString("vi-VN")}
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Tags */}
           <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 admin-dark:text-gray-100">
@@ -217,20 +232,18 @@ export default function WebsitetemplatesDetail() {
             </CardContent>
           </Card>
 
-          {/* Actions */}
           <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">Hành động</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
-                onClick={() => navigate(`${template.id}/edit`)}
+                onClick={() => navigate(`edit`)}
                 className="w-full bg-primary hover:bg-primary/90 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-500"
               >
-                <Edit className="h-4 w-4 mr-2" />
                 Chỉnh sửa mẫu
               </Button>
-              <Link to={template.urlGitHub}>
+              <Link to={template.url_github}>
                 <Button
                   variant="outline"
                   className="w-full bg-transparent text-gray-800 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800"
@@ -241,7 +254,6 @@ export default function WebsitetemplatesDetail() {
             </CardContent>
           </Card>
 
-          {/* Statistics */}
           <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">Thống kê</CardTitle>
@@ -251,11 +263,6 @@ export default function WebsitetemplatesDetail() {
                 <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Lượt xem</span>
                 <span className="font-medium text-gray-900 admin-dark:text-gray-100">1,234</span>
               </div>
-              {/* <Separator className="admin-dark:bg-gray-700" />
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Lượt tải</span>
-              <span className="font-medium text-gray-900 admin-dark:text-gray-100">89</span>
-            </div> */}
               <Separator className="admin-dark:bg-gray-700" />
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Đánh giá</span>
@@ -267,5 +274,4 @@ export default function WebsitetemplatesDetail() {
       </div>
     </div>
   );
-
 }
