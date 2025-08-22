@@ -34,7 +34,10 @@ import AllComponentsPageAdmin from "@/pages/managers/AllComponent"
 
 //admin 
 import ConfigPage from "@/pages/managers/ConfigPage"
-import AboutConfig from "@/pages/managers/AboutConfig"
+import AboutConfig from "@/pages/managers/ConfigPage/AboutConfig"
+import OverviewPageConfig from "@/pages/managers/ConfigPage/OverviewPageConfig"
+
+//admin
 import AdminZonePage from "@/pages/managers/AdminZonePage"
 import ProfilePage from "@/pages/managers/ProfilePage"
 
@@ -104,12 +107,14 @@ const publicRoutes = [
 const privateRoutes = [
     // redirect /managers -> /managers/dashboard
     { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
+    { path: "/managers/page-config", component: () => <Navigate to="/managers/page-config/overview" replace={true} /> },
 
     //admin routes
     { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
     {
         path: "/managers/page-config", component: ConfigPage, layout: AdminLayout,
         children: [
+            { path: "overview", component: OverviewPageConfig, layout: AdminLayout },
             { path: "header", component: AboutConfig, layout: AdminLayout },
             { path: "footer", component: AboutConfig, layout: AdminLayout },
             { path: "home", component: AboutConfig, layout: AdminLayout },

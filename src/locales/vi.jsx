@@ -1,5 +1,3 @@
-import { title } from "framer-motion/client";
-
 export default {
     header: {
         home: { title: "Trang Chủ" },
@@ -23,9 +21,9 @@ export default {
                 "Thiết kế Logo",
             ],
         },
-        designweb: { 
+        designweb: {
             title: "Thiết Kế Website",
-            listDesign :[
+            listDesign: [
                 " Website giới thiệu",
                 " Website bán hàng",
                 " Website dịch vụ",
@@ -36,7 +34,7 @@ export default {
                 " Website cá nhân"
             ]
         },
-        marketing:{title: "Truyền Thông & Marketing"},
+        marketing: { title: "Truyền Thông & Marketing" },
         news: { title: "Tin Tức" },
         contact: { title: "Liên Hệ" },
         recruitment: { title: "Tuyển Dụng" },
@@ -367,6 +365,12 @@ export default {
         emailPlaceholder: "modi-company@gmail.com",
         websitePlaceholder: "modi.com",
         fanpagePlaceholder: "Modi team",
+    },
+    aboutV2: {
+        title: "Mộc Điền Kiến tạo tương lai số của bạn",
+        description:
+            "Chúng tôi là đội ngũ trẻ, đam mê mang đến những website sáng tạo, hiện đại, và thân thiện với người dùng.",
+        button: "Liên hệ ngay",
     },
     TermsOfServicePage: {
         header: {
