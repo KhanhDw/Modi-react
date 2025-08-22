@@ -15,31 +15,45 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function WebsiteTemplatesDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { templates, handleDelete, handleSave } = useOutletContext();
   const template = templates.find(t => String(t.id) === id);
-  const navigate = useNavigate();
-  const [localExportState, setLocalExportState] = useState(template ? !!template.export_state : false);
   const [isToggling, setIsToggling] = useState(false);
+  const [localExportState, setLocalExportState] = useState(0);
+
+  useEffect(() => {
+    if (template) {
+      setLocalExportState(template.export_state);
+    }
+  }, [template]);
+
+  if (!template) {
+    return <div>Không tìm thấy mẫu website</div>;
+  }
+
 
   const toggleExportState = async () => {
     if (isToggling) return;
     setIsToggling(true);
-    const newExportState = !localExportState;
-    setLocalExportState(newExportState);
+
     if (template) {
       try {
-        await handleSave({
-          ...template,
-          export_state: newExportState,
-          updated_at: new Date().toISOString().split("T")[0],
-        });
+        setLocalExportState(template.export_state === 1 ? 0 : 1);
+        const formData = new FormData();
+        for (const key in template) {
+          formData.append(key, template[key]);
+        }
+        formData.set("export_state", template.export_state === 1 ? 0 : 1);
+        formData.set("updated_at", new Date().toISOString().slice(0, 19).replace("T", " "));
+
+        await handleSave(formData, template.id);
       } catch (error) {
         console.error("Error toggling export state:", error);
-        setLocalExportState(!newExportState); // Revert on error
+        setLocalExportState(template.export_state !== 1 ? 0 : 1); // revert UI
       } finally {
         setIsToggling(false);
       }
@@ -47,6 +61,7 @@ export default function WebsiteTemplatesDetail() {
       setIsToggling(false);
     }
   };
+
 
   if (!template) {
     return <div>Không tìm thấy mẫu website</div>;
@@ -77,10 +92,10 @@ export default function WebsiteTemplatesDetail() {
 
           <Button
             onClick={toggleExportState}
-            className={`flex items-center gap-2 ${localExportState ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 hover:bg-gray-500"} text-white`}
+            className={`flex items-center gap-2 ${localExportState == 1 ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 hover:bg-gray-500"} text-white`}
             disabled={isToggling}
           >
-            {localExportState ? "Đã xuất bản" : "Chưa xuất bản"}
+            {localExportState == 1 ? "Đã xuất bản" : "Chưa xuất bản"}
           </Button>
         </div>
       </div>
@@ -90,11 +105,18 @@ export default function WebsiteTemplatesDetail() {
           <Card className="py-0 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <CardContent className="p-0">
               <div className="relative overflow-hidden rounded-lg">
-                <img
-                  src={template.imageUrl || "/placeholder.svg"}
+                {template.image_url && <img
+                  // src={template.image_url}
+                  src={`${import.meta.env.VITE_MAIN_BE_URL}${template.image_url}`}
                   alt={template.name}
                   className="w-full h-96 object-cover"
-                />
+                />}
+
+                {!template.image_url && (
+                  <div className="w-full h-96 flex items-center justify-center">
+                    <span className="text-gray-500">Không cập nhật được hình ảnh</span>
+                  </div>
+                )}
                 <div className="absolute top-4 left-4">
                   <Badge
                     variant="secondary"
@@ -124,12 +146,7 @@ export default function WebsiteTemplatesDetail() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  "Responsive Design",
-                  "SEO Optimized",
-                  "Fast Loading",
-                  "Cross Browser Compatible",
-                ].map((feature) => (
+                {template?.top_features?.map((feature) => (
                   <div
                     key={feature}
                     className="flex items-center gap-3 p-3 bg-muted/20 admin-dark:bg-gray-800 rounded-lg"
@@ -152,7 +169,7 @@ export default function WebsiteTemplatesDetail() {
                 title="Xóa"
               >
                 <Trash2 className="h-4 w-4" />
-                Xóa mẫu Website này!
+                Xóa mẫu Website này
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -263,11 +280,11 @@ export default function WebsiteTemplatesDetail() {
                 <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Lượt xem</span>
                 <span className="font-medium text-gray-900 admin-dark:text-gray-100">1,234</span>
               </div>
-              <Separator className="admin-dark:bg-gray-700" />
+              {/* <Separator className="admin-dark:bg-gray-700" />
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground admin-dark:text-gray-400">Đánh giá</span>
                 <span className="font-medium text-gray-900 admin-dark:text-gray-100">4.8/5</span>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>

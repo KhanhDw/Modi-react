@@ -50,6 +50,7 @@ export default function WebsiteTemplateEdit() {
         category: categoryValue,
         price: template.price || 0,
         tech: Array.isArray(template.tech) ? template.tech : [],
+        top_features: Array.isArray(template.top_features) ? template.top_features : [],
         tags: Array.isArray(template.tags) ? template.tags : [],
         export_state: to01(template.export_state), // <- luôn 0/1
       };
@@ -62,6 +63,7 @@ export default function WebsiteTemplateEdit() {
       category: "",
       price: 0,
       tech: [],
+      top_features: [],
       tags: [],
       export_state: 0, // <- 0/1
     };
@@ -70,6 +72,7 @@ export default function WebsiteTemplateEdit() {
   const [file, setFile] = useState(null);
   const [newTag, setNewTag] = useState("");
   const [newTech, setNewTech] = useState("");
+  const [newTopFeature, setNewTopFeature] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [localExportState, setLocalExportState] = useState(0);
 
@@ -84,6 +87,7 @@ export default function WebsiteTemplateEdit() {
         category: categoryValue,
         price: template.price || 0,
         tech: Array.isArray(template.tech) ? template.tech : [],
+        top_features: Array.isArray(template.top_features) ? template.top_features : [],
         tags: Array.isArray(template.tags) ? template.tags : [],
         export_state: to01(template.export_state),
       });
@@ -99,6 +103,7 @@ export default function WebsiteTemplateEdit() {
         category: "",
         price: 0,
         tech: [],
+        top_features: [],
         tags: [],
         export_state: 0,
       });
@@ -131,6 +136,33 @@ export default function WebsiteTemplateEdit() {
     if (e.key === "Enter") {
       e.preventDefault();
       addTag();
+    }
+  };
+
+  // top_features----------------------------------
+
+
+  const addTopFeature = () => {
+    if (newTopFeature.trim() && !formData.top_features.includes(newTopFeature.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        top_features: [...prev.top_features, newTopFeature.trim()],
+      }));
+      setNewTopFeature("");
+    }
+  };
+
+  const removeTopFeature = (top_featuresToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      top_features: prev.top_features.filter((top_features) => top_features !== top_featuresToRemove),
+    }));
+  };
+
+  const handleKeyPressTopFeature = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTopFeature();
     }
   };
 
@@ -433,7 +465,7 @@ export default function WebsiteTemplateEdit() {
                   </Button>
                 </div>
 
-                {formData.tech.length > 0 && (
+                {formData?.tech?.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.tech.map((tech) => (
                       <Badge
@@ -443,6 +475,44 @@ export default function WebsiteTemplateEdit() {
                         onClick={() => removeTech(tech)}
                       >
                         {tech} ×
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+
+              <div className="space-y-2">
+                <Label htmlFor="top_features" className="text-gray-800 admin-dark:text-gray-200">Tính năng nổi bật</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="top_features"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500"
+                    value={newTopFeature}
+                    onChange={(e) => setNewTopFeature(e.target.value)}
+                    onKeyPress={handleKeyPressTopFeature}
+                    placeholder="Nhập tính năng và nhấn Enter"
+                  />
+                  <Button
+                    type="button"
+                    onClick={addTopFeature}
+                    variant="outline"
+                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800"
+                  >
+                    Thêm
+                  </Button>
+                </div>
+
+                {formData?.top_features?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.top_features.map((top_feature) => (
+                      <Badge
+                        key={top_feature}
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300"
+                        onClick={() => removeTopFeature(top_feature)}
+                      >
+                        {top_feature} ×
                       </Badge>
                     ))}
                   </div>
@@ -470,7 +540,7 @@ export default function WebsiteTemplateEdit() {
                   </Button>
                 </div>
 
-                {formData.tags.length > 0 && (
+                {formData?.tags?.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.tags.map((tag) => (
                       <Badge

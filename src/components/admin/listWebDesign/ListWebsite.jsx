@@ -25,6 +25,7 @@ export default function WebsiteTemplateList() {
   const [filters, setFilters] = useState({
     technologies: [],
     tags: [],
+    top_features: [],
     authors: [],
     dateRange: "",
     publishStatus: "",
@@ -40,6 +41,8 @@ export default function WebsiteTemplateList() {
   }, [searchTerm, filters]);
 
   const availableTags = templates ? [...new Set(templates.flatMap((t) => t.tags))] : [];
+  const availableTech = templates ? [...new Set(templates.flatMap((t) => t.tech))] : [];
+  const availableTopFeatures = templates ? [...new Set(templates.flatMap((t) => t.top_features))] : [];
   const availableAuthors = templates ? [...new Set(templates.map((t) => "Admin"))] : [];
 
   const filteredTemplates = templates
@@ -50,6 +53,8 @@ export default function WebsiteTemplateList() {
         template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         template.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      template.tech.some((tech) => tech.toLowerCase().includes(searchTerm.toLowerCase()));
+      template.top_features.some((top_feature) => top_feature.toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchesTechnology =
         filters.technologies.length === 0 ||
