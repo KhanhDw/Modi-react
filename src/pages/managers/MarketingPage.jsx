@@ -1,5 +1,5 @@
-import MarketingPageFull from "@/pages/managers/marketing/marketingPageFull"
-import MarketingSimple from "@/pages/managers/marketing_v1/marketingSimple"
+import MarketingPageFull from "@/components/admin/marketing/marketingPageFull"
+import MarketingSimple from "@/components/admin/marketing_v1/marketingSimple"
 
 export default function MarketingPage() {
 

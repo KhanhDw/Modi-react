@@ -2,9 +2,9 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Plus } from "lucide-react"
-import CampaignForm from "@/components/admin/marketing/campaigns/campaign-form"
-import CampaignDetailModal from "@/components/admin/marketing/campaigns/campaign-detail-modal"
-import CampaignsTable from "@/components/admin/marketing/campaigns/campaigns-table"
+import CampaignForm from "@/components/admin/marketingComponent/campaigns/campaign-form"
+import CampaignDetailModal from "@/components/admin/marketingComponent/campaigns/campaign-detail-modal"
+import CampaignsTable from "@/components/admin/marketingComponent/campaigns/campaigns-table"
 
 export default function CampaignsPage() {
   const [showCampaignForm, setShowCampaignForm] = useState(false)

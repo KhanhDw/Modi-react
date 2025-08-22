@@ -4,14 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Hash, FileText, Plus } from "lucide-react"
-import KeywordForm from "@/components/admin/marketing/seo/keyword-form"
-import SEOAnalytics from "@/components/admin/marketing/seo/seo-analytics"
-import {useLenisToggle} from "@/contexts/LenisContext"
+import KeywordForm from "@/components/admin/marketingComponent/seo/keyword-form"
+import SEOAnalytics from "@/components/admin/marketingComponent/seo/seo-analytics"
+import { useLenisToggle } from "@/contexts/LenisContext"
 
 export default function SEOPage() {
-  const lenisContext = useLenisToggle(); 
+  const lenisContext = useLenisToggle();
   const { enabled, setEnabled } = lenisContext || {};// để nữa cấu lại , giờ chưa rành
- 
+
 
   const [showKeywordForm, setShowKeywordForm] = useState(false)
   const [showPostForm, setShowPostForm] = useState(false)
@@ -130,7 +130,7 @@ export default function SEOPage() {
     setEditingKeyword(null)
   }
 
-  return ( 
+  return (
     <div className="space-y-6 text-black admin-dark:bg-gray-900 admin-dark:text-gray-100">
       <div className="flex items-center justify-between">
         <div>

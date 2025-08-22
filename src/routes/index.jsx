@@ -1,36 +1,36 @@
-import { DefaultLayout, HeaderOnlyLayout, NoneHeaderFooterLayout, AdminLayout } from "../components/layout"
+import { DefaultLayout, HeaderOnlyLayout, NoneHeaderFooterLayout, AdminLayout } from "@/components/layout"
 import { Navigate } from "react-router-dom"
 
-import Home from "../pages/homePage"
-import About from "../pages/aboutMePage"
-import Services from "../pages/servicesPage"
-import News from '../pages/newsPage'
-import Contact from '../pages/contactPage'
-import Recruitment from '../pages/recruitmentPage'
-import NotFound from '../pages/NotFoundPage'
-import ServiceDetailPage from "../pages/serviceDetailPage";
+import Home from "@/pages/homePage"
+import About from "@/pages/aboutMePage"
+import Services from "@/pages/servicesPage"
+import News from '@/pages/newsPage'
+import Contact from '@/pages/contactPage'
+import Recruitment from '@/pages/recruitmentPage'
+import NotFound from '@/pages/NotFoundPage'
+import ServiceDetailPage from "@/pages/serviceDetailPage";
 
-import AdminLoginPage from '../pages/managers/AdminLoginPage'
-import NewsDetail from '../pages/NewsDetail'
+import AdminLoginPage from '@/pages/managers/AdminLoginPage'
+import NewsDetail from '@/pages/NewsDetail'
 
 //admin dashboard
-import ManagerDashboard from "../pages/managers/DashboardPage"
+import ManagerDashboard from "@/pages/managers/DashboardPage"
 //admin services
-import ManagerServices from "../pages/managers/ServicesPage"
+import ManagerServices from "@/pages/managers/ServicesPage"
 //admin blogs
-import ManagerBlogs from "../pages/managers/BlogsPage"
-import BlogsListPage from "../pages/managers/blogs/blogList"
-import BlogViewPage from "../pages/managers/blogs/blogView"
-import BlogsNewPage from "../pages/managers/blogs/blogNew"
+import ManagerBlogs from "@/pages/managers/BlogsPage"
+import BlogsListPage from "@/components/admin/blogs/blogList"
+import BlogViewPage from "@/components/admin/blogs/blogView"
+import BlogsNewPage from "@/components/admin/blogs/blogNew"
 
 //admin 
-import ManagerRecruitment from "../pages/managers/RecruitmentPage"
+import ManagerRecruitment from "@/pages/managers/RecruitmentPage"
 
 //admin 
-import ManagerContact from "../pages/managers/ContactPage"
+import ManagerContact from "@/pages/managers/ContactPage"
 
 //admin 
-import AllComponentsPageAdmin from "../pages/managers/AllComponent"
+import AllComponentsPageAdmin from "@/pages/managers/AllComponent"
 
 //admin 
 import ConfigHomePage from "@/pages/managers/ConfigHomePage"
@@ -46,43 +46,43 @@ import WebsiteTemplateEdit from "@/components/admin/listWebDesign/EditWebsite";
 
 //admin 
 import MarketingPage from "@/pages/managers/MarketingPage"
-import OverviewPage from "@/pages/managers/marketing/OverviewPage"
-import CampaignsPage from "@/pages/managers/marketing/CampaignsPage"
-import EmailPage from "@/pages/managers/marketing/EmailPage"
-import SEOPage from "@/pages/managers/marketing/SEOPage"
-import SocialPage from "@/pages/managers/marketing/SocialPage"
+import OverviewPage from "@/components/admin/marketing/OverviewPage"
+import CampaignsPage from "@/components/admin/marketing/CampaignsPage"
+import EmailPage from "@/components/admin/marketing/EmailPage"
+import SEOPage from "@/components/admin/marketing/SEOPage"
+import SocialPage from "@/components/admin/marketing/SocialPage"
 
 //admin 
-import TermsOfServicePage from "../pages/TermsOfServicePage"
+import TermsOfServicePage from "@/pages/TermsOfServicePage"
 
 
 // tất cả components
-import ChartAreaGradient from "../components/adminComponent/chart"
-import TopSellingProducts from "../components/adminComponent/TopSellingProducts"
-import BuyersProfile from "../components/adminComponent/BuyersProfile"
-import CarStatistics from "../components/adminComponent/CarStatistics"
-import CheckRadioSwitch from "../components/adminComponent/CheckRadioSwitch"
-import DefaultInputs from "../components/adminComponent/DefaultInputs"
-import Dropzone from "../components/adminComponent/Dropzone"
-import ForgotPassword from "../components/adminComponent/ForgotPassword"
-import LatestTransactions from "../components/adminComponent/LatestTransactions"
-import Login from "../components/adminComponent/Login"
-import SignIn from "../components/adminComponent/SignIn"
-import MilesStatistics from "../components/adminComponent/MilesStatistics"
-import NewCustomersDropdown from "../components/adminComponent/NewCustomersDropdown"
-import RecentOrders from "../components/adminComponent/RecentOrders"
-import ReminderTable from "../components/adminComponent/ReminderTable"
-import ResetPassword from "../components/adminComponent/ResetPassword"
-import RevenueChart from "../components/adminComponent/RevenueChart"
-import SelectInputs from "../components/adminComponent/SelectInputs"
-import Signup from "../components/adminComponent/Signup"
-import SignUp1 from "../components/adminComponent/SignUp1"
-import TodaySales from "../components/adminComponent/TodaySales"
-import TopProducts from "../components/adminComponent/TopProducts"
-import TotalRevenueChart from "../components/adminComponent/TotalRevenueChart"
-import VisitorInsights from "../components/adminComponent/VisitorInsights"
-import WebsiteVisitorsDonut from "../components/adminComponent/WebsiteVisitorsDonut"
-import TaskList from "../components/adminComponent/TaskList"
+import ChartAreaGradient from "@/components/adminComponent/chart"
+import TopSellingProducts from "@/components/adminComponent/TopSellingProducts"
+import BuyersProfile from "@/components/adminComponent/BuyersProfile"
+import CarStatistics from "@/components/adminComponent/CarStatistics"
+import CheckRadioSwitch from "@/components/adminComponent/CheckRadioSwitch"
+import DefaultInputs from "@/components/adminComponent/DefaultInputs"
+import Dropzone from "@/components/adminComponent/Dropzone"
+import ForgotPassword from "@/components/adminComponent/ForgotPassword"
+import LatestTransactions from "@/components/adminComponent/LatestTransactions"
+import Login from "@/components/adminComponent/Login"
+import SignIn from "@/components/adminComponent/SignIn"
+import MilesStatistics from "@/components/adminComponent/MilesStatistics"
+import NewCustomersDropdown from "@/components/adminComponent/NewCustomersDropdown"
+import RecentOrders from "@/components/adminComponent/RecentOrders"
+import ReminderTable from "@/components/adminComponent/ReminderTable"
+import ResetPassword from "@/components/adminComponent/ResetPassword"
+import RevenueChart from "@/components/adminComponent/RevenueChart"
+import SelectInputs from "@/components/adminComponent/SelectInputs"
+import Signup from "@/components/adminComponent/Signup"
+import SignUp1 from "@/components/adminComponent/SignUp1"
+import TodaySales from "@/components/adminComponent/TodaySales"
+import TopProducts from "@/components/adminComponent/TopProducts"
+import TotalRevenueChart from "@/components/adminComponent/TotalRevenueChart"
+import VisitorInsights from "@/components/adminComponent/VisitorInsights"
+import WebsiteVisitorsDonut from "@/components/adminComponent/WebsiteVisitorsDonut"
+import TaskList from "@/components/adminComponent/TaskList"
 
 
 

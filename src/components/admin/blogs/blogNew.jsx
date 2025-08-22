@@ -1,5 +1,5 @@
 import PageHeader from "@/components/admin/common/PageHeader";
-import BlogForm from "@/components/admin/blogs/BlogForm";
+import BlogForm from "@/components/admin/blogForm/BlogForm";
 import useBlogs from "@/hook/useBlogsAdmin";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
