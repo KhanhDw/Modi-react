@@ -308,7 +308,7 @@ export default function WebsiteTemplateEdit() {
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
         <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
           <CardHeader className={"flex items-center justify-between"}>
             <CardTitle className="text-gray-900 admin-dark:text-gray-100">Thông tin mẫu</CardTitle>
@@ -341,7 +341,7 @@ export default function WebsiteTemplateEdit() {
                 <Label htmlFor="description" className="text-gray-800 admin-dark:text-gray-200">Mô tả *</Label>
                 <Textarea
                   id="description"
-                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500"
+                  className="bg-white  admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500"
                   value={formData.description}
                   onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                   placeholder="Mô tả chi tiết về mẫu website"
@@ -568,12 +568,12 @@ export default function WebsiteTemplateEdit() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+        <Card className="max-w-6xl  bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
           <CardHeader>
             <CardTitle className="text-gray-900 admin-dark:text-gray-100">Xem trước</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4 ">
               { }
 
               {/* {formData.image_url ? (
@@ -594,12 +594,12 @@ export default function WebsiteTemplateEdit() {
               ) : ( */}
               {preview ? (
                 <div className="relative overflow-hidden rounded-lg w-full border-2 border-gray-300 admin-dark:border-gray-700">
-                  <div className="w-120 h-50 border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
+                  <div className="w-full h-50 border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
                     <img
                       src={preview}
                       // src={formData.image_url ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}` : ""}
                       alt="Preview"
-                      className="w-120 h-50 object-cover"
+                      className="w-full h-50 object-cover"
                     />
                   </div>
                   <div className="absolute top-2 left-2">
@@ -626,7 +626,7 @@ export default function WebsiteTemplateEdit() {
                 <h3 className="font-semibold text-lg mb-2 text-gray-900 admin-dark:text-gray-100">
                   {formData.name || "Tên mẫu"}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-3 admin-dark:text-gray-400">
+                <p className="max-w-6xl wrap-anywhere text-muted-foreground text-sm mb-3 admin-dark:text-gray-400">
                   {formData.description || "Mô tả mẫu website"}
                 </p>
 
