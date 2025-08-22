@@ -1,4 +1,4 @@
-"use client"
+
 
 import * as React from "react"
 import * as SwitchPrimitive from "@radix-ui/react-switch"
@@ -11,13 +11,13 @@ function Switch({ className, ...props }) {
       className={cn(
         // Base style
         "peer inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50",
-        
+
         // Unchecked state (light & admin-dark)
         "data-[state=unchecked]:bg-gray-300 admin-dark:data-[state=unchecked]:bg-gray-600",
-        
+
         // Checked state default color (có thể override bằng className)
         "data-[state=checked]:bg-primary",
-        
+
         // Focus ring
         "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring",
 

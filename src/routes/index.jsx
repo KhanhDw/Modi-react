@@ -33,7 +33,7 @@ import ManagerContact from "@/pages/managers/ContactPage"
 import AllComponentsPageAdmin from "@/pages/managers/AllComponent"
 
 //admin 
-import ConfigHomePage from "@/pages/managers/ConfigHomePage"
+import ConfigPage from "@/pages/managers/ConfigPage"
 import AboutConfig from "@/pages/managers/AboutConfig"
 import AdminZonePage from "@/pages/managers/AdminZonePage"
 import ProfilePage from "@/pages/managers/ProfilePage"
@@ -107,7 +107,15 @@ const privateRoutes = [
 
     //admin routes
     { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
-    { path: "/managers/home-config", component: ConfigHomePage, layout: AdminLayout },
+    {
+        path: "/managers/page-config", component: ConfigPage, layout: AdminLayout,
+        children: [
+            { path: "header", component: AboutConfig, layout: AdminLayout },
+            { path: "footer", component: AboutConfig, layout: AdminLayout },
+            { path: "home", component: AboutConfig, layout: AdminLayout },
+            { path: "about", component: AboutConfig, layout: AdminLayout },
+        ]
+    },
     {
         path: "/managers/marketing",
         component: MarketingPage,
@@ -135,7 +143,7 @@ const privateRoutes = [
     { path: "/managers/recruitment", component: ManagerRecruitment, layout: AdminLayout },
     { path: "/managers/contact", component: ManagerContact, layout: AdminLayout },
     { path: "/managers/components", component: AllComponentsPageAdmin, layout: AdminLayout },
-    { path: "/managers/about-config", component: AboutConfig, layout: AdminLayout },
+
     { path: "/managers/admin-zone", component: AdminZonePage, layout: AdminLayout },
     { path: "/managers/profile", component: ProfilePage, layout: AdminLayout },
     {

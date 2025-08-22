@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter as Router, useLocation } from "react-router-dom";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { publicRoutes, privateRoutes } from "./routes";
 import PrivateRoute from "./components/guardRouter/PrivateRoute";
 import LenisProvider, { useLenisToggle } from "./contexts/LenisContext";
@@ -10,14 +10,27 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 // Component con để theo dõi route thay đổi
 function ScrollHandler() {
   const location = useLocation();
+  const prevRef = useRef(location);
   const { lenis } = useLenisToggle() || {};
 
   useEffect(() => {
-    // Khi đổi route, scroll về đầu
-    if (lenis?.instance) {
-      lenis.instance.scrollTo(0, { immediate: true });
-      lenis.instance.resize();
+    const prev = prevRef.current;
+    // so sánh pathname + search + hash để biết có gì khác không
+    const prevFull = `${prev.pathname}${prev.search}${prev.hash}`;
+    const currFull = `${location.pathname}${location.search}${location.hash}`;
+    if (prevFull === currFull) return; // không đổi → không làm gì
+
+    // Scroll chỉ khi path hoặc query thay đổi (không phải chỉ hash)
+    if (prev.pathname !== location.pathname || prev.search !== location.search) {
+      if (lenis?.instance) {
+        lenis.instance.scrollTo(0, { immediate: true });
+        lenis.instance.resize();
+      } else if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
     }
+
+    prevRef.current = location;
   }, [location, lenis]);
 
   return null;

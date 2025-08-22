@@ -1,4 +1,4 @@
-"use client"
+
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -88,7 +88,7 @@ export default function SocialAnalytics({ socialAccounts, posts }) {
   const totalPosts = posts.filter((p) => p.status === "posted").length
   const avgEngagement = 4.2
 
-const mutedClass = "text-gray-500 admin-dark:text-gray-400"
+  const mutedClass = "text-gray-500 admin-dark:text-gray-400"
   const gridStroke = "currentColor";
   const tooltipStyle = {
     backgroundColor: "rgba(31, 41, 55, 0.9)", // nền tối mờ
@@ -102,96 +102,96 @@ const mutedClass = "text-gray-500 admin-dark:text-gray-400"
       {/* Key Metrics */}
       <div className="grid gap-6 md:grid-cols-4">
         <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
-            Tổng followers
-          </CardTitle>
-          <Users className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{(totalFollowers / 1000).toFixed(1)}K</div>
-          <div className="flex items-center text-xs text-green-600 admin-dark:text-green-400">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            +12.5% từ tháng trước
-          </div>
-        </CardContent>
-      </Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
+              Tổng followers
+            </CardTitle>
+            <Users className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{(totalFollowers / 1000).toFixed(1)}K</div>
+            <div className="flex items-center text-xs text-green-600 admin-dark:text-green-400">
+              <TrendingUp className="h-3 w-3 mr-1" />
+              +12.5% từ tháng trước
+            </div>
+          </CardContent>
+        </Card>
 
-      <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
-            Bài đăng tháng này
-          </CardTitle>
-          <MessageCircle className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{totalPosts}</div>
-          <div className="flex items-center text-xs text-green-600 admin-dark:text-green-400">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            +8 từ tháng trước
-          </div>
-        </CardContent>
-      </Card>
+        <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
+              Bài đăng tháng này
+            </CardTitle>
+            <MessageCircle className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalPosts}</div>
+            <div className="flex items-center text-xs text-green-600 admin-dark:text-green-400">
+              <TrendingUp className="h-3 w-3 mr-1" />
+              +8 từ tháng trước
+            </div>
+          </CardContent>
+        </Card>
 
-      <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
-            Tỷ lệ tương tác
-          </CardTitle>
-          <Heart className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{avgEngagement}%</div>
-          <div className="flex items-center text-xs text-red-600 admin-dark:text-red-400">
-            <TrendingDown className="h-3 w-3 mr-1" />
-            -0.3% từ tháng trước
-          </div>
-        </CardContent>
-      </Card>
+        <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
+              Tỷ lệ tương tác
+            </CardTitle>
+            <Heart className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{avgEngagement}%</div>
+            <div className="flex items-center text-xs text-red-600 admin-dark:text-red-400">
+              <TrendingDown className="h-3 w-3 mr-1" />
+              -0.3% từ tháng trước
+            </div>
+          </CardContent>
+        </Card>
 
-      <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
-            Lượt xem
-          </CardTitle>
-          <Eye className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">125K</div>
-          <div className="flex items-center text-xs text-green-600 admin-dark:text-green-400">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            +18.2% từ tháng trước
-          </div>
-        </CardContent>
-      </Card>
+        <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900 admin-dark:text-white">
+              Lượt xem
+            </CardTitle>
+            <Eye className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">125K</div>
+            <div className="flex items-center text-xs text-green-600 admin-dark:text-green-400">
+              <TrendingUp className="h-3 w-3 mr-1" />
+              +18.2% từ tháng trước
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Charts */}
       <div className="grid gap-6 md:grid-cols-2">
-         <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader>
-          <CardTitle className="text-gray-900 admin-dark:text-white">Tăng trưởng followers</CardTitle>
-          <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-            Số lượng followers theo thời gian
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+        <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
+          <CardHeader>
+            <CardTitle className="text-gray-900 admin-dark:text-white">Tăng trưởng followers</CardTitle>
+            <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+              Số lượng followers theo thời gian
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={followerGrowthData}>
-                  <CartesianGrid strokeDasharray="3 3" 
+                  <CartesianGrid strokeDasharray="3 3"
                     stroke={gridStroke}
                     className="opacity-20"
                   />
-                  <XAxis dataKey="month"  stroke={gridStroke} />
-                  <YAxis stroke={gridStroke}/>
+                  <XAxis dataKey="month" stroke={gridStroke} />
+                  <YAxis stroke={gridStroke} />
                   <Tooltip
-                  contentStyle={tooltipStyle}
-                   formatter={(value) => [value.toLocaleString(), "Followers"]} />
+                    contentStyle={tooltipStyle}
+                    formatter={(value) => [value.toLocaleString(), "Followers"]} />
                   <Line
                     type="monotone"
                     dataKey="followers"
-                     stroke="#fcba03" // xanh Tailwind fixed
+                    stroke="#fcba03" // xanh Tailwind fixed
                     strokeWidth={2}
                     dot={{ fill: "#fcba03" }}
                     activeDot={{ r: 6, fill: "#fcba03" }}
@@ -203,14 +203,14 @@ const mutedClass = "text-gray-500 admin-dark:text-gray-400"
         </Card>
 
         <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader>
-          <CardTitle className="text-gray-900 admin-dark:text-white">Tương tác theo nền tảng</CardTitle>
-          <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-            Lượt tương tác hàng tháng
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
+          <CardHeader>
+            <CardTitle className="text-gray-900 admin-dark:text-white">Tương tác theo nền tảng</CardTitle>
+            <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+              Lượt tương tác hàng tháng
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={engagementData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -229,11 +229,11 @@ const mutedClass = "text-gray-500 admin-dark:text-gray-400"
       </div>
 
       {/* Platform Distribution & Top Posts */}
-       <div className="grid gap-6 md:grid-cols-2">
-      <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader>
-          <CardTitle className="text-gray-900 admin-dark:text-white">Phân bố nền tảng</CardTitle>
-          <CardDescription className="text-gray-500 admin-dark:text-gray-400">Tỷ lệ tương tác theo nền tảng</CardDescription>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
+          <CardHeader>
+            <CardTitle className="text-gray-900 admin-dark:text-white">Phân bố nền tảng</CardTitle>
+            <CardDescription className="text-gray-500 admin-dark:text-gray-400">Tỷ lệ tương tác theo nền tảng</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-80">
@@ -269,58 +269,58 @@ const mutedClass = "text-gray-500 admin-dark:text-gray-400"
         </Card>
 
         <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-        <CardHeader>
-          <CardTitle className="text-gray-900 admin-dark:text-white">Bài đăng hiệu quả nhất</CardTitle>
-          <CardDescription className="text-gray-500 admin-dark:text-gray-400">Top bài đăng có tương tác cao</CardDescription>
+          <CardHeader>
+            <CardTitle className="text-gray-900 admin-dark:text-white">Bài đăng hiệu quả nhất</CardTitle>
+            <CardDescription className="text-gray-500 admin-dark:text-gray-400">Top bài đăng có tương tác cao</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-             {topPosts.map((post, index) => (
-            <div
-              key={index}
-              className="p-3 border border-gray-200 rounded-lg space-y-2 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800"
-            >
-              <div className="flex items-center justify-between">
-                <Badge
-                  variant="outline"
-                  className="border-gray-300 text-gray-900 admin-dark:border-gray-600 admin-dark:text-white"
-                >
-                  {post.platform}
-                </Badge>
-                <span className="text-xs text-gray-500 admin-dark:text-gray-400">{post.date}</span>
+            {topPosts.map((post, index) => (
+              <div
+                key={index}
+                className="p-3 border border-gray-200 rounded-lg space-y-2 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800"
+              >
+                <div className="flex items-center justify-between">
+                  <Badge
+                    variant="outline"
+                    className="border-gray-300 text-gray-900 admin-dark:border-gray-600 admin-dark:text-white"
+                  >
+                    {post.platform}
+                  </Badge>
+                  <span className="text-xs text-gray-500 admin-dark:text-gray-400">{post.date}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-900 admin-dark:text-white">{post.content}</p>
+                <div className="grid grid-cols-4 gap-2 text-xs text-gray-900 admin-dark:text-white">
+                  <div className="flex items-center gap-1">
+                    <Heart className="h-3 w-3" />
+                    <span>{post.likes}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageCircle className="h-3 w-3" />
+                    <span>{post.comments}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Share className="h-3 w-3" />
+                    <span>{post.shares}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-medium text-blue-600 admin-dark:text-blue-400">{post.engagement}</span>
+                  </div>
+                </div>
               </div>
-              <p className="text-sm font-medium text-gray-900 admin-dark:text-white">{post.content}</p>
-              <div className="grid grid-cols-4 gap-2 text-xs text-gray-900 admin-dark:text-white">
-                <div className="flex items-center gap-1">
-                  <Heart className="h-3 w-3" />
-                  <span>{post.likes}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MessageCircle className="h-3 w-3" />
-                  <span>{post.comments}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Share className="h-3 w-3" />
-                  <span>{post.shares}</span>
-                </div>
-                <div className="text-right">
-                  <span className="font-medium text-blue-600 admin-dark:text-blue-400">{post.engagement}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
           </CardContent>
         </Card>
       </div>
 
       {/* Performance by Platform */}
       <Card className="bg-white border border-gray-200 text-gray-900 admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:text-white">
-      <CardHeader>
-        <CardTitle className="text-gray-900 admin-dark:text-white">Hiệu suất theo nền tảng</CardTitle>
-        <CardDescription className="text-gray-500 admin-dark:text-gray-400">
-          So sánh hiệu suất các tài khoản mạng xã hội
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        <CardHeader>
+          <CardTitle className="text-gray-900 admin-dark:text-white">Hiệu suất theo nền tảng</CardTitle>
+          <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+            So sánh hiệu suất các tài khoản mạng xã hội
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="space-y-4">
             {connectedAccounts.map((account, index) => (
               <div key={index} className="space-y-2">
@@ -347,14 +347,14 @@ const mutedClass = "text-gray-500 admin-dark:text-gray-400"
                       <span>Tăng trưởng</span>
                       <span>+12%</span>
                     </div>
-                    <Progress value={75} indicatorClassName="bg-violet-500"  className="h-2" />
+                    <Progress value={75} indicatorClassName="bg-violet-500" className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span>Bài đăng</span>
                       <span>{account.posts}/tháng</span>
                     </div>
-                    <Progress value={(account.posts / 30) * 100} indicatorClassName="bg-violet-500"  className="h-2" />
+                    <Progress value={(account.posts / 30) * 100} indicatorClassName="bg-violet-500" className="h-2" />
                   </div>
                 </div>
               </div>

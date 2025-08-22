@@ -1,9 +1,21 @@
-import HeroBanner from "../components/about/HeroBanner"
-import Mission from "../components/about/Mission"
-import Services from "../components/about/Services"
-import WhyChooseUs from "../components/about/WhyChooseUs"
-import Customers from "../components/about/Customers"
-import Contact from "../components/about/Contact"
+// import HeroBanner from "@/components/about_v1/HeroBanner"
+// import Mission from "@/components/about_v1/Mission"
+// import Services from "@/components/about_v1/Services"
+// import WhyChooseUs from "@/components/about_v1/WhyChooseUs"
+// import Customers from "@/components/about_v1/Customers"
+// import Contact from "@/components/about_v1/Contact"
+
+
+import { HeroBanner } from "@/components/about_v2/hero-banner"
+import { CompanyOverview } from "@/components/about_v2/company-overview"
+import { StartupJourney } from "@/components/about_v2/startup-journey"
+import { MissionVision } from "@/components/about_v2/mission-vision"
+import { ServicesHighlight } from "@/components/about_v2/services-highlight"
+import { CTASection } from "@/components/about_v2/cta-section"
+import { TeamSection } from "@/components/about_v2/team-section"
+import { CommitmentSection } from "@/components/about_v2/commitment-section"
+import { TechnologiesSection } from "@/components/about_v2/technologies-section"
+
 
 /**
  * About Page Component
@@ -22,13 +34,29 @@ import Contact from "../components/about/Contact"
 
 export default function About() {
   return (
-        <div className="min-h-screen transition-all duration-500 md:p-4">
-          <HeroBanner />
-          <Mission />
-          <Services />
-          <WhyChooseUs />
-          <Customers />
-          <Contact />
-        </div>
+    <div className="min-h-screen transition-all duration-500 md:p-4">
+      {/* <HeroBanner />
+      <Mission />
+      <Services />
+      <WhyChooseUs />
+      <Customers />
+      <Contact /> */}
+
+      {/* -------- */}
+      {/* Vesion 2 */}
+      {/* -------- */}
+
+      <HeroBanner />
+      <CompanyOverview />
+      <StartupJourney />
+      <MissionVision />
+      <ServicesHighlight />
+      <CTASection />
+      <TeamSection />
+      <CommitmentSection />
+      <TechnologiesSection />
+
+
+    </div>
   )
 }
