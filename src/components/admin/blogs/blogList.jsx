@@ -3,6 +3,21 @@ import BlogForm from "@/components/admin/blogForm/BlogForm";
 import useBlogs from "@/hook/useBlogsAdmin";
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Clock } from 'lucide-react';
+
+import { isAfter, parseISO } from "date-fns";
+
+export const isFuture = (dt) => {
+    try {
+        console.log(dt);
+        const date = typeof dt === "string" ? parseISO(dt) : new Date(dt);
+        return isAfter(date, new Date());
+    } catch {
+        return false;
+    }
+};
+
+
 
 export default function BlogsListPage() {
 
@@ -172,13 +187,37 @@ export default function BlogsListPage() {
                                             );
                                         }
 
-                                        if (col.type === "enum") {
+
+                                        if (col.type === "date") {
                                             return (
                                                 <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
-                                                    {value === "draft" ? "Nháp" : value === "published" ? "Công khai" : value}
+                                                    {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
                                                 </td>
                                             );
                                         }
+
+                                        if (col.type === "enum") {
+                                            return (
+                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                                                    {value === "draft" ? (
+                                                        <span>Nháp</span>
+                                                    ) : value === "published" ? (
+                                                        <div className="flex items-center space-x-1">
+                                                            <span>Công khai</span>
+                                                            {blog.published_at &&
+                                                                isFuture(blog.published_at) && (
+                                                                    <Clock size={15} />
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ) : (
+                                                        value
+                                                    )}
+                                                </td>
+                                            );
+                                        }
+
+
 
                                         return (
                                             <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">

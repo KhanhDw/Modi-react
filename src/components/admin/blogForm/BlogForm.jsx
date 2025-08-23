@@ -51,24 +51,15 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
 
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const { name } = e.target; // "image"
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
 
-    if (file) {
-      // chỉ lấy tên file
-      setFormData((prev) => ({
-        ...prev,
-        [name]: file,
-      }));
-
-      // Nếu vẫn muốn có preview
-      const objectUrl = URL.createObjectURL(file);
+      // Preview
+      const objectUrl = URL.createObjectURL(selectedFile);
       setPreview(objectUrl);
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setFile(null);
       setPreview(
         formData.image
           ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image}`
@@ -78,19 +69,23 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
   };
 
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formDataUpload = new FormData();
 
-    // const data = new FormData();
-    // data.append("title", formData.title);
-    // data.append("content", formData.content);
-    // data.append("status", formData.status);  // ✅ luôn có published/draft
-    // data.append("author_id", formData.author_id);
-    // data.append("published_at", formData.published_at);
-    // data.append("image", formData.image); // giữ link/tên cũ
+    // Thêm các field text
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key !== "image") { // bỏ image cũ
+        formDataUpload.append(key, value);
+      }
+    });
 
+    // Nếu có file mới upload
+    if (file) {
+      formDataUpload.append("image", file);
+    }
     onSubmit(formData, file);
-    // onSubmit(data, file);
   };
 
   return (

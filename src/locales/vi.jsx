@@ -671,6 +671,4 @@ export default {
             }
         ]
     },
-
-
 };
