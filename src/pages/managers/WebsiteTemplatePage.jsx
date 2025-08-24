@@ -15,15 +15,15 @@ export default function WebsiteTemplatePage() {
     try {
       const response = await fetch(`${baseUrl}/api/web-samples`);
       if (!response.ok) throw new Error('Failed to fetch templates');
-      const data = await response.json();
-      const parsedData = data.map(item => ({
+      const result = await response.json();
+      const parsedData = result.data.map(item => ({
         ...item,
         tags: typeof item.tags === 'string' ? JSON.parse(item.tags) : item.tags,
         tech: typeof item.tech === 'string' ? JSON.parse(item.tech) : item.tech,
         top_features: typeof item.top_features === 'string' ? JSON.parse(item.top_features) : item.top_features,
         export_state: item.export_state ? 1 : 0,
       }));
-      setTemplates(parsedData);
+      setTemplates(parsedData || []);
     } catch (error) {
       console.error("Error fetching templates:", error);
     }

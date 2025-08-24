@@ -49,11 +49,14 @@ import WebsiteTemplateEdit from "@/components/admin/listWebDesign/EditWebsite";
 
 //admin 
 import MarketingPage from "@/pages/managers/MarketingPage"
-import OverviewPage from "@/components/admin/marketing/OverviewPage"
-import CampaignsPage from "@/components/admin/marketing/CampaignsPage"
-import EmailPage from "@/components/admin/marketing/EmailPage"
-import SEOPage from "@/components/admin/marketing/SEOPage"
-import SocialPage from "@/components/admin/marketing/SocialPage"
+import ListPage from "@/pages/managers/MarketingPage/ListPage"
+import AddPage from "@/pages/managers/MarketingPage/AddPage"
+import EditPage from "@/pages/managers/MarketingPage/EditPage"
+// import OverviewPage from "@/components/admin/marketing/OverviewPage"
+// import CampaignsPage from "@/components/admin/marketing/CampaignsPage"
+// import EmailPage from "@/components/admin/marketing/EmailPage"
+// import SEOPage from "@/components/admin/marketing/SEOPage"
+// import SocialPage from "@/components/admin/marketing/SocialPage"
 
 //admin 
 import TermsOfServicePage from "@/pages/TermsOfServicePage"
@@ -126,12 +129,18 @@ const privateRoutes = [
         component: MarketingPage,
         layout: AdminLayout,
         children: [
-            { path: "overview", component: OverviewPage },
-            { path: "campaigns", component: CampaignsPage },
-            { path: "seo", component: SEOPage },
-            { path: "social", component: SocialPage },
-            { path: "email", component: EmailPage },
+            { path: "", component: ListPage },
+            { path: "add", component: AddPage },
+            { path: ":id/edit", component: EditPage },
+
         ],
+        // children: [
+        //     { path: "overview", component: OverviewPage },
+        //     { path: "campaigns", component: CampaignsPage },
+        //     { path: "seo", component: SEOPage },
+        //     { path: "social", component: SocialPage },
+        //     { path: "email", component: EmailPage },
+        // ],
     },
     { path: "/managers/services", component: ManagerServices, layout: AdminLayout },
     {
