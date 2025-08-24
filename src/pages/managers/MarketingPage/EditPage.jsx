@@ -166,29 +166,40 @@ export default function EditPage() {
                         <Label className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2">
                             URL Hình ảnh
                         </Label>
-                        <Input
-                            value={formData.image}
-                            onChange={(e) => {
-                                const url = e.target.value;
-                                setFormData({ ...formData, image: url });
-                                setPreview(url);
-                            }}
-                            placeholder="Nhập URL hình ảnh"
-                            className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white 
-                                       admin-dark:border-gray-500 border-gray-300 
-                                       focus:ring-2 focus:ring-blue-500 admin-dark:focus:ring-blue-600 rounded-md px-4 py-2"
-                        />
-                        {preview && (
-                            <img
-                                src={preview}
-                                alt="Preview"
-                                className="object-cover rounded mt-2"
-                                onError={(e) => {
-                                    e.target.style.display = "none";
+
+                        <div className="flex gap-2">
+                            <Input
+                                value={formData.image}
+                                onChange={(e) => {
+                                    setFormData({ ...formData, image: e.target.value });
                                 }}
+                                placeholder="Nhập URL hình ảnh"
+                                className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white 
+                 admin-dark:border-gray-500 border-gray-300 
+                 focus:ring-2 focus:ring-blue-500 admin-dark:focus:ring-blue-600 rounded-md px-4 py-2"
                             />
-                        )}
+                            <Button
+                                type="button"
+                                onClick={() => setPreview(formData.image)} // chỉ set preview khi bấm nút
+                            >
+                                Xem ảnh
+                            </Button>
+                        </div>
+
+                        <div className="text-sm text-gray-500 admin-dark:text-gray-400 mt-3 border border-gray-300 admin-dark:border-gray-500 p-2 rounded">
+                            {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
+                            {preview && (
+                                <img
+                                    key={preview} // ép re-render khi đổi URL
+                                    src={preview}
+                                    alt="Preview"
+                                    className="object-cover rounded mt-2 max-h-60 mx-auto"
+                                    onError={() => setPreview("")}
+                                />
+                            )}
+                        </div>
                     </div>
+
                 </div>
 
                 {/* Cột phải */}

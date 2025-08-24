@@ -2,10 +2,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
 import PageList from "@/components/feature/pagination";
 import PostRow from "./PostRow";
-import { columns } from "./constants";
+// import { columns } from "./constants";
 import { useState } from "react";
 
-export default function PostsTable({ posts }) {
+export default function PostsTable({ posts, columns }) {
+    // phân trang
     const [pageSize, setPageSize] = useState(8);
     const [pagedPosts, setPagedPosts] = useState([]); // 👉 dữ liệu sau khi phân trang
 
@@ -14,14 +15,17 @@ export default function PostsTable({ posts }) {
             <Table>
                 <TableHeader className="admin-dark:bg-gray-700">
                     <TableRow className="border-b border-gray-200 admin-dark:border-gray-700">
-                        {columns.map((col) => (
+                        {columns.map((col, index) => (
                             <TableHead
-                                key={col.key}
+                                key={index}
                                 className={`text-gray-900 admin-dark:text-white ${col.align === "right" ? "text-right" : "text-left"}`}
                             >
                                 {col.label}
                             </TableHead>
                         ))}
+                        <TableHead className="text-gray-900 admin-dark:text-white text-center">
+                            Hành động
+                        </TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

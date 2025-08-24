@@ -1,9 +1,9 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { Outlet, Routes, Route } from "react-router-dom";
 import ListPage from "@/pages/managers/MarketingPage/ListPage";
 import AddPage from "@/pages/managers/MarketingPage/AddPage";
 import EditPage from "@/pages/managers/MarketingPage/EditPage";
-import { initialPosts } from "@/pages/managers/MarketingPage/constants";
+// import { initialPosts } from "@/pages/managers/MarketingPage/constants";
 
 // export const MarketingContext = createContext();
 
@@ -11,11 +11,13 @@ export default function MarketingPage() {
   const activeClass =
     "bg-blue-500 text-white admin-dark:bg-blue-600 admin-dark:text-white font-medium rounded-md px-4 py-2 transition-colors duration-200";
 
-  const [posts, setPosts] = useState(initialPosts);
+  // const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -26,6 +28,35 @@ export default function MarketingPage() {
     tags: "",
     image: "",
   });
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing`);
+      if (!res.ok) throw new Error("Không thể tải dữ liệu");
+      let result = await res.json();
+
+      // lấy riêng ra
+      // const cols = result.colums;
+
+      console.log(result.data);
+      // set state
+      setPosts(result.data);
+      setColumns(result.colums);
+      setError(null);
+    } catch (err) {
+      console.error("Lỗi khi lấy dữ liệu:", err);
+      setError("Không thể tải danh sách bài viết. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+
 
   const handleAddPost = () => {
     const newPost = {
@@ -80,14 +111,14 @@ export default function MarketingPage() {
       <Outlet context={{
         posts,
         setPosts,
+        columns,
+        setColumns,
+        loading,
+        error,
         searchTerm,
         setSearchTerm,
         selectedStatus,
         setSelectedStatus,
-        isAddDialogOpen,
-        setIsAddDialogOpen,
-        isEditDialogOpen,
-        setIsEditDialogOpen,
         editingPost,
         setEditingPost,
         formData,

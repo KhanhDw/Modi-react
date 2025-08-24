@@ -8,6 +8,9 @@ export default function ListPage() {
     const location = useLocation();
     const {
         posts,
+        columns,
+        loading,
+        error,
         searchTerm,
         setSearchTerm,
         selectedStatus,
@@ -20,17 +23,16 @@ export default function ListPage() {
         setFormData,
         handleAddPost,
         handleEditPost,
-        openEditDialog,
     } = useOutletContext();
 
-    const filteredPosts = posts.filter((post) => {
-        const matchesSearch =
-            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.tags.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesStatus = selectedStatus === "all" || post.status === selectedStatus;
-        return matchesSearch && matchesStatus;
-    });
+    // const filteredPosts = posts.filter((post) => {
+    //     const matchesSearch =
+    //         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         post.tags.toLowerCase().includes(searchTerm.toLowerCase());
+    //     const matchesStatus = selectedStatus === "all" || post.status === selectedStatus;
+    //     return matchesSearch && matchesStatus;
+    // });
 
     return (
         <>
@@ -52,9 +54,9 @@ export default function ListPage() {
                 </Link>
             </div>
             <PostsTable
-                posts={filteredPosts}
+                posts={posts}
+                columns={columns}
                 handleDeletePost={handleDeletePost} // Truyền handleDeletePost vào PostsTable
-                openEditDialog={openEditDialog} // Truyền openEditDialog nếu cần
             />
         </>
     );
