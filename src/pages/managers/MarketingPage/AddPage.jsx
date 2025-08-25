@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SquarePen, Trash2 } from 'lucide-react';
 
 export default function AddPage() {
     const navigate = useNavigate();
@@ -13,6 +14,23 @@ export default function AddPage() {
     const [preview, setPreview] = useState("");
     const [error, setError] = useState("");
     const [isOpenEditNetwork, setIsOpenEditNetwork] = useState(false);
+    const [isOpenUpdateNetwork2, setIsOpenUpdateNetwork2] = useState(false);
+    const [isOpenUpdateNetwork, setIsOpenUpdateNetwork] = useState(false);  // trạng thái mở form chỉnh sửa mạng xã hội
+
+
+    const handleShowForm = (state) => {
+        if (state === "add") {
+            setIsOpenUpdateNetwork(true);
+            setIsOpenUpdateNetwork2(false);
+        } else if (state === "edit") {
+            setIsOpenUpdateNetwork2(true);
+            setIsOpenUpdateNetwork(false);
+        } else if (state === "close") {
+            setIsOpenUpdateNetwork(false);
+            setIsOpenUpdateNetwork2(false);
+        }
+    }
+
     //
 
     const handleOpenEditNetwork = () => {
@@ -245,12 +263,11 @@ export default function AddPage() {
                                 )}
                             </div>
                         </div>
-
                     </div>
                     :
                     <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-700 rounded-2xl overflow-hidden">
                         <div className="flex justify-between items-center mb-4">
-                            <h1>
+                            <h1 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
                                 Danh sách mạng xã hội
                             </h1>
                             <button type="button" onClick={() => setIsOpenEditNetwork(false)} className="text-blue-500 hover:underline font-bold">
@@ -262,8 +279,12 @@ export default function AddPage() {
                                 {socialNetworks.map((network, index) => (
                                     <div key={network.id || network + 1} className="p-2 border-b border-gray-200 admin-dark:border-gray-700">
                                         <div className="flex items-center justify-between">
-                                            <div className="font-medium text-gray-900 admin-dark:text-white">{network.name}</div>
+                                            <div className="font-medium text-gray-900 admin-dark:text-white px-2 py-1 rounded-lg" style={{ background: network.HEX_color }}>{network.name}</div>
                                             <div className="flex items-center gap-2">
+                                                <Button variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleShowForm("edit")}
+                                                    className="border-gray-300 bg-gray-400  text-xs text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700  px-1 py-2 rounded-md"><SquarePen /></Button>
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
@@ -287,49 +308,112 @@ export default function AddPage() {
                                                     }}
                                                     className="border-red-400 text-red-500 hover:bg-red-50 admin-dark:text-red-400 admin-dark:hover:bg-red-900"
                                                 >
-                                                    Xóa
+                                                    <Trash2 />
                                                 </Button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                                 <div>
-                                    <div className="p-2">
+                                    {isOpenUpdateNetwork2 &&
+                                        <div className="p-2 border-2 border-dashed border-gray-400 rounded-lg mt-4">
+                                            <h2 className="text-lg font-medium  mb-2">Điều chỉnh thông tin mạng xã hội</h2>
+                                            <div className="grid grid-cols-1 gap-2 border ">
+                                                <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
+                                                    <Button
+                                                        onClick={() => {
+                                                            const query = "color picker"; // 👈 nội dung cần search
+                                                            const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                                                            window.open(url, "_blank"); // mở tab mới
+                                                        }}
+                                                        variant="outline"
+                                                        className="mt-2"
+                                                    >
+                                                        Tìm trên Google
+                                                    </Button>
 
-                                        <div className="grid grid-cols-1 gap-2 border ">
-                                            <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
-                                            <div className="flex items-center justify-between gap-3">
-                                                <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 space-x-2 justify-between items-center mt-4">
                                                 <Button
-                                                    onClick={() => {
-                                                        const query = "color picker"; // 👈 nội dung cần search
-                                                        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                                                        window.open(url, "_blank"); // mở tab mới
-                                                    }}
-                                                    variant="outline"
-                                                    className="mt-2"
+                                                    onClick={() => handleShowForm("close")}
+                                                    theme="admin"
+                                                    className=" "
                                                 >
-                                                    Tìm trên Google
+                                                    Hủy
                                                 </Button>
 
+                                                <Button
+                                                    onClick={handleAddNetwork}
+                                                    theme="admin"
+                                                    className=""
+                                                >
+                                                    Cập nhật
+                                                </Button>
                                             </div>
                                         </div>
+                                    }
+                                    {isOpenUpdateNetwork &&
+                                        <div className="p-2 border-2 border-dashed border-gray-400 rounded-lg mt-4">
+                                            <h2 className="text-lg font-medium  mb-2">Thêm mạng xã hội mới</h2>
+                                            <div className="grid grid-cols-1 gap-2 border ">
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
+                                                    <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
+                                                </div>
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
+                                                    <Button
+                                                        onClick={() => {
+                                                            const query = "color picker"; // 👈 nội dung cần search
+                                                            const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                                                            window.open(url, "_blank"); // mở tab mới
+                                                        }}
+                                                        variant="outline"
+                                                        className="mt-2"
+                                                    >
+                                                        Tìm trên Google
+                                                    </Button>
 
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 space-x-2 justify-between items-center mt-4">
+                                                <Button
+                                                    onClick={() => handleShowForm("close")}
+                                                    theme="admin"
+                                                    className=" "
+                                                >
+                                                    Hủy
+                                                </Button>
+                                                <Button
+                                                    onClick={handleAddNetwork}
+                                                    theme="admin"
+                                                    className=""
+                                                >
+                                                    Thêm mạng xã hội mới
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                {!isOpenUpdateNetwork && !isOpenUpdateNetwork2 &&
+                                    <div className="flex justify-center mt-4">
                                         <Button
-                                            onClick={handleAddNetwork}
+                                            onClick={() => handleShowForm("add")}
                                             theme="admin"
-                                            className="w-full mt-2"
+                                            className="w-full "
                                         >
                                             Thêm mạng xã hội mới
                                         </Button>
-
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
                 }
-
                 {/* Cột phải */}
                 <div className="box-border col-span-2 p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
                     <Label>Nội dung bài viết</Label>
