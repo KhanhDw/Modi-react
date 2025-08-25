@@ -120,7 +120,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} h_table="h-[70vh]"/>
+      <Table columns={columns} data={contacts} onView={setShowDetail} onDelete={handleDelete} h_table="h-[70vh]" />
       <ContactDetail
         contact={showDetail}
         isOpen={!!showDetail}

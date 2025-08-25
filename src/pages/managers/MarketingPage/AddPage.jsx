@@ -3,59 +3,124 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function AddPage() {
+    const navigate = useNavigate();
     const { formData, setFormData, handleAddPost } = useOutletContext();
+    const [socialNetworks, setSocialNetworks] = useState([]);
+    const [preview, setPreview] = useState("");
+    const [error, setError] = useState("");
+    const [isOpenEditNetwork, setIsOpenEditNetwork] = useState(false);
+    //
 
+    const handleOpenEditNetwork = () => {
+        setIsOpenEditNetwork(true);
+    };
+
+    // Fetch social networks
+    const fetchSocialNetworks = async () => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/social-networks`);
+            if (!res.ok) throw new Error("Không thể tải mạng xã hội");
+            const data = await res.json();
+            setSocialNetworks(data);
+        } catch (err) {
+            console.error("Lỗi mạng xã hội:", err);
+        }
+    };
+
+    // Reset form
     useEffect(() => {
-        // Reset form khi vào AddPage
         setFormData({
             title: "",
             content: "",
-            platform_name: "",
-            author_name: "",
+            author_id: 1,
+            platform_id: null,
             status: "draft",
             tags: "",
             image: "",
             lang: "vi",
-            published_at: "",
         });
+
+
+        fetchSocialNetworks();
     }, [setFormData]);
 
-    const [preview, setPreview] = useState("");
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
-
     const onSubmit = () => {
-        handleAddPost();
+        if (!formData.title || !formData.content || !formData.platform_id || !formData.image) {
+            setError("Vui lòng điền đầy đủ thông tin");
+            return;
+        }
+
+        setError("");
+
+        const payload = {
+            author_id: formData.author_id || 1,
+            platform_id: formData.platform_id,
+            image: formData.image,
+            tags: formData.tags,
+            status: formData.status || "draft",
+            translations: [
+                {
+                    lang: formData.lang || "vi",
+                    title: formData.title,
+                    content: formData.content,
+                },
+            ],
+        };
+
+
+        console.log("Payload gửi:", payload);
+        handleAddPost(payload);
         navigate(-1);
     };
 
 
-    const handlePreview = () => {
-        if (!formData.image) {
-            setError("Vui lòng nhập URL hình ảnh");
-            setPreview("");
-            return;
+    const [name, setName] = useState("");
+    const [color, setColor] = useState("#000000");
+
+    const handleAddNetwork = () => {
+        if (name) {
+
+            // Gọi API thêm mới ở đây
+            fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/social-networks`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: name, HEX_color: color }), // gửi cả name + color
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error("Thêm mới thất bại");
+                    return res.json();
+                })
+                .then((newNetwork) => {
+                    // Cập nhật lại danh sách sau khi thêm mới
+                    // setSocialNetworks([...socialNetworks, newNetwork]);
+                    fetchSocialNetworks();
+                    setName("");
+                    setColor("#000000");
+                })
+                .catch((err) => {
+                    console.error("Lỗi khi thêm mới:", err);
+                    alert("Thêm mạng xã hội thất bại. Vui lòng thử lại.");
+                });
         }
-        setPreview(formData.image);
-        setError(""); // clear error trước khi load
     };
+
 
     return (
         <div className="w-full bg-white admin-dark:bg-gray-900 rounded-xl">
+            {/* Header */}
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
-                    Tạo bài viết mới
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 admin-dark:text-white">Tạo bài viết mới</h2>
                 <div className="flex justify-end gap-4 mt-8">
                     <Button
                         variant="outline"
                         onClick={() => navigate(-1)}
-                        className="border-gray-300 text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700 text-base px-6 py-2 rounded-md"
+                        className="border-gray-300 bg-gray-400  text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700 text-base px-6 py-2 rounded-md"
                     >
                         Hủy
                     </Button>
@@ -69,179 +134,213 @@ export default function AddPage() {
             </div>
 
             <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-6">
+
                 {/* Cột trái */}
-                <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-700 rounded-2xl overflow-hidden">
-                    <div className="bg-gray-50 admin-dark:bg-gray-900 rounded-lg shadow-sm">
-                        <div className="grid grid-cols-1 gap-2 py-2">
-                            {/* Tiêu đề */}
+                {!isOpenEditNetwork ?
+                    <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-700 rounded-2xl overflow-hidden">
+                        {/* Tiêu đề */}
+                        <div className="bg-gray-50 admin-dark:bg-gray-900 rounded-lg shadow-sm">
+                            <div className="grid grid-cols-1 gap-2 py-2">
+                                <div>
+                                    <Label>Tiêu đề</Label>
+                                    <Input
+                                        value={formData.title || ""}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        placeholder="Nhập tiêu đề bài viết"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mạng xã hội + Trạng thái + Tags */}
+                        <div className="bg-gray-50 admin-dark:bg-gray-900 py-4 rounded-lg shadow-sm">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                <div>
+                                    <Label>Mạng xã hội</Label>
+                                    <Select
+                                        value={formData.platform_id || ""} // để undefined hoặc "" khi chưa chọn
+                                        onValueChange={(value) =>
+                                            setFormData({ ...formData, platform_id: value })
+                                        }
+                                    >
+
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn mạng xã hội" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {socialNetworks.map((network) => (
+                                                <SelectItem key={network.id} value={network.id}>
+                                                    {network.name}
+                                                </SelectItem>
+                                            ))}
+                                            <Button
+                                                onClick={handleOpenEditNetwork}
+                                                theme="admin" className="w-full  mt-2">
+                                                Thêm mạng xã hội mới
+                                            </Button>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div>
+                                    <Label>Trạng thái</Label>
+                                    <Select
+                                        value={formData.status || ""}
+                                        onValueChange={(value) => setFormData({ ...formData, status: value })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="draft">Bản nháp</SelectItem>
+                                            <SelectItem value="published">Đã xuất bản</SelectItem>
+                                            <SelectItem value="archived">Lưu trữ</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
                             <div>
-                                <Label
-                                    htmlFor="add-title"
-                                    className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2"
-                                >
-                                    Tiêu đề
-                                </Label>
+                                <Label>Tags</Label>
                                 <Input
-                                    id="add-title"
-                                    value={formData.title ?? ""}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, title: e.target.value })
-                                    }
-                                    placeholder="Nhập tiêu đề bài viết"
-                                    className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300 focus:ring-2 focus:ring-blue-500 admin-dark:focus:ring-blue-600 rounded-md px-4 py-2"
+                                    value={formData.tags || ""}
+                                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                    placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
                                 />
                             </div>
-                            {/* Tác giả */}
-                            <div>
-                                <Label
-                                    htmlFor="add-author"
-                                    className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2"
-                                >
-                                    Tác giả
-                                </Label>
+                        </div>
+
+                        {/* Ảnh */}
+                        <div className="bg-gray-50 admin-dark:bg-gray-900 pb-6 rounded-lg shadow-sm">
+                            <Label>URL Hình ảnh</Label>
+                            <div className="flex gap-2">
                                 <Input
-                                    id="add-author"
-                                    value={formData.author_name ?? ""}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, author_name: e.target.value })
-                                    }
-                                    placeholder="Nhập tên tác giả"
-                                    className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300 focus:ring-2 focus:ring-blue-500 admin-dark:focus:ring-blue-600 rounded-md px-4 py-2"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Platform + Status + Tags */}
-                    <div className="bg-gray-50 admin-dark:bg-gray-900 py-4 rounded-lg shadow-sm">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <Label className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2">
-                                    Mạng xã hội
-                                </Label>
-                                <Select
-                                    value={formData.platform_name ?? ""}
-                                    onValueChange={(value) =>
-                                        setFormData({ ...formData, platform_name: value })
-                                    }
-                                >
-                                    <SelectTrigger className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300">
-                                        <SelectValue placeholder="Chọn mạng xã hội" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white text-black admin-dark:bg-gray-900">
-                                        <SelectItem value="facebook">Facebook</SelectItem>
-                                        <SelectItem value="youtube">YouTube</SelectItem>
-                                        <SelectItem value="tiktok">TikTok</SelectItem>
-                                        <Separator />
-                                        <Button
-                                            theme="admin"
-                                            type="button"
-                                            className="mt-2 px-2 w-full flex items-center hover:bg-gray-300 admin-dark:hover:bg-gray-700"
-                                        >
-                                            Thêm mạng xã hội khác
-                                        </Button>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div>
-                                <Label className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2">
-                                    Trạng thái
-                                </Label>
-                                <Select
-                                    value={formData.status ?? ""}
-                                    onValueChange={(value) =>
-                                        setFormData({ ...formData, status: value })
-                                    }
-                                >
-                                    <SelectTrigger className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300">
-                                        <SelectValue placeholder="Chọn trạng thái" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white text-black admin-dark:bg-gray-900">
-                                        <SelectItem value="draft">Bản nháp</SelectItem>
-                                        <SelectItem value="published">Đã xuất bản</SelectItem>
-                                        <SelectItem value="archived">Lưu trữ</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <Label className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2">
-                                Tags
-                            </Label>
-                            <Input
-                                value={formData.tags ?? ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, tags: e.target.value })
-                                }
-                                placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300 px-4 py-2"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Ảnh */}
-                    <div className="bg-gray-50 admin-dark:bg-gray-900 pb-6 rounded-lg shadow-sm">
-                        <Label className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2">
-                            URL Hình ảnh
-                        </Label>
-                        <div className="flex gap-2">
-                            <Input
-                                value={formData.image ?? ""}
-                                onChange={(e) => {
-                                    setFormData({ ...formData, image: e.target.value });
-                                    setError(""); // reset error khi nhập lại
-                                }}
-                                placeholder="Nhập URL hình ảnh"
-                                className="w-full bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300 px-4 py-2"
-                            />
-                            <Button type="button" onClick={handlePreview}>
-                                Xem ảnh
-                            </Button>
-                        </div>
-
-                        <div className="text-sm text-gray-500 admin-dark:text-gray-400 mt-3 border border-gray-300 admin-dark:border-gray-500 p-2 rounded">
-                            {!preview && !error && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
-                            {error && (
-                                <p className="text-red-500 font-medium">{error}</p>
-                            )}
-                            {preview && (
-                                <img
-                                    key={preview}
-                                    src={preview}
-                                    alt="Preview"
-                                    className="object-cover rounded mt-2 max-h-60 mx-auto"
-                                    onError={() => {
-                                        setError("Không tìm thấy hình ảnh từ URL đã nhập");
-                                        setPreview("");
+                                    value={formData.image || ""}
+                                    onChange={(e) => {
+                                        setFormData({ ...formData, image: e.target.value });
+                                        setError("");
                                     }}
+                                    placeholder="Nhập URL hình ảnh"
                                 />
-                            )}
+                                <Button
+
+                                    type="button" onClick={() => setPreview(formData.image)}>
+                                    Xem ảnh
+                                </Button>
+                            </div>
+                            <div className="text-sm text-gray-500 mt-3 border p-2 rounded">
+                                {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
+                                {error && <p className="text-red-500 font-medium">{error}</p>}
+                                {preview && (
+                                    <img
+                                        key={preview}
+                                        src={preview}
+                                        alt="Preview"
+                                        className="object-cover rounded mt-2 max-h-60 mx-auto"
+                                        onError={() => {
+                                            setError("Không tìm thấy hình ảnh từ URL đã nhập");
+                                            setPreview("");
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
+
+                    </div>
+                    :
+                    <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-700 rounded-2xl overflow-hidden">
+                        <div className="flex justify-between items-center mb-4">
+                            <h1>
+                                Danh sách mạng xã hội
+                            </h1>
+                            <button type="button" onClick={() => setIsOpenEditNetwork(false)} className="text-blue-500 hover:underline font-bold">
+                                Quay lại
+                            </button>
+                        </div>
+                        <div>
+                            <div>
+                                {socialNetworks.map((network, index) => (
+                                    <div key={network.id || network + 1} className="p-2 border-b border-gray-200 admin-dark:border-gray-700">
+                                        <div className="flex items-center justify-between">
+                                            <div className="font-medium text-gray-900 admin-dark:text-white">{network.name}</div>
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        // Xử lý xóa mạng xã hội
+                                                        if (window.confirm(`Bạn có chắc chắn muốn xóa mạng xã hội "${network.name}" không?`)) {
+                                                            // Gọi API xóa ở đây
+                                                            fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/social-networks/${network.id}`, {
+                                                                method: 'DELETE',
+                                                            })
+                                                                .then((res) => {
+                                                                    if (!res.ok) throw new Error("Xóa thất bại");
+                                                                    // Cập nhật lại danh sách sau khi xóa
+                                                                    setSocialNetworks(socialNetworks.filter((n) => n.id !== network.id));
+                                                                })
+                                                                .catch((err) => {
+                                                                    console.error("Lỗi khi xóa:", err);
+                                                                    alert("Xóa mạng xã hội thất bại. Vui lòng thử lại.");
+                                                                });
+                                                        }
+                                                    }}
+                                                    className="border-red-400 text-red-500 hover:bg-red-50 admin-dark:text-red-400 admin-dark:hover:bg-red-900"
+                                                >
+                                                    Xóa
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div>
+                                    <div className="p-2">
+
+                                        <div className="grid grid-cols-1 gap-2 border ">
+                                            <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
+                                            <div className="flex items-center justify-between gap-3">
+                                                <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
+                                                <Button
+                                                    onClick={() => {
+                                                        const query = "color picker"; // 👈 nội dung cần search
+                                                        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                                                        window.open(url, "_blank"); // mở tab mới
+                                                    }}
+                                                    variant="outline"
+                                                    className="mt-2"
+                                                >
+                                                    Tìm trên Google
+                                                </Button>
+
+                                            </div>
+                                        </div>
+
+                                        <Button
+                                            onClick={handleAddNetwork}
+                                            theme="admin"
+                                            className="w-full mt-2"
+                                        >
+                                            Thêm mạng xã hội mới
+                                        </Button>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
 
                 {/* Cột phải */}
-                <div className="box-border col-span-2 p-4 overflow-hidden bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
-                    <Label
-                        htmlFor="add-content"
-                        className="text-sm font-medium text-gray-700 admin-dark:text-gray-200 mb-2"
-                    >
-                        Nội dung bài viết
-                    </Label>
+                <div className="box-border col-span-2 p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
+                    <Label>Nội dung bài viết</Label>
                     <Textarea
-                        id="add-content"
-                        value={formData.content ?? ""}
-                        onChange={(e) =>
-                            setFormData({ ...formData, content: e.target.value })
-                        }
+                        value={formData.content || ""}
+                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                         placeholder="Nhập nội dung bài viết"
                         rows={6}
-                        className="px-4 py-2 w-full h-11/12 overflow-y-auto bg-white admin-dark:bg-gray-600 admin-dark:text-white admin-dark:border-gray-500 border-gray-300 rounded-md"
                     />
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

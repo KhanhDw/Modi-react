@@ -11,13 +11,13 @@ export default function ListPage() {
         columns,
         loading,
         error,
+        searchPosts,
         searchTerm,
         setSearchTerm,
         selectedStatus,
         setSelectedStatus,
         activeClass,
         handleDeletePost, // Thêm handleDeletePost vào destructuring
-        setIsAddDialogOpen,
         setIsEditDialogOpen,
         setEditingPost,
         setFormData,
@@ -25,14 +25,21 @@ export default function ListPage() {
         handleEditPost,
     } = useOutletContext();
 
-    // const filteredPosts = posts.filter((post) => {
-    //     const matchesSearch =
-    //         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         post.tags.toLowerCase().includes(searchTerm.toLowerCase());
-    //     const matchesStatus = selectedStatus === "all" || post.status === selectedStatus;
-    //     return matchesSearch && matchesStatus;
-    // });
+    const filteredPosts = posts.filter((post) => {
+        const lowerSearch = (searchTerm || "").toLowerCase();
+
+        const matchesSearch =
+            (post.title || "").toLowerCase().includes(lowerSearch) ||
+            (post.author || "").toLowerCase().includes(lowerSearch) ||
+            (post.tags || "").toLowerCase().includes(lowerSearch);
+
+        const matchesStatus =
+            selectedStatus === "all" || post.status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+    });
+
+
 
     return (
         <>
@@ -54,9 +61,10 @@ export default function ListPage() {
                 </Link>
             </div>
             <PostsTable
-                posts={posts}
+                // posts={posts}
+                posts={filteredPosts}
                 columns={columns}
-                handleDeletePost={handleDeletePost} // Truyền handleDeletePost vào PostsTable
+                handleDeletePost={handleDeletePost}
             />
         </>
     );

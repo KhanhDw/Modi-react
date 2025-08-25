@@ -3,31 +3,41 @@ import { Outlet, Routes, Route } from "react-router-dom";
 import ListPage from "@/pages/managers/MarketingPage/ListPage";
 import AddPage from "@/pages/managers/MarketingPage/AddPage";
 import EditPage from "@/pages/managers/MarketingPage/EditPage";
-// import { initialPosts } from "@/pages/managers/MarketingPage/constants";
-
-// export const MarketingContext = createContext();
 
 export default function MarketingPage() {
   const activeClass =
     "bg-blue-500 text-white admin-dark:bg-blue-600 admin-dark:text-white font-medium rounded-md px-4 py-2 transition-colors duration-200";
 
-  // const [posts, setPosts] = useState(initialPosts);
   const [posts, setPosts] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [editingPost, setEditingPost] = useState(null);
+  const [socialNetworks, setSocialNetworks] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    platform: "",
-    author: "",
+    author_id: 1,
     status: "draft",
+    platform_id: "",
+    platform_name: "",
+    platform_color: "",
     tags: "",
     image: "",
+    lang: "vi",
   });
+
+  const fetchSocialNetWorks = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/social-networks`);
+      if (!res.ok) throw new Error("Không thể tải mạng xã hội");
+      const data = await res.json();
+      setSocialNetworks(data);
+    } catch (err) {
+      console.error("Lỗi mạng xã hội:", err);
+    }
+  };
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -35,12 +45,7 @@ export default function MarketingPage() {
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing`);
       if (!res.ok) throw new Error("Không thể tải dữ liệu");
       let result = await res.json();
-
-      // lấy riêng ra
-      // const cols = result.colums;
-
-      console.log(result.data);
-      // set state
+      console.log("--->", result.data);
       setPosts(result.data);
       setColumns(result.colums);
       setError(null);
@@ -52,61 +57,181 @@ export default function MarketingPage() {
     }
   };
 
+
+
   useEffect(() => {
+    fetchSocialNetWorks();
     fetchPosts();
   }, []);
 
 
 
-  const handleAddPost = () => {
-    const newPost = {
-      id: Math.max(...posts.map((p) => p.id)) + 1,
-      ...formData,
-      date: new Date().toISOString().split("T")[0],
-      likes: 0,
-      comments: 0,
-      shares: 0,
-      views: 0,
-    };
-    setPosts([...posts, newPost]);
-    setFormData({
-      title: "",
-      content: "",
-      platform: "",
-      author: "",
-      status: "draft",
-      tags: "",
-      image: "",
-    });
-    setIsAddDialogOpen(false);
+  const handleAddPost = async () => {
+    try {
+      const payload = {
+        author_id: formData.author_id || 1,
+        platform_id: formData.platform_id || null,
+        image: formData.image,
+        tags: formData.tags,
+        status: formData.status || "draft",
+        translations: [
+          {
+            lang: formData.lang || "vi",
+            title: formData.title,
+            content: formData.content,
+          },
+        ],
+      };
+
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        console.error("Backend error:", errData);
+        alert("Thêm bài viết thất bại. Vui lòng thử lại.");
+        return;
+      }
+
+      const newPost = await res.json();
+      console.log("Thêm dữ liệu mới thành công:", newPost);
+
+      setPosts([...posts, newPost]);
+
+      // Reset form
+      setFormData({
+        title: "",
+        content: "",
+        author_id: 1,
+        status: "draft",
+        tags: "",
+        image: "",
+        lang: "vi",
+        platform_name: "",
+      });
+
+      fetchPosts();
+    } catch (error) {
+      console.error("Lỗi khi thêm bài viết:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại.");
+    }
   };
 
-  const handleEditPost = (postId) => {
-    setPosts(posts.map((post) => (post.id === parseInt(postId) ? { ...post, ...formData } : post)));
-    setIsEditDialogOpen(false);
-    setEditingPost(null);
+
+
+  const handleEditPost = async (updatedPost) => {
+    try {
+
+      console.log("PUT gửi:", updatedPost);
+
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${updatedPost.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPost),
+      });
+
+      if (!res.ok) {
+        throw new Error("Lỗi khi cập nhật bài viết");
+      }
+
+      const data = await res.json();
+
+      // cập nhật lại state từ response
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === updatedPost.id ? data : post
+        )
+      );
+
+      fetchPosts();
+    } catch (err) {
+      console.error("PUT thất bại:", err);
+    }
   };
 
-  const handleDeletePost = (id) => {
-    setPosts(posts.filter((post) => post.id !== id));
+
+
+  const handleDeletePost = async (id) => {
+    await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Xóa không thành công");
+        return res.json();
+      })
+      .then(() => fetchPosts())
+      .catch((err) => {
+        console.error("Lỗi khi xóa:", err);
+        setError("Xóa bài viết thất bại. Vui lòng thử lại.");
+      });
   };
 
-  const openEditDialog = (post) => {
-    setEditingPost(post);
-    setFormData({
-      title: post.title,
-      content: post.content,
-      platform: post.platform,
-      author: post.author,
-      status: post.status,
-      tags: post.tags,
-      image: post.image,
-    });
-    setIsEditDialogOpen(true);
+
+  const searchPosts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/search?term=${encodeURIComponent(searchTerm)}&status=${encodeURIComponent(selectedStatus)}`);
+      if (!res.ok) throw new Error("Không thể tải dữ liệu");
+      let result = await res.json();
+      console.log("--->", result.data);
+      setPosts(result.data);
+      setColumns(result.colums);
+      setError(null);
+    } catch (err) {
+      console.error("Lỗi khi lấy dữ liệu:", err);
+      setError("Không thể tải danh sách bài viết. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+  //------------------------------
+
+  const handleAddNetwork = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/social-networks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: formData.platform_name }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        console.error("Backend error:", errData);
+        alert("Thêm mạng xã hội thất bại. Vui lòng thử lại.");
+        return;
+      }
+
+      const newNetwork = await res.json();
+      console.log("Thêm mạng xã hội mới thành công:", newNetwork);
+
+      setSocialNetworks([...socialNetworks, newNetwork]);
+
+      // Reset form
+      setFormData((prev) => ({
+        ...prev,
+        platform_id: newNetwork.id,
+        platform_name: "",
+      }));
+
+    } catch (error) {
+      console.error("Lỗi khi thêm mạng xã hội:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại.");
+    }
+  }
+
 
   return (
-    // <MarketingContext.Provider value={contextValue}>
     <div className=" mx-auto ">
       <Outlet context={{
         posts,
@@ -119,18 +244,15 @@ export default function MarketingPage() {
         setSearchTerm,
         selectedStatus,
         setSelectedStatus,
-        editingPost,
-        setEditingPost,
         formData,
         setFormData,
         handleAddPost,
         handleEditPost,
         handleDeletePost,
-        openEditDialog,
         activeClass,
-      }
-      } />
+        searchPosts,
+        handleAddNetwork
+      }} />
     </div>
-    // </MarketingContext.Provider>
   );
 }

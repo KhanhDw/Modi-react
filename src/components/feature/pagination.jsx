@@ -6,16 +6,29 @@ export default function PageList({ data, pageSize = 5, onPageChange }) {
     const totalRows = data.length;
     const totalPages = Math.ceil(totalRows / pageSize);
 
+
+    // mỗi lần page đổi thì gọi callback để PostsTable nhận dữ liệu đã cắt
+    useEffect(() => {
+        if (totalPages > 0 && page > totalPages) {
+            setPage(totalPages); // Chuyển về trang cuối hợp lệ
+        } else if (totalPages === 0) {
+            setPage(1); // Reset về 1 khi data rỗng
+        }
+
+        console.log("Pagination - page:", page, "totalPages:", totalPages, "data length:", data.length);
+
+    }, [data, totalPages]);
+
     const startIndex = (page - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, totalRows);
     const paginatedData = data.slice(startIndex, endIndex);
 
-    // mỗi lần page đổi thì gọi callback để PostsTable nhận dữ liệu đã cắt
+    // useEffect gốc: Gọi onPageChange khi page hoặc data thay đổi
     useEffect(() => {
         if (onPageChange) {
             onPageChange(paginatedData);
         }
-    }, [page, data]);
+    }, [page, data, onPageChange]);
 
     const renderPageNumbers = () => {
         let pages = [];

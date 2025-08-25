@@ -4,24 +4,42 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Tag, User, SquarePen } from "lucide-react";
 import { Link, useOutletContext, useLocation } from "react-router-dom";
 import DeleteDialog from "./DeleteDialog";
+import { TriangleAlert } from 'lucide-react';
 
-export default function PostRow({ post }) {
+export default function PostRow({ post, indexSTT, handleDeletePost }) {
     const location = useLocation();
-    const { handleDeletePost } = useOutletContext();
 
     return (
-        <TableRow className="border-b border-gray-200 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors duration-200">
+        <TableRow className="border-b border-gray-200 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700/30 transition-colors duration-200">
 
             {/* Tiêu đề */}
-            <TableCell className="w-2/5">
+            <TableCell className="w-1/25">
+                <span>{indexSTT + 1}</span>
+            </TableCell>
+            <TableCell className="w-1/20 pl-0">
+                {post.image ? (
+                    <img
+                        src={post.image}
+                        alt="Ảnh bài viết"
+                        className="w-12 h-12 rounded-md object-cover border border-gray-200 admin-dark:border-gray-600"
+                        onError={(e) => {
+                            e.currentTarget.style.display = "none"; // ẩn ảnh bị lỗi
+                            e.currentTarget.nextSibling.style.display = "flex"; // hiện fallback
+                        }}
+                    />
+                ) : null}
+
+                {/* Fallback nếu ảnh lỗi */}
+                <div
+                    className="w-12 h-12 hidden items-center justify-center rounded-md border border-red-400 bg-red-50 text-red-500"
+                >
+                    <TriangleAlert className="w-6 h-6" />
+                </div>
+            </TableCell>
+
+            <TableCell className="w-5/12">
                 <div className="flex items-center gap-3">
-                    {post.image && (
-                        <img
-                            src={post.image}
-                            alt="Ảnh bài viết"
-                            className="w-12 h-12 rounded-md object-cover border border-gray-200 admin-dark:border-gray-600"
-                        />
-                    )}
+
                     <div>
                         <div className="font-medium text-gray-900 admin-dark:text-white line-clamp-1">
                             {post.title}
@@ -36,7 +54,8 @@ export default function PostRow({ post }) {
 
             {/* Nền tảng */}
             <TableCell>
-                <Badge className="text-white font-medium bg-blue-500">
+                <Badge className={`admin-dark:text-white font-medium  `}
+                    style={{ backgroundColor: post.platform_color }}>
                     {post.platform_name}
                 </Badge>
             </TableCell>
@@ -65,13 +84,7 @@ export default function PostRow({ post }) {
 
 
 
-            {/* Ngày đăng */}
-            <TableCell>
-                <div className="flex items-center gap-1 text-gray-900 admin-dark:text-white">
-                    <Calendar className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
-                    {post.published_at ? new Date(post.published_at).toLocaleDateString("vi-VN") : "—"}
-                </div>
-            </TableCell>
+
 
             {/* Ngày tạo */}
             <TableCell>
