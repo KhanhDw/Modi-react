@@ -1,8 +1,5 @@
 import { useState, createContext, useEffect } from "react";
 import { Outlet, Routes, Route } from "react-router-dom";
-import ListPage from "@/pages/managers/MarketingPage/ListPage";
-import AddPage from "@/pages/managers/MarketingPage/AddPage";
-import EditPage from "@/pages/managers/MarketingPage/EditPage";
 
 export default function MarketingPage() {
   const activeClass =
@@ -27,6 +24,8 @@ export default function MarketingPage() {
     image: "",
     lang: "vi",
   });
+
+
 
   const fetchSocialNetWorks = async () => {
     try {
@@ -57,11 +56,15 @@ export default function MarketingPage() {
     }
   };
 
+  const reloadPostsAndSocialNetWorks = () => {
+    fetchSocialNetWorks();
+    fetchPosts();
+  };
+
 
 
   useEffect(() => {
-    fetchSocialNetWorks();
-    fetchPosts();
+    reloadPostsAndSocialNetWorks();
   }, []);
 
 
@@ -251,7 +254,8 @@ export default function MarketingPage() {
         handleDeletePost,
         activeClass,
         searchPosts,
-        handleAddNetwork
+        handleAddNetwork,
+        reloadPostsAndSocialNetWorks
       }} />
     </div>
   );

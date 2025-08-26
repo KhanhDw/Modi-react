@@ -15,6 +15,44 @@ export const isFuture = (dt) => {
     }
 };
 
+// Hàm chuyển Slate JSON sang HTML
+export const renderSlateToHTML = (nodes) => {
+    if (!Array.isArray(nodes)) return "";
+
+    const renderNode = (node) => {
+        if (node.text !== undefined) {
+            let text = node.text;
+
+            if (node.bold) text = `<strong>${text}</strong>`;
+            if (node.italic) text = `<em>${text}</em>`;
+            if (node.underline) text = `<u>${text}</u>`;
+            if (node.code) text = `<code>${text}</code>`;
+
+            return text;
+        }
+
+        const children = (node.children || []).map(renderNode).join("");
+
+        switch (node.type) {
+            case "paragraph":
+                return `<p>${children}</p>`;
+            case "block-quote":
+                return `<blockquote style="margin:0;padding-left:8px;border-left:2px solid #ccc;">${children}</blockquote>`;
+            case "numbered-list":
+                return `<ol>${children}</ol>`;
+            case "bulleted-list":
+                return `<ul>${children}</ul>`;
+            case "list-item":
+                return `<li>${children}</li>`;
+            default:
+                return children;
+        }
+    };
+
+    return nodes.map(renderNode).join("");
+};
+
+
 
 
 export default function BlogsListPage() {
@@ -170,12 +208,29 @@ export default function BlogsListPage() {
 
 
                                         if (col.name === "content") {
+                                            let parsedValue = [];
+                                            try {
+                                                parsedValue = typeof value === "string" ? JSON.parse(value) : value;
+                                            } catch (e) {
+                                                console.error("JSON parse error:", e);
+                                            }
+
+                                            const htmlContent = renderSlateToHTML(parsedValue);
+
                                             return (
-                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
-                                                    {value}
+                                                <td
+                                                    key={col.name}
+                                                    className="px-2 sm:px-4 py-2 text-slate-400 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden"
+                                                >
+                                                    <div
+                                                        className="prose prose-sm max-w-none text-slate-400 prose-p:text-slate-400 prose-strong:text-slate-400 prose-li:text-slate-400 prose-blockquote:text-slate-400 line-clamp-1"
+                                                        dangerouslySetInnerHTML={{ __html: htmlContent }}
+                                                    />
                                                 </td>
                                             );
                                         }
+
+
 
                                         if (col.type === "date") {
                                             return (

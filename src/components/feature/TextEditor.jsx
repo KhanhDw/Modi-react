@@ -130,31 +130,33 @@ function TextEditor({ valueContextNews = '', onChange }) {
     const [editor] = useState(() => withReact(createEditor()))
 
     const initialValue = useMemo(() => {
-        try {
-            // Kiểm tra xem có dữ liệu không
-            if (valueContextNews) {
-                // "Dịch" chuỗi JSON thành cấu trúc đối tượng
-                const parsedValue = JSON.parse(valueContextNews);
+        if (!valueContextNews) {
+            // Nếu không có dữ liệu
+            return [{ type: 'paragraph', children: [{ text: '' }] }];
+        }
 
-                // Nếu dịch thành công và là một mảng hợp lệ...
-                if (Array.isArray(parsedValue) && parsedValue.length > 0) {
-                    // ...thì TRẢ VỀ NÓ TRỰC TIẾP.
-                    return parsedValue;
-                }
+        // Nếu là chuỗi JSON hợp lệ
+        try {
+            const parsed = JSON.parse(valueContextNews);
+            if (Array.isArray(parsed)) {
+                return parsed;
             }
         } catch (e) {
-            // Nếu dịch lỗi (dữ liệu cũ là text), trả về giá trị dựa trên text đó.
-            console.error("Dữ liệu không phải JSON, hiển thị như văn bản thường.");
+            // Nếu không parse được => coi như plain text
             return [{ type: 'paragraph', children: [{ text: valueContextNews }] }];
         }
 
-        // Nếu không có dữ liệu gì, trả về một giá trị mặc định.
+        // fallback
         return [{ type: 'paragraph', children: [{ text: '' }] }];
     }, [valueContextNews]);
+
 
     // CẢNH BÁO: Dòng này vẫn còn tiềm ẩn lỗi logic như đã giải thích ở câu trả lời trước.
     const [value, setValue] = useState(initialValue);
 
+    useEffect(() => {
+        setValue(initialValue);
+    }, [initialValue]);
 
 
 
@@ -183,7 +185,7 @@ function TextEditor({ valueContextNews = '', onChange }) {
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
 
     return (
-        <div className="border rounded-lg p-4 shadow bg-white w-full mx-auto">
+        <div className="border rounded-lg p-4 shadow bg-white w-full mx-auto admin-dark:bg-slate-800 admin-dark:text-gray-300">
             <Slate
                 // key={editorKey}
                 editor={editor}
@@ -193,7 +195,7 @@ function TextEditor({ valueContextNews = '', onChange }) {
             >
                 <Toolbar />
                 <Editable
-                    className="mt-4 p-4 border rounded min-h-[300px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mt-4 p-4 border rounded min-h-[300px] focus:outline-none focus:ring-2 focus:ring-blue-500 admin-dark:bg-slate-800 admin-dark:text-gray-300"
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     placeholder="Nhập nội dung tại đây..."
@@ -235,7 +237,7 @@ const Toolbar = () => {
 
     const MarkButton = ({ format, icon: Icon }) => (
         <button
-            className={`p-2 rounded hover:bg-gray-200 ${CustomEditor.isMarkActive(editor, format)
+            className={`p-2 rounded admin-dark:text-gray-300 hover:bg-gray-200 ${CustomEditor.isMarkActive(editor, format)
                 ? 'bg-gray-300 text-gray-800'
                 : 'text-gray-600'
                 }`}
@@ -250,7 +252,7 @@ const Toolbar = () => {
 
     const BlockButton = ({ format, icon: Icon }) => (
         <button
-            className={`p-2 rounded hover:bg-gray-200 ${CustomEditor.isBlockActive(
+            className={`p-2 rounded admin-dark:text-gray-300 hover:bg-gray-200 ${CustomEditor.isBlockActive(
                 editor,
                 format,
                 TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
@@ -268,7 +270,7 @@ const Toolbar = () => {
     )
 
     return (
-        <div className="flex flex-wrap gap-1 p-2 border-b">
+        <div className="flex flex-wrap gap-1 p-2 border-b admin-dark:bg-slate-800 admin-dark:text-gray-400">
             {/* Text formatting */}
             <div className="flex gap-1 mr-4">
                 <MarkButton format="bold" icon={Bold} />

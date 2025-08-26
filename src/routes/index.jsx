@@ -52,6 +52,7 @@ import MarketingPage from "@/pages/managers/MarketingPage"
 import ListPage from "@/pages/managers/MarketingPage/ListPage"
 import AddPage from "@/pages/managers/MarketingPage/AddPage"
 import EditPage from "@/pages/managers/MarketingPage/EditPage"
+import ViewPage from "@/pages/managers/MarketingPage/ViewPage"
 // import OverviewPage from "@/components/admin/marketing/OverviewPage"
 // import CampaignsPage from "@/components/admin/marketing/CampaignsPage"
 // import EmailPage from "@/components/admin/marketing/EmailPage"
@@ -130,6 +131,7 @@ const privateRoutes = [
         children: [
             { path: "", component: ListPage },
             { path: "add", component: AddPage },
+            { path: ":id/view", component: ViewPage },
             { path: ":id/edit", component: EditPage },
 
         ],

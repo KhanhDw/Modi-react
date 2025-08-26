@@ -10,7 +10,7 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
     const location = useLocation();
 
     return (
-        <TableRow className="border-b border-gray-200 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700/30 transition-colors duration-200">
+        <TableRow className="border-b  border-gray-200 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700/30 transition-colors duration-200">
 
             {/* Tiêu đề */}
             <TableCell className="w-1/25">
@@ -37,11 +37,10 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                 </div>
             </TableCell>
 
-            <TableCell className="w-5/12">
-                <div className="flex items-center gap-3">
-
-                    <div>
-                        <div className="font-medium text-gray-900 admin-dark:text-white line-clamp-1">
+            <TableCell className="w-5/12 p-0 cursor-pointer admin-dark:hover:bg-gray-700/50 hover:bg-gray-100 transition-colors duration-200">
+                <Link to={`${location.pathname}/${post.id}/view`} className="group p-0 m-0 flex items-center gap-3">
+                    <div className="group-hover:text-yellow-400 transition-colors">
+                        <div className="font-medium text-gray-900 admin-dark:text-white line-clamp-1 admin-dark:group-hover:text-yellow-400 group-hover:text-blue-700 group-hover:font-bold transition-colors">
                             {post.title}
                         </div>
                         <div className="text-sm text-gray-500 admin-dark:text-gray-400 flex items-center gap-1">
@@ -49,12 +48,12 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                             {post.tags}
                         </div>
                     </div>
-                </div>
+                </Link>
             </TableCell>
 
             {/* Nền tảng */}
             <TableCell>
-                <Badge className={`admin-dark:text-white font-medium  `}
+                <Badge className={`admin-dark:text-white font-medium text-white `}
                     style={{ backgroundColor: post.platform_color }}>
                     {post.platform_name}
                 </Badge>
@@ -69,8 +68,8 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
 
             {/* Trạng thái */}
             <TableCell>
-                <Badge className="text-white font-medium bg-gray-500">
-                    {post.status}
+                <Badge className={`text-white font-medium ${post.status === "published" ? "bg-green-500" : post.status === "draft" ? "bg-gray-700" : "bg-orange-700"} `}>
+                    {post.status === "published" ? "Đã đăng" : post.status === "draft" ? "Nháp" : "Lưu trữ"}
                 </Badge>
             </TableCell>
 
@@ -81,8 +80,6 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                     {post.author_name}
                 </div>
             </TableCell>
-
-
 
 
 

@@ -128,8 +128,8 @@ export default function ContactPage() {
       render: (value) => (
         <span
           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${value === "Đã phản hồi"
-              ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
-              : "bg-amber-100 text-amber-800 border border-amber-200"
+            ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+            : "bg-amber-100 text-amber-800 border border-amber-200"
             }`}
         >
           <div className={`w-2 h-2 rounded-full mr-2 ${value === "Đã phản hồi" ? "bg-emerald-400" : "bg-amber-400"
@@ -281,8 +281,8 @@ export default function ContactPage() {
                   key={page}
                   onClick={() => setCurrentPage(page)}
                   className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${currentPage === page
-                      ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                      : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                    ? 'z-10 bg-blue-600 text-white focus:z-20  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                    : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
                     }`}
                 >
                   {page}

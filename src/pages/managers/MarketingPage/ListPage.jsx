@@ -31,13 +31,15 @@ export default function ListPage() {
         const matchesSearch =
             (post.title || "").toLowerCase().includes(lowerSearch) ||
             (post.author || "").toLowerCase().includes(lowerSearch) ||
-            (post.tags || "").toLowerCase().includes(lowerSearch);
+            (post.tags || "").toLowerCase().includes(lowerSearch) ||
+            (post.platform_name || "").toLowerCase().includes(lowerSearch); // ✅ tìm theo network name
 
         const matchesStatus =
             selectedStatus === "all" || post.status === selectedStatus;
 
         return matchesSearch && matchesStatus;
     });
+
 
 
 
