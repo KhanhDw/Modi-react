@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { HiX } from "react-icons/hi";
 import ThemeToggle from './ThemeToggle';
 import { useLanguage } from '../../../contexts/LanguageContext';
+
+const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000";
 
 function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
   const { t } = useLanguage();
@@ -369,18 +371,35 @@ function ModalServices() {
 
 function ModalDesignWeb() {
   const { t } = useLanguage();
-  const designItems = [
-    { title: t("header.designweb.listDesign.0"), slug: "introductory-website-design" },
-    { title: t("header.designweb.listDesign.1"), slug: "e-commerce-website-design" },
-    { title: t("header.designweb.listDesign.2"), slug: "service-website-design" },
-    { title: t("header.designweb.listDesign.3"), slug: "news-website-design" },
-    { title: t("header.designweb.listDesign.4"), slug: "real-estate-website-design" },
-    { title: t("header.designweb.listDesign.5"), slug: "tourism-website-design" },
-    { title: t("header.designweb.listDesign.6"), slug: "education-website-design" },
-    { title: t("header.designweb.listDesign.7"), slug: "personal-website-design" },
-  ];
-
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [categories, setCategories] = useState([]); // State cho danh mục động
+
+  // Gọi API để lấy danh mục
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/web-samples`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const result = await res.json();
+        const parsedData = (result.data || []).map((item) => ({
+          ...item,
+          tags: typeof item.tags === "string" ? JSON.parse(item.tags) : item.tags,
+          tech: typeof item.tech === "string" ? JSON.parse(item.tech) : item.tech,
+          top_features: typeof item.top_features === "string" ? JSON.parse(item.top_features) : item.top_features,
+          export_state: item.export_state ? 1 : 0,
+        }));
+        const activeData = parsedData.filter((item) => item.export_state === 1);
+        const uniqueCategories = [...new Set(activeData.map((s) => s.category))]; // Không thêm "Tất cả"
+        setCategories(uniqueCategories.map(category => ({
+          title: category,
+          slug: category // Lấy thẳng category làm slug (sẽ encode sau)
+        })));
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleMouseEnterItem = (index) => {
     setHoveredItem(index);
@@ -398,7 +417,7 @@ function ModalDesignWeb() {
       <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl p-4 relative">
         <div className="min-w-[300px] lg:min-w-[400px] xl:min-w-[200px] relative">
           <div className="space-y-1">
-            {designItems.map((item, index) => {
+            {categories.map((item, index) => {
               const isActive = hoveredItem === index;
 
               return (
@@ -428,7 +447,7 @@ function ModalDesignWeb() {
 
                   <div className="flex items-center justify-between relative z-10">
                     <Link
-                      to={`/Products/${item.slug}`}
+                      to={`/Products?category=${encodeURIComponent(item.title)}`} // Encode trực tiếp category
                       className={`
                         flex-1 text-xs lg:text-sm transition-all duration-300
                         ${isActive ? 'font-bold' : 'font-medium group-hover:font-semibold'}
@@ -449,6 +468,35 @@ function ModalDesignWeb() {
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const { t } = useLanguage();
+  const [categories, setCategories] = useState([]); // State cho danh mục động trong Sidebar
+
+  // Gọi API để lấy danh mục cho Sidebar
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/web-samples`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const result = await res.json();
+        const parsedData = (result.data || []).map((item) => ({
+          ...item,
+          tags: typeof item.tags === "string" ? JSON.parse(item.tags) : item.tags,
+          tech: typeof item.tech === "string" ? JSON.parse(item.tech) : item.tech,
+          top_features: typeof item.top_features === "string" ? JSON.parse(item.top_features) : item.top_features,
+          export_state: item.export_state ? 1 : 0,
+        }));
+        const activeData = parsedData.filter((item) => item.export_state === 1);
+        const uniqueCategories = [...new Set(activeData.map((s) => s.category))]; // Không thêm "Tất cả"
+        setCategories(uniqueCategories.map(category => ({
+          title: category,
+          slug: category // Lấy thẳng
+        })));
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const MenuHeader = [
     { id: 1, name: t("header.home.title"), link: '/' },
     { id: 2, name: t("header.about.title"), link: '/about' },
@@ -456,16 +504,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
       id: 3,
       name: t("header.designweb.title"),
       link: '/Products',
-      subItems: [
-        { title: t("header.designweb.listDesign.0"), slug: "introductory-website-design" },
-        { title: t("header.designweb.listDesign.1"), slug: "e-commerce-website-design" },
-        { title: t("header.designweb.listDesign.2"), slug: "service-website-design" },
-        { title: t("header.designweb.listDesign.3"), slug: "news-website-design" },
-        { title: t("header.designweb.listDesign.4"), slug: "real-estate-website-design" },
-        { title: t("header.designweb.listDesign.5"), slug: "tourism-website-design" },
-        { title: t("header.designweb.listDesign.6"), slug: "education-website-design" },
-        { title: t("header.designweb.listDesign.7"), slug: "personal-website-design" },
-      ],
+      subItems: categories // Sử dụng danh mục động
     },
     { id: 4, name: t("header.marketing.title"), link: '/marketing' },
     {
@@ -473,6 +512,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
       name: t("header.services.title"),
       link: '/services',
       subItems: [
+        // Giữ nguyên subItems tĩnh cho services
         {
           title: t("header.services.listServices.0"),
           slug: "online-kickstart",
@@ -494,10 +534,9 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
         },
         { title: t("header.services.listServices.3"), slug: "online-store" },
         { title: t("header.services.listServices.4"), slug: "service-booking" },
-        // { title: t("header.services.listServices.5"), slug: "comprehensive-management" },
         {
           title: t("header.services.listServices.5"),
-          slug: "brand-building",
+          slug: "comprehensive-management",
           subSubItems: [
             { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
             { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
@@ -605,7 +644,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                             }}
                           >
                             <Link 
-                              to={sub.slug ? `${item.link}/${sub.slug}` : sub.link} 
+                              to={sub.slug ? `${item.link}?category=${encodeURIComponent(sub.title)}` : sub.link} // Encode cho design web
                               onClick={(e) => { if (sub.subSubItems) e.preventDefault(); }}
                               className="flex-1 text-xs sm:text-sm group-hover:font-medium transition-all duration-300"
                             >

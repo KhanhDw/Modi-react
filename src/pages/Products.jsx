@@ -1,21 +1,32 @@
-// Products.jsx
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { Search, Filter, Github, Eye, Star } from "lucide-react"
 
 const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000"
 
 export default function Products() {
+  const location = useLocation();
   const [visibleCards, setVisibleCards] = useState([])
   const [selectedCategory, setSelectedCategory] = useState("Tất cả")
   const [searchTerm, setSearchTerm] = useState("")
   const [samples, setSamples] = useState([])
   const [filteredSamples, setFilteredSamples] = useState([])
+
+  // Đọc tham số category từ URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryFromUrl = params.get("category");
+    if (categoryFromUrl) {
+      setSelectedCategory(decodeURIComponent(categoryFromUrl)); // Decode trực tiếp để khớp DB
+    } else {
+      setSelectedCategory("Tất cả"); // Reset khi không có param
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const fetchSamples = async () => {
@@ -82,8 +93,6 @@ export default function Products() {
   }, [selectedCategory, searchTerm, samples])
 
   const categories = ["Tất cả", ...new Set(samples.map((s) => s.category))]
-
-
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-7xl mx-auto">
