@@ -7,6 +7,7 @@ export const ServiceAPI = {
   getALL: () => `${serviceUrl}`,
   create: () => `${serviceUrl}`,
   delete: (id) => `${serviceUrl}/${id}`,
+  edit: (id) => `${serviceUrl}/${id}`,
 };
 
 export const UploadAPI = {

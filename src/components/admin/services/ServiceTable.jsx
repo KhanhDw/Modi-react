@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Edit, Trash2, MoreHorizontal, Car } from "lucide-react";
+import { Search, MoreHorizontal, Filter } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,13 +25,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 export default function ServiceTable() {
   const {
     initDataService,
+    openEditServiceForm,
     handleEditService,
     viewDetail,
     handleDeleteService,
   } = useOutletContext();
+  const [search, setSearch] = useState("");
+
+  const filteredService = initDataService.filter((service) =>
+    service.ten_dich_vu.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <Card className="bg-gray-100">
       <CardHeader>
@@ -46,19 +60,13 @@ export default function ServiceTable() {
           <div className="flex items-center gap-2">
             <div className="relative bg-white rounded-md shadow-sm text-black">
               <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Tìm kiếm dịch vụ..." className="pl-10 w-64" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Tìm kiếm dịch vụ..."
+                className="pl-10 w-64"
+              />
             </div>
-            {/* <Select>
-              <SelectTrigger className="w-40">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Trạng thái" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Tất cả</SelectItem>
-                <SelectItem value="">Đang hoạt động </SelectItem>
-                <SelectItem value="">Ngưng hoạt động</SelectItem>
-              </SelectContent>
-            </Select> */}
           </div>
         </div>
       </CardHeader>
@@ -76,7 +84,7 @@ export default function ServiceTable() {
             </TableHeader>
             <TableBody>
               {/* Example data, replace with actual data */}
-              {initDataService.map((item) => (
+              {filteredService.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>{item.ten_dich_vu}</TableCell>
                   <TableCell>{item.mo_ta}</TableCell>
@@ -103,7 +111,7 @@ export default function ServiceTable() {
                           Xem chi tiết
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleEditService(item)}
+                          onClick={() => openEditServiceForm(item)}
                         >
                           Chỉnh sửa
                         </DropdownMenuItem>

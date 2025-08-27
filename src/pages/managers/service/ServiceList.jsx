@@ -2,7 +2,6 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceTable from "@/components/admin/services/ServiceTable";
 import ServiceForm from "@/components/admin/services/service-form";
-import ArticleServiceForm from "@/components/admin/services/articles/article-form";
 import { useOutletContext } from "react-router-dom";
 import {
   Dialog,
@@ -13,7 +12,8 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ServiceList() {
-  const { handleOpen, showForm, setShowForm } = useOutletContext();
+  const { handleOpen, showForm, setShowForm, editingService } =
+    useOutletContext();
 
   return (
     <div className="space-y-6">
@@ -35,7 +35,11 @@ export default function ServiceList() {
       <ServiceTable />
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="min-w-[70vw] min-h-[60vh] bg-white p-6 text-black shadow-2xl">
+        <DialogContent
+          className={` ${
+            !editingService ? `min-w-[70vw]` : ``
+          } min-h-[60vh] bg-white p-6 text-black shadow-2xl`}
+        >
           <ServiceForm />
         </DialogContent>
       </Dialog>

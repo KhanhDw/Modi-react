@@ -61,7 +61,7 @@ export default function ServicesPage() {
     price = parseFloat(price);
     const dataService = {
       name: formData.serviceName,
-      desc: formData.desc,
+      decs: formData.desc,
       headerArticle: formData.header,
       footerArticle: formData.footer,
       contentArticle: JSON.stringify(formData.content || {}),
@@ -104,9 +104,37 @@ export default function ServicesPage() {
     await fetchServices();
   };
 
-  const handleEditService = (service) => {
+  const openEditServiceForm = (service) => {
     setEditingService(service);
     setShowForm(true);
+  };
+
+  const handleEditService = async (formData, id) => {
+    try {
+      const dataEditService = {
+        ten_dich_vu: formData.serviceName,
+        mo_ta: formData.desc,
+        price: formData.price,
+      };
+
+      const res = await fetch(ServiceAPI.edit(id), {
+        method: "PUT",
+        body: JSON.stringify(dataEditService),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Error when edit service data");
+      }
+      if (res.ok) {
+        await fetchServices();
+        handleClose();
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+    }
   };
 
   return (
@@ -193,6 +221,7 @@ export default function ServicesPage() {
             editingService,
             setEditingService,
             handleCreateService,
+            openEditServiceForm,
             handleEditService,
             handleDeleteService,
           }}
