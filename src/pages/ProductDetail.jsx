@@ -172,6 +172,24 @@ export default function ProductDetail() {
                 ))}
               </div>
             )}
+
+            {/* Features */}
+            {product.top_features && (
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
+                  <Zap className="w-5 h-5 mr-2" />
+                  Tính năng nổi bật
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {product.top_features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-border  rounded-lg">
+                      <div className="w-2 h-2 bg-primary rounded-full" />
+                      <span className="">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Product Info */}
@@ -205,7 +223,7 @@ export default function ProductDetail() {
                   <Code className="w-5 h-5 mr-2" />
                   Công nghệ sử dụng
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 ">
                   {product.tech.map((tech, index) => (
                     <Badge key={index} variant="secondary">
                       {tech}
@@ -216,7 +234,7 @@ export default function ProductDetail() {
             )}
 
             {/* Features */}
-            {product.top_features && (
+            {/* {product.top_features && (
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
                   <Zap className="w-5 h-5 mr-2" />
@@ -231,7 +249,7 @@ export default function ProductDetail() {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
