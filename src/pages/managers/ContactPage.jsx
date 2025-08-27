@@ -96,11 +96,11 @@ export default function ContactPage() {
     { 
       key: "ho_ten", 
       label: "Họ tên", 
-      className: "font-semibold text-gray-900",
+      className: "font-semibold admin-dark:text-gray-100 text-gray-900",
       render: (value) => (
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-            <span className="text-blue-600 font-semibold text-sm">
+          <div className="w-8 h-8 admin-dark:bg-blue-900 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+            <span className="admin-dark:text-blue-300 text-blue-600 font-semibold text-sm">
               {value.charAt(0).toUpperCase()}
             </span>
           </div>
@@ -112,14 +112,14 @@ export default function ContactPage() {
       key: "email", 
       label: "Email",
       render: (value) => (
-        <span className="text-gray-600">{value}</span>
+        <span className="admin-dark:text-gray-300 text-gray-600">{value}</span>
       )
     },
     { 
       key: "so_dien_thoai", 
       label: "Điện thoại",
       render: (value) => (
-        <span className="font-mono text-sm text-gray-700">{value}</span>
+        <span className="font-mono text-sm admin-dark:text-gray-200 text-gray-700">{value}</span>
       )
     },
     {
@@ -129,12 +129,12 @@ export default function ContactPage() {
         <span
           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
             value === "Đã phản hồi" 
-              ? "bg-emerald-100 text-emerald-800 border border-emerald-200" 
-              : "bg-amber-100 text-amber-800 border border-amber-200"
+              ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200" 
+              : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
           }`}
         >
           <div className={`w-2 h-2 rounded-full mr-2 ${
-            value === "Đã phản hồi" ? "bg-emerald-400" : "bg-amber-400"
+            value === "Đã phản hồi" ? "admin-dark:bg-emerald-400 bg-emerald-400" : "admin-dark:bg-amber-400 bg-amber-400"
           }`}></div>
           {value}
         </span>
@@ -147,10 +147,10 @@ export default function ContactPage() {
         const date = new Date(value);
         return (
           <div className="text-sm">
-            <div className="font-medium text-gray-900">
+            <div className="font-medium admin-dark:text-gray-100 text-gray-900">
               {date.toLocaleDateString('vi-VN')}
             </div>
-            <div className="text-gray-500">
+            <div className="admin-dark:text-gray-400 text-gray-500">
               {date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
             </div>
           </div>
@@ -220,26 +220,26 @@ export default function ContactPage() {
     }
 
     return (
-      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+      <div className="flex items-center justify-between border-t admin-dark:border-gray-700 border-gray-200 admin-dark:bg-gray-800 bg-white px-4 py-3 sm:px-6">
         <div className="flex flex-1 justify-between sm:hidden">
           <button
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="relative inline-flex items-center rounded-md border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-300 admin-dark:hover:bg-gray-600 border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Trước
           </button>
           <button
             onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
-            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="relative ml-3 inline-flex items-center rounded-md border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-300 admin-dark:hover:bg-gray-600 border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Sau
           </button>
         </div>
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
-            {/* <p className="text-sm text-gray-700">
+            {/* <p className="text-sm admin-dark:text-gray-300 text-gray-700">
               Hiển thị{' '}
               <span className="font-medium">{startIndex + 1}</span>
               {' '}đến{' '}
@@ -254,7 +254,7 @@ export default function ContactPage() {
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center rounded-l-md px-2 py-2 admin-dark:text-gray-400 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sr-only">Previous</span>
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -266,12 +266,12 @@ export default function ContactPage() {
                 <>
                   <button
                     onClick={() => setCurrentPage(1)}
-                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                   >
                     1
                   </button>
                   {startPage > 2 && (
-                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold admin-dark:text-gray-400 admin-dark:ring-gray-600 text-gray-700 ring-1 ring-inset ring-gray-300">
                       ...
                     </span>
                   )}
@@ -285,7 +285,7 @@ export default function ContactPage() {
                   className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
                     currentPage === page
                       ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                      : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                      : 'admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
                   }`}
                 >
                   {page}
@@ -295,13 +295,13 @@ export default function ContactPage() {
               {endPage < totalPages && (
                 <>
                   {endPage < totalPages - 1 && (
-                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold admin-dark:text-gray-400 admin-dark:ring-gray-600 text-gray-700 ring-1 ring-inset ring-gray-300">
                       ...
                     </span>
                   )}
                   <button
                     onClick={() => setCurrentPage(totalPages)}
-                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                   >
                     {totalPages}
                   </button>
@@ -311,7 +311,7 @@ export default function ContactPage() {
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center rounded-r-md px-2 py-2 admin-dark:text-gray-400 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sr-only">Next</span>
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -326,10 +326,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen admin-dark:bg-gray-900 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Quản lý liên hệ</h1>
+          <h1 className="text-2xl font-bold admin-dark:text-gray-100 text-gray-900">Quản lý liên hệ</h1>
           <div className="flex items-center space-x-4">
             {/* New Search Bar */}
             <input
@@ -337,13 +337,13 @@ export default function ContactPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm theo tên, số điện thoại, email..."
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-64"
+              className="px-4 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-64"
             />
             {/* Existing Date Filter */}
             <select
               value={dateFilter}
               onChange={(e) => handleFilterChange(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+              className="px-4 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
             >
               <option value="all">Tất cả thời gian</option>
               <option value="today">Hôm nay</option>
@@ -356,8 +356,8 @@ export default function ContactPage() {
         {/* Statistics Cards */}
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div 
-            className={`bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "all" && dateFilter === "all" ? "border-blue-400 bg-blue-50" : "border-gray-200 hover:border-blue-300"
+            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
+              statusFilter === "all" && dateFilter === "all" ? "admin-dark:border-blue-500 admin-dark:bg-blue-900/20 border-blue-400 bg-blue-50" : "admin-dark:border-gray-600 admin-dark:hover:border-blue-400 border-gray-200 hover:border-blue-300"
             }`}
             onClick={handleShowAll}
           >
@@ -374,8 +374,8 @@ export default function ContactPage() {
                 </div>
                 <div className="ml-4 w-0 flex-1">
                   <dl>
-                    <dt className="text-xs font-medium text-gray-500 truncate">Tổng liên hệ</dt>
-                    <dd className="text-xl font-bold text-gray-900">{total}</dd>
+                    <dt className="text-xs font-medium admin-dark:text-gray-400 text-gray-500 truncate">Tổng liên hệ</dt>
+                    <dd className="text-xl font-bold admin-dark:text-gray-100 text-gray-900">{total}</dd>
                   </dl>
                 </div>
                 {statusFilter === "all" && dateFilter === "all" && (
@@ -388,8 +388,8 @@ export default function ContactPage() {
           </div>
 
           <div 
-            className={`bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "pending" ? "border-amber-400 bg-amber-50" : "border-gray-200 hover:border-amber-300"
+            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
+              statusFilter === "pending" ? "admin-dark:border-amber-500 admin-dark:bg-amber-900/20 border-amber-400 bg-amber-50" : "admin-dark:border-gray-600 admin-dark:hover:border-amber-400 border-gray-200 hover:border-amber-300"
             }`}
             onClick={() => handleStatusFilterChange(statusFilter === "pending" ? "all" : "pending")}
           >
@@ -406,8 +406,8 @@ export default function ContactPage() {
                 </div>
                 <div className="ml-4 w-0 flex-1">
                   <dl>
-                    <dt className="text-xs font-medium text-gray-500 truncate">Chờ phản hồi</dt>
-                    <dd className="text-xl font-bold text-gray-900">{pending}</dd>
+                    <dt className="text-xs font-medium admin-dark:text-gray-400 text-gray-500 truncate">Chờ phản hồi</dt>
+                    <dd className="text-xl font-bold admin-dark:text-gray-100 text-gray-900">{pending}</dd>
                   </dl>
                 </div>
                 {statusFilter === "pending" && (
@@ -420,8 +420,8 @@ export default function ContactPage() {
           </div>
 
           <div 
-            className={`bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "responded" ? "border-emerald-400 bg-emerald-50" : "border-gray-200 hover:border-emerald-300"
+            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
+              statusFilter === "responded" ? "admin-dark:border-emerald-500 admin-dark:bg-emerald-900/20 border-emerald-400 bg-emerald-50" : "admin-dark:border-gray-600 admin-dark:hover:border-emerald-400 border-gray-200 hover:border-emerald-300"
             }`}
             onClick={() => handleStatusFilterChange(statusFilter === "responded" ? "all" : "responded")}
           >
@@ -438,8 +438,8 @@ export default function ContactPage() {
                 </div>
                 <div className="ml-4 w-0 flex-1">
                   <dl>
-                    <dt className="text-xs font-medium text-gray-500 truncate">Đã phản hồi</dt>
-                    <dd className="text-xl font-bold text-gray-900">{responded}</dd>
+                    <dt className="text-xs font-medium admin-dark:text-gray-400 text-gray-500 truncate">Đã phản hồi</dt>
+                    <dd className="text-xl font-bold admin-dark:text-gray-100 text-gray-900">{responded}</dd>
                   </dl>
                 </div>
                 {statusFilter === "responded" && (
@@ -453,7 +453,7 @@ export default function ContactPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+        <div className="admin-dark:bg-gray-800 bg-white shadow-sm rounded-lg border admin-dark:border-gray-700 border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <Table 
               columns={columns} 
