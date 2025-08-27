@@ -35,8 +35,11 @@ export default function Products() {
           export_state: item.export_state ? 1 : 0,
         }))
 
-        setSamples(parsedData)
-        setFilteredSamples(parsedData)
+
+        const activeData = parsedData.filter((item) => item.export_state === 1)
+
+        setSamples(activeData)
+        setFilteredSamples(activeData)
       } catch (err) {
         console.error("Error fetching products:", err)
       }
@@ -70,6 +73,7 @@ export default function Products() {
     if (searchTerm) {
       filtered = filtered.filter(
         (sample) =>
+           sample.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           sample.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           sample.tech?.some((tech) => tech.toLowerCase().includes(searchTerm.toLowerCase())),
       )

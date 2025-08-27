@@ -269,7 +269,7 @@ export default function ProductDetail() {
                 <Button size="lg" variant="outline" asChild>
                   <a href={product.url_github} target="_blank" rel="noopener noreferrer">
                     <Github className="w-4 h-4 mr-2" />
-                    GitHub
+                    Xem website mẫu
                   </a>
                 </Button>
               )}

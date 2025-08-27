@@ -57,7 +57,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
           >
             <Link
               to="/Products"
-              className={`flex justify-center items-center text-lg h-full ${location.pathname.startsWith('/design-website') ? 'text-green-400' : 'text-white'}`}
+              className={`flex justify-center items-center text-lg h-full ${location.pathname.startsWith('/Products') ? 'text-green-400' : 'text-white'}`}
             >
               {t("header.designweb.title")} 
               <IoMdArrowDropdown className={`ml-1 ${isHoverDesignWeb ? 'rotate-180' : ''}`} />
@@ -428,7 +428,7 @@ function ModalDesignWeb() {
 
                   <div className="flex items-center justify-between relative z-10">
                     <Link
-                      to={`/design-website/${item.slug}`}
+                      to={`/Products/${item.slug}`}
                       className={`
                         flex-1 text-xs lg:text-sm transition-all duration-300
                         ${isActive ? 'font-bold' : 'font-medium group-hover:font-semibold'}
@@ -455,7 +455,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     {
       id: 3,
       name: t("header.designweb.title"),
-      link: '/design-website',
+      link: '/Products',
       subItems: [
         { title: t("header.designweb.listDesign.0"), slug: "introductory-website-design" },
         { title: t("header.designweb.listDesign.1"), slug: "e-commerce-website-design" },
