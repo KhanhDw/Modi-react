@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { createEditor, Transforms, Editor, Element as SlateElement, Text, Range, Node } from "slate";
 import { ReactEditor, Slate, Editable, withReact, useSlate } from "slate-react";
+import { withHistory } from 'slate-history';
 import {
     Bold,
     Italic,
@@ -105,29 +106,8 @@ const CustomEditor = {
     },
 };
 
-const initialValue = [
-    {
-        type: 'paragraph',
-        children: [{ text: 'Chào mừng đến với Text Editor! Hãy thử các chức năng định dạng văn bản.' }],
-    },
-    {
-        type: 'paragraph',
-        children: [
-            { text: 'Bạn có thể làm cho văn bản ' },
-            { text: 'đậm', bold: true },
-            { text: ', ' },
-            { text: 'nghiêng', italic: true },
-            { text: ', ' },
-            { text: 'gạch chân', underline: true },
-            { text: ', hoặc ' },
-            { text: 'code', code: true },
-            { text: '.' },
-        ],
-    },
-]
-
-function TextEditor({ valueContextNews = '', onChange }) {
-    const [editor] = useState(() => withReact(createEditor()))
+function TextEditor_slate({ valueContextNews = '', onChange }) {
+    const [editor] = useState(() => withReact(withHistory(createEditor())))
 
     const initialValue = useMemo(() => {
         if (!valueContextNews) {
@@ -138,6 +118,7 @@ function TextEditor({ valueContextNews = '', onChange }) {
         // Nếu là chuỗi JSON hợp lệ
         try {
             const parsed = JSON.parse(valueContextNews);
+            console.log("--->.>>>", parsed);
             if (Array.isArray(parsed)) {
                 return parsed;
             }
@@ -150,15 +131,16 @@ function TextEditor({ valueContextNews = '', onChange }) {
         return [{ type: 'paragraph', children: [{ text: '' }] }];
     }, [valueContextNews]);
 
-
     // CẢNH BÁO: Dòng này vẫn còn tiềm ẩn lỗi logic như đã giải thích ở câu trả lời trước.
     const [value, setValue] = useState(initialValue);
 
+    // Cập nhật value khi initialValue thay đổi
     useEffect(() => {
         setValue(initialValue);
-    }, [initialValue]);
-
-
+        // Reset editor với dữ liệu mới
+        editor.children = initialValue;
+        Editor.normalize(editor, { force: true });
+    }, [initialValue, editor]);
 
     const handleChange = (newValue) => {
         setValue(newValue);
@@ -180,53 +162,54 @@ function TextEditor({ valueContextNews = '', onChange }) {
         }
     };
 
-
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
 
     return (
-        <div className="border rounded-lg p-4 shadow bg-white w-full mx-auto admin-dark:bg-slate-800 admin-dark:text-gray-300">
+        <div className="border border-gray-200 admin-dark:border-gray-600 rounded-lg p-4 shadow bg-white admin-dark:bg-slate-800 text-black admin-dark:text-gray-300 w-full mx-auto">
             <Slate
-                // key={editorKey}
                 editor={editor}
                 initialValue={initialValue}
-                value={value}
                 onChange={handleChange}
             >
                 <Toolbar />
-                <Editable
-                    className="mt-4 p-4 border rounded min-h-[300px] focus:outline-none focus:ring-2 focus:ring-blue-500 admin-dark:bg-slate-800 admin-dark:text-gray-300"
-                    renderElement={renderElement}
-                    renderLeaf={renderLeaf}
-                    placeholder="Nhập nội dung tại đây..."
-                    spellCheck
-                    onKeyDown={event => {
-                        if (!event.ctrlKey) return
+                <div className="relative mt-4 p-4 border border-gray-200 admin-dark:border-gray-600 rounded min-h-[300px] focus-within:ring-2 focus-within:ring-blue-500 admin-dark:focus-within:ring-blue-400 bg-white admin-dark:bg-slate-700">
+                    <Editable
+                        className="w-full h-full focus:outline-none text-gray-900 admin-dark:text-gray-100"
+                        renderElement={renderElement}
+                        renderLeaf={renderLeaf}
+                        spellCheck={false}
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        placeholder="Nhập nội dung tại đây..."
+                        onKeyDown={event => {
+                            if (!event.ctrlKey) return
 
-                        switch (event.key) {
-                            case 'b': {
-                                event.preventDefault()
-                                CustomEditor.toggleMark(editor, 'bold')
-                                break
+                            switch (event.key) {
+                                case 'b': {
+                                    event.preventDefault()
+                                    CustomEditor.toggleMark(editor, 'bold')
+                                    break
+                                }
+                                case 'i': {
+                                    event.preventDefault()
+                                    CustomEditor.toggleMark(editor, 'italic')
+                                    break
+                                }
+                                case 'u': {
+                                    event.preventDefault()
+                                    CustomEditor.toggleMark(editor, 'underline')
+                                    break
+                                }
+                                case '`': {
+                                    event.preventDefault()
+                                    CustomEditor.toggleMark(editor, 'code')
+                                    break
+                                }
                             }
-                            case 'i': {
-                                event.preventDefault()
-                                CustomEditor.toggleMark(editor, 'italic')
-                                break
-                            }
-                            case 'u': {
-                                event.preventDefault()
-                                CustomEditor.toggleMark(editor, 'underline')
-                                break
-                            }
-                            case '`': {
-                                event.preventDefault()
-                                CustomEditor.toggleMark(editor, 'code')
-                                break
-                            }
-                        }
-                    }}
-                />
+                        }}
+                    />
+                </div>
             </Slate>
         </div>
     )
@@ -237,9 +220,9 @@ const Toolbar = () => {
 
     const MarkButton = ({ format, icon: Icon }) => (
         <button
-            className={`p-2 rounded admin-dark:text-gray-300 hover:bg-gray-200 ${CustomEditor.isMarkActive(editor, format)
-                ? 'bg-gray-300 text-gray-800'
-                : 'text-gray-600'
+            className={`p-2 rounded transition-colors duration-200 ${CustomEditor.isMarkActive(editor, format)
+                ? 'bg-blue-500 text-white admin-dark:bg-blue-600 admin-dark:text-white'
+                : 'text-gray-600 admin-dark:text-gray-300 hover:bg-gray-200 admin-dark:hover:bg-gray-600 hover:text-gray-800 admin-dark:hover:text-gray-100'
                 }`}
             onMouseDown={event => {
                 event.preventDefault()
@@ -252,13 +235,13 @@ const Toolbar = () => {
 
     const BlockButton = ({ format, icon: Icon }) => (
         <button
-            className={`p-2 rounded admin-dark:text-gray-300 hover:bg-gray-200 ${CustomEditor.isBlockActive(
+            className={`p-2 rounded transition-colors duration-200 ${CustomEditor.isBlockActive(
                 editor,
                 format,
                 TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
             )
-                ? 'bg-gray-300 text-gray-800'
-                : 'text-gray-600'
+                ? 'bg-blue-500 text-white admin-dark:bg-blue-600 admin-dark:text-white'
+                : 'text-gray-600 admin-dark:text-gray-300 hover:bg-gray-200 admin-dark:hover:bg-gray-600 hover:text-gray-800 admin-dark:hover:text-gray-100'
                 }`}
             onMouseDown={event => {
                 event.preventDefault()
@@ -270,7 +253,7 @@ const Toolbar = () => {
     )
 
     return (
-        <div className="flex flex-wrap gap-1 p-2 border-b admin-dark:bg-slate-800 admin-dark:text-gray-400">
+        <div className="flex flex-wrap gap-1 p-2 border-b border-gray-200 admin-dark:border-gray-600 bg-gray-50 admin-dark:bg-slate-700">
             {/* Text formatting */}
             <div className="flex gap-1 mr-4">
                 <MarkButton format="bold" icon={Bold} />
@@ -311,44 +294,44 @@ const Element = ({ attributes, children, element }) => {
                 <blockquote
                     {...attributes}
                     style={style}
-                    className="border-l-4 border-gray-300 pl-4 italic text-gray-700 my-4"
+                    className="border-l-4 border-gray-400 admin-dark:border-gray-500 pl-4 italic text-gray-700 admin-dark:text-gray-300 my-4 bg-gray-50 admin-dark:bg-slate-600 p-3 rounded-r"
                 >
                     {children}
                 </blockquote>
             )
         case 'bulleted-list':
             return (
-                <ul {...attributes} style={style} className="list-disc list-inside my-4">
+                <ul {...attributes} style={style} className="list-disc list-inside my-4 text-gray-800 admin-dark:text-gray-200 pl-4">
                     {children}
                 </ul>
             )
         case 'heading-one':
             return (
-                <h1 {...attributes} style={style} className="text-3xl font-bold my-4">
+                <h1 {...attributes} style={style} className="text-3xl font-bold my-4 text-gray-900 admin-dark:text-gray-100 border-b border-gray-200 admin-dark:border-gray-600 pb-2">
                     {children}
                 </h1>
             )
         case 'heading-two':
             return (
-                <h2 {...attributes} style={style} className="text-2xl font-semibold my-3">
+                <h2 {...attributes} style={style} className="text-2xl font-semibold my-3 text-gray-800 admin-dark:text-gray-200">
                     {children}
                 </h2>
             )
         case 'list-item':
             return (
-                <li {...attributes} style={style} className="my-1">
+                <li {...attributes} style={style} className="my-1 text-gray-800 admin-dark:text-gray-200">
                     {children}
                 </li>
             )
         case 'numbered-list':
             return (
-                <ol {...attributes} style={style} className="list-decimal list-inside my-4">
+                <ol {...attributes} style={style} className="list-decimal list-inside my-4 text-gray-800 admin-dark:text-gray-200 pl-4">
                     {children}
                 </ol>
             )
         default:
             return (
-                <p {...attributes} style={style} className="my-2">
+                <p {...attributes} style={style} className="my-2 text-gray-900 admin-dark:text-gray-100 leading-relaxed">
                     {children}
                 </p>
             )
@@ -357,26 +340,26 @@ const Element = ({ attributes, children, element }) => {
 
 const Leaf = ({ attributes, children, leaf }) => {
     if (leaf.bold) {
-        children = <strong>{children}</strong>
+        children = <strong className="font-bold text-gray-900 admin-dark:text-gray-100">{children}</strong>
     }
 
     if (leaf.code) {
         children = (
-            <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">
+            <code className="bg-gray-100 admin-dark:bg-gray-700 text-pink-600 admin-dark:text-pink-400 px-1 py-0.5 rounded text-sm font-mono border admin-dark:border-gray-600">
                 {children}
             </code>
         )
     }
 
     if (leaf.italic) {
-        children = <em>{children}</em>
+        children = <em className="italic text-gray-800 admin-dark:text-gray-200">{children}</em>
     }
 
     if (leaf.underline) {
-        children = <u>{children}</u>
+        children = <u className="underline text-gray-800 admin-dark:text-gray-200">{children}</u>
     }
 
     return <span {...attributes}>{children}</span>
 }
 
-export default TextEditor
+export default TextEditor_slate

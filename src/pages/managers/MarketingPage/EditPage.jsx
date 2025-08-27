@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,8 +7,11 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SocialNetworkManager from "./SocialNetworkManager";
+import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
+
 
 export default function EditPage() {
+    const editorRef = useRef(null);
     const { formData, setFormData, handleEditPost, reloadPostsAndSocialNetWorks } = useOutletContext();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -65,7 +68,7 @@ export default function EditPage() {
 
     const onSubmit = async () => {
         try {
-
+            const content = editorRef.current?.getHTML();
             const payload = {
                 id,
                 author_id: formData.author_id || 1,   // nếu có author_id
@@ -77,7 +80,8 @@ export default function EditPage() {
                     {
                         lang: formData.lang || "vi",
                         title: formData.title,
-                        content: formData.content,
+                        // content: formData.content,
+                        content: content,
                     },
                 ],
             };
@@ -268,13 +272,20 @@ export default function EditPage() {
                 {/* Cột phải */}
                 <div className="space-y-3 box-border col-span-2 p-4 border-2 border-slate-300 admin-dark:border-slate-600 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
                     <Label>Nội dung bài viết</Label>
-                    <Textarea
+                    {/* <Textarea
                         value={formData.content || ""}
                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                         placeholder="Nhập nội dung bài viết"
                         rows={6}
                         className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-                    />
+                    /> */}
+
+                    {/* <TextEditor
+                        valueContextNews={formData.content}
+                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    /> */}
+
+                    <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" />
                 </div>
             </div>
         </div>

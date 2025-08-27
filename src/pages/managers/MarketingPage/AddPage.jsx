@@ -1,5 +1,5 @@
 // AddPage.jsx (component tổng đã được cập nhật)
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator"
 import SocialNetworkManager from "./SocialNetworkManager";
+import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
 
 export default function AddPage() {
+    const editorRef = useRef(null);
     const navigate = useNavigate();
     const { formData, setFormData, handleAddPost, reloadPostsAndSocialNetWorks } = useOutletContext();
     const [socialNetworks, setSocialNetworks] = useState([]);
@@ -50,7 +52,11 @@ export default function AddPage() {
     }, [setFormData]);
 
     const onSubmit = () => {
-        if (!formData.title || !formData.content || !formData.platform_id || !formData.image) {
+
+        const content = editorRef.current?.getHTML();
+
+        // if (!formData.title || !formData.content || !formData.platform_id || !formData.image) {
+        if (!formData.title || !content || !formData.platform_id || !formData.image) {
             setError("Vui lòng điền đầy đủ thông tin");
             return;
         }
@@ -67,7 +73,7 @@ export default function AddPage() {
                 {
                     lang: formData.lang || "vi",
                     title: formData.title,
-                    content: formData.content,
+                    content: content,
                 },
             ],
         };
@@ -234,13 +240,14 @@ export default function AddPage() {
                 {/* Cột phải */}
                 <div className="space-y-3 box-border col-span-2 p-4 border-2 border-slate-300 admin-dark:border-slate-600 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
                     <Label>Nội dung bài viết</Label>
-                    <Textarea
+                    {/* <Textarea
                         value={formData.content || ""}
                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                         placeholder="Nhập nội dung bài viết"
                         rows={6}
                         className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-                    />
+                    /> */}
+                    <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" />
                 </div>
             </div>
         </div >

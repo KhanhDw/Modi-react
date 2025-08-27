@@ -1,65 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useParams } from 'react-router-dom';
-// Hàm chuyển Slate JSON sang HTML
-export const renderSlateToHTML = (nodes) => {
-    if (!Array.isArray(nodes)) return "";
 
-    const renderNode = (node) => {
-        if (node.text !== undefined) {
-            let text = node.text;
 
-            if (node.bold) text = `<strong>${text}</strong>`;
-            if (node.italic) text = `<em>${text}</em>`;
-            if (node.underline) text = `<u>${text}</u>`;
-            if (node.code) text = `<code>${text}</code>`;
-
-            return text;
-        }
-
-        const children = (node.children || []).map(renderNode).join("");
-
-        switch (node.type) {
-            case "paragraph":
-                return `<p>${children}</p>`;
-            case "block-quote":
-                return `<blockquote style="margin:0;padding-left:8px;border-left:2px solid #ccc;">${children}</blockquote>`;
-            case "numbered-list":
-                return `<ol>${children}</ol>`;
-            case "bulleted-list":
-                return `<ul>${children}</ul>`;
-            case "list-item":
-                return `<li>${children}</li>`;
-            default:
-                return children;
-        }
-    };
-
-    return nodes.map(renderNode).join("");
-};
-
-// Component hiển thị Blog Content
-export const ShowContextBlog = ({ parsedContent }) => {
-    let parsedValue = [];
-    try {
-        parsedValue =
-            typeof parsedContent === "string"
-                ? JSON.parse(parsedContent)
-                : parsedContent;
-    } catch (e) {
-        console.error("JSON parse error:", e);
-    }
-
-    const htmlContent = renderSlateToHTML(parsedValue);
-
-    return (
-        <div
-            className="prose max-w-none text-gray-800 leading-relaxed admin-dark:text-gray-200
-        prose-p:text-inherit prose-strong:text-inherit prose-li:text-inherit prose-blockquote:text-inherit"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-        />
-    );
-};
 
 
 function BlogViewPage() {
@@ -146,12 +89,10 @@ function BlogViewPage() {
                         </div>
 
                         {/* Content */}
-                        {/* <div
+                        <div
                             className="prose max-w-none text-gray-800 leading-relaxed admin-dark:text-gray-200"
                             dangerouslySetInnerHTML={{ __html: blogs.content }}
-                        /> */}
-
-                        <ShowContextBlog parsedContent={blogs.content} />
+                        />
                     </div>
                 </div>
 

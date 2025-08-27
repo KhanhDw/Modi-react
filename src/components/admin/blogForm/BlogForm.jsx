@@ -1,9 +1,11 @@
 import { Textarea } from "@material-tailwind/react";
-import { useState, useEffect } from "react";
-import TextEditor from "@/components/feature/TextEditor";
+import React, { useState, useEffect, useRef } from "react";
+import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
+
 
 
 export default function BlogForm({ blog, onSubmit, onCancel }) {
+  const editorRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -75,13 +77,19 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const content = editorRef.current?.getHTML();  // ✅ lấy nội dung editor
+
+    console.log("===>", content);
+
     const formDataUpload = new FormData();
 
+    // Gom dữ liệu cuối cùng
+    const finalData = { ...formData, content };
+
     // Thêm các field text
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key !== "image") { // bỏ image cũ
-        formDataUpload.append(key, value);
-      }
+    Object.entries(finalData).forEach(([key, value]) => {
+      if (key !== "image") formDataUpload.append(key, value);
     });
 
     // Nếu có file mới upload
@@ -89,9 +97,10 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
       formDataUpload.append("image", file);
     }
 
-    // console.log("-->", formData);
-    onSubmit(formData, file);
+    // Gọi submit với dữ liệu đã có content
+    onSubmit(formDataUpload, file);
   };
+
 
   return (
     <form onSubmit={handleSubmit} className=" text-black w-full flex justify-between items-start gap-5">
@@ -211,10 +220,9 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
             rows="6"
             className="w-full h-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
           /> */}
-          <TextEditor
-            valueContextNews={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-          />
+
+          <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" />
+          {/* <SubmitButton editorRef={editorRef} onSubmit={handleSubmit} /> */}
         </div>
 
 

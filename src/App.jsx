@@ -4,6 +4,7 @@ import { publicRoutes, privateRoutes } from "./routes";
 import PrivateRoute from "./components/guardRouter/PrivateRoute";
 import LenisProvider, { useLenisToggle } from "./contexts/LenisContext";
 import "./App.css";
+
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 

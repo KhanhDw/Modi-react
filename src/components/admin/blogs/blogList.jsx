@@ -7,7 +7,6 @@ import { Clock } from 'lucide-react';
 
 export const isFuture = (dt) => {
     try {
-        console.log(dt);
         const date = typeof dt === "string" ? parseISO(dt) : new Date(dt);
         return isAfter(date, new Date());
     } catch {
@@ -20,9 +19,11 @@ export const renderSlateToHTML = (nodes) => {
     if (!Array.isArray(nodes)) return "";
 
     const renderNode = (node) => {
+        // Trường hợp node text (leaf)
         if (node.text !== undefined) {
             let text = node.text;
 
+            if (!text) return ""; // bỏ qua text rỗng
             if (node.bold) text = `<strong>${text}</strong>`;
             if (node.italic) text = `<em>${text}</em>`;
             if (node.underline) text = `<u>${text}</u>`;
@@ -31,19 +32,23 @@ export const renderSlateToHTML = (nodes) => {
             return text;
         }
 
+        // Render children
         const children = (node.children || []).map(renderNode).join("");
+
+        // Thêm style align nếu có
+        const alignStyle = node.align ? ` style="text-align:${node.align};"` : "";
 
         switch (node.type) {
             case "paragraph":
-                return `<p>${children}</p>`;
+                return `<p${alignStyle}>${children}</p>`;
             case "block-quote":
-                return `<blockquote style="margin:0;padding-left:8px;border-left:2px solid #ccc;">${children}</blockquote>`;
+                return `<blockquote${alignStyle} style="margin:0;padding-left:8px;border-left:2px solid #ccc;">${children}</blockquote>`;
             case "numbered-list":
-                return `<ol>${children}</ol>`;
+                return `<ol${alignStyle}>${children}</ol>`;
             case "bulleted-list":
-                return `<ul>${children}</ul>`;
+                return `<ul${alignStyle}>${children}</ul>`;
             case "list-item":
-                return `<li>${children}</li>`;
+                return `<li${alignStyle}>${children}</li>`;
             default:
                 return children;
         }
@@ -51,6 +56,7 @@ export const renderSlateToHTML = (nodes) => {
 
     return nodes.map(renderNode).join("");
 };
+
 
 
 
@@ -210,12 +216,19 @@ export default function BlogsListPage() {
                                         if (col.name === "content") {
                                             let parsedValue = [];
                                             try {
-                                                parsedValue = typeof value === "string" ? JSON.parse(value) : value;
+                                                parsedValue =
+                                                    typeof value === "string" && value.trim().startsWith("[")
+                                                        ? JSON.parse(value)
+                                                        : value;
                                             } catch (e) {
                                                 console.error("JSON parse error:", e);
+                                                parsedValue = value; // fallback plain text
                                             }
 
-                                            const htmlContent = renderSlateToHTML(parsedValue);
+                                            const htmlContent = Array.isArray(parsedValue)
+                                                ? renderSlateToHTML(parsedValue)
+                                                : parsedValue; // nếu chỉ là text thì render thẳng
+
 
                                             return (
                                                 <td
