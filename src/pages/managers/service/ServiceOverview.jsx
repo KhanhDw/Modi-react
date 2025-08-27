@@ -16,19 +16,10 @@ import {
   Layers,
 } from "lucide-react";
 import SaleAnalytics from "@/components/admin/services/sales/sale-analytics";
+import { useOutletContext } from "react-router-dom";
 
 export default function ServiceOverview() {
-  const location = useLocation();
-  const { data } = location.state || {};
-
-  const services = data.map((item) => ({
-    id: item.id,
-    name: item.ten_dich_vu,
-    desc: item.mo_ta,
-    price: 10000000,
-    order: "10",
-  }));
-
+  const { initDataService } = useOutletContext();
   return (
     <div className="text-black">
       <div className="space-y-6">
@@ -42,7 +33,7 @@ export default function ServiceOverview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-black">
-                {services.length}
+                {initDataService.length}
               </div>
               <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p>
             </CardContent>
@@ -57,8 +48,11 @@ export default function ServiceOverview() {
             <CardContent>
               <div className="text-2xl font-bold text-black">
                 ₫
-                {services
-                  ?.reduce((total, service) => total + (service.price ?? 0), 0)
+                {initDataService
+                  ?.reduce(
+                    (total, service) => total + (service.revenue ?? 0),
+                    0
+                  )
                   .toLocaleString()}
               </div>
               <p className="text-xs text-[#5ea25e]">+20.1% từ tháng trước</p>
@@ -71,10 +65,10 @@ export default function ServiceOverview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-black">
-                {services.length}
+                {initDataService.length}
               </div>
               <p className="text-xs text-[#5ea25e]">
-                +{services.length} từ tháng trước
+                +{initDataService.length} từ tháng trước
               </p>
             </CardContent>
           </Card>
@@ -85,10 +79,10 @@ export default function ServiceOverview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-black">
-                {services.length}
+                {initDataService.length}
               </div>
               <p className="text-xs text-[#5ea25e]">
-                +{services.length} từ tháng trước
+                +{initDataService.length} từ tháng trước
               </p>
             </CardContent>
           </Card>
@@ -105,7 +99,7 @@ export default function ServiceOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {services
+              {initDataService
                 .filter((service) => service.order >= 10)
                 .map((service, index) => (
                   <div

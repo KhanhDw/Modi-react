@@ -24,57 +24,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-export default function ServiceTable({ services, onSubmit, onCancel }) {
-  // const [formData, setFormData] = useState({
-  //   ten_dich_vu: "",
-  //   mo_ta: "",
-  // });
-
-  // // Reset form khi service thay đổi hoặc khi chuyển sang chế độ thêm mới
-  // useEffect(() => {
-  //   if (service) {
-  //     setFormData({
-  //       ten_dich_vu: service.ten_dich_vu || "",
-  //       mo_ta: service.mo_ta || "",
-  //     });
-  //   } else {
-  //     // Reset form về trống khi không có service (chế độ thêm mới)
-  //     setFormData({ ten_dich_vu: "", mo_ta: "" });
-  //   }
-  // }, [service]);
-
-  // const handleChange = (e) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (!formData.ten_dich_vu.trim()) {
-  //     alert("Vui lòng nhập tên dịch vụ");
-  //     return;
-  //   }
-  //   onSubmit(formData);
-  //   // Không reset form sau submit để giữ dữ liệu cho lần tiếp theo
-  // };
-
-  // const handleCancel = () => {
-  //   if (!service) {
-  //     // Reset form khi hủy thêm mới
-  //     setFormData({ ten_dich_vu: "", mo_ta: "" });
-  //   }
-  //   onCancel();
-  // };
-
+import { useOutletContext } from "react-router-dom";
+export default function ServiceTable() {
+  const {
+    initDataService,
+    handleEditService,
+    viewDetail,
+    handleDeleteService,
+  } = useOutletContext();
   return (
     <Card className="bg-gray-100">
       <CardHeader>
@@ -119,10 +76,10 @@ export default function ServiceTable({ services, onSubmit, onCancel }) {
             </TableHeader>
             <TableBody>
               {/* Example data, replace with actual data */}
-              {services.map((item) => (
+              {initDataService.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.desc}</TableCell>
+                  <TableCell>{item.ten_dich_vu}</TableCell>
+                  <TableCell>{item.mo_ta}</TableCell>
                   <TableCell>{`₫${item.price.toLocaleString()}`}</TableCell>
                   <TableCell>
                     {/* {item.status ? ( */}
@@ -140,13 +97,19 @@ export default function ServiceTable({ services, onSubmit, onCancel }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         {/* Add more actions here */}
-                        <DropdownMenuItem onClick={() => console.log("Edit")}>
+                        <DropdownMenuItem
+                          onClick={() => console.log("View Detail")}
+                        >
                           Xem chi tiết
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log("Edit")}>
+                        <DropdownMenuItem
+                          onClick={() => handleEditService(item)}
+                        >
                           Chỉnh sửa
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log("Delete")}>
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteService(item.id)}
+                        >
                           Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>

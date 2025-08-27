@@ -1,15 +1,25 @@
-import  React from "react"
+import React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon, Target, DollarSign } from "lucide-react"
-
-
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { CalendarIcon, Target, DollarSign } from "lucide-react";
 
 export default function CampaignForm({ onSubmit, onCancel, initialData }) {
   const [formData, setFormData] = useState({
@@ -21,16 +31,16 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
     status: initialData?.status || "planned",
     targetAudience: initialData?.targetAudience || "",
     objectives: initialData?.objectives || "",
-  })
+  });
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value })); 
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -40,9 +50,11 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
           {initialData ? "Chỉnh sửa chiến dịch" : "Tạo chiến dịch mới"}
         </CardTitle>
         <CardDescription>
-          {initialData ? "Cập nhật thông tin chiến dịch" : "Điền thông tin để tạo chiến dịch marketing mới"}
+          {initialData
+            ? "Cập nhật thông tin chiến dịch"
+            : "Điền thông tin để tạo chiến dịch marketing mới"}
         </CardDescription>
-      </CardHeader>
+      </CardHeader>mm
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -118,7 +130,10 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>
-              <Select value={formData.status} onValueChange={(value) => handleChange("status", value)}>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => handleChange("status", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn trạng thái" />
                 </SelectTrigger>
@@ -156,12 +171,17 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
             <Button type="submit" className="flex-1">
               {initialData ? "Cập nhật chiến dịch" : "Tạo chiến dịch"}
             </Button>
-            <Button type="button" variant="outline" onClick={onCancel} className="flex-1 bg-transparent">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="flex-1 bg-transparent"
+            >
               Hủy
             </Button>
           </div>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

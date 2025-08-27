@@ -1,35 +1,8 @@
-import PageHeader from "../../components/admin/common/PageHeader";
 import { useState, useEffect } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import {
-  BarChart3,
-  Users,
-  Mail,
-  Search,
-  Share2,
-  Target,
-  DollarSign,
-  Eye,
-  MousePointer,
-  Calendar,
-  FileText,
-  Hash,
-  Facebook,
-  Youtube,
-  MessageCircle,
-  Send,
-  Settings,
-  Plus,
-  Link,
-  ShoppingCart,
-  User,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-
+import { NavLink, Outlet, useLocation, Navigate } from "react-router-dom";
+import { BarChart3, Users, Target, ShoppingCart } from "lucide-react";
+import { ServiceAPI } from "@/api/serviceAPI";
 import ThemeToggle from "@/components/layout/partials/ThemeToggle";
-
-// const ServiceOverview = ({ services }) => <div className="space-y-6"></div>;
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -38,14 +11,12 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = useLocation();
+
   // Lấy danh sách dịch vụ từ API
   const fetchServices = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/services`
-      );
-      if (!res.ok) throw new Error("Không thể tải dữ liệu");
+      const res = await fetch(ServiceAPI.getALL());
       const data = await res.json();
       setServices(Array.isArray(data) ? data : []);
       setError(null);
@@ -60,9 +31,84 @@ export default function ServicesPage() {
   useEffect(() => {
     fetchServices();
   }, []);
+
   if (loading)
     return <div className="p-6 text-center text-green-800">Đang tải...</div>;
   if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
+
+  // Default overview service page
+  if (location.pathname === "/managers/services") {
+    return <Navigate to="/managers/services/service_overview" replace />;
+  }
+
+  const handleOpen = () => {
+    setShowForm(true);
+  };
+
+  const handleClose = () => {
+    setEditingService(null);
+    setShowForm(false);
+  };
+
+  // Xu ly gui du lieu ve server thuc hien tao dich vu
+  const handleCreateService = async (formData) => {
+    let price = formData.price;
+
+    // Loại bỏ dấu chấm hoặc dấu phẩy hàng nghìn
+    price = price.replace(/[.,]/g, "");
+    price = parseFloat(price);
+
+    price = parseFloat(price);
+    const dataService = {
+      name: formData.serviceName,
+      desc: formData.desc,
+      headerArticle: formData.header,
+      footerArticle: formData.footer,
+      contentArticle: JSON.stringify(formData.content || {}),
+      lang: formData.lang || "vi",
+      price: price || 0,
+    };
+
+    try {
+      const res = await fetch(ServiceAPI.create(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataService),
+      });
+
+      if (!res.ok) {
+        throw new Error("Loi khi tao dich vu");
+      }
+      const result = await res.json();
+    } catch (err) {
+      console.error("Loi khi tao dich vu:", err);
+    }
+    await fetchServices();
+    handleClose();
+  };
+
+  const handleDeleteService = async (id) => {
+    try {
+      const res = await fetch(ServiceAPI.delete(id), {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Error when delete service");
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+    await fetchServices();
+  };
+
+  const handleEditService = (service) => {
+    setEditingService(service);
+    setShowForm(true);
+  };
+
   return (
     <div className="min-h-screen bg-white rounded-2xl shadow-[0_35px_35px_rgba(0,0,0,0.25)] ">
       <div className="container mx-auto px-6 py-8">
@@ -70,7 +116,6 @@ export default function ServicesPage() {
           <nav className="flex justify-center">
             <NavLink
               to="service_overview"
-              state={{ data: services }}
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
                   isActive || location.pathname === "/managers/services"
@@ -98,7 +143,6 @@ export default function ServicesPage() {
             </NavLink>
             <NavLink
               to="service_booking"
-              state={{ data: services }}
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
                   isActive
@@ -138,7 +182,21 @@ export default function ServicesPage() {
             </NavLink>
           </nav>
         </div>
-        <Outlet />
+        <Outlet
+          context={{
+            //Dich vu
+            initDataService: services,
+            handleOpen,
+            handleClose,
+            showForm,
+            setShowForm,
+            editingService,
+            setEditingService,
+            handleCreateService,
+            handleEditService,
+            handleDeleteService,
+          }}
+        />
       </div>
     </div>
   );

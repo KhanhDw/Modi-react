@@ -22,7 +22,7 @@ import NewsDetail from "../pages/NewsDetail";
 import ManagerDashboard from "../pages/managers/DashboardPage";
 
 //manager service
-import ManagerServices from "../pages/managers/ServicesPage";
+import ServicesPage from "../pages/managers/ServicesPage";
 import ServiceOverview from "../pages/managers/service/ServiceOverview";
 import ServiceList from "../pages/managers/service/ServiceList";
 import ServiceBooking from "@/pages/managers/service/ServiceBookings";
@@ -123,7 +123,7 @@ const privateRoutes = [
   //Service
   {
     path: "/managers/services",
-    component: ManagerServices,
+    component: ServicesPage,
     layout: AdminLayout,
     children: [
       { index: true, component: ServiceOverview },

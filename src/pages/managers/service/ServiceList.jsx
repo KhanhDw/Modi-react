@@ -1,19 +1,20 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceTable from "@/components/admin/services/ServiceTable";
-import { useLocation } from "react-router-dom";
+import ServiceForm from "@/components/admin/services/service-form";
+import ArticleServiceForm from "@/components/admin/services/articles/article-form";
+import { useOutletContext } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function ServiceList() {
-  const location = useLocation();
-  const { data } = location.state || {};
+  const { handleOpen, showForm, setShowForm } = useOutletContext();
 
-  const services = data.map((item) => ({
-    id: item.id,
-    name: item.ten_dich_vu,
-    desc: item.mo_ta,
-    price: 10000000,
-    order: "10",
-  }));
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -24,14 +25,20 @@ export default function ServiceList() {
           </p>
         </div>
         <Button
-          className="bg-primary hover:bg-primary/90"
-          onClick={() => setShowCampaignForm(true)}
+          className="bg-primary hover:bg-gray-500/90"
+          onClick={handleOpen}
         >
           <Plus className="h-4 w-4 mr-2" />
           Tạo dịch vụ mới
         </Button>
       </div>
-      <ServiceTable services={services} />
+      <ServiceTable />
+
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className="min-w-[70vw] min-h-[60vh] bg-white p-6 text-black shadow-2xl">
+          <ServiceForm />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

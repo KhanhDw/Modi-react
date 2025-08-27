@@ -7,8 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import {
   LineChart,
   Line,
@@ -17,21 +15,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  Heart,
-  MessageCircle,
-  Share,
-  Eye,
-} from "lucide-react";
 
 export default function SaleAnalytics() {
   const monthlyRevenue = [

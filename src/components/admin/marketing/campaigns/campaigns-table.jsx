@@ -1,61 +1,96 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Filter, Eye, Edit, Trash2, MoreHorizontal } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-
-
-export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [sortBy, setSortBy] = useState("name")
+export default function CampaignsTable({
+  campaigns,
+  onView,
+  onEdit,
+  onDelete,
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
 
   const filteredCampaigns = campaigns
     .filter((campaign) => {
       const matchesSearch =
         campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        campaign.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesStatus = statusFilter === "all" || campaign.status === statusFilter
-      return matchesSearch && matchesStatus
+        campaign.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" || campaign.status === statusFilter;
+      return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
       switch (sortBy) {
         case "budget":
-          return b.budget - a.budget
+          return b.budget - a.budget;
         case "revenue":
-          return Number.parseInt(b.revenue.replace(/[₫,]/g, "")) - Number.parseInt(a.revenue.replace(/[₫,]/g, ""))
+          return (
+            Number.parseInt(b.revenue.replace(/[₫,]/g, "")) -
+            Number.parseInt(a.revenue.replace(/[₫,]/g, ""))
+          );
         case "leads":
-          return b.leads - a.leads
+          return b.leads - a.leads;
         default:
-          return a.name.localeCompare(b.name)
+          return a.name.localeCompare(b.name);
       }
-    })
+    });
 
   const getStatusBadge = (status) => {
     switch (status) {
       case "running":
-        return <Badge className="bg-primary">Đang chạy</Badge>
+        return <Badge className="bg-primary">Đang chạy</Badge>;
       case "completed":
-        return <Badge variant="secondary">Hoàn thành</Badge>
+        return <Badge variant="secondary">Hoàn thành</Badge>;
       case "paused":
-        return <Badge variant="outline">Tạm dừng</Badge>
+        return <Badge variant="outline">Tạm dừng</Badge>;
       default:
-        return <Badge variant="outline">Lên kế hoạch</Badge>
+        return <Badge variant="outline">Lên kế hoạch</Badge>;
     }
-  }
+  };
 
   const calculateROI = (revenue, spent) => {
-    const revenueNum = Number.parseInt(revenue.replace(/[₫,]/g, ""))
-    return (((revenueNum - spent) / spent) * 100).toFixed(1)
-  }
+    const revenueNum = Number.parseInt(revenue.replace(/[₫,]/g, ""));
+    return (((revenueNum - spent) / spent) * 100).toFixed(1);
+  };
 
   return (
     <Card>
@@ -63,7 +98,9 @@ export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) 
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Danh sách chiến dịch</CardTitle>
-            <CardDescription>Quản lý tất cả chiến dịch marketing</CardDescription>
+            <CardDescription>
+              Quản lý tất cả chiến dịch marketing
+            </CardDescription>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative">
@@ -124,17 +161,32 @@ export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) 
                   <TableCell>
                     <div>
                       <div className="font-medium">{campaign.name}</div>
-                      <div className="text-sm text-muted-foreground">{campaign.description}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {campaign.description}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>{getStatusBadge(campaign.status)}</TableCell>
-                  <TableCell className="text-right font-medium">{campaign.budget?.toLocaleString()}₫</TableCell>
-                  <TableCell className="text-right">{campaign.spent?.toLocaleString()}₫</TableCell>
-                  <TableCell className="text-right">{campaign.clicks?.toLocaleString()}</TableCell>
-                  <TableCell className="text-right font-medium">{campaign.leads}</TableCell>
-                  <TableCell className="text-right font-medium text-primary">{campaign.revenue}</TableCell>
+                  <TableCell className="text-right font-medium">
+                    {campaign.budget?.toLocaleString()}₫
+                  </TableCell>
                   <TableCell className="text-right">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary">
+                    {campaign.spent?.toLocaleString()}₫
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {campaign.clicks?.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    {campaign.leads}
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-primary">
+                    {campaign.revenue}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Badge
+                      variant="secondary"
+                      className="bg-primary/10 text-primary"
+                    >
                       +{calculateROI(campaign.revenue, campaign.spent)}%
                     </Badge>
                   </TableCell>
@@ -154,7 +206,10 @@ export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) 
                           <Edit className="mr-2 h-4 w-4" />
                           Chỉnh sửa
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onDelete(campaign)} className="text-destructive">
+                        <DropdownMenuItem
+                          onClick={() => onDelete(campaign)}
+                          className="text-destructive"
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Xóa
                         </DropdownMenuItem>
@@ -169,10 +224,12 @@ export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) 
 
         {filteredCampaigns.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-muted-foreground">Không tìm thấy chiến dịch nào phù hợp</p>
+            <p className="text-muted-foreground">
+              Không tìm thấy chiến dịch nào phù hợp
+            </p>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
