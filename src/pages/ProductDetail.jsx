@@ -8,6 +8,7 @@ import { useParams, Link } from "react-router-dom"
 import {
   ArrowLeft,
   Github,
+  Globe,
   ExternalLink,
   Star,
   Calendar,
@@ -145,12 +146,23 @@ export default function ProductDetail() {
           <div
             className={`transition-all duration-600 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}
           >
-            <div className="mb-6">
+            <div className="mb-6 relative">
+              
               <img
                 src={product.screenshots?.[selectedImage] || `${baseUrl}${product.image_url}`}
                 alt={`Website ${product.category}`}
                 className="w-full h-96 object-cover rounded-lg shadow-lg"
               />
+              
+              {product.url_github && (
+                <Button className="absolute bottom-4 left-1/2 -translate-x-1/2  hover:bg-red-400 shadow-md " size="lg" variant="outline" asChild>
+                  <a href={product.url_github} target="_blank" rel="noopener noreferrer">
+                    <Globe className="w-4 h-4 mr-2" />
+                    Xem website mẫu
+                  </a>
+                </Button>
+              )}
+
             </div>
 
             {product.screenshots && (
@@ -180,9 +192,9 @@ export default function ProductDetail() {
                   <Zap className="w-5 h-5 mr-2" />
                   Tính năng nổi bật
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className=" grid grid-cols-1 md:grid-cols-3 gap-4">
                   {product.top_features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-border  rounded-lg">
+                    <div key={index} className="flex items-center gap-3 p-3 bg-border  rounded-lg ">
                       <div className="w-2 h-2 bg-primary rounded-full" />
                       <span className="">{feature}</span>
                     </div>
@@ -208,6 +220,13 @@ export default function ProductDetail() {
                   <Star className="w-4 h-4 fill-current" />
                   <span className="text-sm">4.8</span>
                 </div>
+                <div className="flex items-center gap-3 ml-auto">
+                    <Calendar className="w-5 h-5 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Ngày tạo</div>
+                      <div className="font-semibold">{formatDate(product.created_at)}</div>
+                    </div>
+                  </div>
               </div>
 
               <h1 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-4">{product.name}</h1>
@@ -265,18 +284,18 @@ export default function ProductDetail() {
                   </a>
                 </Button>
               )}
-              {product.url_github && (
+              {/* {product.url_github && (
                 <Button size="lg" variant="outline" asChild>
                   <a href={product.url_github} target="_blank" rel="noopener noreferrer">
-                    <Github className="w-4 h-4 mr-2" />
+                    <Globe className="w-4 h-4 mr-2" />
                     Xem website mẫu
                   </a>
                 </Button>
-              )}
+              )} */}
             </div>
 
             {/* Additional Info */}
-            <Card>
+            {/* <Card>
               <CardContent className="p-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex items-center gap-3">
@@ -309,7 +328,7 @@ export default function ProductDetail() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </div>
 
