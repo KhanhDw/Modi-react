@@ -50,10 +50,13 @@ export default function ServiceOverview() {
                 ₫
                 {initDataService
                   ?.reduce(
-                    (total, service) => total + (service.revenue ?? 0),
+                    (total, service) => total + Number(service.revenue ?? 0),
                     0
                   )
-                  .toLocaleString()}
+                  .toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
               </div>
               <p className="text-xs text-[#5ea25e]">+20.1% từ tháng trước</p>
             </CardContent>
