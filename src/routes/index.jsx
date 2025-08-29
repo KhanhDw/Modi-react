@@ -42,8 +42,6 @@ import ConfigPage from "@/pages/managers/ConfigPage"
 import AboutConfig from "@/pages/managers/ConfigPage/AboutConfig"
 import OverviewPageConfig from "@/pages/managers/ConfigPage/OverviewPageConfig"
 
-//admin
-import ManagerDashboard from "../pages/managers/DashboardPage";
 
 //manager service
 import ServicesPage from "../pages/managers/ServicesPage";
@@ -53,17 +51,7 @@ import ServiceBooking from "@/pages/managers/service/ServiceBookings";
 import ServiceCustomer from "@/pages/managers/service/ServiceCustomers";
 // import ServiceReview from "@/pages/managers/service/ServiceReviews";
 
-import ManagerNews from "../pages/managers/NewsPage";
-import ManagerRecruitment from "../pages/managers/RecruitmentPage";
-import ManagerContact from "../pages/managers/ContactPage";
-import AllComponentsPageAdmin from "../pages/managers/AllComponent";
 
-import ConfigHomePage from "@/pages/managers/ConfigHomePage";
-import AboutConfig from "@/pages/managers/AboutConfig";
-import AdminZonePage from "@/pages/managers/AdminZonePage";
-
-import WebsiteTemplatePage from "@/pages/managers/WebsiteTemplatePage";
-import WebsiteTemplateList from "@/components/admin/listWebDesign/ListWebsite";
 import AdminZonePage from "@/pages/managers/AdminZonePage"
 import ProfilePage from "@/pages/managers/ProfilePage"
 
