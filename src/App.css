@@ -84,3 +84,9 @@ html.lenis body {
 .animate-in.fade-in-0.zoom-in-95 {
     animation: fadeIn 0.2s ease-out;
 }
+
+[contenteditable="true"] {
+    -webkit-user-modify: read-write;
+    -webkit-text-size-adjust: none;
+    spellcheck: false;
+}

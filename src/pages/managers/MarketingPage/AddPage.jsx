@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator"
 import SocialNetworkManager from "./SocialNetworkManager";
-import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
+// import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
 
 export default function AddPage() {
     const editorRef = useRef(null);
@@ -247,7 +247,7 @@ export default function AddPage() {
                         rows={6}
                         className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
                     /> */}
-                    <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" />
+                    {/* <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" /> */}
                 </div>
             </div>
         </div >

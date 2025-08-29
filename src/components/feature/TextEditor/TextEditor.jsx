@@ -1,29 +1,16 @@
-import { MantineProvider, Button } from "@mantine/core";
-import { forwardRef } from "react";
-import TextEditor_mantine from "./TextEditor_mantine"; // editor Mantine/Tiptap
-import TextEditor_slate from "./TextEditor_slate";     // editor Slate (nếu cần)
+import React, { forwardRef } from "react";
+import { MantineProvider } from "@mantine/core";
+import TextEditor_mantine from "./TextEditor_mantine";
 
-// 1️⃣ Editor wrapper: dùng forwardRef để cha có thể getHTML()
-const TextEditorWrapper = forwardRef(({ valueContextNews = "" }, ref) => {
+const TextEditorWrapper = forwardRef(({ value }, ref) => {
+
+
     return (
         <MantineProvider>
-            <TextEditor_mantine ref={ref} valueContextNews={valueContextNews} />
+            <TextEditor_mantine ref={ref} valueContextNews={value} />
+
         </MantineProvider>
     );
 });
 
-// 2️⃣ SubmitButton: tách riêng
-const SubmitButton = ({ editorRef, onSubmit, label = "Lưu nội dung" }) => {
-    const handleClick = () => {
-        const html = editorRef.current?.getHTML();
-        onSubmit(html);
-    };
-
-    return (
-        <Button onClick={handleClick} color="blue">
-            {label}
-        </Button>
-    );
-};
-
-export { TextEditorWrapper, SubmitButton };
+export default TextEditorWrapper;

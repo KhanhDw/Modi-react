@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SocialNetworkManager from "./SocialNetworkManager";
-import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
+// import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
 
 
 export default function EditPage() {
@@ -285,7 +285,7 @@ export default function EditPage() {
                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                     /> */}
 
-                    <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" />
+                    {/* <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" /> */}
                 </div>
             </div>
         </div>

@@ -103,6 +103,10 @@ export default function useBlogs() {
     const handleSubmit = async (formData, file) => {
         try {
 
+
+            console.log("-->", formData);
+
+
             // Chuẩn bị FormData
             const formDataUpload = new FormData();
 
@@ -128,6 +132,8 @@ export default function useBlogs() {
                     // }
                 ])
             );
+
+
 
             const method = editingBlog ? "PUT" : "POST";
 

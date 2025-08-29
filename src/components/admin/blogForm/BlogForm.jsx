@@ -1,6 +1,6 @@
 import { Textarea } from "@material-tailwind/react";
 import React, { useState, useEffect, useRef } from "react";
-import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 
 
 
@@ -34,6 +34,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
       }));
       setPreview(blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : "");
       setFile(null); // Reset file input
+      console.log(formData.content);
     } else {
       setFormData({
         title: "",
@@ -52,8 +53,6 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -74,32 +73,31 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
   };
 
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const content = editorRef.current?.getHTML();  // ✅ lấy nội dung editor
-
-    console.log("===>", content);
-
-    const formDataUpload = new FormData();
-
-    // Gom dữ liệu cuối cùng
-    const finalData = { ...formData, content };
-
-    // Thêm các field text
-    Object.entries(finalData).forEach(([key, value]) => {
-      if (key !== "image") formDataUpload.append(key, value);
-    });
-
-    // Nếu có file mới upload
-    if (file) {
-      formDataUpload.append("image", file);
+    // Kiểm tra file khi tạo mới (không có blog)
+    if (!formData && !file) {
+      alert("Vui lòng chọn ảnh trước khi lưu.");
+      return;
     }
 
-    // Gọi submit với dữ liệu đã có content
-    onSubmit(formDataUpload, file);
+    const contentHTML = editorRef.current?.getHTML()?.trim() ?? "";
+
+    // Gom dữ liệu thành object thường
+    const dataToSubmit = {
+      ...formData,
+      title: formData.title.trim(),
+      content: contentHTML,
+    };
+
+    // Debug
+    console.log("--- DataToSubmit debug ---", dataToSubmit, file);
+
+    // Truyền object lên cha
+    onSubmit(dataToSubmit, file);
   };
+
 
 
   return (
@@ -113,7 +111,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
             <Textarea
               type="text"
               name="title"
-              value={formData.title}
+              value={formData.title.trim()}
               onChange={handleChange}
               required
               spellCheck="false"
@@ -221,7 +219,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
             className="w-full h-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
           /> */}
 
-          <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" />
+          <TextEditorWrapper ref={editorRef} value={formData.content} />
           {/* <SubmitButton editorRef={editorRef} onSubmit={handleSubmit} /> */}
         </div>
 
