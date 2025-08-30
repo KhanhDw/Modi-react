@@ -87,7 +87,7 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-x-6 flex ">
           {/* Technology Filter */}
           <div>
             <h4 className="font-medium mb-3">Công nghệ</h4>
@@ -211,10 +211,10 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
                     {filters.dateRange === "today"
                       ? "Hôm nay"
                       : filters.dateRange === "week"
-                      ? "Tuần này"
-                      : filters.dateRange === "month"
-                      ? "Tháng này"
-                      : "Năm này"}
+                        ? "Tuần này"
+                        : filters.dateRange === "month"
+                          ? "Tháng này"
+                          : "Năm này"}
                     <X className="h-3 w-3 cursor-pointer" onClick={() => updateFilter("dateRange", "")} />
                   </Badge>
                 )}

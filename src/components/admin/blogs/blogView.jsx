@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
+
+
+
 function BlogViewPage() {
     const { id } = useParams(); // lấy id từ URL: /blogs/:id
     const [blogs, setBlogs] = useState(null);

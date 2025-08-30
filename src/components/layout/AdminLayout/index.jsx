@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { AdminThemeProvider, useAdminTheme } from "@/contexts/ThemeLocalContext";
+import {
+  AdminThemeProvider,
+  useAdminTheme,
+} from "@/contexts/ThemeLocalContext";
 import AdminSidebar from "@/components/layout/AdminLayout/partials/sidebar/AdminSidebar";
 import AdminHeader from "./partials/header/AdminHeader";
 import { cn } from "@/lib/utils";
@@ -10,16 +13,32 @@ const AdminLayoutInner = ({ children }) => {
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
   const { theme } = useAdminTheme(); // "light" | "dark"
 
+  // --- Load state từ localStorage khi mount ---
   useEffect(() => {
     const savedHeaderSticky = localStorage.getItem("headerSticky");
     if (savedHeaderSticky) {
       setIsHeaderSticky(savedHeaderSticky === "true");
     }
+
+    const savedSidebarCollapsed = localStorage.getItem("sidebarCollapsed");
+    if (savedSidebarCollapsed) {
+      setSidebarCollapsed(savedSidebarCollapsed === "true");
+    }
   }, []);
 
+  // --- Lưu state khi thay đổi ---
   useEffect(() => {
     localStorage.setItem("headerSticky", isHeaderSticky.toString());
   }, [isHeaderSticky]);
+
+  const toggleSidebar_Collapse = () => {
+    setSidebarCollapsed(prev => {
+      const newValue = !prev;
+      localStorage.setItem("sidebarCollapsed", newValue.toString());
+      return newValue;
+    });
+  };
+
 
   return (
     <div
@@ -33,7 +52,7 @@ const AdminLayoutInner = ({ children }) => {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         isCollapsed={sidebarCollapsed}
-        toggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        toggleCollapse={toggleSidebar_Collapse}
       />
 
       {/* Main Content */}
@@ -59,7 +78,9 @@ const AdminLayoutInner = ({ children }) => {
             isHeaderSticky && "mt-23"
           )}
         >
-          <div className="bg-slate-50 admin-dark:bg-gray-900 p-4 h-full" >{children}</div>
+          <div className="bg-white admin-dark:bg-gray-900 p-4 h-full">
+            {children}
+          </div>
         </main>
       </div>
 

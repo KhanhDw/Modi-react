@@ -1,6 +1,11 @@
-import { useState, useEffect } from "react";
+import { Textarea } from "@material-tailwind/react";
+import React, { useState, useEffect, useRef } from "react";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+
+
 
 export default function BlogForm({ blog, onSubmit, onCancel }) {
+  const editorRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -29,6 +34,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
       }));
       setPreview(blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : "");
       setFile(null); // Reset file input
+      console.log(formData.content);
     } else {
       setFormData({
         title: "",
@@ -48,27 +54,16 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
     setFormData({ ...formData, [name]: value });
   };
 
-
-
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const { name } = e.target; // "image"
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
 
-    if (file) {
-      // chỉ lấy tên file
-      setFormData((prev) => ({
-        ...prev,
-        [name]: file,
-      }));
-
-      // Nếu vẫn muốn có preview
-      const objectUrl = URL.createObjectURL(file);
+      // Preview
+      const objectUrl = URL.createObjectURL(selectedFile);
       setPreview(objectUrl);
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setFile(null);
       setPreview(
         formData.image
           ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image}`
@@ -81,31 +76,47 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // const data = new FormData();
-    // data.append("title", formData.title);
-    // data.append("content", formData.content);
-    // data.append("status", formData.status);  // ✅ luôn có published/draft
-    // data.append("author_id", formData.author_id);
-    // data.append("published_at", formData.published_at);
-    // data.append("image", formData.image); // giữ link/tên cũ
+    // Kiểm tra file khi tạo mới (không có blog)
+    if (!formData && !file) {
+      alert("Vui lòng chọn ảnh trước khi lưu.");
+      return;
+    }
 
-    onSubmit(formData, file);
-    // onSubmit(data, file);
+    const contentHTML = editorRef.current?.getHTML()?.trim() ?? "";
+
+    // Gom dữ liệu thành object thường
+    const dataToSubmit = {
+      ...formData,
+      title: formData.title.trim(),
+      content: contentHTML,
+    };
+
+    // Debug
+    console.log("--- DataToSubmit debug ---", dataToSubmit, file);
+
+    // Truyền object lên cha
+    onSubmit(dataToSubmit, file);
   };
 
+
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-black">
-      <div className="flex justify-between space-x-3">
-        <div className="w-full ">
+    <form onSubmit={handleSubmit} className=" text-black w-full flex justify-between items-start gap-5">
+      {/* left column */}
+      <div className="w-2/6 mx-auto space-y-5 admin-dark:bg-slate-800  sm:p-6 rounded-3xl">
+        <div className="w-full">
           {/* Tiêu đề */}
           <div>
             <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">Tiêu đề</label>
-            <input
+            <Textarea
               type="text"
               name="title"
-              value={formData.title}
+              value={formData.title.trim()}
               onChange={handleChange}
               required
+              spellCheck="false"
+              placeholder="Nhập tiêu đề"
+              rows={3}
               className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
             />
           </div>
@@ -120,7 +131,6 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
               onChange={handleFileChange}
               className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg admin-dark:text-gray-200"
             />
-
           </div>
         </div>
         <div className="border w-92 mx-auto flex justify-center items-center rounded p-1 " >
@@ -133,35 +143,19 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
           )}
           {!preview && <p className="text-center text-sm font-medium text-green-800 admin-dark:text-gray-200"> Nơi hiển thị ảnh</p>}
         </div>
-      </div>
 
+        {/* Tác giả */}
+        <div hidden>
+          <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">Tác giả (ID)</label>
+          <input
+            type="number"
+            name="author_id"
+            value={formData.author_id}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
+          />
+        </div>
 
-      {/* Nội dung */}
-      <div>
-        <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">Nội dung</label>
-        <textarea
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-          required
-          rows="6"
-          className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
-        />
-      </div>
-
-      {/* Tác giả */}
-      <div hidden>
-        <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">Tác giả (ID)</label>
-        <input
-          type="number"
-          name="author_id"
-          value={formData.author_id}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
-        />
-      </div>
-
-      <div className="flex justify-between space-x-3">
         <div className=" w-full flex items-center  space-x-4">
           {/* Trạng thái */}
           <div className=" ">
@@ -194,12 +188,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
 
         {/* Buttons */}
         <div className="flex space-x-2 w-full  justify-end">
-          <button
-            type="submit"
-            className="px-4 w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
-          >
-            {blog ? "Cập nhật" : "Thêm"}
-          </button>
+
           <button
             type="button"
             onClick={onCancel}
@@ -207,7 +196,34 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
           >
             Hủy
           </button>
+          <button
+            type="submit"
+            className="px-4 w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+          >
+            {blog ? "Cập nhật" : "Thêm"}
+          </button>
         </div>
+      </div>
+      {/* right column */}
+      <div className="w-full mx-auto h-full sm:p-6 rounded-3xl admin-dark:bg-slate-800">
+        {/* Nội dung */}
+        <div className="h-full w-full">
+          <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">Nội dung</label>
+          {/* <textarea
+            hidden
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            required
+            rows="6"
+            className="w-full h-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
+          /> */}
+
+          <TextEditorWrapper ref={editorRef} value={formData.content} />
+          {/* <SubmitButton editorRef={editorRef} onSubmit={handleSubmit} /> */}
+        </div>
+
+
       </div>
     </form>
 

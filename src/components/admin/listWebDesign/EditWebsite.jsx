@@ -253,6 +253,7 @@ export default function WebsiteTemplateEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
       const formDataUpload = new FormData();
 
@@ -260,18 +261,31 @@ export default function WebsiteTemplateEdit() {
         formDataUpload.append("image_url", file);
       }
 
+      // ✅ Thêm translations thủ công (FE cần gửi JSON.stringify)
+      const translations = [
+        {
+          lang: "vi",
+          name: formData.name,            // lấy từ state formData
+          description: formData.description,
+          tags: formData.tags || [],
+          top_features: formData.top_features || []
+        }
+        // có thể thêm lang khác nếu cần
+      ];
+      formDataUpload.append("translations", JSON.stringify(translations));
+
       // append các field khác từ state formData
       Object.entries(formData).forEach(([key, value]) => {
-        if (key === "image_url") return; // file đã append
+        if (key === "image_url" || key === "name" || key === "description" || key === "tags" || key === "top_features") {
+          // bỏ qua vì đã đưa vào translations
+          return;
+        }
         if (Array.isArray(value)) {
-          formDataUpload.append(key, JSON.stringify(value)); // nếu BE mong JSON
+          formDataUpload.append(key, JSON.stringify(value));
         } else {
-          formDataUpload.append(key, String(value)); // 0/1 -> "0"/"1"
+          formDataUpload.append(key, String(value));
         }
       });
-
-      console.log(formDataUpload.get("export_state"));
-
 
       // append ngày tháng
       const today = new Date().toISOString().split("T")[0];
@@ -291,6 +305,7 @@ export default function WebsiteTemplateEdit() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="mx-auto px-4 w-fit">

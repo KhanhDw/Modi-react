@@ -8,31 +8,40 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Search, Filter, Eye, Edit, Trash2, MoreHorizontal } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [sortBy, setSortBy] = useState("name")
+export default function CampaignsTable({
+  campaigns,
+  onView,
+  onEdit,
+  onDelete,
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
 
   const filteredCampaigns = campaigns
     .filter((campaign) => {
       const matchesSearch =
         campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        campaign.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesStatus = statusFilter === "all" || campaign.status === statusFilter
-      return matchesSearch && matchesStatus
+        campaign.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" || campaign.status === statusFilter;
+      return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
       switch (sortBy) {
         case "budget":
-          return b.budget - a.budget
+          return b.budget - a.budget;
         case "revenue":
-          return Number.parseInt(b.revenue.replace(/[₫,]/g, "")) - Number.parseInt(a.revenue.replace(/[₫,]/g, ""))
+          return (
+            Number.parseInt(b.revenue.replace(/[₫,]/g, "")) -
+            Number.parseInt(a.revenue.replace(/[₫,]/g, ""))
+          );
         case "leads":
-          return b.leads - a.leads
+          return b.leads - a.leads;
         default:
-          return a.name.localeCompare(b.name)
+          return a.name.localeCompare(b.name);
       }
-    })
+    });
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -61,12 +70,12 @@ export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) 
           </Badge>
         )
     }
-  }
+  };
 
   const calculateROI = (revenue, spent) => {
-    const revenueNum = Number.parseInt(revenue.replace(/[₫,]/g, ""))
-    return (((revenueNum - spent) / spent) * 100).toFixed(1)
-  }
+    const revenueNum = Number.parseInt(revenue.replace(/[₫,]/g, ""));
+    return (((revenueNum - spent) / spent) * 100).toFixed(1);
+  };
 
   return (
     <Card className="admin-dark:bg-gray-900 bg-white admin-dark:text-gray-100 text-gray-900">
@@ -207,5 +216,5 @@ export default function CampaignsTable({ campaigns, onView, onEdit, onDelete }) 
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

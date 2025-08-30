@@ -8,7 +8,6 @@ import { AlignJustify } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdminSettingsDropdown from "@/components/layout/AdminLayout/partials/header/AdminSettingsDropdown";
 import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
-import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSearch"
 
 
@@ -34,12 +33,6 @@ const AdminHeader = ({
   sidebarCollapsed,
 }) => {
   const location = useLocation();
-  const { isDark } = useAdminTheme();
-
-  // Debug khi theme đổi
-  useEffect(() => {
-    console.log("Theme Admin hiện tại:", isDark ? "dark" : "light");
-  }, [isDark]);
 
   // Lấy trạng thái sticky header từ localStorage
   useEffect(() => {
@@ -128,11 +121,11 @@ const AdminHeader = ({
 
         {/* Right */}
         <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
-
           <AdminSearch />
-
           {/* Website link */}
-          <NavLink to={`${import.meta.env.VITE_MAIN_FE_URL}`}>
+          <NavLink to={`${import.meta.env.VITE_MAIN_FE_URL}`}
+            target="_blank"
+            rel="noopener noreferrer">
             <Button
               variant="ghost"
               className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 admin-dark:bg-gray-400/10 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"

@@ -1,8 +1,65 @@
 import PageHeader from "@/components/admin/common/PageHeader";
-import BlogForm from "@/components/admin/blogForm/BlogForm";
-import useBlogs from "@/hook/useBlogsAdmin";
-import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { isAfter, parseISO } from "date-fns";
+import useBlogs from "@/hook/useBlogsAdmin";
+import React, { useState, } from "react";
+import { Clock } from 'lucide-react';
+
+export const isFuture = (dt) => {
+    try {
+        const date = typeof dt === "string" ? parseISO(dt) : new Date(dt);
+        return isAfter(date, new Date());
+    } catch {
+        return false;
+    }
+};
+
+// Hàm chuyển Slate JSON sang HTML
+export const renderSlateToHTML = (nodes) => {
+    if (!Array.isArray(nodes)) return "";
+
+    const renderNode = (node) => {
+        // Trường hợp node text (leaf)
+        if (node.text !== undefined) {
+            let text = node.text;
+
+            if (!text) return ""; // bỏ qua text rỗng
+            if (node.bold) text = `<strong>${text}</strong>`;
+            if (node.italic) text = `<em>${text}</em>`;
+            if (node.underline) text = `<u>${text}</u>`;
+            if (node.code) text = `<code>${text}</code>`;
+
+            return text;
+        }
+
+        // Render children
+        const children = (node.children || []).map(renderNode).join("");
+
+        // Thêm style align nếu có
+        const alignStyle = node.align ? ` style="text-align:${node.align};"` : "";
+
+        switch (node.type) {
+            case "paragraph":
+                return `<p${alignStyle}>${children}</p>`;
+            case "block-quote":
+                return `<blockquote${alignStyle} style="margin:0;padding-left:8px;border-left:2px solid #ccc;">${children}</blockquote>`;
+            case "numbered-list":
+                return `<ol${alignStyle}>${children}</ol>`;
+            case "bulleted-list":
+                return `<ul${alignStyle}>${children}</ul>`;
+            case "list-item":
+                return `<li${alignStyle}>${children}</li>`;
+            default:
+                return children;
+        }
+    };
+
+    return nodes.map(renderNode).join("");
+};
+
+
+
+
 
 export default function BlogsListPage() {
 
@@ -79,7 +136,7 @@ export default function BlogsListPage() {
 
 
     return (
-        <div className="p-2">
+        <div className="">
             <div className="flex justify-between items-center mb-6">
                 <PageHeader
                     title={showForm ? "Sửa tin tức" : "Quản lý tin tức"}
@@ -149,7 +206,7 @@ export default function BlogsListPage() {
 
                                         if (col.name === "title") {
                                             return (
-                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-200 admin-dark:hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
                                                     {value}
                                                 </td>
                                             );
@@ -157,12 +214,45 @@ export default function BlogsListPage() {
 
 
                                         if (col.name === "content") {
+                                            let parsedValue = [];
+                                            try {
+                                                parsedValue =
+                                                    typeof value === "string" && value.trim().startsWith("[")
+                                                        ? JSON.parse(value)
+                                                        : value;
+                                            } catch (e) {
+                                                console.error("JSON parse error:", e);
+                                                parsedValue = value; // fallback plain text
+                                            }
+
+                                            const htmlContent = Array.isArray(parsedValue)
+                                                ? renderSlateToHTML(parsedValue)
+                                                : parsedValue; // nếu chỉ là text thì render thẳng
+
+
                                             return (
-                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
-                                                    {value}
+                                                <td
+                                                    key={col.name}
+                                                    className="px-2 sm:px-4 py-2 text-slate-400 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden"
+                                                >
+                                                    <div
+                                                        className="prose prose-sm max-w-none text-slate-400 prose-p:text-slate-400 prose-strong:text-slate-400 prose-li:text-slate-400 prose-blockquote:text-slate-400 line-clamp-1"
+                                                        dangerouslySetInnerHTML={{ __html: htmlContent }}
+                                                    />
                                                 </td>
                                             );
                                         }
+
+
+
+                                        if (col.type === "date") {
+                                            return (
+                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                                                    {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
+                                                </td>
+                                            );
+                                        }
+
 
                                         if (col.type === "date") {
                                             return (
@@ -175,10 +265,25 @@ export default function BlogsListPage() {
                                         if (col.type === "enum") {
                                             return (
                                                 <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
-                                                    {value === "draft" ? "Nháp" : value === "published" ? "Công khai" : value}
+                                                    {value === "draft" ? (
+                                                        <span>Nháp</span>
+                                                    ) : value === "published" ? (
+                                                        <div className="flex items-center space-x-1">
+                                                            <span>Công khai</span>
+                                                            {blog.published_at &&
+                                                                isFuture(blog.published_at) && (
+                                                                    <Clock size={15} />
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ) : (
+                                                        value
+                                                    )}
                                                 </td>
                                             );
                                         }
+
+
 
                                         return (
                                             <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">

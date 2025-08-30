@@ -103,19 +103,50 @@ export default function useBlogs() {
     const handleSubmit = async (formData, file) => {
         try {
 
+
+            console.log("-->", formData);
+
+
             // Chuẩn bị FormData
             const formDataUpload = new FormData();
-            // Gắn dữ liệu blog (title, content, status...)
-            Object.keys(formData).forEach((key) => {
-                formDataUpload.append(key, formData[key]);
-            });
+
+            // Gắn các field của blogs
+            formDataUpload.append("author_id", formData.author_id || 1);
+            formDataUpload.append("status", formData.status || "draft");
+            formDataUpload.append("published_at", formData.published_at || "");
+
+            // Gắn translations (phải stringify)
+            formDataUpload.append(
+                "translations",
+                JSON.stringify([
+                    {
+                        lang: "vi",
+                        title: formData.title,
+                        content: formData.content,
+                    },
+                    // bạn có thể thêm "en" nếu muốn song ngữ
+                    // {
+                    //   lang: "en",
+                    //   title: formData.title_en,
+                    //   content: formData.content_en,
+                    // }
+                ])
+            );
+
+
+
+            const method = editingBlog ? "PUT" : "POST";
 
             // Gắn file ảnh nếu có
             if (file) {
                 formDataUpload.append("image", file);
+            } else {
+                if (!editingBlog) {   // 👈 chỉ khi thêm mới thì ép có ảnh
+                    setError("Ảnh là bắt buộc");
+                    return;
+                }
             }
 
-            const method = editingBlog ? "PUT" : "POST";
             const url = editingBlog
                 ? `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs/${editingBlog.id}`
                 : `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs`;
@@ -125,9 +156,13 @@ export default function useBlogs() {
                 body: formDataUpload, // 👈 Không set Content-Type, browser tự set multipart/form-data
             });
 
-            if (!res.ok) throw new Error("Thao tác không thành công");
-            await res.json();
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                console.error("Error response:", errData);
+                throw new Error("Thao tác không thành công");
+            }
 
+            await res.json();
             fetchBlogs();
             setShowForm(false);
             setEditingBlog(null);

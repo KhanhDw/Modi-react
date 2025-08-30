@@ -134,7 +134,7 @@ export default function WebsiteTemplatesDetail() {
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">Mô tả chi tiết</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 admin-dark:text-gray-300 leading-relaxed">
+              <p className="text-gray-700 admin-dark:text-gray-300 leading-relaxed wrap-anywhere">
                 {template.description}
               </p>
             </CardContent>
