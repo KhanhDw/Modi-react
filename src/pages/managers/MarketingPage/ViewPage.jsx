@@ -167,8 +167,8 @@ export default function ViewPage() {
     const createdAt = post.created_at ? format(new Date(post.created_at), "PPP", { locale: vi }) : "N/A";
 
     return (
-        <div className="min-h-screen relative bg-gray-50 admin-dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8  transition-all duration-300">
-            <div className="max-w-4xl mx-auto bg-white admin-dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
+        <div className="relative bg-gray-50 admin-dark:bg-gray-900  transition-all duration-300">
+            <div className="mx-auto  bg-white admin-dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <article className="p-8">
                     {/* Header bài viết */}
                     <header className="mb-8 text-center">
@@ -215,7 +215,11 @@ export default function ViewPage() {
                     {/* Nội dung bài viết */}
                     <section className="prose admin-dark:prose-invert max-w-none text-gray-800 admin-dark:text-gray-200 leading-relaxed mb-8">
                         {/* <div dangerouslySetInnerHTML={{ __html: post.content }} /> */}
-                        <ShowContextBlog parsedContent={post.content} />
+                        {/* <ShowContextBlog parsedContent={post.content} /> */}
+                        <div
+                            className="prose max-w-none text-gray-800 leading-relaxed admin-dark:text-gray-200"
+                            dangerouslySetInnerHTML={{ __html: post.content }}
+                        />
                     </section>
 
                     {/* Tags */}
@@ -237,10 +241,10 @@ export default function ViewPage() {
                 </article>
 
             </div>
-            <div className=" border-gray-200 admin-dark:border-gray-700 absolute top-0 left-0 right-0 bottom-0 ">
+            <div className="absolute top-0 left-0 border-gray-200 admin-dark:border-gray-700  ">
                 <button
                     onClick={() => navigate(-1)}
-                    className="px-6 py-2 bg-gray-200 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow hover:bg-gray-300 admin-dark:hover:bg-gray-600 transition-colors duration-300"
+                    className="px-3 py-2 bg-gray-200/20 hover:bg-gray-200/70 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow  admin-dark:hover:bg-gray-600 transition-colors duration-300"
                 >
                     <ChevronLeft />
                 </button>

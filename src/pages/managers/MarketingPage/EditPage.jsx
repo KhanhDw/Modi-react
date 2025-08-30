@@ -7,8 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SocialNetworkManager from "./SocialNetworkManager";
-// import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
-
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 
 export default function EditPage() {
     const editorRef = useRef(null);
@@ -69,25 +68,8 @@ export default function EditPage() {
     const onSubmit = async () => {
         try {
             const content = editorRef.current?.getHTML();
-            const payload = {
-                id,
-                author_id: formData.author_id || 1,   // nếu có author_id
-                platform_id: formData.platform_id, // lấy thẳng số id
-                image: formData.image,
-                tags: formData.tags,
-                status: formData.status || "draft",
-                translations: [
-                    {
-                        lang: formData.lang || "vi",
-                        title: formData.title,
-                        // content: formData.content,
-                        content: content,
-                    },
-                ],
-            };
-
-            console.log("Cập nhật bài viết với payload:", payload);
-            await handleEditPost(payload);
+            formData.content = content
+            await handleEditPost();
             navigate(-1);
         } catch (err) {
             console.error("Lỗi cập nhật:", err);
@@ -285,7 +267,7 @@ export default function EditPage() {
                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                     /> */}
 
-                    {/* <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" /> */}
+                    <TextEditorWrapper ref={editorRef} value={formData.content} />
                 </div>
             </div>
         </div>

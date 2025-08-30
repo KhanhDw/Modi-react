@@ -23,10 +23,6 @@ export const LanguageProvider = ({ children }) => {
     localStorage.setItem("site-language", newLang);
   };
 
-  useEffect(() => {
-    console.log("LanguageProvider mounted");
-  }, []);
-
 
   const t = (key) => {
     const keys = key.split(".");

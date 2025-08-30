@@ -136,7 +136,7 @@ export default function BlogsListPage() {
 
 
     return (
-        <div className="p-2">
+        <div className="">
             <div className="flex justify-between items-center mb-6">
                 <PageHeader
                     title={showForm ? "Sửa tin tức" : "Quản lý tin tức"}
@@ -206,7 +206,7 @@ export default function BlogsListPage() {
 
                                         if (col.name === "title") {
                                             return (
-                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-200 admin-dark:hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
                                                     {value}
                                                 </td>
                                             );

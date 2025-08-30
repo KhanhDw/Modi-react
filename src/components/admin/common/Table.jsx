@@ -23,7 +23,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView, }) {
     <div className="bg-white">
       <div className={`lenis-local scroll-container overflow-y-auto flex flex-col `}>
         <table className="min-w-full">
-          <thead className="bg-gray-50/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200">
+          <thead className="bg-gray-50  sticky top-0 z-10 border-b border-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 STT

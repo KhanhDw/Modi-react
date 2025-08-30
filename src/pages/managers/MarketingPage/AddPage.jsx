@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator"
 import SocialNetworkManager from "./SocialNetworkManager";
-// import { TextEditorWrapper, SubmitButton } from "@/components/feature/TextEditor/TextEditor";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+
 
 export default function AddPage() {
     const editorRef = useRef(null);
@@ -63,23 +64,23 @@ export default function AddPage() {
 
         setError("");
 
-        const payload = {
-            author_id: formData.author_id || 1,
-            platform_id: formData.platform_id,
-            image: formData.image,
-            tags: formData.tags,
-            status: formData.status || "draft",
-            translations: [
-                {
-                    lang: formData.lang || "vi",
-                    title: formData.title,
-                    content: content,
-                },
-            ],
-        };
-
-        console.log("Payload gửi:", payload);
-        handleAddPost(payload);
+        formData.content = content
+        // const payload = {
+        //     author_id: formData.author_id || 1,
+        //     platform_id: formData.platform_id,
+        //     image: formData.image,
+        //     tags: formData.tags,
+        //     status: formData.status || "draft",
+        //     translations: [
+        //         {
+        //             lang: formData.lang || "vi",
+        //             title: formData.title,
+        //             content: formData.content,
+        //         },
+        //     ],
+        // };
+        // console.log("Payload gửi:", payload);
+        handleAddPost();
         navigate(-1);
     };
 
@@ -247,7 +248,7 @@ export default function AddPage() {
                         rows={6}
                         className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
                     /> */}
-                    {/* <TextEditorWrapper ref={editorRef} valueContextNews="<p>Hello Blog!</p>" /> */}
+                    <TextEditorWrapper ref={editorRef} value={formData.content} />
                 </div>
             </div>
         </div >

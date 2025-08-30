@@ -8,7 +8,6 @@ import { AlignJustify } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdminSettingsDropdown from "@/components/layout/AdminLayout/partials/header/AdminSettingsDropdown";
 import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
-import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSearch"
 
 
@@ -34,12 +33,6 @@ const AdminHeader = ({
   sidebarCollapsed,
 }) => {
   const location = useLocation();
-  const { isDark } = useAdminTheme();
-
-  // Debug khi theme đổi
-  useEffect(() => {
-    console.log("Theme Admin hiện tại:", isDark ? "dark" : "light");
-  }, [isDark]);
 
   // Lấy trạng thái sticky header từ localStorage
   useEffect(() => {

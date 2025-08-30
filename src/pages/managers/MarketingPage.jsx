@@ -45,7 +45,7 @@ export default function MarketingPage() {
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing`);
       if (!res.ok) throw new Error("Không thể tải dữ liệu");
       let result = await res.json();
-      console.log("--->", result.data);
+
       setPosts(result.data);
       setColumns(result.colums);
       setError(null);
@@ -123,32 +123,42 @@ export default function MarketingPage() {
   };
 
 
-
-  const handleEditPost = async (updatedPost) => {
+  const handleEditPost = async () => {
     try {
-
-      console.log("PUT gửi:", updatedPost);
-
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${updatedPost.id}`, {
+      const payload = {
+        author_id: formData.author_id || 1,
+        platform_id: formData.platform_id || null,
+        image: formData.image,
+        tags: formData.tags,
+        status: formData.status || "draft",
+        translations: [
+          {
+            lang: formData.lang || "vi",
+            title: formData.title,
+            content: formData.content,
+          },
+        ],
+      };
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${formData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedPost),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
         throw new Error("Lỗi khi cập nhật bài viết");
       }
 
-      const data = await res.json();
+      // const data = await res.json();
 
-      // cập nhật lại state từ response
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === updatedPost.id ? data : post
-        )
-      );
+      // // cập nhật lại state từ response
+      // setPosts((prevPosts) =>
+      //   prevPosts.map((post) =>
+      //     post.id === updatedPost.id ? data : post
+      //   )
+      // );
 
       fetchPosts();
     } catch (err) {
@@ -180,7 +190,7 @@ export default function MarketingPage() {
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/search?term=${encodeURIComponent(searchTerm)}&status=${encodeURIComponent(selectedStatus)}`);
       if (!res.ok) throw new Error("Không thể tải dữ liệu");
       let result = await res.json();
-      console.log("--->", result.data);
+
       setPosts(result.data);
       setColumns(result.colums);
       setError(null);
