@@ -4,7 +4,7 @@ import axios from "axios";
 import UserForm from "../../components/admin/userForm/userForm"; // <-- thêm component form
 import "../../styles/scrollbar.css";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 8;
 
 function removeVietnameseTones(str) {
   return str
@@ -20,6 +20,8 @@ export default function AdminZonePage() {
   const [page, setPage] = useState(1);
   const [fade, setFade] = useState(true);
   const [users, setUsers] = useState([]);
+  const [columns, setColumns] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   // quản lý form
@@ -30,6 +32,7 @@ export default function AdminZonePage() {
     try {
       const res = await axios.get(`${import.meta.env.VITE_MAIN_BE_URL}/api/users`);
       setUsers(res.data.data || []);
+      setColumns(res.data.column || []);
     } catch (err) {
       console.error("Lỗi lấy users:", err);
     } finally {
@@ -74,6 +77,18 @@ export default function AdminZonePage() {
 
   if (loading) return <div className="p-6">Đang tải dữ liệu...</div>;
 
+  const formatValue = (value) => {
+    // Kiểm tra xem giá trị có phải là ngày tháng hợp lệ hay không
+    const date = new Date(value);
+    if (!isNaN(date.getTime())) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+    return value;
+  };
+
   return (
     <div>
       <div className="mx-auto rounded-xl border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 p-6 transition-all duration-500 ease-in-out">
@@ -84,7 +99,7 @@ export default function AdminZonePage() {
           </h2>
 
           <div className="relative w-full max-w-xs flex-grow">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={20}/>
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
             <input
               type="search"
               placeholder="Tìm kiếm..."
@@ -112,21 +127,40 @@ export default function AdminZonePage() {
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
             <thead>
               <tr className="bg-gray-100 admin-dark:bg-gray-800 text-left text-gray-600 admin-dark:text-gray-300 uppercase text-sm select-none border-b border-gray-200 admin-dark:border-gray-700">
-                <th className="py-3 px-6 whitespace-nowrap">Tên nhân viên</th>
+                {/* <th className="py-3 px-6 whitespace-nowrap">Tên nhân viên</th>
                 <th className="py-3 px-6 whitespace-nowrap">Email</th>
                 <th className="py-3 px-6 whitespace-nowrap">Tên đăng nhập</th>
                 <th className="py-3 px-6 whitespace-nowrap">Vai trò</th>
+                <th className="py-3 px-6 whitespace-nowrap text-center">Thao tác</th> */}
+                {columns.map(col => (
+                  <th key={col.name} className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold text-gray-800 admin-dark:text-gray-200">{col.label}</th>
+                ))}
                 <th className="py-3 px-6 whitespace-nowrap text-center">Thao tác</th>
               </tr>
             </thead>
             <tbody>
               {paginatedData.length > 0 ? (
                 paginatedData.map((item) => (
+
                   <tr key={item.id} className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition duration-150 cursor-pointer border-b border-gray-100 admin-dark:border-gray-700">
-                    <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300">{item.full_name}</td>
-                    <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300">{item.email}</td>
-                    <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300">{item.username}</td>
-                    <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300 whitespace-nowrap">{item.role}</td>
+                    {Object.keys(item).filter(key => key !== 'id').map((key, index) => {
+                      let cellContent = item[key];
+                      if (key === 'created_at' || key === 'updated_at') {
+                        cellContent = formatValue(item[key]);
+                      } else if (key === 'avatar_url') {
+                        const avatarUrl = item[key].startsWith('/image/') ? `${import.meta.env.VITE_MAIN_BE_URL}${item[key]}` : item[key];
+                        cellContent = <img src={avatarUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />;
+                      }
+                      return (
+                        <td
+                          key={index}
+                          className="py-3 px-6 text-gray-700 admin-dark:text-gray-300"
+                        >
+                          {cellContent}
+                        </td>
+                      );
+                    })}
+
                     <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300 text-center">
                       <div className="flex justify-center gap-4">
                         <button
@@ -172,8 +206,8 @@ export default function AdminZonePage() {
                   key={num + 1}
                   onClick={() => setPage(num + 1)}
                   className={`w-7 h-7 rounded-full flex items-center justify-center border ${isActive
-                      ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
-                      : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"} transition cursor-pointer`}
+                    ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
+                    : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"} transition cursor-pointer`}
                 >
                   {num + 1}
                 </button>
