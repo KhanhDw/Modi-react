@@ -2,36 +2,55 @@
 import { useEffect, useState } from "react";
 import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { newsData } from "../data/MockData"; // Import dữ liệu mẫu
+import { newsData } from "../../data/MockData"; // Import dữ liệu mẫu
 
 export default function NewsInterface() {
   const [newsArticles, setNewsArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const pageSize = 6;
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/tintuc`)
+    setIsLoading(true);
+
+    // Chỉnh sửa lại fetch URL theo yêu cầu của bạn
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/blogs`)
       .then((res) => {
-        if (!res.ok) throw new Error("API không phản hồi"); // Kiểm tra lỗi HTTP
+        if (!res.ok) throw new Error("API không phản hồi");
         return res.json();
       })
-      .then((data) => {
-        // Kiểm tra dữ liệu từ API
-        if (data && Array.isArray(data) && data.length > 0) {
-          const sorted = [...data].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
-          setNewsArticles(sorted);
+      .then((apiData) => {
+        console.log("Dữ liệu từ API:", apiData);
+
+        if (apiData && apiData.data && Array.isArray(apiData.data) && apiData.data.length > 0) {
+          const sorted = [...apiData.data].sort(
+            (a, b) => new Date(b.published_at) - new Date(a.published_at)
+          );
+          // Ánh xạ các trường dữ liệu
+          const mappedData = sorted.map(item => ({
+            id: item.id,
+            tieu_de: item.title,
+            slug: item.slug,
+            noi_dung: item.content,
+            hinh_anh: item.image,
+            tac_gia: item.author_name,
+            ngay_dang: item.published_at,
+          }));
+          setNewsArticles(mappedData);
         } else {
-          // Sử dụng dữ liệu mẫu nếu API trả về mảng rỗng
+          // Sử dụng dữ liệu mẫu nếu API không trả về dữ liệu hợp lệ
           const sortedMockData = [...newsData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
           setNewsArticles(sortedMockData);
         }
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
         // Sử dụng dữ liệu mẫu khi API thất bại
         const sortedMockData = [...newsData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
         setNewsArticles(sortedMockData);
+        setIsLoading(false);
       });
   }, []);
 
@@ -41,6 +60,12 @@ export default function NewsInterface() {
     return new Date(dateStr).toLocaleDateString("vi-VN");
   };
 
+  // Hiển thị trạng thái tải
+  if (isLoading) {
+    return <div className="text-center py-20 text-gray-500">Đang tải tin tức...</div>;
+  }
+
+  // Hiển thị khi không có dữ liệu
   if (!newsArticles.length) {
     return <div className="text-center py-20 text-gray-500">Không có tin tức nào.</div>;
   }
@@ -59,6 +84,10 @@ export default function NewsInterface() {
 
   const totalPages = Math.ceil((newsArticles.length - 1) / pageSize) || 1;
 
+  const handleArticleClick = (articleSlug, articleId) => {
+    navigate(`/news/${articleSlug}`, { state: { blogId: articleId } });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-8">
@@ -67,7 +96,7 @@ export default function NewsInterface() {
           <div className="mb-12">
             <div
               className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-300"
-              onClick={() => navigate(`/news/${heroArticle.id}`)}
+              onClick={() => handleArticleClick(heroArticle.slug, heroArticle.id)}
             >
               <div className="md:flex">
                 <div className="md:w-1/2">
@@ -104,7 +133,7 @@ export default function NewsInterface() {
             <div
               key={article.id}
               className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-              onClick={() => navigate(`/news/${article.id}`)}
+              onClick={() => handleArticleClick(article.slug, article.id)}
             >
               <img
                 src={article.hinh_anh || "/placeholder.svg"}
@@ -143,7 +172,8 @@ export default function NewsInterface() {
           {[...Array(totalPages)].map((_, idx) => (
             <button
               key={idx + 1}
-              className={`px-4 py-2 rounded ${currentPage === idx + 1 ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
+              className={`px-4 py-2 rounded ${currentPage === idx + 1 ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700"
+                }`}
               onClick={() => setCurrentPage(idx + 1)}
             >
               {idx + 1}

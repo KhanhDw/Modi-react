@@ -9,7 +9,7 @@ import { Navigate } from "react-router-dom";
 import Home from "@/pages/homePage"
 import About from "@/pages/aboutMePage"
 import Services from "@/pages/servicesPage"
-import News from '@/pages/newsPage'
+import News from '@/pages/news/newsPage'
 import Contact from '@/pages/contactPage'
 import Recruitment from '@/pages/recruitmentPage'
 import NotFound from '@/pages/NotFoundPage'
@@ -20,7 +20,7 @@ import Products from "@/pages/Products"
 
 
 import AdminLoginPage from '@/pages/managers/AdminLoginPage'
-import NewsDetail from '@/pages/NewsDetail'
+import NewsDetail from '@/pages/news/NewsDetail'
 
 //admin dashboard
 import ManagerDashboard from "@/pages/managers/DashboardPage"
@@ -118,11 +118,11 @@ const publicRoutes = [
   { path: "/services", component: Services, layout: DefaultLayout },
   { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
   { path: "/news", component: News, layout: DefaultLayout },
+  { path: "/news/:slug", component: NewsDetail, layout: DefaultLayout },
   { path: "/contact", component: Contact, layout: DefaultLayout },
   { path: "/careers", component: Recruitment, layout: DefaultLayout },
   { path: "/terms-of-services", component: TermsOfServicePage, layout: DefaultLayout },
   { path: "/login", component: AdminLoginPage, layout: NoneHeaderFooterLayout },
-  { path: "/news/:id", component: NewsDetail, layout: DefaultLayout },
   { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
   { path: "/Products", component: Products, layout: DefaultLayout },
   { path: "/Products/:id", component: ProductDetail, layout: DefaultLayout },

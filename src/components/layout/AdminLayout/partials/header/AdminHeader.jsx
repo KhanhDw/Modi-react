@@ -121,11 +121,11 @@ const AdminHeader = ({
 
         {/* Right */}
         <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
-
           <AdminSearch />
-
           {/* Website link */}
-          <NavLink to={`${import.meta.env.VITE_MAIN_FE_URL}`}>
+          <NavLink to={`${import.meta.env.VITE_MAIN_FE_URL}`}
+            target="_blank"
+            rel="noopener noreferrer">
             <Button
               variant="ghost"
               className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 admin-dark:bg-gray-400/10 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
