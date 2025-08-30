@@ -12,6 +12,7 @@ export default function ServicesPage() {
   const [error, setError] = useState(null);
   const location = useLocation();
 
+  // Lấy danh sách dịch vụ từ API
   const fetchServices = async () => {
     setLoading(true);
     try {
@@ -29,7 +30,7 @@ export default function ServicesPage() {
 
   useEffect(() => {
     fetchServices();
-  }, [sortOrder]);
+  }, []);
 
   if (loading)
     return <div className="p-6 text-center text-green-800">Đang tải...</div>;
@@ -137,8 +138,8 @@ export default function ServicesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white rounded-2xl shadow-[0_35px_35px_rgba(0,0,0,0.25)] ">
-      <div className="container mx-auto px-6 py-8">
+    <div className=" bg-white rounded-2xl ">
+      <div className="container mx-auto ">
         <div className="mb-6">
           <nav className="flex justify-center">
             <NavLink
@@ -220,26 +221,6 @@ export default function ServicesPage() {
             handleDeleteService,
           }}
         />
-      </div>
-
-      <div className="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="w-full sm:w-auto px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50 text-xs sm:text-sm"
-        >
-          Trước
-        </button>
-        <span className="text-green-800 text-xs sm:text-sm">
-          Trang {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="w-full sm:w-auto px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50 text-xs sm:text-sm"
-        >
-          Sau
-        </button>
       </div>
     </div>
   );
