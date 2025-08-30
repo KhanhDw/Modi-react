@@ -13,7 +13,11 @@ import News from '@/pages/newsPage'
 import Contact from '@/pages/contactPage'
 import Recruitment from '@/pages/recruitmentPage'
 import NotFound from '@/pages/NotFoundPage'
-import ServiceDetailPage from "@/pages/serviceDetailPage";
+import ServiceDetailPage from "@/pages/serviceDetailPage"
+import ProductDetail from "@/pages/ProductDetail"
+import Products from "@/pages/Products"
+
+
 
 import AdminLoginPage from '@/pages/managers/AdminLoginPage'
 import NewsDetail from '@/pages/NewsDetail'
@@ -120,6 +124,8 @@ const publicRoutes = [
   { path: "/login", component: AdminLoginPage, layout: NoneHeaderFooterLayout },
   { path: "/news/:id", component: NewsDetail, layout: DefaultLayout },
   { path: "*", component: NotFound, layout: NoneHeaderFooterLayout },
+  { path: "/Products", component: Products, layout: DefaultLayout },
+  { path: "/Products/:id", component: ProductDetail, layout: DefaultLayout },
 ]
 
 const privateRoutes = [
