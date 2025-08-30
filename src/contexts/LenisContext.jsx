@@ -1,12 +1,11 @@
+// contexts/LenisContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import useLenisWithToggle from "@/hook/useLenisWithToggle";
 
-// Tạo context
 const LenisContext = createContext(null);
 
-// Provider
 export default function LenisProvider({ children } = {}) {
-  const lenis = useLenisWithToggle();
+  const lenis = useLenisWithToggle(); // hook của bạn trả về instance + helpers
   const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
@@ -16,7 +15,15 @@ export default function LenisProvider({ children } = {}) {
   }, [enabled, lenis]);
 
   return (
-    <LenisContext.Provider value={{ enabled, setEnabled }}>
+    <LenisContext.Provider
+      value={{
+        instance: lenis?.instance || null, // expose instance gốc
+        enable: lenis?.enable,
+        disable: lenis?.disable,
+        enabled,
+        setEnabled,
+      }}
+    >
       {children}
     </LenisContext.Provider>
   );

@@ -128,8 +128,8 @@ export default function ContactPage() {
       render: (value) => (
         <span
           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${value === "Đã phản hồi"
-              ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200"
-              : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
+            ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200"
+            : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
             }`}
         >
           <div className={`w-2 h-2 rounded-full mr-2 ${value === "Đã phản hồi" ? "admin-dark:bg-emerald-400 bg-emerald-400" : "admin-dark:bg-amber-400 bg-amber-400"
@@ -281,8 +281,8 @@ export default function ContactPage() {
                   key={page}
                   onClick={() => setCurrentPage(page)}
                   className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${currentPage === page
-                      ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                      : 'admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                    ? 'z-10 bg-blue-600 text-white focus:z-20  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                    : 'admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
                     }`}
                 >
                   {page}
@@ -323,8 +323,8 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen admin-dark:bg-gray-900 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className=" admin-dark:bg-gray-900 bg-white">
+      <div className="mx-auto ">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold admin-dark:text-gray-100 text-gray-900">Quản lý liên hệ</h1>
           <div className="flex items-center space-x-4">

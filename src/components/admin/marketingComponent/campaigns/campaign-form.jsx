@@ -39,7 +39,7 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
   };
 
   const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value })); 
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -54,7 +54,7 @@ export default function CampaignForm({ onSubmit, onCancel, initialData }) {
             ? "Cập nhật thông tin chiến dịch"
             : "Điền thông tin để tạo chiến dịch marketing mới"}
         </CardDescription>
-      </CardHeader>mm
+      </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
