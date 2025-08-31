@@ -48,6 +48,9 @@ import AllComponentsPageAdmin from "@/pages/managers/AllComponent"
 //admin 
 import ConfigPage from "@/pages/managers/ConfigPage"
 import AboutConfig from "@/pages/managers/ConfigPage/AboutConfig"
+import HomeConfig from "@/pages/managers/ConfigPage/HomeConfig"
+import HeaderConfig from "@/pages/managers/ConfigPage/HeaderConfig"
+import FooterConfig from "@/pages/managers/ConfigPage/FooterConfig"
 import OverviewPageConfig from "@/pages/managers/ConfigPage/OverviewPageConfig"
 
 
@@ -149,9 +152,9 @@ const privateRoutes = [
     path: "/managers/page-config", component: ConfigPage, layout: AdminLayout,
     children: [
       { path: "", component: OverviewPageConfig, layout: AdminLayout },
-      { path: "header", component: AboutConfig, layout: AdminLayout },
-      { path: "footer", component: AboutConfig, layout: AdminLayout },
-      { path: "home", component: AboutConfig, layout: AdminLayout },
+      { path: "header", component: HeaderConfig, layout: AdminLayout },
+      { path: "footer", component: FooterConfig, layout: AdminLayout },
+      { path: "home", component: HomeConfig, layout: AdminLayout },
       { path: "about", component: AboutConfig, layout: AdminLayout },
     ]
   },
