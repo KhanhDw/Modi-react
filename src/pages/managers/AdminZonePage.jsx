@@ -148,9 +148,24 @@ export default function AdminZonePage() {
                       if (key === 'created_at' || key === 'updated_at') {
                         cellContent = formatValue(item[key]);
                       } else if (key === 'avatar_url') {
-                        const avatarUrl = item[key].startsWith('/image/') ? `${import.meta.env.VITE_MAIN_BE_URL}${item[key]}` : item[key];
-                        cellContent = <img src={avatarUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />;
+                        const rawUrl = item[key];
+                        let avatarUrl = null;
+
+                        if (rawUrl) {
+                          avatarUrl = rawUrl.startsWith('/image/')
+                            ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
+                            : rawUrl;
+                        }
+
+                        cellContent = avatarUrl ? (
+                          <img src={avatarUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">
+                            N/A
+                          </div>
+                        );
                       }
+
                       return (
                         <td
                           key={index}

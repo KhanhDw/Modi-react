@@ -13,8 +13,8 @@ import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSe
 
 const breadcrumbMap = {
   "/managers/dashboard": "Tổng quan",
-  "/managers/home-config": "Cấu hình trang chủ",
-  "/managers/marketing": "Marketing & Truyền thông",
+  "/managers/page-config": "Cấu hình thông tin website",
+  "/managers/marketing": "Truyền thông",
   "/managers/website-templates": "Thiết kế Website",
   "/managers/news": "Tin tức",
   "/managers/contact": "Liên hệ",
@@ -22,7 +22,7 @@ const breadcrumbMap = {
   "/managers/about-config": "Giới thiệu",
   "/managers/admin-zone": "Khu vực quản trị",
   "/managers/components": "Component",
-  "/managers/profile": "Component",
+  "/managers/profile": "Hồ sơ người dùng",
 };
 
 const AdminHeader = ({
@@ -33,6 +33,17 @@ const AdminHeader = ({
   sidebarCollapsed,
 }) => {
   const location = useLocation();
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("fullName");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+
 
   // Lấy trạng thái sticky header từ localStorage
   useEffect(() => {
@@ -47,20 +58,14 @@ const AdminHeader = ({
     localStorage.setItem("headerSticky", String(isHeaderSticky));
   }, [isHeaderSticky]);
 
-  const currentPath = location.pathname;
-  // const pageTitle = breadcrumbMap[currentPath] || "NUll";
-  // const breadcrumb = `Admin / ${pageTitle}`;
-
-  // Tách các segment
-  const pathSegments = currentPath.split("/").filter(Boolean); // ["home", "alog", "test", "extra"]
-
-  // Luôn lấy cấp 2 nếu có
-  const titleLevel2 = pathSegments.length >= 2 ? pathSegments[1] : null;
-  const titleLevel3 = pathSegments.length >= 3 ? pathSegments[2] : null;
-
-  const pageTitle = breadcrumbMap[currentPath] || titleLevel2 || "Null";
-
   const pathnames = location.pathname.split("/").filter(Boolean);
+  // ["managers", "dashboard", "extra"]
+
+  const firstLevel = `/${pathnames.slice(0, 2).join("/")}`;
+  // -> "/managers/dashboard"
+
+  const pageTitle = breadcrumbMap[firstLevel] || "Null";
+
 
   const headerStyle = isHeaderSticky
     ? {
@@ -94,26 +99,15 @@ const AdminHeader = ({
             <div className="flex text-sm text-gray-500 admin-dark:text-gray-400 truncate">
               <span>Admin</span>
 
-              {pathnames.slice(1).map((value, index) => {
-                const to = `/${pathnames.slice(0, index + 2).join("/")}`;
-                const isLast = index === pathnames.slice(1).length - 1;
-
-                return (
-                  <li key={to} className="block">
-
-                    <span className="mx-1">/</span>
-                    {isLast ? (
-                      <span className="font-semibold capitalize">{value}</span>
-                    ) : (
-                      <Link to={to} className="hover:underline capitalize">
-                        {value}
-                      </Link>
-                    )}
-                  </li>);
-              })}
+              {pathnames[1] && (
+                <>
+                  <span className="mx-1">/</span>
+                  <span className="font-semibold capitalize">{pathnames[1]}</span>
+                </>
+              )}
             </div>
             <h1 className="text-xl flex items-center font-bold text-gray-800 admin-dark:text-gray-100 md:text-2xl truncate">
-              {pageTitle}{titleLevel3 ? ` - ${titleLevel3}` : ""}
+              {pageTitle}
             </h1>
           </div>
         </div>
@@ -150,7 +144,7 @@ const AdminHeader = ({
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <span className="hidden md:inline text-sm font-bold">ADMIN</span>
+              <span className="hidden md:inline text-sm font-bold">{username}</span>
             </Button>
           </NavLink>
 

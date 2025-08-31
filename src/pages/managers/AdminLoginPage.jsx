@@ -40,6 +40,8 @@ function AdminLoginPage() {
 
             const data = await response.json();
 
+            localStorage.setItem("fullName", data.user.fullname);
+
             if (!response.ok || !data.accessToken) {
                 throw new Error(data.message || "Đăng nhập thất bại");
             }
