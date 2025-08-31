@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiKey } from "react-icons/fi";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import loginBanner from '../../assets/images/authentication-banners/login.png';
 import logo from '/logoModi1.png';
 
@@ -14,6 +14,14 @@ function AdminLoginPage() {
     const handleShowPassword = () => {
         setIsShowPassword(!isShowPassword);
     };
+
+    // ✅ Kiểm tra nếu đã login thì redirect
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            navigate("/managers");
+        }
+    }, [navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
