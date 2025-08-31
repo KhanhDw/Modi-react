@@ -47,7 +47,7 @@ function AnimationHeader({ ActiveSideBarHeader }) {
 
     return (<>
         <motion.div key={location.pathname + scrolled}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all shadow-md w-full`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-md w-full`}
             initial={location.pathname === "/" ? { backgroundColor: "rgba(0,0,0,0)" } : { backgroundColor: "rgba(0,0,0,1)" }}
             animate={{
                 backgroundColor: animatedBackgroundColor,
@@ -57,7 +57,7 @@ function AnimationHeader({ ActiveSideBarHeader }) {
                 opacity: scrolled ? 1 : 1,
                 boxShadow: scrolled ? "0 2px 12px rgba(255, 255, 255, 0.2)" : "0 0 0 rgba(0, 0, 0, 0)",
             }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
         >
             <div className="flex items-center justify-center w-full">
                 <Header

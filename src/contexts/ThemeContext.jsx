@@ -1,30 +1,19 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-/**
- * Theme Context for About Page
- * Quản lý chế độ sáng/tối cho trang About
- *
- * Usage:
- * import { ThemeProvider, useTheme } from '../contexts/about/ThemeContext'
- *
- * const { isDark, toggleTheme } = useTheme()
- */
-
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [isDark, setIsDark] = useState(true); // Mặc định là dark mode
-
-  useEffect(() => {
+  const [isDark, setIsDark] = useState(() => {
     try {
       const savedTheme = localStorage.getItem("web-theme");
       if (savedTheme) {
-        setIsDark(savedTheme === "dark");
+        return savedTheme === "dark";
       }
     } catch (error) {
       console.log("LocalStorage not available");
     }
-  }, []);
+    return true; // fallback mặc định
+  });
 
   useEffect(() => {
     if (isDark) {
