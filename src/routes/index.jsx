@@ -11,6 +11,10 @@ import About from "@/pages/aboutMePage"
 import Services from "@/pages/servicesPage"
 import News from '@/pages/news/newsPage'
 import Contact from '@/pages/contactPage'
+import MarketingOutlet from '@/pages/marketingPage'
+import ArticleDetail from '@/pages/marketing/article-detail'
+import Marketing from '@/pages/marketing/marketing-list_page'
+
 import Recruitment from '@/pages/recruitmentPage'
 import NotFound from '@/pages/NotFoundPage'
 import ServiceDetailPage from "@/pages/serviceDetailPage"
@@ -116,6 +120,13 @@ const publicRoutes = [
   { path: "/", component: Home, layout: DefaultLayout },
   { path: "/about", component: About, layout: DefaultLayout },
   { path: "/services", component: Services, layout: DefaultLayout },
+  {
+    path: "/marketing", component: MarketingOutlet, layout: DefaultLayout,
+    children: [
+      { path: "", component: Marketing, layout: DefaultLayout },
+      { path: ":slug", component: ArticleDetail, layout: DefaultLayout },
+    ]
+  },
   { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
   { path: "/news", component: News, layout: DefaultLayout },
   { path: "/news/:slug", component: NewsDetail, layout: DefaultLayout },
