@@ -46,7 +46,7 @@ export default function EditPage() {
 
         const fetchData = async () => {
             try {
-                const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${id}`);
+                const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/id/${id}`);
                 if (!res.ok) throw new Error("Không thể tải dữ liệu");
                 const data = await res.json();
 

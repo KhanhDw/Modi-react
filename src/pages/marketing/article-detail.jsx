@@ -17,7 +17,7 @@ export default function ArticleDetail() {
         const fetchArticle = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${slug}`
+                    `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/slug/${slug}`
                 );
                 if (!res.ok) throw new Error("Không thể tải dữ liệu11111");
                 const data = await res.json();

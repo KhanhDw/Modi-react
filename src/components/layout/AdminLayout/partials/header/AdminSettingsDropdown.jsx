@@ -1,4 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import { Settings, UserCircle, LogOut, SunMedium, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -13,6 +15,31 @@ import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 
 const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
   const { isDark, toggleTheme } = useAdminTheme();
+  const navigate = useNavigate()
+
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      if (token) {
+        await axios.post(
+          `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/logout`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      // Xóa token localStorage
+      localStorage.removeItem("accessToken");
+
+      // Điều hướng về trang login
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      alert("Có lỗi khi đăng xuất");
+    }
+  };
 
   return (
     <div className="z-999">
@@ -73,22 +100,22 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
         </CustomDropdownItem>
 
         {/* Profile Link */}
-        <CustomDropdownItem asChild>
+        {/* <CustomDropdownItem asChil >
           <NavLink
-            to="/managers/profile"
+            onClick={() => navigate("/managers/profile")}
             className="flex items-center font-medium gap-2 hover:underline underline-offset-4"
           >
             <UserCircle className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
             Hồ sơ
           </NavLink>
-        </CustomDropdownItem>
+        </CustomDropdownItem> */}
 
         <CustomDropdownSeparator />
 
         {/* Logout */}
         <CustomDropdownItem
           className="text-red-600 admin-dark:text-red-400 hover:bg-red-50 admin-dark:hover:bg-red-900/50 active:scale-[0.98] transition-all"
-          onClick={() => console.log("Logout clicked")}
+          onClick={handleLogout}
         >
           <LogOut className="h-4 w-4" />
           Đăng xuất

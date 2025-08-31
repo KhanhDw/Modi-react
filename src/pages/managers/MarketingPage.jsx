@@ -139,7 +139,7 @@ export default function MarketingPage() {
           },
         ],
       };
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${formData.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/id/${formData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

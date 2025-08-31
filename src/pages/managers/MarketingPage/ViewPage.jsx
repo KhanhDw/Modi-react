@@ -120,7 +120,7 @@ export default function ViewPage() {
             try {
                 setLoading(true);
                 setImageError(false);
-                const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${id}`);
+                const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/id/${id}`);
                 if (!res.ok) {
                     throw new Error(`Không thể tải dữ liệu: ${res.statusText}`);
                 }

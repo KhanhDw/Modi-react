@@ -3,7 +3,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  MessageSquare, Globe, DollarSign, TrendingUp, CheckCircle
+  MessageSquare, Sprout, DollarSign, TrendingUp
 } from "lucide-react"
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar
@@ -38,10 +38,10 @@ const visitorData = [
 // 1. KPI Cards
 function KpiCards() {
   const cards = [
-    { title: "Liên hệ hôm nay", value: 24, change: "+12%", icon: MessageSquare },
-    { title: "Đơn đặt website hôm nay", value: 8, change: "+25%", icon: Globe },
+    { title: "Liên hệ tháng này", value: 24, change: "+12%", icon: MessageSquare },
+    { title: "Đơn đặt website tháng này", value: 8, change: "+25%", icon: Sprout },
     { title: "Doanh thu tháng này", value: "98.5M", change: "+18%", icon: DollarSign },
-    { title: "Giao diện mới được thêm", value: 15, change: "+5", icon: TrendingUp },
+    { title: "Lượt khách truy cập tháng này", value: 15, change: "+5", icon: TrendingUp },
   ]
 
   return (
