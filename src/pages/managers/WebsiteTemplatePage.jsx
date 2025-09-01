@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-const baseUrl = import.meta.env.VITE_MAIN_BE_URL || 'http://localhost:3000';
-
 export default function WebsiteTemplatePage() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [templates, setTemplates] = useState([]);
@@ -13,7 +11,7 @@ export default function WebsiteTemplatePage() {
 
   const fetchTemplates = async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/web-samples`);
+      const response = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/web-samples`);
       if (!response.ok) throw new Error('Failed to fetch templates');
       const result = await response.json();
       const parsedData = result.data.map(item => ({
@@ -23,7 +21,9 @@ export default function WebsiteTemplatePage() {
         top_features: typeof item.top_features === 'string' ? JSON.parse(item.top_features) : item.top_features,
         export_state: item.export_state ? 1 : 0,
       }));
-      setTemplates(parsedData || []);
+      setTemplates(parsedData ?? []);
+      console.log("--->>>>>>>>>>>>>>>>>>>>", parsedData);
+
     } catch (error) {
       console.error("Error fetching templates:", error);
     }
@@ -39,7 +39,7 @@ export default function WebsiteTemplatePage() {
 
   const handleSave = async (updatedTemplate, id) => {
     try {
-      const response = await fetch(`${baseUrl}/api/web-samples/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/web-samples/${id}`, {
         method: 'PUT',
         body: updatedTemplate,
       });
@@ -54,7 +54,7 @@ export default function WebsiteTemplatePage() {
 
   const handleAdd = async (newTemplate) => {
     try {
-      const response = await fetch(`${baseUrl}/api/web-samples`, {
+      const response = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/web-samples`, {
         method: 'POST',
         body: newTemplate,
       });
@@ -69,7 +69,7 @@ export default function WebsiteTemplatePage() {
 
   const handleDelete = async (templateId) => {
     try {
-      const response = await fetch(`${baseUrl}/api/web-samples/${templateId}`, {
+      const response = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/web-samples/${templateId}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete template');

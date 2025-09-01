@@ -46,6 +46,34 @@ export default function BlogsNewPage() {
     }, [id, blogs]);
 
 
+
+    // params: lang = "" | "en"
+    const handleChangeLang = async (lang = "") => {
+        if (!editingBlog) return;
+
+        // thêm "/" nếu có lang
+        const langPath = lang === 'en' ? `/${lang}` : "";
+
+        const url = `${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/blogs/${editingBlog.id}`;
+
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
+
+            const blogData = await res.json();
+            if (blogData) {
+                // merge để không mất field cũ
+                setEditingBlog((prev) => ({ ...prev, ...blogData }));
+            }
+        } catch (err) {
+            console.error("Lỗi khi lấy dữ liệu:", err);
+            setError("Không thể tải dữ liệu. Vui lòng thử lại.");
+        }
+
+        console.log("Đang load lang:", lang);
+    };
+
+
     if (loading) return <div className="p-4 text-center text-green-800">Đang tải...</div>;
     if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
 
@@ -73,6 +101,7 @@ export default function BlogsNewPage() {
             <div className=" bg-white admin-dark:bg-slate-900 rounded-lg shadow-md ">
                 <BlogForm
                     blog={editingBlog}
+                    handleChangeLang={handleChangeLang}
                     onSubmit={handleSubmit}
                     onCancel={() => {
                         handleCancel();

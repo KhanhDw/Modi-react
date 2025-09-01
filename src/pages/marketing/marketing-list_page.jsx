@@ -1,3 +1,4 @@
+// src/pages/marketing/index.jsx
 import { useEffect, useState } from "react"
 import ArticlesList from "@/pages/marketing/articles-list"
 import { Search } from "lucide-react"
@@ -7,12 +8,15 @@ export default function MarketingPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
     const [searchTerm, setSearchTerm] = useState("")
-    const [isSearching, setIsSearching] = useState(false) // 🔹 check đang tìm kiếm hay không
+    const [isSearching, setIsSearching] = useState(false)
+
+    const [visibleCount, setVisibleCount] = useState(5) // 🔹 số bài hiện tại
+    const pageSize = 5
 
     const fetchArticles = async (term = "") => {
         try {
             setIsLoading(true)
-            setIsSearching(!!term) // nếu có từ khóa thì bật flag tìm kiếm
+            setIsSearching(!!term)
 
             let apiUrl = `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing`
             if (term) {
@@ -24,6 +28,7 @@ export default function MarketingPage() {
 
             const data = await response.json()
             setArticles(data.data || data)
+            setVisibleCount(pageSize) // reset lại mỗi lần tìm kiếm
         } catch (error) {
             console.error("Lỗi khi fetch dữ liệu:", error)
             setError(error.message)
@@ -59,6 +64,8 @@ export default function MarketingPage() {
         )
     }
 
+    const visibleArticles = articles.slice(0, visibleCount)
+
     return (
         <div className="min-h-screen bg-background">
             <main className="container mx-auto py-10 px-4">
@@ -92,7 +99,21 @@ export default function MarketingPage() {
                 </div>
 
                 {articles.length > 0 ? (
-                    <ArticlesList articles={articles} />
+                    <>
+                        <ArticlesList articles={visibleArticles} />
+
+                        {/* Nút xem thêm */}
+                        {visibleCount < articles.length && (
+                            <div className="flex justify-center mt-6">
+                                <button
+                                    onClick={() => setVisibleCount((prev) => prev + pageSize)}
+                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                                >
+                                    Xem thêm
+                                </button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     isSearching && (
                         <div className="text-center text-lg text-muted-foreground">

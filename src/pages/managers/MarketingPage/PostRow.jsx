@@ -60,11 +60,11 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
             </TableCell>
 
             {/* Ngôn ngữ */}
-            <TableCell>
+            {/* <TableCell>
                 <Badge className="text-white font-medium bg-indigo-500">
                     {post.lang}
                 </Badge>
-            </TableCell>
+            </TableCell> */}
 
             {/* Trạng thái */}
             <TableCell>

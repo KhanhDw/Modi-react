@@ -20,7 +20,7 @@ export default function EditPage() {
     const [error, setError] = useState("");
     const [isOpenEditNetwork, setIsOpenEditNetwork] = useState(false);
     const [socialNetworks, setSocialNetworks] = useState([]);
-
+    const [activeLang, setActiveLang] = useState("vi");
 
     const handleOpenEditNetwork = () => {
         setIsOpenEditNetwork(true);
@@ -37,6 +37,9 @@ export default function EditPage() {
         }
     };
 
+
+
+
     // Fetch dữ liệu bài viết theo id
     useEffect(() => {
         if (!id) {
@@ -51,7 +54,8 @@ export default function EditPage() {
                 const data = await res.json();
 
                 setFormData(data);
-                setPreview(data.image || "");
+                setPreview(data.image ?? "");
+                setActiveLang(data.lang ?? "vi");
             } catch (err) {
                 console.error("Lỗi khi tải:", err);
                 setError("Không thể tải dữ liệu bài viết");
@@ -64,6 +68,45 @@ export default function EditPage() {
         fetchSocialNetworks();
         fetchData();
     }, [id, setFormData]);
+
+
+    // params: lang = "" | "en"
+    const handleChangeLang = async (lang = "") => {
+        if (!id) return;
+
+
+        try {
+            // thêm "/" nếu có lang
+            const langPath = lang === 'en' ? `/${lang}` : "";
+            const url = `${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/marketing/id/${id}`;
+            const res = await fetch(url);
+
+            let marketingData = {};
+            if (res.ok) {
+                marketingData = await res.json();
+            }
+
+            if (!marketingData || Object.keys(marketingData).length === 0) {
+                setFormData((prev) => ({
+                    ...prev,
+                    lang,
+                    title: "",
+                    content: "<p></p>",
+                }));
+            } else {
+                // ✅ Có dữ liệu -> hiển thị bình thường
+                setFormData(marketingData);
+            }
+
+            setActiveLang(lang);
+        } catch (err) {
+            console.error("Lỗi khi lấy dữ liệu:", err);
+            setError("Không thể tải dữ liệu. Vui lòng thử lại.");
+        }
+
+        console.log("Đang load lang:", lang);
+    };
+
 
     const onSubmit = async () => {
         try {
@@ -95,6 +138,22 @@ export default function EditPage() {
         );
     }
 
+    const handleActiveLangbtn = (lang) => {
+        if (lang !== activeLang) {
+            // cảnh báo nếu chuyển từ vi sang en
+            const confirmMsg =
+                lang === "en"
+                    ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
+                    : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
+
+            const proceed = window.confirm(confirmMsg);
+            if (!proceed) return; // nếu user nhấn Hủy thì không chuyển
+        }
+
+        setActiveLang(lang);
+        handleChangeLang(lang);
+    };
+
     return (
         <div className="w-full admin-dark:bg-gray-900 rounded-xl">
             {/* Header */}
@@ -102,6 +161,20 @@ export default function EditPage() {
                 <h2 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
                     Chỉnh sửa bài viết
                 </h2>
+
+                <div className="flex justify-center items-center space-x-4">
+                    <button type="button" name="vi"
+                        onClick={() => handleActiveLangbtn("vi")}
+                        className={`${activeLang === "vi" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+                        <span className="font-semibold text-xl">Tiếng Việt</span>
+                    </button>
+                    <button type="button" name="en"
+                        onClick={() => handleActiveLangbtn("en")}
+                        className={`${activeLang === "en" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+                        <span className="font-semibold text-xl">Tiếng Anh</span>
+                    </button>
+                </div>
+
                 <div className="flex justify-end gap-4 mt-8">
                     <Button
                         variant="outline"

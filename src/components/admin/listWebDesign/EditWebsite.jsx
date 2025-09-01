@@ -43,16 +43,17 @@ export default function WebsiteTemplateEdit() {
     if (template) {
       const categoryValue = (template.category ?? "").trim();
       return {
-        name: template.name || "",
-        description: template.description || "",
-        image_url: template.image_url || "",
-        url_github: template.url_github || "",
+        name: template.name ?? "",
+        description: template.description ?? "",
+        image_url: template.image_url ?? "",
+        url_github: template.url_github ?? "",
         category: categoryValue,
-        price: template.price || 0,
+        price: template.price ?? 0,
         tech: Array.isArray(template.tech) ? template.tech : [],
         top_features: Array.isArray(template.top_features) ? template.top_features : [],
         tags: Array.isArray(template.tags) ? template.tags : [],
         export_state: to01(template.export_state), // <- luôn 0/1
+        lang: template.lang ?? "vi",
       };
     }
     return {
@@ -66,6 +67,7 @@ export default function WebsiteTemplateEdit() {
       top_features: [],
       tags: [],
       export_state: 0, // <- 0/1
+      lang: "vi",
     };
   });
 
@@ -250,6 +252,64 @@ export default function WebsiteTemplateEdit() {
 
 
 
+
+
+  const [activeLang, setActiveLang] = useState("vi");
+
+  // params: lang = "" | "en"
+  const handleChangeLang = async (lang = "") => {
+    if (!id) return;
+    try {
+      // thêm "/" nếu có lang
+      const langPath = lang === 'en' ? `/${lang}` : "";
+      const url = `${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/web-samples/${id}`;
+      const res = await fetch(url);
+
+      let websiteData = {};
+      if (res.ok) {
+        websiteData = await res.json();
+      }
+
+      if (!websiteData || Object.keys(websiteData).length === 0) {
+        setFormData((prev) => ({
+          ...prev,
+          lang,
+          name: "",
+          description: "",
+          top_features: [],
+        }));
+      } else {
+        // ✅ Có dữ liệu -> hiển thị bình thường
+        setFormData(websiteData);
+      }
+
+      setActiveLang(lang);
+    } catch (err) {
+      console.error("Lỗi khi lấy dữ liệu:", err);
+      setError("Không thể tải dữ liệu. Vui lòng thử lại.");
+    }
+
+    console.log("Đang load lang:", lang);
+  };
+
+  const handleActiveLangbtn = (lang) => {
+    if (lang !== activeLang) {
+      // cảnh báo nếu chuyển từ vi sang en
+      const confirmMsg =
+        lang === "en"
+          ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
+          : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
+
+      const proceed = window.confirm(confirmMsg);
+      if (!proceed) return; // nếu user nhấn Hủy thì không chuyển
+    }
+
+    setActiveLang(lang);
+    handleChangeLang(lang);
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -264,11 +324,11 @@ export default function WebsiteTemplateEdit() {
       // ✅ Thêm translations thủ công (FE cần gửi JSON.stringify)
       const translations = [
         {
-          lang: "vi",
+          lang: activeLang,
           name: formData.name,            // lấy từ state formData
           description: formData.description,
-          tags: formData.tags || [],
-          top_features: formData.top_features || []
+          tags: formData.tags ?? [],
+          top_features: formData.top_features ?? []
         }
         // có thể thêm lang khác nếu cần
       ];
@@ -306,25 +366,38 @@ export default function WebsiteTemplateEdit() {
     }
   };
 
-
-  return (
-    <div className="mx-auto px-4 w-fit">
-      <div className="flex items-center gap-4 mb-8">
-        <Button
-          variant="ghost"
-          onClick={() => navigate(-1)}
-          className="flex items-center hover:text-gray-800 gap-2 text-gray-700 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800"
-        >
-          <ArrowLeft className="h-4 w-4 text-gray-900 admin-dark:text-gray-100" />
-          Quay lại
-        </Button>
-        <h1 className="text-3xl font-bold text-gray-900 admin-dark:text-gray-100">
-          {template ? "Chỉnh sửa mẫu" : "Thêm mẫu mới"}
-        </h1>
+  return (<>
+    <div className="mx-auto max-w-fit">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="flex items-center hover:text-gray-800 gap-2 text-gray-700 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800"
+          >
+            <ArrowLeft className="h-4 w-4 text-gray-900 admin-dark:text-gray-100" />
+            Quay lại
+          </Button>
+          <h1 className="text-3xl font-bold text-gray-900 admin-dark:text-gray-100">
+            {template ? "Chỉnh sửa mẫu" : "Thêm mẫu mới"}
+          </h1>
+        </div>
+        <div className="flex justify-center items-center space-x-4">
+          <button type="button" name="vi"
+            onClick={() => handleActiveLangbtn("vi")}
+            className={`${activeLang === "vi" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+            <span className="font-semibold text-xl">Tiếng Việt</span>
+          </button>
+          <button type="button" name="en"
+            onClick={() => handleActiveLangbtn("en")}
+            className={`${activeLang === "en" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+            <span className="font-semibold text-xl">Tiếng Anh</span>
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
-        <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+      <div className="flex  gap-7 items-start">
+        <Card className="w-120 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
           <CardHeader className={"flex items-center justify-between"}>
             <CardTitle className="text-gray-900 admin-dark:text-gray-100">Thông tin mẫu</CardTitle>
             <CardTitle className="text-gray-900 admin-dark:text-gray-100">
@@ -339,8 +412,8 @@ export default function WebsiteTemplateEdit() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
+            <form onSubmit={handleSubmit} className="space-y-6 ">
+              <div className="space-y-2 ">
                 <Label htmlFor="name" className="text-gray-800 admin-dark:text-gray-200">Tên mẫu *</Label>
                 <Input
                   id="name"
@@ -421,26 +494,6 @@ export default function WebsiteTemplateEdit() {
                     className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500"
                     onChange={handleFileChange}
                   />
-                  {/* ) : (
-                    <Input
-                      id="image_url"
-                      name="image_url"
-                      type="url"
-                      className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, image_url: e.target.value }))}
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  )} */}
-                  {/* <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setIsUploadFileImage(!isUploadFileImage)}
-                    className={`${isUploadFileImage ? "bg-blue-700" : "bg-white text-black admin-dark:bg-gray-800"} hover:bg-white hover:text-black border-gray-300 admin-dark:border-gray-600`}
-                  >
-                    <Upload className="h-4 w-4 admin-dark:text-gray-200" />
-                  </Button> */}
                 </div>
               </div>
 
@@ -577,25 +630,24 @@ export default function WebsiteTemplateEdit() {
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500"
               >
                 <Save className="h-4 w-4 mr-2" />
-                {isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"}
+                <span className="font-semibold text-xl">{isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"} {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</span>
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="max-w-6xl  bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+        <Card className="w-fit  bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
           <CardHeader>
             <CardTitle className="text-gray-900 admin-dark:text-gray-100">Xem trước</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4 ">
-              { }
-
-              {/* {formData.image_url ? (
-                <div className="relative overflow-hidden rounded-lg w-full border-2 border-gray-300 admin-dark:border-gray-700">
-                  <div className="w-120 h-50 border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
+              {preview ? (
+                <div className="relative overflow-hidden rounded-lg min-w-120 border-2 border-gray-300 admin-dark:border-gray-700">
+                  <div className="w-fit h-50 border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
                     <img
-                      src={formData.image_url ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}` : ""}
+                      src={preview}
+                      // src={formData.image_url ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}` : ""}
                       alt="Preview"
                       className="w-120 h-50 object-cover"
                     />
@@ -606,26 +658,9 @@ export default function WebsiteTemplateEdit() {
                     </Badge>
                   </div>
                 </div>
-              ) : ( */}
-              {preview ? (
-                <div className="relative overflow-hidden rounded-lg w-full border-2 border-gray-300 admin-dark:border-gray-700">
-                  <div className="w-full h-50 border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src={preview}
-                      // src={formData.image_url ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}` : ""}
-                      alt="Preview"
-                      className="w-full h-50 object-cover"
-                    />
-                  </div>
-                  <div className="absolute top-2 left-2">
-                    <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300">
-                      {formData.category || "Chưa có danh mục"}
-                    </Badge>
-                  </div>
-                </div>
 
               ) : (
-                <div className="relative overflow-hidden rounded-lg w-full border-2 border-gray-300 admin-dark:border-gray-700">
+                <div className="relative overflow-hidden rounded-lg w-fit border-2 border-gray-300 admin-dark:border-gray-700">
                   <div className="w-120 h-50 flex items-center justify-center border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
                     <h1>Chưa có ảnh</h1>
                   </div>
@@ -660,5 +695,6 @@ export default function WebsiteTemplateEdit() {
         </Card>
       </div>
     </div >
+  </>
   );
 }
