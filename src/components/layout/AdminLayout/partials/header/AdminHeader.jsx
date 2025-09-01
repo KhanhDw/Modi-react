@@ -122,7 +122,7 @@ const AdminHeader = ({
             rel="noopener noreferrer">
             <Button
               variant="ghost"
-              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 admin-dark:bg-gray-400/10 hover:bg-gray-500 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
+              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 admin-dark:bg-gray-400/10 hover:bg-gray-200 bg-slate-100 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />

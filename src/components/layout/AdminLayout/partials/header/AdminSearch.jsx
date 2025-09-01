@@ -95,7 +95,7 @@ export default function SearchPage() {
                                     onFocus={() => setIsFocused(true)}
                                     onBlur={() => setIsFocused(false)}
                                     className="w-full pl-10 pr-10 py-5 text-gray-800 border-2 border-slate-300 admin-dark:border-slate-500 rounded-lg shadow-sm
-                                    bg-gray-400 placeholder:text-gray-400
+                                    bg-white placeholder:text-gray-400
                                     focus:outline-none focus:ring-2 focus:ring-gray-500
                                     transition-colors duration-200 ease-in-out
                                     admin-dark:bg-gray-700 admin-dark:text-white admin-dark:placeholder:text-gray-400
@@ -114,10 +114,10 @@ export default function SearchPage() {
                     </div>
 
                     {showResults && (
-                        <div data-lenis-prevent className={`scroll-container lenis-local absolute top-full left-0 right-0 mt-2 bg-gray-800 rounded-lg border border-gray-700 shadow-xl overflow-hidden z-50 max-h-96 overflow-y-auto transition-all duration-300 ${isFocused ? 'w-2xl' : 'w-md'}`}>
-                            <div className="z-100 px-4 py-3 border-b border-gray-700 sticky top-0 bg-gray-800">
-                                <h3 className="text-white font-medium flex gap-2">
-                                    <Search/> Kết quả cho "{searchQuery}" ({totalResults})
+                        <div data-lenis-prevent className={`scroll-container lenis-local absolute top-full left-0 right-0 mt-2 admin-dark:bg-gray-800  bg-slate-50 text-gray-800     rounded-lg border border-gray-700 shadow-xl overflow-hidden z-50 max-h-96 overflow-y-auto transition-all duration-300 ${isFocused ? 'w-2xl' : 'w-md'}`}>
+                            <div className="z-100 px-4 py-3 border-b border-gray-700 sticky top-0 admin-dark:bg-gray-800 bg-slate-50 text-gray-800">
+                                <h3 className="text-gray-800 admin-dark:text-white font-medium flex gap-2 ">
+                                    <Search /> Kết quả cho "{searchQuery}" ({totalResults})
                                 </h3>
                             </div>
 
@@ -127,16 +127,16 @@ export default function SearchPage() {
 
                                     return (
                                         <div key={category}>
-                                            <div className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-800/50 sticky top-12">
+                                            <div className="px-4 py-2 text-sm font-medium admin-dark:text-gray-300 admin-dark:bg-gray-800/50   bg-slate-50 text-gray-800    sticky top-12">
                                                 {config.label} ({config.count})
                                             </div>
 
                                             <div>
                                                 {categoryResults.map((result) => (
-                                                    <div key={result.id} className="group cursor-pointer transition-colors hover:bg-gray-700">
+                                                    <div key={result.id} className="group cursor-pointer transition-colors hover:bg-gray-300  admin-dark:hover:bg-gray-700">
                                                         <div className="flex items-center gap-3 px-4 py-3">
-                                                            <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors" />
-                                                            <span className="text-white font-medium group-hover:text-gray-100 transition-colors">
+                                                            <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-gray-800 transition-colors" />
+                                                            <span className="text-gray-800 admin-dark:text-white font-medium group-hover:text-gray-800 transition-colors">
                                                                 {result.title}
                                                             </span>
                                                         </div>
