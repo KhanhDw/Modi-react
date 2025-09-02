@@ -20,12 +20,12 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white admin-dark:bg-gray-800">
       <div className={`lenis-local scroll-container overflow-y-auto flex flex-col ${h_table}`}>
         <table className="min-w-full">
-          <thead className="bg-gray-50/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200">
+          <thead className="bg-gray-50/80 admin-dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200 admin-dark:border-gray-700">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider">
                 STT
               </th>
               {columns
@@ -33,29 +33,29 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
                 .map((column) => (
                   <th
                     key={column.key}
-                    className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                    className="px-6 py-4 text-left text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider"
                   >
                     {column.label}
                   </th>
                 ))}
-              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider">
                 Thao tác
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
+          <tbody className="divide-y divide-gray-100 admin-dark:divide-gray-700 bg-white admin-dark:bg-gray-800">
             {data.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.filter(c => c.key !== 'id').length + 2}
-                  className="px-6 py-12 text-center text-gray-500"
+                  className="px-6 py-12 text-center text-gray-500 admin-dark:text-gray-400"
                 >
                   <div className="flex flex-col items-center">
-                    <svg className="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-12 h-12 text-gray-300 admin-dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                     </svg>
-                    <span className="text-sm font-medium">Không có dữ liệu</span>
-                    <span className="text-xs text-gray-400 mt-1">Chưa có thông tin nào được tìm thấy</span>
+                    <span className="text-sm font-medium text-gray-500 admin-dark:text-gray-300">Không có dữ liệu</span>
+                    <span className="text-xs text-gray-400 admin-dark:text-gray-500 mt-1">Chưa có thông tin nào được tìm thấy</span>
                   </div>
                 </td>
               </tr>
@@ -63,10 +63,10 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
               data.map((item, index) => (
                 <tr
                   key={item.id || index}
-                  className="hover:bg-gray-50/50 transition-colors duration-150 group"
+                  className="hover:bg-gray-50/50 admin-dark:hover:bg-gray-700/50 transition-colors duration-150 group"
                 >
                   {/* Cột STT */}
-                  <td className="px-6 py-4 text-sm font-medium text-gray-400 group-hover:text-gray-600">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-400 admin-dark:text-gray-500 group-hover:text-gray-600 admin-dark:group-hover:text-gray-300">
                     {index + 1}
                   </td>
                   {/* Các cột từ columns */}
@@ -77,7 +77,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
                       return (
                         <td
                           key={column.key}
-                          className={`px-6 py-4 text-sm ${column.className || "text-gray-700"}`}
+                          className={`px-6 py-4 text-sm ${column.className || "text-gray-700 admin-dark:text-gray-200"}`}
                         >
                           {column.render
                             ? column.render(value, item)
@@ -93,7 +93,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
                       {onView && (
                         <button
                           onClick={() => onView(item)}
-                          className="inline-flex items-center justify-center w-10 h-10 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-all duration-200 group/btn shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-10 h-10 text-blue-600 admin-dark:text-blue-400 hover:text-blue-700 admin-dark:hover:text-blue-300 hover:bg-blue-50 admin-dark:hover:bg-blue-900/50 rounded-xl transition-all duration-200 group/btn shadow-sm hover:shadow-md"
                           title="Xem chi tiết"
                         >
                           <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
                       {onEdit && (
                         <button
                           onClick={() => onEdit(item)}
-                          className="inline-flex items-center justify-center w-10 h-10 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 group/btn shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-10 h-10 text-emerald-600 admin-dark:text-emerald-400 hover:text-emerald-700 admin-dark:hover:text-emerald-300 hover:bg-emerald-50 admin-dark:hover:bg-emerald-900/50 rounded-xl transition-all duration-200 group/btn shadow-sm hover:shadow-md"
                           title="Chỉnh sửa"
                         >
                           <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView, h_table
                       {onDelete && (
                         <button
                           onClick={() => onDelete(item.id)}
-                          className="inline-flex items-center justify-center w-10 h-10 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-200 group/btn shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-10 h-10 text-red-600 admin-dark:text-red-400 hover:text-red-700 admin-dark:hover:text-red-300 hover:bg-red-50 admin-dark:hover:bg-red-900/50 rounded-xl transition-all duration-200 group/btn shadow-sm hover:shadow-md"
                           title="Xóa"
                         >
                           <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
