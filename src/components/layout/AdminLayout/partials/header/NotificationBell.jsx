@@ -5,77 +5,87 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import fetchWithAuth from "@/utils/fetchWithAuth";
 
-const mockNotifications = [
-  {
-    id: "1",
-    title: "Đơn hàng mới",
-    message: "Bạn có một đơn hàng mới từ khách hàng Nguyễn Văn A",
-    time: "2 phút trước",
-    isRead: false,
-    type: "info",
-  },
-  {
-    id: "2",
-    title: "Thanh toán thành công",
-    message: "Giao dịch #12345 đã được xử lý thành công",
-    time: "15 phút trước",
-    isRead: false,
-    type: "success",
-  },
-  {
-    id: "3",
-    title: "Cảnh báo tồn kho",
-    message: "Sản phẩm ABC sắp hết hàng (còn 5 sản phẩm)",
-    time: "1 giờ trước",
-    isRead: true,
-    type: "warning",
-  },
-  {
-    id: "4",
-    title: "Lỗi hệ thống",
-    message: "Đã xảy ra lỗi trong quá trình đồng bộ dữ liệu",
-    time: "2 giờ trước",
-    isRead: true,
-    type: "error",
-  },
-  {
-    id: "5",
-    title: "Khách hàng mới",
-    message: "Trần Thị B vừa đăng ký tài khoản mới",
-    time: "3 giờ trước",
-    isRead: true,
-    type: "info",
-  },
-];
+
+
 
 export function NotificationBell() {
   useLenisLocal(".lenis-local");
   const { isDark } = useAdminTheme();
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
+  const [userId, setUserId] = useState(null)
+
+  const fetchNotifications = async (id) => {
+    try {
+      const data = await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${id}`);
+      setNotifications(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Lấy thông tin user hiện tại từ backend
+  const getCurrentUser = async () => {
+    try {
+      const data = await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`);
+      // { id, username, fullname, email, role, ... }
+      fetchNotifications(data.user.id);
+      setUserId(data.user.id);
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin user:", error);
+      return null;
+    }
+  };
+  // Fetch API lấy thông báo từ backend
+  useEffect(() => {
+    getCurrentUser()
+  }, []);
+
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
-  const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id ? { ...notification, isRead: true } : notification
-      )
-    );
+  const markAsRead = async (id) => {
+    try {
+      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}/read`, {
+        method: "PATCH",
+      });
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+      getCurrentUser()
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const markAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((notification) => ({ ...notification, isRead: true }))
-    );
+  const markAllAsRead = async (userId) => {
+    try {
+      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${userId}/read-all`, {
+        method: "PATCH",
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      getCurrentUser()
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  const removeNotification = async (id) => {
+    try {
+      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}`, {
+        method: "DELETE",
+      });
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+      getCurrentUser()
+    } catch (err) {
+      console.error(err);
+    }
   };
+
 
   const getTypeColor = (type) => {
     switch (type) {
@@ -89,6 +99,7 @@ export function NotificationBell() {
         return "text-blue-600 admin-dark:text-blue-400";
     }
   };
+
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -141,7 +152,7 @@ export function NotificationBell() {
                 theme={isDark ? "admin" : "light"}
                 variant="ghost"
                 size="sm"
-                onClick={markAllAsRead}
+                onClick={() => markAllAsRead(userId)}
                 className="text-xs admin-dark:hover:bg-gray-600 text-blue-600 hover:text-blue-800 admin-dark:text-blue-400 admin-dark:hover:text-blue-300 cursor-pointer"
               >
                 Đánh dấu tất cả đã đọc
