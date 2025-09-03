@@ -4,3 +4,24 @@ export const ENDPOINT = {
   services: "/services",
   upload: "/upload",
 };
+
+
+import axios from "axios";
+
+const api = axios.create({
+  // baseURL: "http://localhost:3000",
+  baseURL: BASE_URL,
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response && err.response.status === 401) {
+      localStorage.removeItem("accessToken");
+      window.location.href = "/login";
+    }
+    return Promise.reject(err);
+  }
+);
+
+export default api;

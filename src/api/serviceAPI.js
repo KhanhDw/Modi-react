@@ -13,3 +13,5 @@ export const ServiceAPI = {
 export const UploadAPI = {
   uploadImg: () => `${uploadUrl}`,
 };
+
+

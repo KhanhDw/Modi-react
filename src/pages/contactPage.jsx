@@ -3,6 +3,7 @@ import CaptchaImage from '../components/feature/CaptchaImage';
 import { useSearchParams } from 'react-router-dom';
 import getServiceBySlug from '../utils/slugData.jsx';
 import { useLanguage } from "../contexts/LanguageContext.jsx";
+import useSocket from "@/hook/useSocket";
 
 // Trạng thái ban đầu của form
 const initialFormState = {
@@ -14,17 +15,23 @@ const initialFormState = {
 }
 
 export default function ContactPage() {
-
   const { t } = useLanguage();
-
-
+  const socket = useSocket();
   const [searchParams] = useSearchParams();
   const serviceOrderURL = getServiceBySlug(searchParams.get('service-order')) ? getServiceBySlug(searchParams.get('service-order')).name : "";
-
-
-
   const [formData, setFormData] = useState(initialFormState)
   const [formSubmitted, setFormSubmitted] = useState(false)
+
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("dataChanged", (data) => {
+      console.log("📩 Data changed:", data);
+    });
+    return () => socket.off("dataChanged");
+  }, [socket]);
+
+
 
   const generateCaptcha = (length = 5) => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz0123456789';
@@ -43,19 +50,14 @@ export default function ContactPage() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-
-    // Thư viện cung cấp hàm xác thực
-    if (formData.securityCode.trim().toLowerCase() === captchaText.toLowerCase()) {
-      // Xử lý thành công
-      setFormSubmitted(true);
-      setFormData(initialFormState);
-      setCaptchaText(generateCaptcha()); // tạo captcha mới
-    } else {
+    // kiểm tra captcha trước
+    if (formData.securityCode.trim().toLowerCase() !== captchaText.toLowerCase()) {
       alert("Mã bảo mật không đúng. Vui lòng thử lại.");
       setFormData(prev => ({ ...prev, securityCode: "" }));
       setCaptchaText(generateCaptcha());
+      return; // dừng lại, không gửi API
     }
 
     try {
@@ -64,17 +66,25 @@ export default function ContactPage() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData) // gửi dữ liệu trước khi reset
       });
 
       const data = await response.json();
+
+
+
       console.log('Kết quả từ server:', data);
       alert(data.message);
+
+      // Sau khi gửi thành công mới reset form
+      setFormSubmitted(true);
+      setFormData(initialFormState);
+      setCaptchaText(generateCaptcha());
     } catch (error) {
       console.error('Lỗi khi gửi dữ liệu:', error);
     }
+  };
 
-  }
 
   // Tự động đóng modal sau 3 giây
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter as Router, useLocation } from "react-router-dom";
 import { Suspense, useEffect, useRef } from "react";
 import { publicRoutes, privateRoutes } from "./routes";
-import PrivateRoute from "./components/guardRouter/PrivateRoute";
+import PrivateRoute from "@/guardRouter/PrivateRoute";
 import LenisProvider, { useLenisToggle } from "./contexts/LenisContext";
 import "./App.css";
 

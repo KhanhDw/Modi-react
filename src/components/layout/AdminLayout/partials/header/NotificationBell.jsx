@@ -6,6 +6,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import fetchWithAuth from "@/utils/fetchWithAuth";
+import { io } from "socket.io-client";
+
+const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
 
 
@@ -40,10 +43,24 @@ export function NotificationBell() {
       return null;
     }
   };
+
+
   // Fetch API lấy thông báo từ backend
   useEffect(() => {
     getCurrentUser()
   }, []);
+
+  useEffect(() => {
+    socket.on("newLienHe", (data) => {
+      getCurrentUser()
+    });
+
+    return () => {
+      socket.off("newLienHe");
+    };
+  }, []);
+
+
 
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -120,6 +137,36 @@ export function NotificationBell() {
     };
   }, []);
 
+
+
+
+  // Hàm xử lý chuỗi message
+  const renderMessage = (message) => {
+    // Tách chuỗi bằng dấu phân cách "khách hàng "
+    const parts = message.split("Khách hàng ");
+
+    // parts sẽ là ["", "xxx vừa liên hệ"]
+
+
+    if (parts.length > 1) {
+      // Tách tiếp phần tử thứ hai bằng dấu phân cách " vừa liên hệ"
+      const nameParts = parts[1].split(" vừa gửi liên hệ.");
+
+      // nameParts sẽ là ["xxx", ""]
+
+      if (nameParts.length > 0) {
+        const customerName = nameParts[0];
+        return (
+          <>
+            khách hàng <span className="font-bold">{customerName}</span> vừa liên hệ
+          </>
+        );
+      }
+    }
+
+    return message; // Trả về nguyên văn nếu không khớp
+  };
+
   return (
     <div className="relative inline-block">
       <Button
@@ -190,10 +237,19 @@ export function NotificationBell() {
                           )}
                         </div>
                         <p className="text-sm text-gray-600 admin-dark:text-gray-300 mb-2">
-                          {notification.message}
+                          {renderMessage(notification.message)}
                         </p>
                         <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-                          {notification.time}
+                          {/* {notification.createdAt} */}
+                          {
+                            new Date(notification.createdAt).toLocaleString("vi-VN", {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })
+                          }
                         </p>
                       </div>
 
