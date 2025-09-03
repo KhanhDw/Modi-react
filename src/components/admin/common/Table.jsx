@@ -21,7 +21,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView, }) {
 
   return (
     <div className="bg-white admin-dark:bg-gray-800">
-      <div className={`lenis-local scroll-container overflow-y-auto flex flex-col ${h_table}`}>
+      <div className={`lenis-local scroll-container overflow-y-auto flex flex-col`}>
         <table className="min-w-full">
           <thead className="bg-gray-50/80 admin-dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200 admin-dark:border-gray-700">
             <tr>
