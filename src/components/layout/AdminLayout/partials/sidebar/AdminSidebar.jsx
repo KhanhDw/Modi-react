@@ -10,6 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+
+const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
+
+
 
 // { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
 const menuItems = [
@@ -28,6 +34,40 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   const { pathname } = useLocation();
   const { isDark, toggleTheme } = useAdminTheme();
   const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
+
+  const [todayVisits, setTodayVisits] = useState(0);
+
+
+  const fetchData = async () => {
+    // Lấy tổng lượt truy cập hôm nay
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setTodayVisits(data.total))
+      .catch((err) => console.error("Không lấy được visit:", err))
+  };
+
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    socket.on("newVisit", (data) => {
+      fetchData()
+    });
+
+    return () => {
+      socket.off("newVisit");
+    };
+  }, []);
+
+
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
       {/* Header */}
@@ -96,6 +136,17 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
           </Link>
         ))}
       </nav>
+
+      <div className="px-2 flex items-center justify-between">
+        <span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50">
+          Lượt truy cập hôm nay:
+        </span>
+        <span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50">
+          {todayVisits.toLocaleString("vi-VN")}
+        </span>
+
+      </div>
+
 
       {/* Theme Toggle */}
       <div className="p-3 border-t border-gray-200 admin-dark:border-gray-600 overflow-hidden">

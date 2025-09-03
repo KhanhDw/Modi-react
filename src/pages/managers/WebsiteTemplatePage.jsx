@@ -22,7 +22,7 @@ export default function WebsiteTemplatePage() {
         export_state: item.export_state ? 1 : 0,
       }));
       setTemplates(parsedData ?? []);
-      console.log("--->>>>>>>>>>>>>>>>>>>>", parsedData);
+      // console.log("--->>>>>>>>>>>>>>>>>>>>", parsedData);
 
     } catch (error) {
       console.error("Error fetching templates:", error);

@@ -84,7 +84,7 @@ export default function Products() {
     if (searchTerm) {
       filtered = filtered.filter(
         (sample) =>
-           sample.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          sample.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           sample.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           sample.tech?.some((tech) => tech.toLowerCase().includes(searchTerm.toLowerCase())),
       )
@@ -143,9 +143,8 @@ export default function Products() {
             {filteredSamples.map((sample, index) => (
               <Card
                 key={sample.id}
-                className={`group transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 hover:border-primary/50 ${
-                  visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+                className={`group transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 hover:border-primary/50 ${visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  }`}
               >
                 <CardContent className="p-0">
                   <div className="relative overflow-hidden rounded-t-lg">
@@ -188,7 +187,7 @@ export default function Products() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
-                        
+
                       </div>
                       <div className="flex gap-2">
                         {sample.url_github && (

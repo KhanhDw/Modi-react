@@ -27,7 +27,10 @@ export default function MarketingPage() {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 
             const data = await response.json()
-            setArticles(data.data || data)
+
+            const blogsPublis = data.data.filter((post) => { return post.status === "published" })
+            const sortData = blogsPublis.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+            setArticles(sortData)
             setVisibleCount(pageSize) // reset lại mỗi lần tìm kiếm
         } catch (error) {
             console.error("Lỗi khi fetch dữ liệu:", error)
@@ -67,7 +70,7 @@ export default function MarketingPage() {
     const visibleArticles = articles.slice(0, visibleCount)
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen  bg-transparent ">
             <main className="container mx-auto py-10 px-4">
                 <div className="mb-8 flex justify-between items-center">
                     <div className="flex flex-col">

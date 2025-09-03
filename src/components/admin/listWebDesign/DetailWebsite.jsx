@@ -177,6 +177,7 @@ export default function WebsiteTemplatesDetail() {
               <CardTitle className="text-gray-900 admin-dark:text-gray-100">
                 Tính năng nổi bật
               </CardTitle>
+
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -367,7 +368,7 @@ export default function WebsiteTemplatesDetail() {
                   Lượt xem
                 </span>
                 <span className="font-medium text-gray-900 admin-dark:text-gray-100">
-                  1,234
+                  {template.views}
                 </span>
               </div>
             </CardContent>

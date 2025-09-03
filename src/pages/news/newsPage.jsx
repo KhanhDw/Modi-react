@@ -24,7 +24,8 @@ export default function NewsInterface() {
         console.log("Dữ liệu từ API:", apiData);
 
         if (apiData && apiData.data && Array.isArray(apiData.data) && apiData.data.length > 0) {
-          const sorted = [...apiData.data].sort(
+          const blogsPublis = apiData.data.filter((blog) => { return new Date(blog.published_at) <= new Date() })
+          const sorted = [...blogsPublis].sort(
             (a, b) => new Date(b.published_at) - new Date(a.published_at)
           );
           // Ánh xạ các trường dữ liệu
@@ -108,8 +109,10 @@ export default function NewsInterface() {
                 </div>
                 <div className="md:w-1/2 p-8">
                   <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">{heroArticle.tieu_de}</h1>
-                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed line-clamp-5">
-                    {heroArticle.noi_dung}
+                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed line-clamp-5"
+                    dangerouslySetInnerHTML={{ __html: heroArticle.noi_dung }}
+                  >
+                    {/* {heroArticle.noi_dung} */}
                   </p>
                   <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-2">

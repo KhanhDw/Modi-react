@@ -304,7 +304,15 @@ export default function WebsiteTemplateList() {
                     </div>
 
                     <div className="text-right">
+
+
+
                       <div className="text-3xl font-bold text-gray-900 admin-dark:text-gray-200 mb-2">{template.price ? <ProductPrice price={template.price} /> : 0}<span className="text-xs text-gray-700 admin-dark:text-gray-500 ml-1">Vnđ</span></div>
+
+
+                      <div className="text-xs text-gray-700 admin-dark:text-gray-200 leading-relaxed">
+                        Lượt xem: <sapn className="text-xl font-semibold text-blue-900 admin-dark:text-blue-400">{template.views}</sapn>
+                      </div>
                       <div className="text-xs text-gray-700 admin-dark:text-gray-200 leading-relaxed">
                         Cập nhật:
                         <span className="ml-2 font-medium">
