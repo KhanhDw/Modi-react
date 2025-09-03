@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { FaLinkedin, FaFacebookSquare } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useLanguage } from '../../../contexts/LanguageContext';
+import { useLanguage } from "../../../contexts/LanguageContext";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -12,23 +12,33 @@ export default function Footer() {
 
   const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:5000";
 
+  // Hàm xử lý logo (ghép URL đầy đủ nếu DB chỉ lưu đường dẫn tương đối)
+  const getFullLogoUrl = (logoPath) => {
+    if (!logoPath) return "/logoModi.png"; // fallback
+    if (logoPath.startsWith("http")) return logoPath; // nếu DB đã lưu full URL
+    return `${API_BASE_URL}${logoPath}`; // ghép base URL
+  };
+
   // 🔹 Load dữ liệu từ API
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const url = `${API_BASE_URL}/api/footer/${activeLang}`;
-        console.log("Fetching data from:", url);  // Debugging log
+        console.log("Fetching data from:", url);
         const res = await fetch(url);
+
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || "Không thể tải dữ liệu footer.");
         }
+
         const data = await res.json();
+
         setFooterData((prev) => ({
           ...prev,
           [activeLang]: {
-            logo: data.logo || "/logoModi.png",
+            logo: getFullLogoUrl(data.logo),
             name_company: data.name_company,
             content_about_us: data.content_about_us,
             address_company: data.address_company,
@@ -65,10 +75,10 @@ export default function Footer() {
   ];
 
   const privacy_statement = [
-    { link: "/about", title: t("footer.privacyStatement.0"), },
-    { link: "/terms-of-services", title: t("footer.privacyStatement.1"), },
-    { link: "/contact", title: t("footer.privacyStatement.2"), },
-    { link: "/careers", title: t("footer.privacyStatement.3"), },
+    { link: "/about", title: t("footer.privacyStatement.0") },
+    { link: "/terms-of-services", title: t("footer.privacyStatement.1") },
+    { link: "/contact", title: t("footer.privacyStatement.2") },
+    { link: "/careers", title: t("footer.privacyStatement.3") },
   ];
 
   return (
@@ -78,10 +88,17 @@ export default function Footer() {
           {/* Left Section - Company Info */}
           <div className="space-y-6">
             <div>
-              <div className='flex items-center justify-center xs:h-10 3xl:h-20 px-3 py-2 mb-3 overflow-hidden rounded-2xl w-fit'>
-                <img src={currentData.logo} className='xs:h-10 3xl:h-20 w-fit' alt='logo' />
+              <div className="flex items-center justify-center xs:h-10 3xl:h-20 px-3 py-2 mb-3 overflow-hidden rounded-2xl w-fit">
+                <img
+                  src={currentData.logo}
+                  className='xs:h-10 3xl:h-20 w-fit object-fill'
+                  alt="logo"
+                  onError={(e) => (e.target.src = "/logoModi.png")}
+                />
               </div>
-              <h2 className="mb-6 text-xl font-semibold 3xl:text-3xl">{currentData.name_company}</h2>
+              <h2 className="mb-6 text-xl font-semibold 3xl:text-3xl">
+                {currentData.name_company}
+              </h2>
             </div>
 
             <div className="space-y-4">
@@ -107,7 +124,6 @@ export default function Footer() {
           {/* Middle Section - Services */}
           <div>
             <h3 className="mb-6 text-xl font-semibold 3xl:text-3xl">{t("footer.services")}</h3>
-
             <div className="grid grid-cols-2 gap-x-8">
               <ul className="space-y-3">
                 {services.slice(0, Math.ceil(services.length / 2)).map((service, index) => (
@@ -156,11 +172,12 @@ export default function Footer() {
                     </li>
                   ))}
                 </ul>
-
                 <ul className="space-y-3">
                   {privacy_statement.slice(Math.ceil(privacy_statement.length / 2)).map((service, index) => (
                     <li key={index + 100} className="transition-all duration-200 hover:text-green-400">
-                      <Link to={service.link} className="xs:text-sm md:text-md 3xl:text-xl">{service.title}</Link>
+                      <Link to={service.link} className="xs:text-sm md:text-md 3xl:text-xl">
+                        {service.title}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -169,9 +186,11 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Section - Copyright & Social */}
+        {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between pt-6 border-t border-gray-700 md:flex-row">
-          <p className="mb-4 text-sm text-gray-400 md:mb-0  3xl:text-xl">© Copyright 2025 All Rights Reserved</p>
+          <p className="mb-4 text-sm text-gray-400 md:mb-0 3xl:text-xl">
+            © Copyright 2025 All Rights Reserved
+          </p>
 
           <div className="flex gap-3">
             <div className="flex items-center justify-center w-10 h-10 transition-colors rounded cursor-pointer hover:bg-blue-700">

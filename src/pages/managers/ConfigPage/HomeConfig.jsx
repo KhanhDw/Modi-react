@@ -1,252 +1,226 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaTrash } from "react-icons/fa";
 
-// =================== COMPONENT: BANNER SLIDER ===================
-function BannerSlider({ banners }) {
-    const [current, setCurrent] = useState(0);
-
-    const nextSlide = () => setCurrent((prev) => (prev + 1) % banners.length);
-    const prevSlide = () => setCurrent((prev) => (prev - 1 + banners.length) % banners.length);
-
-    if (banners.length === 0) {
-        return (
-            <div className="flex items-center justify-center h-[300px] bg-gray-200 admin-dark:bg-gray-700 rounded-2xl">
-                <span className="text-gray-500 admin-dark:text-gray-300">Chưa có banner</span>
-            </div>
-        );
-    }
-
+// Input Component
+function InputField({ label, value, onChange, type = "text", ...props }) {
     return (
-        <motion.div
-            className="relative w-full h-[300px] overflow-hidden rounded-2xl shadow-xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-        >
-            <img
-                src={banners[current].img}
-                alt={banners[current].title}
-                className="w-full h-full object-contain"
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <label className="block font-semibold mb-2">{label}</label>
+            <input
+                type={type}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
+        focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                value={value}
+                onChange={onChange}
+                {...props}
             />
-            <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white bg-gradient-to-t from-black/60 via-black/30 to-transparent">
-                <motion.h2
-                    className="text-3xl font-bold drop-shadow-lg"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    {banners[current].title}
-                </motion.h2>
-                <motion.p
-                    className="mt-2 text-lg"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
-                >
-                    {banners[current].description}
-                </motion.p>
-            </div>
-
-            {/* Nút điều hướng */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full hover:bg-black/70"
-            >
-                ‹
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full hover:bg-black/70"
-            >
-                ›
-            </button>
         </motion.div>
     );
 }
 
-// =================== COMPONENT: CARD LIST ===================
-function CardList({ cards }) {
+// Textarea Component
+function TextareaField({ label, value, onChange, rows = 4, ...props }) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-            {cards.map((card, index) => (
-                <motion.div
-                    key={index}
-                    className="p-3 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition"
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 }}
-                >
-                    <img
-                        src={card.img}
-                        alt={card.title}
-                        className="w-full h-32 object-contain rounded-lg mb-4"
-                    />
-                    <h3 className="text-xl font-semibold text-indigo-600">{card.title}</h3>
-                    <p className="mt-2 text-gray-600 admin-dark:text-gray-300">{card.description}</p>
-                </motion.div>
-            ))}
-        </div>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <label className="block font-semibold mb-2">{label}</label>
+            <textarea
+                rows={rows}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
+        focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                value={value}
+                onChange={onChange}
+                {...props}
+            />
+        </motion.div>
     );
 }
 
-// =================== COMPONENT: SERVICE LIST ===================
-function ServiceList({ services }) {
-    return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {services.map((service, index) => (
-                <motion.div
-                    key={index}
-                    className="p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                >
-                    <img
-                        src={service.img}
-                        alt={service.title}
-                        className="w-full h-28 object-contain rounded-lg mb-4"
-                    />
-                    <h4 className="text-lg font-semibold text-indigo-600">{service.title}</h4>
-                    <p className="mt-1 text-gray-600 admin-dark:text-gray-300">{service.description}</p>
-                </motion.div>
-            ))}
-        </div>
+export default function HomeConfigMultiLang() {
+    const [activeLang, setActiveLang] = useState("vi");
+    const [homeData, setHomeData] = useState(
+        {
+            vi: { banners: [], cards: [], services: [] },
+            en: { banners: [], cards: [], services: [] }
+        }
     );
-}
+    const [loading, setLoading] = useState(false);
 
-// =================== COMPONENT: SECTION EDITOR ===================
-function SectionEditor({ section, data, onChange }) {
-    const handleChange = (index, field, value) => {
-        const updated = [...data];
-        updated[index][field] = value;
-        onChange(updated);
+    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:5000";
+
+    // Load dữ liệu
+    const fetchData = async (lang = activeLang) => {
+        try {
+            setLoading(true);
+
+            const [bannersRes, cardsRes, servicesRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/api/home-config/${lang}/banners`),
+                fetch(`${API_BASE_URL}/api/home-config/${lang}/cards`),
+                fetch(`${API_BASE_URL}/api/home-config/${lang}/services`),
+            ]);
+
+            if (!bannersRes.ok || !cardsRes.ok || !servicesRes.ok) throw new Error("Không thể tải dữ liệu HomeConfig.");
+
+            const [banners, cards, services] = await Promise.all([bannersRes.json(), cardsRes.json(), servicesRes.json()]);
+
+            setHomeData((prev) => ({
+                ...prev,
+                [lang]: { banners, cards, services },
+            }));
+        } catch (err) {
+            console.error("Lỗi load HomeConfig:", err);
+            alert("❌ Lỗi tải dữ liệu: " + err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const removeItem = (index) => {
-        const updated = data.filter((_, i) => i !== index);
-        onChange(updated);
+    useEffect(() => {
+        fetchData(activeLang);
+    }, [activeLang]);
+
+    // Cập nhật state khi sửa field
+    const handleChangeField = (type, id, field, value) => {
+        setHomeData((prev) => ({
+            ...prev,
+            [activeLang]: {
+                ...prev[activeLang],
+                [type]: prev[activeLang][type].map((item) =>
+                    item.id === id ? { ...item, [field]: value } : item
+                ),
+            },
+        }));
     };
 
-    const handleImageUpload = (index, file) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            handleChange(index, "img", reader.result);
-        };
-        if (file) reader.readAsDataURL(file);
+    // Chọn file ảnh
+    const handleImageChange = (type, id, e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setHomeData((prev) => ({
+            ...prev,
+            [activeLang]: {
+                ...prev[activeLang],
+                [type]: prev[activeLang][type].map((item) =>
+                    item.id === id ? { ...item, file, imgPreview: URL.createObjectURL(file) } : item
+                ),
+            },
+        }));
     };
+
+    // Save (PUT API)
+    const handleSave = async (type, id) => {
+        try {
+            setLoading(true);
+            const item = homeData[activeLang][type].find((i) => i.id === id);
+
+            const formData = new FormData();
+            formData.append("title", item.title || "");
+            formData.append("description", item.description || "");
+            if (item.file) {
+                formData.append("image", item.file);
+            } else {
+                formData.append("img", item.img || "");
+            }
+
+            const res = await fetch(`${API_BASE_URL}/api/home-config/${type.slice(0, -1)}/${id}`, {
+                method: "PUT",
+                body: formData,
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || "Lỗi khi lưu dữ liệu.");
+            }
+
+            alert("💾 Lưu thành công!");
+            fetchData(activeLang);
+        } catch (err) {
+            console.error("Lỗi khi lưu:", err);
+            alert("❌ Lưu thất bại: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) return <p className="text-center">⏳ Đang tải...</p>;
+
+    const currentData = homeData[activeLang] || { banners: [], cards: [], services: [] };
 
     return (
-        <div className="p-4 bg-gray-50 admin-dark:bg-gray-900 space-y-4">
-            <h3 className="font-bold text-lg capitalize">{section}</h3>
-            {data.map((item, index) => (
-                <div key={index} className="p-3 bg-white admin-dark:bg-gray-800 rounded-xl shadow space-y-2">
-                    <input
-                        type="text"
-                        placeholder="Tiêu đề..."
-                        value={item.title}
-                        onChange={(e) => handleChange(index, "title", e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                    />
-                    <textarea
-                        placeholder="Mô tả..."
-                        value={item.description}
-                        onChange={(e) => handleChange(index, "description", e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                    />
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleImageUpload(index, e.target.files[0])}
-                            className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                        />
-                        <button
-                            onClick={() => removeItem(index)}
-                            className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        >
-                            <FaTrash />
+        <div className="p-6 max-w-6xl mx-auto space-y-12">
+            {/* Language Tabs */}
+            <div className="flex gap-4 mb-6">
+                {["vi", "en"].map((lang) => (
+                    <motion.button
+                        key={lang}
+                        onClick={() => setActiveLang(lang)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`px-4 py-2 rounded-lg font-semibold transition ${activeLang === lang
+                            ? "bg-indigo-600 text-white shadow-md"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
+                    >
+                        {lang === "vi" ? "Tiếng Việt" : "English"}
+                    </motion.button>
+                ))}
+            </div>
+
+            {/* --- Banners --- */}
+            <section>
+                <h2 className="text-xl font-bold mb-4">🏞 Banners</h2>
+                {currentData.banners.map((banner) => (
+                    <div key={banner.id} className="p-4 border rounded-lg mb-6 shadow-sm bg-white space-y-4">
+                        <InputField label="Tiêu đề" value={banner.title || ""} onChange={(e) => handleChangeField("banners", banner.id, "title", e.target.value)} />
+                        <TextareaField label="Mô tả" value={banner.description || ""} onChange={(e) => handleChangeField("banners", banner.id, "description", e.target.value)} />
+                        <div>
+                            <label className="block font-semibold mb-2">Hình ảnh</label>
+                            <input type="file" accept="image/*" onChange={(e) => handleImageChange("banners", banner.id, e)} />
+                            <img src={banner.imgPreview || (banner.img ? `${API_BASE_URL}${banner.img}` : "/no-image.png")} alt="Preview" className="mt-2 h-40 rounded-lg object-cover" />
+                        </div>
+                        <button onClick={() => handleSave("banners", banner.id)} className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700">
+                            Lưu Banner
                         </button>
                     </div>
-                    {item.img && (
-                        <img src={item.img} alt="Preview" className="w-full h-54 object-contain rounded-lg mt-2" />
-                    )}
-                </div>
-            ))}
+                ))}
+            </section>
+
+            {/* --- Cards --- */}
+            <section>
+                <h2 className="text-xl font-bold mb-4">📇 Cards</h2>
+                {currentData.cards.map((card) => (
+                    <div key={card.id} className="p-4 border rounded-lg mb-6 shadow-sm bg-white space-y-4">
+                        <InputField label="Tiêu đề" value={card.title || ""} onChange={(e) => handleChangeField("cards", card.id, "title", e.target.value)} />
+                        <TextareaField label="Mô tả" value={card.description || ""} onChange={(e) => handleChangeField("cards", card.id, "description", e.target.value)} />
+                        <div>
+                            <label className="block font-semibold mb-2">Hình ảnh</label>
+                            <input type="file" accept="image/*" onChange={(e) => handleImageChange("cards", card.id, e)} />
+                            <img src={card.imgPreview || (card.img ? `${API_BASE_URL}${card.img}` : "/no-image.png")} alt="Preview" className="mt-2 h-40 rounded-lg object-cover" />
+                        </div>
+                        <button onClick={() => handleSave("cards", card.id)} className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700">
+                            Lưu Card
+                        </button>
+                    </div>
+                ))}
+            </section>
+
+            {/* --- Services --- */}
+            <section>
+                <h2 className="text-xl font-bold mb-4">🛠 Services</h2>
+                {currentData.services.map((service) => (
+                    <div key={service.id} className="p-4 border rounded-lg mb-6 shadow-sm bg-white space-y-4">
+                        <InputField label="Tiêu đề" value={service.title || ""} onChange={(e) => handleChangeField("services", service.id, "title", e.target.value)} />
+                        <TextareaField label="Mô tả" value={service.description || ""} onChange={(e) => handleChangeField("services", service.id, "description", e.target.value)} />
+                        <div>
+                            <label className="block font-semibold mb-2">Hình ảnh</label>
+                            <input type="file" accept="image/*" onChange={(e) => handleImageChange("services", service.id, e)} />
+                            <img src={service.imgPreview || (service.img ? `${API_BASE_URL}${service.img}` : "/no-image.png")} alt="Preview" className="mt-2 h-40 rounded-lg object-cover" />
+                        </div>
+                        <button onClick={() => handleSave("services", service.id)} className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700">
+                            Lưu Service
+                        </button>
+                    </div>
+                ))}
+            </section>
         </div>
-    );
-}
-
-// =================== MAIN CONFIG HOME PAGE ===================
-export default function ConfigHomePage() {
-    const [config, setConfig] = useState({
-        banners: [
-            { title: "Banner 1", description: "Mô tả banner 1", img: "/logoModi.png" },
-            { title: "Banner 2", description: "Mô tả banner 2", img: "/logoModi.png" },
-        ],
-        cards: [
-            { title: "Card 1", description: "Mô tả card 1", img: "/logoModi.png" },
-            { title: "Card 2", description: "Mô tả card 2", img: "/logoModi.png" },
-            { title: "Card 3", description: "Mô tả card 3", img: "/logoModi.png" },
-        ],
-        services: [
-            { title: "Dịch vụ A", description: "Mô tả dịch vụ A", img: "/logoModi.png" },
-            { title: "Dịch vụ B", description: "Mô tả dịch vụ B", img: "/logoModi.png" },
-            { title: "Dịch vụ C", description: "Mô tả dịch vụ C", img: "/logoModi.png" },
-            { title: "Dịch vụ C", description: "Mô tả dịch vụ C", img: "/logoModi.png" },
-            { title: "Dịch vụ C", description: "Mô tả dịch vụ C", img: "/logoModi.png" },
-        ],
-    });
-
-    const handleChange = (section, updated) => {
-        setConfig({ ...config, [section]: updated });
-    };
-
-    const handleSave = () => {
-        console.log("Lưu config:", config);
-        alert("Đã lưu cấu hình!");
-    };
-
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 items-start">
-            {/* Form chỉnh sửa (cao bằng bên phải, có cuộn khi dài hơn) */}
-            <div className="flex flex-col max-h-[1100px] overflow-auto">
-                {/* Nút lưu nằm trên đầu */}
-                <div className="mb-4">
-                    <button
-                        onClick={handleSave}
-                        className="w-30 py-3 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition"
-                    >
-                        Lưu cấu hình
-                    </button>
-                </div>
-                {/* Nội dung có scroll riêng */}
-                <div className="flex-1 overflow-y-auto pr-2 space-y-6">
-                    <SectionEditor
-                        section="banners"
-                        data={config.banners}
-                        onChange={(updated) => handleChange("banners", updated)}
-                    />
-                    <SectionEditor
-                        section="cards"
-                        data={config.cards}
-                        onChange={(updated) => handleChange("cards", updated)}
-                    />
-                    <SectionEditor
-                        section="services"
-                        data={config.services}
-                        onChange={(updated) => handleChange("services", updated)}
-                    />
-                </div>
-            </div>
-
-            {/* Preview (làm chuẩn chiều cao) */}
-            <div className="space-y-8">
-                <BannerSlider banners={config.banners} />
-                <CardList cards={config.cards} />
-                <ServiceList services={config.services} />
-            </div>
-        </div>
-
     );
 }
