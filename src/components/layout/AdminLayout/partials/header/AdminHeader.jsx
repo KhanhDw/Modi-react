@@ -35,11 +35,14 @@ const AdminHeader = ({
   const location = useLocation();
 
   const [username, setUsername] = useState("");
+  const [avatar_url, setAvatar_url] = useState("");
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("fullName");
-    if (storedUsername) {
+    const storedAvatar_url = localStorage.getItem("avatar_url");
+    if (storedUsername && storedAvatar_url) {
       setUsername(storedUsername);
+      setAvatar_url(storedAvatar_url);
     }
   }, []);
 
@@ -141,8 +144,8 @@ const AdminHeader = ({
               className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer"
             >
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={`${import.meta.env.VITE_MAIN_BE_URL}${avatar_url}`} />
+                <AvatarFallback>😢</AvatarFallback>
               </Avatar>
               <span className="hidden md:inline text-sm font-bold">{username}</span>
             </Button>

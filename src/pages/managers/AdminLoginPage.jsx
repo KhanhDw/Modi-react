@@ -48,6 +48,7 @@ function AdminLoginPage() {
 
             const data = await response.json();
 
+
             // Sau khi nhận được data từ API
             if (!response.ok || !data.accessToken) {
                 throw new Error(data.message || "Đăng nhập thất bại");
@@ -56,6 +57,10 @@ function AdminLoginPage() {
 
             if (data.user?.fullname) {
                 localStorage.setItem("fullName", data.user.fullname);
+            }
+
+            if (data.user?.avatar_url) {
+                localStorage.setItem("avatar_url", data.user.avatar_url);
             }
 
             if (!response.ok || !data.accessToken) {
