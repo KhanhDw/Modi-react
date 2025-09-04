@@ -9,7 +9,7 @@ function InputField({ label, value, onChange, type = "text", ...props }) {
             <input
                 type={type}
                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
-          focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
                 value={value}
                 onChange={onChange}
                 {...props}
@@ -26,7 +26,7 @@ function TextareaField({ label, value, onChange, rows = 4, ...props }) {
             <textarea
                 rows={rows}
                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
-          focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
                 value={value}
                 onChange={onChange}
                 {...props}
@@ -40,8 +40,8 @@ export default function FooterConfigMultiLang() {
     const [footerData, setFooterData] = useState({ vi: {}, en: {} });
     const [loading, setLoading] = useState(false);
 
-    const [file, setFile] = useState(null);       // file ảnh
-    const [preview, setPreview] = useState("");   // ảnh preview
+    const [file, setFile] = useState(null);
+    const [preview, setPreview] = useState(""); // luôn lấy từ VI
 
     const API_BASE_URL =
         import.meta.env.VITE_MAIN_BE_URL || "http://localhost:5000";
@@ -50,27 +50,35 @@ export default function FooterConfigMultiLang() {
     const fetchData = async (lang = activeLang) => {
         try {
             setLoading(true);
-            const url = `${API_BASE_URL}/api/footer/${lang}`;
-            const res = await fetch(url);
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.message || "Không thể tải dữ liệu footer.");
-            }
-            const data = await res.json();
 
-            setFooterData((prev) => ({
-                ...prev,
-                [lang]: {
-                    logo: data.logo || "/logoModi.png",
-                    name_company: data.name_company || "",
-                    content_about_us: data.content_about_us || "",
-                    address_company: data.address_company || "",
-                    phone: data.phone || "",
-                    email: data.email || "",
+            // Luôn fetch dữ liệu cho cả VI và EN để state luôn đồng bộ
+            const viRes = await fetch(`${API_BASE_URL}/api/footer/vi`);
+            const viData = await viRes.json();
+
+            const enRes = await fetch(`${API_BASE_URL}/api/footer/en`);
+            const enData = await enRes.json();
+
+            setFooterData({
+                vi: {
+                    logo: viData.logo || "/logoModi.png",
+                    name_company: viData.name_company || "",
+                    content_about_us: viData.content_about_us || "",
+                    address_company: viData.address_company || "",
+                    phone: viData.phone || "",
+                    email: viData.email || "",
                 },
-            }));
+                en: {
+                    logo: enData.logo || "",
+                    name_company: enData.name_company || "",
+                    content_about_us: enData.content_about_us || "",
+                    address_company: enData.address_company || "",
+                    phone: enData.phone || "",
+                    email: enData.email || "",
+                },
+            });
 
-            setPreview(data.logo ? `${API_BASE_URL}${data.logo}` : "");
+            // Preview logo luôn là của VI
+            setPreview(viData.logo ? `${API_BASE_URL}${viData.logo}` : "");
             setFile(null);
         } catch (err) {
             console.error("Lỗi load footer config:", err);
@@ -80,12 +88,10 @@ export default function FooterConfigMultiLang() {
         }
     };
 
-    // Load khi đổi ngôn ngữ
     useEffect(() => {
         fetchData(activeLang);
     }, [activeLang]);
 
-    // 🔹 Update field khi edit
     const handleChangeField = (field, value) => {
         setFooterData((prev) => ({
             ...prev,
@@ -93,7 +99,6 @@ export default function FooterConfigMultiLang() {
         }));
     };
 
-    // 🔹 Chọn logo
     const handleLogoChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
@@ -102,24 +107,30 @@ export default function FooterConfigMultiLang() {
         } else {
             setFile(null);
             setPreview(
-                footerData[activeLang].logo
-                    ? `${API_BASE_URL}${footerData[activeLang].logo}`
+                footerData.vi.logo
+                    ? `${API_BASE_URL}${footerData.vi.logo}`
                     : ""
             );
         }
     };
 
-    // 🔹 Save
+    // --- Save ---
     const handleSave = async () => {
         try {
             setLoading(true);
 
             const formData = new FormData();
-            // nếu có file ảnh
+
             if (file) {
+                // Có upload file mới => gửi file
                 formData.append("image", file);
+            } else {
+                // Không có file mới => gửi đường dẫn logo hiện tại để server không reset
+                if (footerData[activeLang].logo) {
+                    formData.append("logo", footerData[activeLang].logo);
+                }
             }
-            // append các field khác
+
             formData.append("name_company", footerData[activeLang].name_company || "");
             formData.append("content_about_us", footerData[activeLang].content_about_us || "");
             formData.append("address_company", footerData[activeLang].address_company || "");
@@ -136,9 +147,24 @@ export default function FooterConfigMultiLang() {
                 throw new Error(errorData.message || "Lỗi khi lưu dữ liệu.");
             }
 
-            alert("💾 Lưu thành công!");
+            const updatedData = await res.json();
+
+            setFooterData((prev) => ({
+                ...prev,
+                [activeLang]: {
+                    ...prev[activeLang],
+                    ...updatedData,
+                    logo: updatedData.logo || prev[activeLang].logo, // giữ logo cũ nếu không có mới
+                },
+            }));
+
+            if (updatedData.logo) {
+                setPreview(`${API_BASE_URL}${updatedData.logo}`);
+            } // nếu không có logo mới => không đổi preview
+
             setFile(null);
-            fetchData(activeLang); // reload lại từ server
+
+            alert("💾 Lưu thành công!");
         } catch (err) {
             console.error("Lỗi khi lưu:", err);
             alert("❌ Lưu thất bại! " + err.message);
@@ -147,9 +173,8 @@ export default function FooterConfigMultiLang() {
         }
     };
 
+
     const defaultLogo = "/logoModi.png";
-
-
     if (loading) return <p className="text-center">⏳ Đang tải...</p>;
 
     const currentData = footerData[activeLang] || {};
@@ -164,14 +189,13 @@ export default function FooterConfigMultiLang() {
             >
                 <div className="flex flex-col md:flex-row md:justify-between items-center gap-6">
                     <motion.img
-                        src={preview}
+                        src={preview || defaultLogo}
                         alt="Logo"
                         className="h-40 w-40 rounded-lg object-fill"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         onError={(e) => (e.currentTarget.src = defaultLogo)}
                     />
-
 
                     <motion.div
                         className="text-center md:text-left space-y-2"
@@ -182,9 +206,7 @@ export default function FooterConfigMultiLang() {
                         <p className="text-gray-300">{currentData.address_company}</p>
                         <p className="text-gray-300">{currentData.phone}</p>
                         <p className="text-gray-300">{currentData.email}</p>
-                        <p className="mt-2 text-gray-400">
-                            {currentData.content_about_us}
-                        </p>
+                        <p className="mt-2 text-gray-400">{currentData.content_about_us}</p>
                     </motion.div>
                 </div>
             </motion.footer>
@@ -209,41 +231,37 @@ export default function FooterConfigMultiLang() {
                     ))}
                 </div>
 
-                {/* Logo Upload */}
-                <div>
-                    <label className="block font-semibold mb-2">Logo</label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleLogoChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-indigo-400 transition cursor-pointer"
-                    />
-                </div>
+                {/* Logo Upload chỉ hiện khi ở tab VI */}
+                {activeLang === "vi" && (
+                    <div>
+                        <label className="block font-semibold mb-2">Logo</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLogoChange}
+                            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
+                            focus:outline-none focus:ring-2 focus:ring-indigo-400 transition cursor-pointer"
+                        />
+                    </div>
+                )}
 
                 {/* Form Fields */}
                 <InputField
                     label="Tên Công Ty / Company Name"
                     value={currentData.name_company || ""}
-                    onChange={(e) =>
-                        handleChangeField("name_company", e.target.value)
-                    }
+                    onChange={(e) => handleChangeField("name_company", e.target.value)}
                 />
 
                 <TextareaField
                     label="Về Chúng Tôi / About Us"
                     value={currentData.content_about_us || ""}
-                    onChange={(e) =>
-                        handleChangeField("content_about_us", e.target.value)
-                    }
+                    onChange={(e) => handleChangeField("content_about_us", e.target.value)}
                 />
 
                 <InputField
                     label="Địa Chỉ / Address"
                     value={currentData.address_company || ""}
-                    onChange={(e) =>
-                        handleChangeField("address_company", e.target.value)
-                    }
+                    onChange={(e) => handleChangeField("address_company", e.target.value)}
                 />
 
                 <InputField
@@ -260,14 +278,13 @@ export default function FooterConfigMultiLang() {
 
                 {/* Buttons */}
                 <div className="flex gap-4 justify-center">
-
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleSave}
                         disabled={loading}
                         className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 
-              shadow-md transition font-semibold cursor-pointer"
+                        shadow-md transition font-semibold cursor-pointer"
                     >
                         {loading ? "Đang lưu..." : "Lưu"}
                     </motion.button>

@@ -15,12 +15,28 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
   const [isHoverServices, setIsHoverServices] = useState(false);
   const [isHoverDesignWeb, setIsHoverDesignWeb] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("/logoModi.png"); // fallback logo
 
   const toggleSidebar = () => {
     const next = !isSidebarOpen;
     setIsSidebarOpen(next);
     setActiveScoll_open_HeaderSideBar(next);
   };
+
+  // Gọi API lấy logo
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/logo`);
+        if (!res.ok) throw new Error("Failed to fetch logo");
+        const data = await res.json();
+        if (data?.url_logo) setLogoUrl(`${baseUrl}${data.url_logo}`);
+      } catch (error) {
+        console.error("Không lấy được logo, dùng fallback:", error);
+      }
+    };
+    fetchLogo();
+  }, []);
 
   return (
     <>
@@ -32,20 +48,22 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
         } w-full bg-transparent flex justify-between items-center transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20 fixed top-0 left-0 z-40`}>
         {/* Logo Section */}
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="/logoModi.png" className='xs:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+          <img src={logoUrl} className='xs:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' onError={(e) => {
+            e.currentTarget.src = "/logoModi.png";
+          }} />
         </Link>
 
         {/* Desktop Navigation - Hidden on mobile and tablet */}
         <nav className='items-center justify-center xs:hidden text-lg font-bold md:flex md:gap-6 lg:gap-8 xl:gap-10'>
-          <Link 
-            to={'/'} 
+          <Link
+            to={'/'}
             className={`flex text-lg justify-center items-center ${location.pathname === '/' ? 'text-green-400' : 'text-white'}`}
           >
             {t("header.home.title")}
           </Link>
 
-          <Link 
-            to={'/about'} 
+          <Link
+            to={'/about'}
             className={`text-lg flex justify-center items-center ${location.pathname === '/about' ? 'text-green-400' : 'text-white'}`}
           >
             {t("header.about.title")}
@@ -61,7 +79,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
               to="/Products"
               className={`flex justify-center items-center text-lg h-full ${location.pathname.startsWith('/Products') ? 'text-green-400' : 'text-white'}`}
             >
-              {t("header.designweb.title")} 
+              {t("header.designweb.title")}
               <IoMdArrowDropdown className={`ml-1 ${isHoverDesignWeb ? 'rotate-180' : ''}`} />
             </Link>
 
@@ -81,7 +99,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
               to="/services"
               className={`flex justify-center items-center text-lg h-full ${location.pathname === '/services' ? 'text-green-400' : 'text-white'}`}
             >
-              {t("header.services.title")} 
+              {t("header.services.title")}
               <IoMdArrowDropdown className={`ml-1 ${isHoverServices ? 'rotate-180' : ''}`} />
             </Link>
 
@@ -92,8 +110,8 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
             )}
           </div>
 
-          <Link 
-            to={'/marketing'} 
+          <Link
+            to={'/marketing'}
             className={`flex justify-center items-center text-lg ${location.pathname === '/marketing' ? 'text-green-400' : 'text-white'}`}
           >
             {t("header.marketing.title")}
@@ -106,8 +124,8 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
             {t("header.news.title")}
           </Link>
 
-          <Link 
-            to={'/contact'} 
+          <Link
+            to={'/contact'}
             className={`flex justify-center items-center text-lg ${location.pathname === '/contact' ? 'text-green-400' : 'text-white'}`}
           >
             {t("header.contact.title")}
@@ -120,11 +138,11 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
           <div className='hidden md:flex'>
             <ThemeToggle />
           </div>
-          
+
           {/* Mobile Menu Button - Show on mobile and tablet */}
-          <button 
-            type="button" 
-            onClick={toggleSidebar} 
+          <button
+            type="button"
+            onClick={toggleSidebar}
             className='flex md:hidden transition-all duration-200 p-1 text-white justify-center items-center border-2 border-gray-500 rounded-lg gap-2 hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer'
           >
             <TiThMenu className="text-base" />
@@ -170,26 +188,28 @@ function ModalServices() {
     },
     { title: t("header.services.listServices.3"), slug: "online-store" },
     { title: t("header.services.listServices.4"), slug: "service-booking" },
-    { title: t("header.services.listServices.5"), 
+    {
+      title: t("header.services.listServices.5"),
       slug: "comprehensive-management",
       subItems: [
         { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
         { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
         { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
       ],
-     },
+    },
     { title: t("header.services.listServices.6"), slug: "website-app" },
     { title: t("header.services.listServices.7"), slug: "re-vision" },
     { title: t("header.services.listServices.8"), link: "/services" },
     { title: t("header.services.listServices.9"), link: "/services" },
     { title: t("header.services.listServices.10"), link: "/services" },
-    { title: t("header.services.listServices.11"), link: "/services",
+    {
+      title: t("header.services.listServices.11"), link: "/services",
       subItems: [
         { title: "Xây Dựng Thương Hiệu Cá Nhân", slug: "personal-brand" },
         { title: "Chiến Lược Thương Hiệu", slug: "brand-strategy" },
         { title: "Thiết Kế Nhận Diện", slug: "identity-design" },
       ],
-     },
+    },
     { title: t("header.services.listServices.12"), link: "/services" },
     { title: t("header.services.listServices.13"), link: "/services" },
   ];
@@ -262,10 +282,9 @@ function ModalServices() {
                     className={`
                       group cursor-pointer transition-all duration-300 ease-in-out transform
                       px-3 py-2 rounded-lg border-l-4 relative
-                      ${
-                        isActive && service.subItems
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
-                          : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
+                      ${isActive && service.subItems
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
+                        : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
                       }
                     `}
                     onMouseEnter={() => handleMouseEnterItem(originalIndex, colIndex)}
@@ -273,10 +292,9 @@ function ModalServices() {
                     <div
                       className={`
                         absolute inset-0 rounded-lg transition-opacity duration-300
-                        ${
-                          isActive && service.subItems
-                            ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
-                            : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
+                        ${isActive && service.subItems
+                          ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
+                          : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
                         }
                       `}
                     ></div>
@@ -303,7 +321,7 @@ function ModalServices() {
 
                     {/* Invisible bridge for smooth hover transition - chỉ cho cột giữa */}
                     {service.subItems && colIndex === 1 && isActive && (
-                      <div 
+                      <div
                         className="absolute top-0 -right-4 w-8 h-full z-30 bg-transparent"
                         onMouseEnter={() => setHoveredItem(originalIndex)}
                       />
@@ -330,12 +348,12 @@ function ModalServices() {
           >
             {/* Bridge element để kết nối với menu cha - chỉ cho cột giữa */}
             {hoveredColumn === 1 && (
-              <div 
+              <div
                 className="absolute -left-4 top-0 w-4 h-full bg-transparent z-10"
                 onMouseEnter={() => setHoveredItem(hoveredItem)}
               />
             )}
-            
+
             {/* Menu cấp 3 với bo góc */}
             <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl overflow-hidden">
               <ul className="list-none py-3">
@@ -426,10 +444,9 @@ function ModalDesignWeb() {
                   className={`
                     group cursor-pointer transition-all duration-300 ease-in-out transform
                     px-3 py-2 rounded-lg border-l-4 relative
-                    ${
-                      isActive
-                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
-                        : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
+                    ${isActive
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
+                      : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
                     }
                   `}
                   onMouseEnter={() => handleMouseEnterItem(index)}
@@ -437,10 +454,9 @@ function ModalDesignWeb() {
                   <div
                     className={`
                       absolute inset-0 rounded-lg transition-opacity duration-300
-                      ${
-                        isActive
-                          ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
-                          : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
+                      ${isActive
+                        ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
+                        : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
                       }
                     `}
                   ></div>
@@ -495,6 +511,23 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
       }
     };
     fetchCategories();
+  }, []);
+
+  const [logoUrl, setLogoUrl] = useState("/logoModi.png");
+
+  // Gọi API lấy logo
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/logo`);
+        if (!res.ok) throw new Error("Failed to fetch logo");
+        const data = await res.json();
+        if (data?.url_logo) setLogoUrl(`${baseUrl}${data.url_logo}`);
+      } catch (error) {
+        console.error("Không lấy được logo, dùng fallback:", error);
+      }
+    };
+    fetchLogo();
   }, []);
 
   const MenuHeader = [
@@ -573,7 +606,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   };
 
   return (
-    <aside 
+    <aside
       className={`
         fixed top-0 left-0 z-50 w-72 sm:w-80 h-screen p-0 overflow-y-auto 
         bg-white dark:bg-gray-900 shadow-2xl border-r border-gray-200 dark:border-gray-700
@@ -586,14 +619,17 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
         <div className='flex items-start justify-start flex-col w-full'>
           <div className='flex items-center justify-between mb-4 sm:mb-6 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-800'>
             <div className='flex items-center justify-start'>
-              <img 
-                src="/logoModi.png" 
-                className='h-6 sm:h-8 w-fit' 
-                alt='logo' 
+              <img
+                src={logoUrl}
+                className='h-6 sm:h-8 w-fit'
+                alt='logo'
+                onError={(e) => {
+                  e.currentTarget.src = "/logoModi.png";
+                }}
               />
             </div>
-            <button 
-              onClick={() => setIsSidebarOpen(false)} 
+            <button
+              onClick={() => setIsSidebarOpen(false)}
               type="button"
               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg p-2 transition-all duration-300 hover:scale-110"
             >
@@ -616,8 +652,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                       }
                     }}
                   >
-                    <Link 
-                      to={item.link} 
+                    <Link
+                      to={item.link}
                       onClick={(e) => { if (item.subItems) e.preventDefault(); }}
                       className="flex-1 text-sm sm:text-base font-medium group-hover:font-semibold transition-all duration-300"
                     >
@@ -643,7 +679,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                               }
                             }}
                           >
-                            <Link 
+                            <Link
                               to={sub.slug ? `${item.link}?category=${encodeURIComponent(sub.title)}` : sub.link} // Encode cho design web
                               onClick={(e) => { if (sub.subSubItems) e.preventDefault(); }}
                               className="flex-1 text-xs sm:text-sm group-hover:font-medium transition-all duration-300"
@@ -659,12 +695,12 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                           {sub.subSubItems && openSubItems[`${item.id}-${subIndex}`] && (
                             <ul className="ml-4 sm:ml-6 space-y-1 animate-in slide-in-from-top-2 duration-200">
                               {sub.subSubItems.map((subSub, subSubIndex) => (
-                                <li 
-                                  key={subSubIndex} 
+                                <li
+                                  key={subSubIndex}
                                   className="p-2 text-gray-600 dark:text-gray-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-700 dark:hover:text-teal-300 rounded-lg transition-all duration-300 cursor-pointer"
                                 >
-                                  <Link 
-                                    to={`${item.link}/${sub.slug}/${subSub.slug}`} 
+                                  <Link
+                                    to={`${item.link}/${sub.slug}/${subSub.slug}`}
                                     onClick={() => setIsSidebarOpen(false)}
                                     className="text-xs hover:font-medium transition-all duration-300"
                                   >
