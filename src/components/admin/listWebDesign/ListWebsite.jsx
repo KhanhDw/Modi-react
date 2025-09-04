@@ -127,21 +127,30 @@ export default function WebsiteTemplateList() {
           </Button>
         </div>
 
-        <div className="flex items-center gap-4">
-          <FilterModalListTemplateWebAdmin
-            filters={filters}
-            onFiltersChange={setFilters}
-            availableTags={availableTags}
-            availableAuthors={availableAuthors}
-          />
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Tìm kiếm mẫu website..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <FilterModalListTemplateWebAdmin
+              filters={filters}
+              onFiltersChange={setFilters}
+              availableTags={availableTags}
+              availableAuthors={availableAuthors}
             />
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder="Tìm kiếm mẫu website..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
+              />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-1 text-gray-600  admin-dark:text-gray-500 font-semibold">
+              <p>Hiện có</p>
+              {templates.length}
+              <p>website mẫu</p>
+            </div>
           </div>
         </div>
       </div>
