@@ -11,7 +11,7 @@ function ConfigPage() {
         "border-gray-400 admin-dark:bg-gray-900 admin-dark:border-gray-700 border-2 hover:bg-gray-200 text-gray-700 flex items-center gap-2 p-2 rounded-md text-sm font-medium admin-dark:hover:bg-gray-700 admin-dark:text-gray-300";
 
     const menus = [
-        { to: "overview", icon: BarChart3, label: "Tổng quan" },       // biểu đồ tổng quan
+        // { to: "overview", icon: BarChart3, label: "Tổng quan" },       // biểu đồ tổng quan
         { to: "header", icon: PanelTop, label: "Đầu trang" },    // header
         { to: "footer", icon: PanelBottom, label: "Cuối trang" },// footer
         { to: "home", icon: Home, label: "Trang chủ" },                // home page
@@ -28,10 +28,16 @@ function ConfigPage() {
 
     return (
         <div className="container mx-auto">
-            <div className="mb-6">
-                <nav className="grid grid-cols-5 gap-2">
+            <div className="mb-6 flex items-center justify-center">
+                <nav className="grid grid-cols-4 gap-2">
                     {menus.map(({ to, icon: Icon, label }) => (
-                        <NavLink key={to} to={to} className={({ isActive }) => getClassName(isActive, to)}>
+                        <NavLink
+                            key={to}
+                            to={to}
+                            className={({ isActive }) =>
+                                `flex justify-center items-center gap-2 ${getClassName(isActive, to)}`
+                            }
+                        >
                             <Icon className="h-4 w-4" />
                             {label}
                         </NavLink>

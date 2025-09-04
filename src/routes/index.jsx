@@ -51,7 +51,6 @@ import AboutConfig from "@/pages/managers/ConfigPage/AboutConfig"
 import HomeConfig from "@/pages/managers/ConfigPage/HomeConfig"
 import HeaderConfig from "@/pages/managers/ConfigPage/HeaderConfig"
 import FooterConfig from "@/pages/managers/ConfigPage/FooterConfig"
-import OverviewPageConfig from "@/pages/managers/ConfigPage/OverviewPageConfig"
 
 
 //manager service
@@ -145,13 +144,13 @@ const publicRoutes = [
 const privateRoutes = [
   // redirect /managers -> /managers/dashboard
   { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
+  { path: "/managers/page-config", component: () => <Navigate to="/managers/page-config/header" replace={true} /> },
 
   //admin routes
   { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },
   {
     path: "/managers/page-config", component: ConfigPage, layout: AdminLayout,
     children: [
-      { path: "", component: OverviewPageConfig, layout: AdminLayout },
       { path: "header", component: HeaderConfig, layout: AdminLayout },
       { path: "footer", component: FooterConfig, layout: AdminLayout },
       { path: "home", component: HomeConfig, layout: AdminLayout },
