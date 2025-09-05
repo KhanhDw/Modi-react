@@ -1,20 +1,31 @@
 import { useState } from "react";
-import { Filter, X } from "lucide-react";
+import { Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import useLenisLocal from "@/hook/useLenisLocal";
+import React, { useEffect } from "react";
 
-// Loại bỏ trùng lặp trong availableTechnologies
-const availableTechnologies = [
-  ...new Set(["React", "Vue", "PHP", "JavaScript", "TypeScript", "Next.js", "Angular", "Node.js"]),
-];
-
-export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChange, availableTags, availableAuthors }) {
-  useLenisLocal();
+export default function FilterModalListTemplateWebAdmin({
+  filters,
+  onFiltersChange,
+  availableTags = [],
+  availableAuthors = [],
+  availableTech = [],
+  availableTopFeatures = [],
+  onDialogToggle,
+}) {
+  // useLenisLocal();
   const [isOpen, setIsOpen] = useState(false);
+
+
+  // báo ra ngoài mỗi khi open/close
+  useEffect(() => {
+    if (onDialogToggle) {
+      onDialogToggle(isOpen);
+    }
+  }, [isOpen, onDialogToggle]);
 
   const updateFilter = (filterType, value) => {
     onFiltersChange({
@@ -39,6 +50,7 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
     onFiltersChange({
       technologies: [],
       tags: [],
+      top_features: [],
       authors: [],
       dateRange: "",
       publishStatus: "",
@@ -49,6 +61,7 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
     return (
       filters.technologies.length +
       filters.tags.length +
+      filters.top_features.length +
       filters.authors.length +
       (filters.dateRange ? 1 : 0) +
       (filters.publishStatus ? 1 : 0)
@@ -58,7 +71,7 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button theme="admin" variant="outline" className="flex items-center gap-2 relative bg-[#525252]">
+        <Button theme="admin" variant="outline" className=" w-20 gap-2 relative ">
           <Filter className="h-4 w-4" />
           <p className="font-bold">Lọc</p>
           {getActiveFiltersCount() > 0 && (
@@ -71,10 +84,15 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="lenis-local max-w-md max-h-[80vh] overflow-y-auto" data-lenis-prevent>
-        <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            Bộ lọc
+
+      <DialogContent
+        className="lenis-local w-fit   flex flex-col items-start max-w-none 
+             max-h-[80vh] overflow-hidden"
+        data-lenis-prevent
+      >
+        <DialogHeader className="h-fit w-full flex items-center justify-between">
+          <DialogTitle className="flex items-center justify-between pb-3 w-full">
+            <p>Bộ lọc</p>
             <Button
               theme="admin"
               variant="ghost"
@@ -87,147 +105,172 @@ export default function FilterModalListTemplateWebAdmin({ filters, onFiltersChan
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-x-6 flex ">
-          {/* Technology Filter */}
-          <div>
-            <h4 className="font-medium mb-3">Công nghệ</h4>
-            <div className="space-y-2">
-              {availableTechnologies.map((tech, index) => (
-                <div key={tech + index} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`tech-${tech}-${index}`}
-                    checked={filters.technologies.includes(tech)}
-                    onCheckedChange={() => toggleArrayFilter("technologies", tech)}
-                  />
-                  <label htmlFor={`tech-${tech}-${index}`} className="text-sm cursor-pointer">
-                    {tech}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Tags Filter */}
-          <div>
-            <h4 className="font-medium mb-3">Tags</h4>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {availableTags.slice(0, 10).map((tag) => (
-                <div key={tag} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`tag-${tag}`}
-                    checked={filters.tags.includes(tag)}
-                    onCheckedChange={() => toggleArrayFilter("tags", tag)}
-                  />
-                  <label htmlFor={`tag-${tag}`} className="text-sm cursor-pointer">
-                    {tag}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Author Filter */}
-          <div>
-            <h4 className="font-medium mb-3">Tác giả</h4>
-            <div className="space-y-2">
-              {availableAuthors.map((author) => (
-                <div key={author} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`author-${author}`}
-                    checked={filters.authors.includes(author)}
-                    onCheckedChange={() => toggleArrayFilter("authors", author)}
-                  />
-                  <label htmlFor={`author-${author}`} className="text-sm cursor-pointer">
-                    {author}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Date Range Filter */}
-          <div>
-            <h4 className="font-medium mb-3">Ngày đăng</h4>
-            <Select
-              value={filters.dateRange || "All"}
-              onValueChange={(value) => updateFilter("dateRange", value === "All" ? "" : value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn khoảng thời gian" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">Tất cả</SelectItem>
-                <SelectItem value="today">Hôm nay</SelectItem>
-                <SelectItem value="week">Tuần này</SelectItem>
-                <SelectItem value="month">Tháng này</SelectItem>
-                <SelectItem value="year">Năm này</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Publish Status Filter */}
-          <div>
-            <h4 className="font-medium mb-3">Trạng thái</h4>
-            <Select
-              value={filters.publishStatus || "All"}
-              onValueChange={(value) => updateFilter("publishStatus", value === "All" ? "" : value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn trạng thái" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">Tất cả</SelectItem>
-                <SelectItem value="published">Đã công bố</SelectItem>
-                <SelectItem value="draft">Chưa công bố</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Active Filters Display */}
-          {getActiveFiltersCount() > 0 && (
-            <div className="border-t pt-4">
-              <h4 className="font-medium mb-3">Bộ lọc đang áp dụng</h4>
-              <div className="flex flex-wrap gap-2">
-                {filters.technologies.map((tech) => (
-                  <Badge key={tech} variant="secondary" className="flex items-center gap-1">
-                    {tech}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => toggleArrayFilter("technologies", tech)} />
-                  </Badge>
+        <div className="w-full flex-1 overflow-y-auto scrollbar-hide max-h-[60vh]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
+            {/* Công nghệ */}
+            <div>
+              <h4 className="font-medium mb-3">Công nghệ</h4>
+              <div className="space-y-2">
+                {availableTech.map((tech, index) => (
+                  <div key={tech + index} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`tech-${tech}-${index}`}
+                      checked={filters.technologies.includes(tech)}
+                      onCheckedChange={() => toggleArrayFilter("technologies", tech)}
+                    />
+                    <label htmlFor={`tech-${tech}-${index}`} className="text-sm cursor-pointer">
+                      {tech}
+                    </label>
+                  </div>
                 ))}
-                {filters.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="flex items-center gap-1">
-                    {tag}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => toggleArrayFilter("tags", tag)} />
-                  </Badge>
-                ))}
-                {filters.authors.map((author) => (
-                  <Badge key={author} variant="secondary" className="flex items-center gap-1">
-                    {author}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => toggleArrayFilter("authors", author)} />
-                  </Badge>
-                ))}
-                {filters.dateRange && (
-                  <Badge variant="secondary" className="flex items-center gap-1">
-                    {filters.dateRange === "today"
-                      ? "Hôm nay"
-                      : filters.dateRange === "week"
-                        ? "Tuần này"
-                        : filters.dateRange === "month"
-                          ? "Tháng này"
-                          : "Năm này"}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => updateFilter("dateRange", "")} />
-                  </Badge>
-                )}
-                {filters.publishStatus && (
-                  <Badge variant="secondary" className="flex items-center gap-1">
-                    {filters.publishStatus === "published" ? "Đã công bố" : "Chưa công bố"}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => updateFilter("publishStatus", "")} />
-                  </Badge>
-                )}
               </div>
             </div>
-          )}
+
+            {/* Tags */}
+            <div>
+              <h4 className="font-medium mb-3">Tags</h4>
+              <div className="space-y-2">
+                {availableTags.map((tag) => (
+                  <div key={tag} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`tag-${tag}`}
+                      checked={filters.tags.includes(tag)}
+                      onCheckedChange={() => toggleArrayFilter("tags", tag)}
+                    />
+                    <label htmlFor={`tag-${tag}`} className="text-sm cursor-pointer">
+                      {tag}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tính năng nổi bật */}
+            <div>
+              <h4 className="font-medium mb-3">Tính năng</h4>
+              <div className="space-y-2">
+                {availableTopFeatures.map((feature) => (
+                  <div key={feature} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`feature-${feature}`}
+                      checked={filters.top_features.includes(feature)}
+                      onCheckedChange={() => toggleArrayFilter("top_features", feature)}
+                    />
+                    <label htmlFor={`feature-${feature}`} className="text-sm cursor-pointer">
+                      {feature}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tác giả */}
+            <div>
+              <h4 className="font-medium mb-3">Tác giả</h4>
+              <div className="space-y-2">
+                {availableAuthors.map((author) => (
+                  <div key={author} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`author-${author}`}
+                      checked={filters.authors.includes(author)}
+                      onCheckedChange={() => toggleArrayFilter("authors", author)}
+                    />
+                    <label htmlFor={`author-${author}`} className="text-sm cursor-pointer">
+                      {author}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Ngày đăng */}
+            <div>
+              <h4 className="font-medium mb-3">Ngày đăng</h4>
+              <div className="space-y-2">
+                {[
+                  { value: "", label: "Tất cả" },
+                  { value: "today", label: "Hôm nay" },
+                  { value: "week", label: "Tuần này" },
+                  { value: "month", label: "Tháng này" },
+                  { value: "year", label: "Năm nay" },
+                ].map((opt) => (
+                  <div key={opt.value} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`date-${opt.value}`}
+                      checked={filters.dateRange === opt.value}
+                      onCheckedChange={() => updateFilter("dateRange", opt.value)}
+                    />
+                    <label htmlFor={`date-${opt.value}`} className="text-sm cursor-pointer">
+                      {opt.label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Trạng thái */}
+            <div>
+              <h4 className="font-medium mb-3">Trạng thái</h4>
+              <div className="space-y-2">
+                {[
+                  { value: "", label: "Tất cả" },
+                  { value: "published", label: "Đã công bố" },
+                  { value: "draft", label: "Chưa công bố" },
+                ].map((opt) => (
+                  <div key={opt.value} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`status-${opt.value}`}
+                      checked={filters.publishStatus === opt.value}
+                      onCheckedChange={() => updateFilter("publishStatus", opt.value)}
+                    />
+                    <label htmlFor={`status-${opt.value}`} className="text-sm cursor-pointer">
+                      {opt.label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Active Filters */}
+        {getActiveFiltersCount() > 0 && (
+          <div className="pt-6 w-full">
+            <h4 className="font-medium mb-3">Bộ lọc đang áp dụng</h4>
+            <div className="flex flex-wrap gap-2">
+              {filters.technologies.map((tech) => (
+                <Badge key={tech} variant="outline" className="text-xs text-foreground">
+                  {tech}
+                </Badge>
+              ))}
+              {filters.tags.map((tag) => (
+                <Badge key={tag} variant="outline" className="text-xs text-foreground">
+                  {tag}
+                </Badge>
+              ))}
+              {filters.top_features.map((feature) => (
+                <Badge key={feature} variant="outline" className="text-xs text-foreground">
+                  {feature}
+                </Badge>
+              ))}
+              {filters.authors.map((author) => (
+                <Badge key={author} variant="outline" className="text-xs text-foreground">
+                  {author}
+                </Badge>
+              ))}
+              {filters.dateRange && (
+                <Badge variant="outline" className="text-xs text-foreground">
+                  Ngày: {filters.dateRange}
+                </Badge>
+              )}
+              {filters.publishStatus && (
+                <Badge variant="outline" className="text-xs text-foreground">
+                  {filters.publishStatus === "published" ? "Đã công bố" : "Chưa công bố"}
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

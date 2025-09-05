@@ -24,7 +24,7 @@ export default function RevenueChart() {
     return (
         <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
             <CardHeader>
-                <CardTitle className="text-lg font-bold">Website bán ra trong 12 tháng</CardTitle>
+                <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Website bán ra trong 12 tháng</CardTitle>
                 <CardDescription>
                     Biểu đồ đơn đặt hàng website theo tháng (Website)
                 </CardDescription>

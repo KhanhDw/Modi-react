@@ -74,9 +74,10 @@ function DialogContent({ className, children, showCloseButton = true, ...props }
       <DialogOverlay />
       <div
         className={cn(
-          "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 sm:max-w-lg animate-in fade-in-0 zoom-in-95",
+          "fixed top-1/2 left-1/2 z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 animate-in fade-in-0 zoom-in-95",
           className
         )}
+
         {...props}
       >
         {children}
