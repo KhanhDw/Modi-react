@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react"
+import useCurrentLanguage from "@/hook/currentLang"
 
 export function CompanyOverview() {
+  const { lang } = useCurrentLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [about, setAbout] = useState(null)
-  const [lang, setLang] = useState("vi") // có thể toggle vi/en
 
   // Quan sát khi scroll để hiện animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
+        if (entry.isIntersecting) setIsVisible(true)
       },
-      { threshold: 0.1 },
+      { threshold: 0.1 }
     )
 
     const element = document.getElementById("company-overview")
@@ -28,11 +27,11 @@ export function CompanyOverview() {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setAbout(data[0]) // lấy phần tử đầu tiên vì sectionId=2 chỉ có 1 item
+          setAbout(data[0]) // lấy phần tử đầu tiên
         }
       })
       .catch((err) => console.error("Fetch about error:", err))
-  }, [])
+  }, [lang]) // refetch khi đổi ngôn ngữ
 
   return (
     <section id="company-overview" className="py-20 px-4">
@@ -40,7 +39,9 @@ export function CompanyOverview() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Text content */}
           <div
-            className={`transition-all duration-600 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            className={`transition-all duration-600 ${isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-8"
               }`}
           >
             <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-6">
@@ -53,12 +54,13 @@ export function CompanyOverview() {
 
           {/* Image */}
           <div
-            className={`transition-all duration-600 delay-200 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+            className={`transition-all duration-600 delay-200 ${isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-8"
               }`}
           >
             <div className="relative">
               <img
-                // src={about?.image_url || "/placeholder-nzovq.png"}
                 src={
                   about?.image_url
                     ? `${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`

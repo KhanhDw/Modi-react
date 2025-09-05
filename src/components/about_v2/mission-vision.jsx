@@ -1,10 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
+import useCurrentLanguage from "@/hook/currentLang"
 
 export function MissionVision() {
+  const { lang } = useCurrentLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [items, setItems] = useState([])
-  const [lang] = useState("vi") // hoặc dùng context/state để đổi ngôn ngữ
 
   useEffect(() => {
     // Quan sát khi scroll tới section
@@ -31,7 +32,7 @@ export function MissionVision() {
         setItems(data) // data là mảng các mục vision & mission
       })
       .catch((err) => console.error("Fetch Mission & Vision error:", err))
-  }, [])
+  }, [lang]) // refetch khi đổi ngôn ngữ
 
   return (
     <section id="mission-vision" className="py-20 px-4">
@@ -45,7 +46,12 @@ export function MissionVision() {
             <Card
               key={item.id}
               className={`transition-all duration-600 hover:shadow-lg border-2 ${index % 2 === 0 ? "hover:border-primary/50" : "hover:border-secondary/50"
-                } ${isVisible ? "opacity-100 translate-x-0" : index % 2 === 0 ? "opacity-0 -translate-x-8" : "opacity-0 translate-x-8"}`}
+                } ${isVisible
+                  ? "opacity-100 translate-x-0"
+                  : index % 2 === 0
+                    ? "opacity-0 -translate-x-8"
+                    : "opacity-0 translate-x-8"
+                }`}
             >
               <CardContent className="p-8">
                 <div className="flex items-center mb-4">
@@ -62,8 +68,8 @@ export function MissionVision() {
                 </p>
                 {item.image_url && (
                   <img
-                    src={item.image_url}
-                    alt={item.title?.[lang]}
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`}
+                    alt={item.title?.[lang] || ""}
                     className="w-full h-40 object-cover rounded-lg mt-4 shadow"
                   />
                 )}

@@ -3,19 +3,21 @@ import { useEffect, useState } from "react";
 import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { newsData } from "../../data/MockData"; // Import dữ liệu mẫu
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 export default function NewsInterface() {
   const [newsArticles, setNewsArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { lang, prefix } = useCurrentLanguage();
   const pageSize = 6;
 
   useEffect(() => {
     setIsLoading(true);
 
     // Chỉnh sửa lại fetch URL theo yêu cầu của bạn
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/blogs`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}${prefix}/api/blogs`)
       .then((res) => {
         if (!res.ok) throw new Error("API không phản hồi");
         return res.json();
@@ -53,7 +55,7 @@ export default function NewsInterface() {
         setNewsArticles(sortedMockData);
         setIsLoading(false);
       });
-  }, []);
+  }, [prefix]);
 
   // Hàm format ngày
   const formatDate = (dateStr) => {

@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
+
 
 export function HeroBanner() {
+  const { lang, prefix } = useCurrentLanguage();
   const [isVisible, setIsVisible] = useState(false)
   const [banner, setBanner] = useState({
     title: { vi: "", en: "" },
     slogan: { vi: "", en: "" },
   })
-  const [lang, setLang] = useState("vi") // hoặc bạn có thể lấy từ context
 
   // Fetch banner từ API
   useEffect(() => {
@@ -15,6 +17,7 @@ export function HeroBanner() {
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) {
+          console.log("->>>>", data);
           const item = data[0]
           setBanner({
             title: item.title || { vi: "", en: "" },
@@ -23,7 +26,7 @@ export function HeroBanner() {
         }
       })
       .catch((err) => console.error("Lỗi khi fetch banner:", err))
-  }, [])
+  }, [lang])
 
   useEffect(() => {
     setIsVisible(true)

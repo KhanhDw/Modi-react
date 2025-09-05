@@ -1,4 +1,3 @@
-"use client"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -6,8 +5,10 @@ import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Search, Filter, Github, Eye, Star } from "lucide-react"
+// import languageAPI from "@/hook/currentLang";
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
-const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000"
+const baseUrl = import.meta.env.VITE_MAIN_BE_URL
 
 export default function Products() {
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState("")
   const [samples, setSamples] = useState([])
   const [filteredSamples, setFilteredSamples] = useState([])
+  const { lang, prefix } = useCurrentLanguage();
 
   // Đọc tham số category từ URL
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function Products() {
   useEffect(() => {
     const fetchSamples = async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/web-samples`)
+        const res = await fetch(`${baseUrl}${prefix}/api/web-samples`)
         if (!res.ok) throw new Error("Failed to fetch")
         const result = await res.json()
 
@@ -56,7 +58,7 @@ export default function Products() {
       }
     }
     fetchSamples()
-  }, [])
+  }, [prefix])
 
   useEffect(() => {
     const observer = new IntersectionObserver(

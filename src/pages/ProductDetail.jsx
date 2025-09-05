@@ -18,6 +18,9 @@ import {
   Zap, Eye,
   ShoppingCart
 } from "lucide-react"
+// import languageAPI from "@/hook/currentLang";
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
+
 
 const baseUrl = import.meta.env.VITE_MAIN_BE_URL
 
@@ -27,12 +30,12 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [relatedProducts, setRelatedProducts] = useState([])
-
+  const { lang, prefix } = useCurrentLanguage();
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         // 1. Fetch chi tiết sản phẩm
-        const res = await fetch(`${baseUrl}/api/web-samples/${id}`)
+        const res = await fetch(`${baseUrl}${prefix}/api/web-samples/${id}`)
         if (!res.ok) throw new Error("Không fetch được sản phẩm")
         const result = await res.json()
 
@@ -91,7 +94,7 @@ export default function ProductDetail() {
     }
 
     fetchProduct()
-  }, [id])
+  }, [id, prefix])
 
 
   // Lấy sản phẩm liên quan (cùng category, khác id)

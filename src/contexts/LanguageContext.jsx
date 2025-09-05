@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import vi from "../locales/vi";
 import en from "../locales/en";
+import { setAppLanguage } from "@/hook/currentLang";
 
 
 const translations = { vi, en };
@@ -21,6 +22,10 @@ export const LanguageProvider = ({ children }) => {
     const newLang = language === "vi" ? "en" : "vi";
     setLanguage(newLang);
     localStorage.setItem("site-language", newLang);
+    setAppLanguage(newLang);
+    // tin tức
+
+
   };
 
 

@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, User, ExternalLink, Share2, BookOpen } from "lucide-react"
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Calendar, User, Share2 } from "lucide-react"
+import { useParams } from 'react-router-dom';
 
 export default function ArticleDetail() {
-
     const { slug } = useParams();
 
     const [post, setPost] = useState(null);
@@ -19,7 +17,7 @@ export default function ArticleDetail() {
                 const res = await fetch(
                     `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/slug/${slug}`
                 );
-                if (!res.ok) throw new Error("Không thể tải dữ liệu11111");
+                if (!res.ok) throw new Error("Không thể tải dữ liệu");
                 const data = await res.json();
                 setPost(data);
             } catch (err) {
@@ -31,26 +29,20 @@ export default function ArticleDetail() {
         if (slug) fetchArticle();
     }, [slug]);
 
-    // const tags = post.tags
-    //     ? post.tags.split(",").map((tag) => tag.trim())
-    //     : [];
-
-    if (loading) return <p>Đang tải dữ liệu...</p>;
-    if (error) return <p className="text-red-500">{error}</p>;
-    if (!post) return <p>Không có dữ liệu.</p>;
-
-
+    if (loading) return <p className="text-foreground dark:text-gray-300">Đang tải dữ liệu...</p>;
+    if (error) return <p className="text-red-500 dark:text-red-400">{error}</p>;
+    if (!post) return <p className="text-muted-foreground dark:text-gray-400">Không có dữ liệu.</p>;
 
     return (
         <div className="max-w-4xl mx-auto mt-10">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-4xl font-bold mb-4">
+                <h1 className="text-4xl font-bold mb-4 text-foreground dark:text-white">
                     {post.title}
                 </h1>
 
-                <div className="flex items-center justify-between flex-wrap gap-4 pb-6 border-b">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center justify-between flex-wrap gap-4 pb-6 border-b border-border dark:border-gray-700">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground dark:text-gray-400">
                         <div className="flex items-center gap-2">
                             <User className="w-4 h-4" />
                             <span className="font-medium">{post.author_name}</span>
@@ -93,32 +85,17 @@ export default function ArticleDetail() {
             )}
 
             {/* Content */}
-            <Card className="mb-8">
+            <Card className="mb-8 bg-white dark:bg-gray-900 border border-border dark:border-gray-700">
                 <CardContent className="p-8">
                     <div
-                        className="prose prose-lg max-w-none leading-relaxed"
+                        className="prose prose-lg max-w-none leading-relaxed 
+                                   text-foreground dark:text-gray-300
+                                   prose-headings:text-foreground prose-headings:dark:text-white
+                                   prose-a:text-blue-600 prose-a:dark:text-blue-400"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                     />
                 </CardContent>
             </Card>
-
-            {/* Tags
-            {tags.length > 0 && (
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-3">Thẻ bài viết</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {tags.map((tag, index) => (
-                            <Badge
-                                key={index}
-                                variant="secondary"
-                                className="bg-muted hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
-                            >
-                                {tag}
-                            </Badge>
-                        ))}
-                    </div>
-                </div>
-            )} */}
         </div>
     );
 }
