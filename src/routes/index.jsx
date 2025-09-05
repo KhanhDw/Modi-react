@@ -144,7 +144,6 @@ const publicRoutes = [
 const privateRoutes = [
   // redirect /managers -> /managers/dashboard
   { path: "/managers", component: () => <Navigate to="/managers/dashboard" replace={true} /> },
-  { path: "/managers/page-config", component: () => <Navigate to="/managers/page-config/header" replace={true} /> },
 
   //admin routes
   { path: "/managers/dashboard", component: ManagerDashboard, layout: AdminLayout },

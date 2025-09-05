@@ -23,10 +23,10 @@ const menuItems = [
   { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
-  { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone }, // loa thông báo
-  { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette }, // biểu tượng bảng màu, thiết kế
-  { name: "Cấu hình trang web", path: "/managers/page-config", icon: Columns3Cog },
-  { name: "Khu vực quản trị", path: "/managers/admin-zone", icon: ShieldMinus }, // icon chữ "i"
+  { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone },
+  { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette },
+  { name: "Cấu hình trang web", path: "/managers/page-config/header", icon: Columns3Cog },
+  { name: "Khu vực quản trị", path: "/managers/admin-zone", icon: ShieldMinus },
   { name: "Component", path: "/managers/components", icon: Puzzle },
 ];
 
