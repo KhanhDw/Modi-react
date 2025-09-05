@@ -1,10 +1,11 @@
-
-
 import { useEffect, useState } from "react"
 
 export function CompanyOverview() {
   const [isVisible, setIsVisible] = useState(false)
+  const [about, setAbout] = useState(null)
+  const [lang, setLang] = useState("vi") // có thể toggle vi/en
 
+  // Quan sát khi scroll để hiện animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -21,34 +22,49 @@ export function CompanyOverview() {
     return () => observer.disconnect()
   }, [])
 
+  // Fetch dữ liệu từ API section-items (section_id = 2)
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items?sectionId=2`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setAbout(data[0]) // lấy phần tử đầu tiên vì sectionId=2 chỉ có 1 item
+        }
+      })
+      .catch((err) => console.error("Fetch about error:", err))
+  }, [])
+
   return (
     <section id="company-overview" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Text content */}
           <div
             className={`transition-all duration-600 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
               }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-6">Chúng tôi là Sáng Tạo Web</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-6">
+              {about?.title?.[lang] || "Đang tải..."}
+            </h2>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
-              Sáng Tạo Web là công ty thiết kế website mới, được thành lập với niềm đam mê mang đến trải nghiệm trực
-              tuyến độc đáo. Chúng tôi tập trung vào giao diện đẹp, hiệu suất cao, và thân thiện với người dùng, giúp
-              doanh nghiệp của bạn nổi bật trong thế giới số.
-            </p>
-            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-              Đội ngũ trẻ của chúng tôi luôn sẵn sàng đồng hành cùng bạn, mang đến những giải pháp web sáng tạo và hiệu
-              quả nhất.
+              {about?.description?.[lang] || "Chưa có mô tả"}
             </p>
           </div>
 
+          {/* Image */}
           <div
             className={`transition-all duration-600 delay-200 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
               }`}
           >
             <div className="relative">
               <img
-                src="/placeholder-nzovq.png"
-                alt="Đội ngũ Sáng Tạo Web làm việc"
+                // src={about?.image_url || "/placeholder-nzovq.png"}
+                src={
+                  about?.image_url
+                    ? `${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`
+                    : "/no-image.png"
+                }
+                alt={about?.title?.[lang] || "Company Overview"}
                 className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-accent/20 rounded-full blur-xl" />

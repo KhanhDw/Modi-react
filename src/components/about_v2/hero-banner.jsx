@@ -3,6 +3,27 @@ import { useEffect, useState } from "react"
 
 export function HeroBanner() {
   const [isVisible, setIsVisible] = useState(false)
+  const [banner, setBanner] = useState({
+    title: { vi: "", en: "" },
+    slogan: { vi: "", en: "" },
+  })
+  const [lang, setLang] = useState("vi") // hoặc bạn có thể lấy từ context
+
+  // Fetch banner từ API
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items?sectionId=1`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.length > 0) {
+          const item = data[0]
+          setBanner({
+            title: item.title || { vi: "", en: "" },
+            slogan: item.description || { vi: "", en: "" },
+          })
+        }
+      })
+      .catch((err) => console.error("Lỗi khi fetch banner:", err))
+  }, [])
 
   useEffect(() => {
     setIsVisible(true)
@@ -13,14 +34,14 @@ export function HeroBanner() {
       {/* Video Background */}
       <video
         className="absolute inset-0 w-full h-full object-cover "
-        src="/videos/hero-bg.mp4"   // đổi path video của bạn
+        src="/videos/hero-bg.mp4"
         autoPlay
         loop
         muted
         playsInline
       />
 
-      {/* Overlay để dễ đọc chữ */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black/40" />
 
       {/* Content */}
@@ -29,14 +50,14 @@ export function HeroBanner() {
           className={`text-4xl md:text-6xl font-bold font-sans text-white mb-6 transition-all duration-800 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
-          Mộc Điền <br /> Kiến tạo tương lai số của bạn
+          {banner.title?.[lang] || "Chưa có tiêu đề"}
         </h1>
 
         <p
           className={`text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto transition-all duration-800 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
-          Chúng tôi là đội ngũ trẻ, đam mê mang đến những website sáng tạo, hiện đại, và thân thiện với người dùng.
+          {banner.slogan?.[lang] || "Chưa có slogan"}
         </p>
 
         <Button

@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, X, Image, Trash2, Eye, Settings, Info } from 'lucide-react';
 
+
+// ======================================================
+// api server upload đã thay đổi - cấu hình lại api để dùng
+// ======================================================
+
 export default function ImageUpload({
     // CẤU HÌNH MẶC ĐỊNH CHO COMPONENT, NẾU CÓ CẤU HÌNH KHÁC TỪ BÊN NGOÀI THÌ SẼ BỊ GHI ĐÈ
     // Cấu hình cơ bản

@@ -137,11 +137,14 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
         ))}
       </nav>
 
-      <div className="px-2 flex items-center justify-between">
-        <span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50">
-          Lượt truy cập hôm nay:
-        </span>
-        <span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50">
+      <div className="px-2 flex items-center justify-between transition-all duration-300 ">
+        {isCollapsed && !isMobile ? "" :
+          (<span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300">
+            Lượt truy cập hôm nay:
+          </span>)
+        }
+
+        <span className={`${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50`}>
           {todayVisits.toLocaleString("vi-VN")}
         </span>
 
@@ -166,7 +169,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 
         </Button>
       </div>
-    </div>
+    </div >
   );
 };
 

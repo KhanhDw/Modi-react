@@ -54,7 +54,7 @@ export function StartupJourney() {
           Hành trình khởi đầu của chúng tôi
         </h2>
         <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Sáng Tạo Web ra đời từ khát vọng mang đến những website độc đáo, giúp doanh nghiệp nhỏ vươn xa.
+          Mộc Điền ra đời từ khát vọng mang đến những website độc đáo, giúp doanh nghiệp nhỏ vươn xa.
         </p>
 
         <div className="grid md:grid-cols-3 gap-8">

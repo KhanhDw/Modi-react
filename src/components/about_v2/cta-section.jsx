@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+
 
 export function CTASection() {
   const [isVisible, setIsVisible] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,16 +58,17 @@ export function CTASection() {
             : "opacity-0 translate-y-8"
             }`}
         >
-          Hãy để Sáng Tạo Web giúp bạn xây dựng website mơ ước. Liên hệ ngay để nhận tư vấn miễn phí!
+          Hãy để Mộc Điền giúp bạn xây dựng website mơ ước. Liên hệ ngay để nhận tư vấn miễn phí!
         </p>
 
         <Button
           size="lg"
           variant="secondary"
-          className={`text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-110 ${isVisible
+          className={`text-primary dark:hover:text-gray-800 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-110 ${isVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-8"
             }`}
+          onClick={() => navigate("/contact")}
         >
           Liên hệ ngay
         </Button>
