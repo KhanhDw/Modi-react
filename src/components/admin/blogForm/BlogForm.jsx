@@ -174,7 +174,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             <img
               src={preview}
               alt="Preview"
-              className="h-32 w-92 object-cover rounded"
+              className="h-50 w-92 object-cover rounded"
               onError={(e) => {
                 e.currentTarget.src = "/images/error.png"; // ✅ đường dẫn ảnh dự phòng
                 e.currentTarget.onerror = null;        // tránh loop vô hạn nếu fallback cũng lỗi

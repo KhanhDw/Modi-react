@@ -168,7 +168,7 @@ export default function BlogsListPage() {
                             paginatedBlogs.map((blog, index) => (
                                 <tr
                                     key={blog.id || index}
-                                    className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer"
+                                    className="last:border-none hover:bg-gray-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer"
                                 >
                                     {columns.map((col) => {
                                         const value = blog[col.name];
@@ -190,7 +190,7 @@ export default function BlogsListPage() {
                                                         <img
                                                             src={`${import.meta.env.VITE_MAIN_BE_URL}${value}`}
                                                             alt="blog"
-                                                            className="max-w-[50px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
+                                                            className="max-w-[70px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
                                                             onError={(e) => {
                                                                 e.currentTarget.src = "/no-image.png";
                                                             }}
@@ -199,7 +199,7 @@ export default function BlogsListPage() {
                                                         <img
                                                             src="/no-image.png"
                                                             alt="no-image"
-                                                            className="max-w-[50px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
+                                                            className="max-w-[70px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
                                                         />
                                                     )}
                                                 </td>
@@ -286,13 +286,13 @@ export default function BlogsListPage() {
                                         <div className="flex justify-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(blog)}
-                                                className="flex items-center px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs transition cursor-pointer"
+                                                className="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs transition cursor-pointer"
                                             >
                                                 Sửa
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(blog.id)}
-                                                className="flex items-center px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs transition cursor-pointer"
+                                                className="flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs transition cursor-pointer"
                                             >
                                                 Xóa
                                             </button>
