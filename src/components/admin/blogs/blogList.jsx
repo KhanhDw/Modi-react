@@ -2,8 +2,8 @@ import PageHeader from "@/components/admin/common/PageHeader";
 import { useNavigate, useLocation } from "react-router-dom";
 import { isAfter, parseISO } from "date-fns";
 import useBlogs from "@/hook/useBlogsAdmin";
-import React, { useState, } from "react";
-import { Clock } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from "react";
+import { Clock } from "lucide-react";
 
 export const isFuture = (dt) => {
     try {
@@ -14,28 +14,21 @@ export const isFuture = (dt) => {
     }
 };
 
-// Hàm chuyển Slate JSON sang HTML
 export const renderSlateToHTML = (nodes) => {
     if (!Array.isArray(nodes)) return "";
 
     const renderNode = (node) => {
-        // Trường hợp node text (leaf)
         if (node.text !== undefined) {
             let text = node.text;
-
-            if (!text) return ""; // bỏ qua text rỗng
+            if (!text) return "";
             if (node.bold) text = `<strong>${text}</strong>`;
             if (node.italic) text = `<em>${text}</em>`;
             if (node.underline) text = `<u>${text}</u>`;
             if (node.code) text = `<code>${text}</code>`;
-
             return text;
         }
 
-        // Render children
         const children = (node.children || []).map(renderNode).join("");
-
-        // Thêm style align nếu có
         const alignStyle = node.align ? ` style="text-align:${node.align};"` : "";
 
         switch (node.type) {
@@ -57,87 +50,88 @@ export const renderSlateToHTML = (nodes) => {
     return nodes.map(renderNode).join("");
 };
 
-
-
-
-
 export default function BlogsListPage() {
-
     const navigate = useNavigate();
     const location = useLocation();
 
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const PAGE_SIZE = 2;
 
     const {
         blogs,
         columns,
         showForm,
-        editingBlog,
         loading,
         error,
-        currentPage,
-        totalPages,
-        paginatedBlogs,
-        itemsPerPage,
-        sortOrder,
         setBlogs,
         handleAdd,
         handleEdit,
         handleDelete,
-        handleSubmit,
-        handleCancel,
         toggleSortOrder,
-        handlePageChange,
-        setLoading,
-        setEditingBlog,
+        sortOrder,
         fetchBlogs,
     } = useBlogs();
 
-
-    // Search API
-    const handleSearch = async (keyword) => {
-        setLoading(true);
-        try {
-            if (!keyword) {
-                await fetchBlogs(); // nếu rỗng load tất cả
-                return;
-            } else if (keyword.trim() === "") {
-                await fetchBlogs(); // nếu rỗng load tất cả
-                return;
-            } else if (keyword.trim().toLowerCase() === "nháp") {
-                keyword = "draft";
-            } else if (keyword.trim().toLowerCase() === "công khai") {
-                keyword = "published";
-            }
-
-            const response = await fetch(
-                `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs/search?term=${encodeURIComponent(keyword)}`
-            );
-            if (!response.ok) throw new Error("API error");
-            const data = await response.json();
-            setBlogs(data);
-        } catch (err) {
-            console.error("Search error:", err);
-        } finally {
-            setLoading(false);
-        }
+    const removeAccents = (str) => {
+        if (!str) return "";
+        return str
+            .normalize("NFD") // tách chữ và dấu
+            .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
+            .toLowerCase();
     };
 
+    // Search logic không phân biệt hoa thường, dấu
+    const filteredBlogs = useMemo(() => {
+        if (!blogs) return [];
+        if (!searchTerm.trim()) return blogs;
 
+        const term = removeAccents(searchTerm.trim());
 
-    if (!blogs) {
-        return <div>Đang tải...</div>;  // ✅ return sau hook
-    }
+        return blogs.filter((b) => {
+            const title = removeAccents(b.title);
+            let content = "";
+            try {
+                content =
+                    typeof b.content === "string" && b.content.trim().startsWith("[")
+                        ? JSON.parse(b.content)
+                            .map((n) => (n.text ? removeAccents(n.text) : ""))
+                            .join(" ")
+                        : removeAccents(b.content);
+            } catch {
+                content = removeAccents(b.content);
+            }
 
+            return title.includes(term) || content.includes(term);
+        });
+    }, [searchTerm, blogs]);
 
-    if (loading) return <div className="p-4 text-center text-green-800">Đang tải...</div>;
-    if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
+    const totalPages = Math.ceil(filteredBlogs.length / PAGE_SIZE);
+    const paginatedBlogs = filteredBlogs.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE
+    );
 
+    useEffect(() => {
+        fetchBlogs();
+    }, []);
 
+    const handlePageChange = (page) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+    };
+
+    const handleSearch = async (keyword) => {
+        setSearchTerm(keyword);
+        setCurrentPage(1);
+    };
+
+    if (!blogs || loading) return <div className="p-6 text-center text-green-700">Đang tải...</div>;
+    if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
 
     return (
-        <div className="">
-            <div className="flex justify-between items-center mb-6">
+        <div>
+            <div className="w-full mb-4 sm:mb-6">
                 <PageHeader
                     title={showForm ? "Sửa tin tức" : "Quản lý tin tức"}
                     buttonText="Thêm tin tức"
@@ -147,72 +141,85 @@ export default function BlogsListPage() {
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     APISearch={handleSearch}
-                    className="mb-4 sm:mb-6 w-full "
                 />
-
             </div>
 
+            {/* Table */}
+            <div className="overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 shadow-md transition-all duration-300">
+                <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
+                    <thead className="sticky top-0 z-10">
+                        <tr className="bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 uppercase tracking-wider text-xs sm:text-sm border-b border-gray-200 admin-dark:border-gray-700">
+                            {columns.map((col) => (
+                                <th
+                                    key={col.name}
+                                    className="px-3 sm:px-4 py-3 text-left font-semibold whitespace-nowrap"
+                                >
+                                    {col.label}
+                                </th>
+                            ))}
+                            <th className="px-3 sm:px-4 py-3 text-center font-semibold whitespace-nowrap">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
 
-            <div className="flex flex-col">
-
-
-
-                <div className=" rounded-xl shadow-lg overflow-x-auto border-2 border-green-200 admin-dark:border-gray-700">
-                    <table className="min-w-full divide-y divide-green-200 admin-dark:divide-slate-600">
-                        <thead className="bg-green-100 admin-dark:bg-slate-700 text-green-800 uppercase text-xs sm:text-sm">
-                            <tr>
-                                {columns.map(col => (
-                                    <th key={col.name} className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold text-gray-800 admin-dark:text-gray-200">{col.label}</th>
-                                ))}
-                                <th className="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold rounded-tr-xl text-gray-800 admin-dark:text-gray-200">Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-green-200 admin-dark:divide-slate-600 admin-dark:bg-slate-800">
-                            {paginatedBlogs.map((blog, index) => (
+                    <tbody className="divide-y divide-gray-200 admin-dark:divide-gray-700">
+                        {paginatedBlogs.length > 0 ? (
+                            paginatedBlogs.map((blog, index) => (
                                 <tr
                                     key={blog.id || index}
-                                    className="hover:bg-green-50 admin-dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200 text-gray-800 admin-dark:text-gray-200"
-
+                                    className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer"
                                 >
-                                    {/* để hiển thị được nội dung vui lòng: (BE) src\config\columns.config.js phải có name chính xác */}
                                     {columns.map((col) => {
-                                        let value = blog[col.name];
+                                        const value = blog[col.name];
 
+                                        // STT
                                         if (col.name === "id") {
                                             return (
-                                                <td key={index} className="px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
-                                                    {/* công thức số thứ tự nối tiếp */}
-                                                    {(currentPage - 1) * itemsPerPage + (index + 1)}
+                                                <td key={col.name} className="px-3 sm:px-4 py-3 whitespace-nowrap">
+                                                    {(currentPage - 1) * PAGE_SIZE + (index + 1)}
                                                 </td>
                                             );
                                         }
 
-                                        // xử lý theo type
+                                        // Image column
                                         if (col.type === "image") {
                                             return (
-                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                                                <td key={col.name} className="px-3 sm:px-4 py-3">
                                                     {value ? (
                                                         <img
                                                             src={`${import.meta.env.VITE_MAIN_BE_URL}${value}`}
                                                             alt="blog"
-                                                            className="h-12 w-12 object-cover rounded"
+                                                            className="max-w-[50px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = "/no-image.png";
+                                                            }}
                                                         />
                                                     ) : (
-                                                        "Không có ảnh"
+                                                        <img
+                                                            src="/no-image.png"
+                                                            alt="no-image"
+                                                            className="max-w-[50px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
+                                                        />
                                                     )}
                                                 </td>
                                             );
                                         }
 
+                                        // Title column
                                         if (col.name === "title") {
                                             return (
-                                                <td onClick={() => navigate(`${location.pathname}/${blog.id}/view`)} key={col.name} className="hover:bg-gray-200 admin-dark:hover:bg-gray-600 px-2 sm:px-4 py-2 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden">
+                                                <td
+                                                    key={col.name}
+                                                    onClick={() => navigate(`${location.pathname}/${blog.id}/view`)}
+                                                    className="px-3 sm:px-4 py-3 hover:text-blue-600 truncate max-w-[200px] cursor-pointer"
+                                                >
                                                     {value}
                                                 </td>
                                             );
                                         }
 
-
+                                        // Content column
                                         if (col.name === "content") {
                                             let parsedValue = [];
                                             try {
@@ -220,61 +227,44 @@ export default function BlogsListPage() {
                                                     typeof value === "string" && value.trim().startsWith("[")
                                                         ? JSON.parse(value)
                                                         : value;
-                                            } catch (e) {
-                                                console.error("JSON parse error:", e);
-                                                parsedValue = value; // fallback plain text
+                                            } catch {
+                                                parsedValue = value;
                                             }
 
                                             const htmlContent = Array.isArray(parsedValue)
                                                 ? renderSlateToHTML(parsedValue)
-                                                : parsedValue; // nếu chỉ là text thì render thẳng
-
+                                                : parsedValue;
 
                                             return (
-                                                <td
-                                                    key={col.name}
-                                                    className="px-2 sm:px-4 py-2 text-slate-400 text-xs sm:text-sm max-w-60 truncate whitespace-nowrap overflow-hidden"
-                                                >
+                                                <td key={col.name} className="px-3 sm:px-4 py-3 text-gray-500 max-w-[300px]">
                                                     <div
-                                                        className="prose prose-sm max-w-none text-slate-400 prose-p:text-slate-400 prose-strong:text-slate-400 prose-li:text-slate-400 prose-blockquote:text-slate-400 line-clamp-1"
+                                                        className="prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-white text-[15px]"
+                                                        style={{ overflow: "hidden", textOverflow: "ellipsis" }}
                                                         dangerouslySetInnerHTML={{ __html: htmlContent }}
                                                     />
                                                 </td>
                                             );
                                         }
 
-
-
+                                        // Date column
                                         if (col.type === "date") {
                                             return (
-                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                                                <td key={col.name} className="px-3 sm:px-4 py-3">
                                                     {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
                                                 </td>
                                             );
                                         }
 
-
-                                        if (col.type === "date") {
-                                            return (
-                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
-                                                    {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
-                                                </td>
-                                            );
-                                        }
-
+                                        // Enum column
                                         if (col.type === "enum") {
                                             return (
-                                                <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                                                <td key={col.name} className="px-3 sm:px-4 py-3">
                                                     {value === "draft" ? (
-                                                        <span>Nháp</span>
+                                                        <span className="text-yellow-600">Nháp</span>
                                                     ) : value === "published" ? (
-                                                        <div className="flex items-center space-x-1">
-                                                            <span>Công khai</span>
-                                                            {blog.published_at &&
-                                                                isFuture(blog.published_at) && (
-                                                                    <Clock size={15} />
-                                                                )
-                                                            }
+                                                        <div className="flex items-center gap-1">
+                                                            <span className="text-green-600">Công khai</span>
+                                                            {blog.published_at && isFuture(blog.published_at) && <Clock size={14} />}
                                                         </div>
                                                     ) : (
                                                         value
@@ -283,70 +273,85 @@ export default function BlogsListPage() {
                                             );
                                         }
 
-
-
+                                        // Default column
                                         return (
-                                            <td key={col.name} className="px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                                            <td key={col.name} className="px-3 sm:px-4 py-3">
                                                 {value}
                                             </td>
                                         );
                                     })}
 
-                                    {/* Cột hành động */}
-                                    <td className="px-2 sm:px-4 py-2 text-center">
-                                        <div className="flex justify-center space-x-1 sm:space-x-2">
+                                    {/* Actions */}
+                                    <td className="px-3 sm:px-4 py-3 text-center">
+                                        <div className="flex justify-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(blog)}
-
-                                                className="px-2 sm:px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200 text-xs sm:text-sm"
+                                                className="flex items-center px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs transition cursor-pointer"
                                             >
                                                 Sửa
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(blog.id)}
-                                                className="px-2 sm:px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200 text-xs sm:text-sm"
+                                                className="flex items-center px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs transition cursor-pointer"
                                             >
                                                 Xóa
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
-                            {paginatedBlogs.length === 0 && (
-                                <tr>
-                                    <td
-                                        colSpan={columns.length + 1}
-                                        className="px-2 w-full sm:px-4 py-2 sm:py-3 text-center text-green-600 italic text-xs sm:text-sm"
-                                    >
-                                        Không có bài viết nào
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            ))
+                        ) : (
+                            <tr className="h-20">
+                                <td
+                                    colSpan={columns.length + 1}
+                                    className="text-center text-gray-500 admin-dark:text-gray-400 text-sm"
+                                >
+                                    Không có bài viết nào
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
-                <div className="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
+            {/* Pagination giống AdminZone */}
+            <div className="flex flex-col sm:flex-row items-center justify-between text-gray-500 admin-dark:text-gray-400 text-sm mt-6 gap-4 sm:gap-0">
+                <div>
+                    Hiển thị {(currentPage - 1) * PAGE_SIZE + 1} -{" "}
+                    {Math.min(currentPage * PAGE_SIZE, filteredBlogs.length)} trong tổng số {filteredBlogs.length}
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="w-full sm:w-auto px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50 text-xs sm:text-sm"
+                        className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
                     >
-                        Trước
+                        &lt;
                     </button>
-                    <span className="text-green-800 text-xs sm:text-sm">
-                        Trang {currentPage} / {totalPages}
-                    </span>
+                    {[...Array(totalPages).keys()].map((num) => {
+                        const isActive = currentPage === num + 1;
+                        return (
+                            <button
+                                key={num + 1}
+                                onClick={() => handlePageChange(num + 1)}
+                                className={`w-7 h-7 rounded-full flex items-center justify-center border ${isActive
+                                    ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
+                                    : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"
+                                    } transition cursor-pointer`}
+                            >
+                                {num + 1}
+                            </button>
+                        );
+                    })}
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="w-full sm:w-auto px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50 text-xs sm:text-sm"
+                        className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
                     >
-                        Sau
+                        &gt;
                     </button>
                 </div>
             </div>
-
         </div>
     );
 }
