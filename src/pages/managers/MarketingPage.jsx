@@ -126,19 +126,20 @@ export default function MarketingPage() {
   const handleEditPost = async () => {
     try {
       const payload = {
-        author_id: formData.author_id || 1,
-        platform_id: formData.platform_id || null,
+        author_id: formData.author_id ?? 1,
+        platform_id: formData.platform_id ?? null,
         image: formData.image,
         tags: formData.tags,
-        status: formData.status || "draft",
+        status: formData.status ?? "draft",
         translations: [
           {
-            lang: formData.lang || "vi",
+            lang: formData.lang,
             title: formData.title,
             content: formData.content,
           },
         ],
       };
+
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${formData.id}`, {
         method: "PUT",
         headers: {
@@ -150,15 +151,6 @@ export default function MarketingPage() {
       if (!res.ok) {
         throw new Error("Lỗi khi cập nhật bài viết");
       }
-
-      // const data = await res.json();
-
-      // // cập nhật lại state từ response
-      // setPosts((prevPosts) =>
-      //   prevPosts.map((post) =>
-      //     post.id === updatedPost.id ? data : post
-      //   )
-      // );
 
       fetchPosts();
     } catch (err) {

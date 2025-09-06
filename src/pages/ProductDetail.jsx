@@ -1,5 +1,3 @@
-"use client"
-
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -17,10 +15,14 @@ import {
   Smartphone,
   Monitor,
   Shield,
-  Zap,
+  Zap, Eye,
+  ShoppingCart
 } from "lucide-react"
+// import languageAPI from "@/hook/currentLang";
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
-const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000"
+
+const baseUrl = import.meta.env.VITE_MAIN_BE_URL
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -28,54 +30,72 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [relatedProducts, setRelatedProducts] = useState([])
-
+  const { lang, prefix } = useCurrentLanguage();
   useEffect(() => {
     const fetchProduct = async () => {
-  try {
-    const res = await fetch(`${baseUrl}/api/web-samples/${id}`)
-    if (!res.ok) throw new Error("Không fetch được sản phẩm")
-    const result = await res.json()
+      try {
+        // 1. Fetch chi tiết sản phẩm
+        const res = await fetch(`${baseUrl}${prefix}/api/web-samples/${id}`)
+        if (!res.ok) throw new Error("Không fetch được sản phẩm")
+        const result = await res.json()
 
-    if (!result) {
-      throw new Error("Sản phẩm không tồn tại")
+        if (!result) throw new Error("Sản phẩm không tồn tại")
+
+        // 2. Chuẩn hóa dữ liệu
+        const parsed = {
+          ...result,
+          tags: Array.isArray(result.tags)
+            ? result.tags
+            : result.tags
+              ? JSON.parse(result.tags)
+              : [],
+          tech: Array.isArray(result.tech)
+            ? result.tech
+            : result.tech
+              ? JSON.parse(result.tech)
+              : [],
+          top_features: Array.isArray(result.top_features)
+            ? result.top_features
+            : result.top_features
+              ? JSON.parse(result.top_features)
+              : [],
+          screenshots: result.screenshots
+            ? typeof result.screenshots === "string"
+              ? JSON.parse(result.screenshots)
+              : result.screenshots
+            : [],
+          export_state: result.export_state ? 1 : 0,
+        }
+
+        setProduct(parsed)
+        setIsVisible(true)
+
+        // 3. Kiểm tra LocalStorage trước khi tăng view
+        const key = "viewed_" + id
+        const now = Date.now()
+        const expireTime = 30 * 60 * 1000 // 30 phút
+
+        const lastView = localStorage.getItem(key)
+
+        if (!lastView || now - lastView > expireTime) {
+          const upViews = await fetch(`${baseUrl}/api/web-samples/views/${id}`, {
+            method: "PUT"
+          })
+
+          if (!upViews.ok) throw new Error("Không thể tăng lượt views")
+
+          // Lưu timestamp để lần sau không gọi trùng
+          localStorage.setItem(key, now)
+        }
+      } catch (err) {
+        console.error("Error fetching product:", err)
+        setProduct(null)
+      }
     }
-
-    const parsed = {
-      ...result,
-      tags: Array.isArray(result.tags)
-        ? result.tags
-        : result.tags
-        ? JSON.parse(result.tags)
-        : [],
-      tech: Array.isArray(result.tech)
-        ? result.tech
-        : result.tech
-        ? JSON.parse(result.tech)
-        : [],
-      top_features: Array.isArray(result.top_features)
-        ? result.top_features
-        : result.top_features
-        ? JSON.parse(result.top_features)
-        : [],
-      screenshots: result.screenshots
-        ? (typeof result.screenshots === "string"
-            ? JSON.parse(result.screenshots)
-            : result.screenshots)
-        : [],
-      export_state: result.export_state ? 1 : 0,
-    }
-
-    setProduct(parsed)
-    setIsVisible(true)
-  } catch (err) {
-    console.error("Error fetching product:", err)
-    setProduct(null)
-  }
-}
-
 
     fetchProduct()
-  }, [id])
+  }, [id, prefix])
+
 
   // Lấy sản phẩm liên quan (cùng category, khác id)
   useEffect(() => {
@@ -118,7 +138,7 @@ export default function ProductDetail() {
     )
   }
 
- 
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("vi-VN", {
@@ -147,13 +167,13 @@ export default function ProductDetail() {
             className={`transition-all duration-600 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}
           >
             <div className="mb-6 relative">
-              
+
               <img
                 src={product.screenshots?.[selectedImage] || `${baseUrl}${product.image_url}`}
                 alt={`Website ${product.category}`}
                 className="w-full h-96 object-cover rounded-lg shadow-lg"
               />
-              
+
               {product.url_github && (
                 <Button className="absolute bottom-4 left-1/2 -translate-x-1/2  hover:bg-red-400 shadow-md " size="lg" variant="outline" asChild>
                   <a href={product.url_github} target="_blank" rel="noopener noreferrer">
@@ -171,9 +191,8 @@ export default function ProductDetail() {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`relative overflow-hidden rounded-lg border-2 transition-all duration-200 ${
-                      selectedImage === index ? "border-primary" : "border-border hover:border-primary/50"
-                    }`}
+                    className={`relative overflow-hidden rounded-lg border-2 transition-all duration-200 ${selectedImage === index ? "border-primary" : "border-border hover:border-primary/50"
+                      }`}
                   >
                     <img
                       src={screenshot.startsWith("http") ? screenshot : `${baseUrl}${screenshot}`}
@@ -196,7 +215,7 @@ export default function ProductDetail() {
                   {product.top_features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-border  rounded-lg ">
                       <div className="w-2 h-2 bg-primary rounded-full" />
-                      <span className="">{feature}</span>
+                      <span className="text-foreground wrap-anywhere">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -221,18 +240,18 @@ export default function ProductDetail() {
                   <span className="text-sm">4.8</span>
                 </div>
                 <div className="flex items-center gap-3 ml-auto">
-                    <Calendar className="w-5 h-5 text-muted-foreground" />
-                    <div>
-                      <div className="text-sm text-muted-foreground">Ngày tạo</div>
-                      <div className="font-semibold">{formatDate(product.created_at)}</div>
-                    </div>
+                  <Calendar className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <div className="text-sm text-muted-foreground">Ngày tạo</div>
+                    <div className="font-semibold text-muted-foreground">{formatDate(product.created_at)}</div>
                   </div>
+                </div>
               </div>
-
               <h1 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-4">{product.name}</h1>
-
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">{product.description}</p>
-
+              <div className="text-lg dark:text-white  text-black  leading-relaxed mb-6 flex gap-3 items-center">
+                <p> Lượt xem:</p>
+                {product.views}</div>
             </div>
 
             {/* Tech Stack */}
@@ -270,11 +289,12 @@ export default function ProductDetail() {
               </div>
             )} */}
 
+
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button size="lg" className="flex-1">
-                <Palette className="w-4 h-4 mr-2" />
-                Mua ngay
+                <ShoppingCart className="w-8 h-8 mr-2" />
+                <p className="font-semibold">Đặt ngay</p>
               </Button>
               {product.demo_url && (
                 <Button size="lg" variant="outline" asChild>

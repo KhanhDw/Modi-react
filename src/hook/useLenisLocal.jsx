@@ -1,10 +1,11 @@
 // hooks/useLenisLocal.js
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import { useLenisToggle } from "@/contexts/LenisContext";
 
 export default function useLenisLocal(selector = ".lenis-local") {
   const localLenis = useRef([]);
-
+  const { instance: globalLenis } = useLenisToggle();
   useEffect(() => {
     const elements = document.querySelectorAll(selector);
     const instances = [];
@@ -32,11 +33,14 @@ export default function useLenisLocal(selector = ".lenis-local") {
 
       // Tạm dừng/khôi phục Lenis toàn cục
       const pauseGlobal = () => {
-        window.__lenis?.stop();
+        // window.__lenis?.stop();
+        globalLenis?.stop();
       };
       const resumeGlobal = () => {
-        window.__lenis?.start();
-        window.__lenis?.resize(); // Cập nhật kích thước Lenis toàn cục
+        // window.__lenis?.start();
+        // window.__lenis?.resize(); // Cập nhật kích thước Lenis toàn cục
+        globalLenis?.start();
+        globalLenis?.resize();
       };
 
       // Sự kiện desktop
@@ -52,12 +56,21 @@ export default function useLenisLocal(selector = ".lenis-local") {
 
       // Cleanup cho từng element
       return () => {
-        el.removeEventListener("mouseenter", pauseGlobal);
-        el.removeEventListener("mouseleave", resumeGlobal);
-        el.removeEventListener("touchstart", pauseGlobal);
-        el.removeEventListener("touchend", resumeGlobal);
-        lenisInstance.destroy();
-        el.removeAttribute("data-lenis-prevent");
+        // el.removeEventListener("mouseenter", pauseGlobal);
+        // el.removeEventListener("mouseleave", resumeGlobal);
+        // el.removeEventListener("touchstart", pauseGlobal);
+        // el.removeEventListener("touchend", resumeGlobal);
+        // el.removeAttribute("data-lenis-prevent");
+        // lenisInstance.destroy();
+        instances.forEach((instance, i) => {
+          const el = elements[i];
+          el.removeEventListener("mouseenter", pauseGlobal);
+          el.removeEventListener("mouseleave", resumeGlobal);
+          el.removeEventListener("touchstart", pauseGlobal);
+          el.removeEventListener("touchend", resumeGlobal);
+          el.removeAttribute("data-lenis-prevent");
+          instance.destroy();
+        });
       };
     });
 

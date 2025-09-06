@@ -5,6 +5,8 @@ import { TiThMenu } from "react-icons/ti";
 import { HiX } from "react-icons/hi";
 import ThemeToggle from './ThemeToggle';
 import { useLanguage } from '../../../contexts/LanguageContext';
+import { motion } from "framer-motion";
+
 
 const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000";
 
@@ -42,10 +44,10 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
     <>
       <div className={`${location.pathname === "/"
         ? (scrolled
-          ? "xs:h-20 md:h-20 2xl:h-20 3xl:h-20"
-          : "xs:h-20 md:h-30 2xl:h-30 3xl:h-30")
-        : "h-20"
-        } w-full bg-transparent flex justify-between items-center transition-all duration-200 xs:px-3 sm:px-3 md:px-10 lg:px-20 fixed top-0 left-0 z-40`}>
+          ? "xs:h-20 md:h-20 2xl:h-20 3xl:h-20 bg-gray-900  transition-all duration-200"
+          : "xs:h-20 md:h-30 2xl:h-30 3xl:h-30  transition-all duration-200")
+        : "h-20 bg-gray-800  transition-all duration-200"
+        } w-full  flex justify-between items-center xs:px-3 sm:px-3 md:px-10 lg:px-20 fixed top-0 left-0 z-40`}>
         {/* Logo Section */}
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
           <img src={logoUrl} className='xs:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' onError={(e) => {
@@ -620,12 +622,9 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
           <div className='flex items-center justify-between mb-4 sm:mb-6 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-800'>
             <div className='flex items-center justify-start'>
               <img
-                src={logoUrl}
+                src="/logoModi.png"
                 className='h-6 sm:h-8 w-fit'
                 alt='logo'
-                onError={(e) => {
-                  e.currentTarget.src = "/logoModi.png";
-                }}
               />
             </div>
             <button

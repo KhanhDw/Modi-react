@@ -11,6 +11,10 @@ import About from "@/pages/aboutMePage"
 import Services from "@/pages/servicesPage"
 import News from '@/pages/news/newsPage'
 import Contact from '@/pages/contactPage'
+import MarketingOutlet from '@/pages/marketingPage'
+import ArticleDetail from '@/pages/marketing/article-detail'
+import Marketing from '@/pages/marketing/marketing-list_page'
+
 import Recruitment from '@/pages/recruitmentPage'
 import NotFound from '@/pages/NotFoundPage'
 import ServiceDetailPage from "@/pages/serviceDetailPage"
@@ -47,7 +51,6 @@ import AboutConfig from "@/pages/managers/ConfigPage/AboutConfig"
 import HomeConfig from "@/pages/managers/ConfigPage/HomeConfig"
 import HeaderConfig from "@/pages/managers/ConfigPage/HeaderConfig"
 import FooterConfig from "@/pages/managers/ConfigPage/FooterConfig"
-import OverviewPageConfig from "@/pages/managers/ConfigPage/OverviewPageConfig"
 
 
 //manager service
@@ -119,6 +122,13 @@ const publicRoutes = [
   { path: "/", component: Home, layout: DefaultLayout },
   { path: "/about", component: About, layout: DefaultLayout },
   { path: "/services", component: Services, layout: DefaultLayout },
+  {
+    path: "/marketing", component: MarketingOutlet, layout: DefaultLayout,
+    children: [
+      { path: "", component: Marketing, layout: DefaultLayout },
+      { path: ":slug", component: ArticleDetail, layout: DefaultLayout },
+    ]
+  },
   { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
   { path: "/news", component: News, layout: DefaultLayout },
   { path: "/news/:slug", component: NewsDetail, layout: DefaultLayout },
@@ -140,7 +150,6 @@ const privateRoutes = [
   {
     path: "/managers/page-config", component: ConfigPage, layout: AdminLayout,
     children: [
-      { path: "", component: OverviewPageConfig, layout: AdminLayout },
       { path: "header", component: HeaderConfig, layout: AdminLayout },
       { path: "footer", component: FooterConfig, layout: AdminLayout },
       { path: "home", component: HomeConfig, layout: AdminLayout },

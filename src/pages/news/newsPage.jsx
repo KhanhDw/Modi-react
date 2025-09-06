@@ -3,19 +3,21 @@ import { useEffect, useState } from "react";
 import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { newsData } from "../../data/MockData"; // Import dữ liệu mẫu
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 export default function NewsInterface() {
   const [newsArticles, setNewsArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { lang, prefix } = useCurrentLanguage();
   const pageSize = 6;
 
   useEffect(() => {
     setIsLoading(true);
 
     // Chỉnh sửa lại fetch URL theo yêu cầu của bạn
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/blogs`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}${prefix}/api/blogs`)
       .then((res) => {
         if (!res.ok) throw new Error("API không phản hồi");
         return res.json();
@@ -24,7 +26,8 @@ export default function NewsInterface() {
         console.log("Dữ liệu từ API:", apiData);
 
         if (apiData && apiData.data && Array.isArray(apiData.data) && apiData.data.length > 0) {
-          const sorted = [...apiData.data].sort(
+          const blogsPublis = apiData.data.filter((blog) => { return new Date(blog.published_at) <= new Date() })
+          const sorted = [...blogsPublis].sort(
             (a, b) => new Date(b.published_at) - new Date(a.published_at)
           );
           // Ánh xạ các trường dữ liệu
@@ -52,7 +55,7 @@ export default function NewsInterface() {
         setNewsArticles(sortedMockData);
         setIsLoading(false);
       });
-  }, []);
+  }, [prefix]);
 
   // Hàm format ngày
   const formatDate = (dateStr) => {
@@ -108,8 +111,10 @@ export default function NewsInterface() {
                 </div>
                 <div className="md:w-1/2 p-8">
                   <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">{heroArticle.tieu_de}</h1>
-                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed line-clamp-5">
-                    {heroArticle.noi_dung}
+                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed line-clamp-5"
+                    dangerouslySetInnerHTML={{ __html: heroArticle.noi_dung }}
+                  >
+                    {/* {heroArticle.noi_dung} */}
                   </p>
                   <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-2">

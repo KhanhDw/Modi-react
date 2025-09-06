@@ -108,34 +108,40 @@ export default function ViewPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [imageError, setImageError] = useState(false);
+    const [lang, setLang] = useState("vi"); // ✅ mặc định tiếng Việt
+
+    const fetchPostData = async () => {
+        try {
+
+            if (!id) {
+                setError("Không tìm thấy ID bài viết.");
+                setLoading(false);
+                return;
+            }
+
+
+            setLoading(true);
+            setImageError(false);
+            const langPath = lang === 'en' ? `/${lang}` : "";
+            const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/marketing/id/${id}`);
+            if (!res.ok) {
+                throw new Error(`Không thể tải dữ liệu: ${res.statusText}`);
+            }
+            const data = await res.json();
+            setPost(data);
+        } catch (err) {
+            console.error("Lỗi khi tải bài viết:", err);
+            setError("Không thể tải bài viết. Vui lòng thử lại sau.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
-        if (!id) {
-            setError("Không tìm thấy ID bài viết.");
-            setLoading(false);
-            return;
-        }
+        if (id) fetchPostData(id, lang);
+    }, [id, lang]); // ✅ gọi lại khi đổi ngôn ngữ
 
-        const fetchPostData = async () => {
-            try {
-                setLoading(true);
-                setImageError(false);
-                const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${id}`);
-                if (!res.ok) {
-                    throw new Error(`Không thể tải dữ liệu: ${res.statusText}`);
-                }
-                const data = await res.json();
-                setPost(data);
-            } catch (err) {
-                console.error("Lỗi khi tải bài viết:", err);
-                setError("Không thể tải bài viết. Vui lòng thử lại sau.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPostData();
-    }, [id]);
 
     const handleImageError = () => {
         setImageError(true);
@@ -247,6 +253,27 @@ export default function ViewPage() {
                     className="px-3 py-2 bg-gray-200/20 hover:bg-gray-200/70 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow  admin-dark:hover:bg-gray-600 transition-colors duration-300"
                 >
                     <ChevronLeft />
+                </button>
+            </div>
+            {/* Language Switch */}
+            <div className="absolute top-0 right-0 flex space-x-2 p-4">
+                <button
+                    onClick={() => setLang("en")}
+                    className={`px-4 py-2 rounded-md font-bold transition-colors ${lang === "en"
+                        ? "bg-purple-800 text-white border-2 admin-dark:border-white"
+                        : "bg-gray-600/80 text-white hover:bg-gray-700"
+                        }`}
+                >
+                    <span className="font-semibold">Anh</span>
+                </button>
+                <button
+                    onClick={() => setLang("vi")}
+                    className={`px-4 py-2 rounded-md font-bold transition-colors ${lang === "vi"
+                        ? "bg-purple-800 text-white border-2 admin-dark:border-white"
+                        : "bg-gray-600/80 text-white hover:bg-gray-700"
+                        }`}
+                >
+                    <span className="font-semibold">Việt</span>
                 </button>
             </div>
         </div>

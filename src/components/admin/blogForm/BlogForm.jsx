@@ -4,7 +4,7 @@ import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 
 
 
-export default function BlogForm({ blog, onSubmit, onCancel }) {
+export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel }) {
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -17,35 +17,41 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
 
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
+  const [activeLang, setActiveLang] = useState("vi");
+
+
 
   // Reset form khi blog prop thay đổi
   useEffect(() => {
     if (blog) {
       setFormData((prev) => ({
         ...prev,
-        title: blog.title || "",
-        content: blog.content || "",
-        image: blog.image || "",
-        author_id: blog.author_id || 1,
+        title: blog.title ?? "",
+        content: blog.content ?? "",
+        image: blog.image ?? "",
+        author_id: blog.author_id ?? 1,
         status: blog.status ?? prev.status, // ✅ giữ lại status hiện tại nếu blog không có
+        lang: blog.lang ?? prev.lang, // ✅ giữ lại lang hiện tại nếu blog không có
         published_at: blog.published_at
           ? blog.published_at.slice(0, 16)
           : prev.published_at,
       }));
       setPreview(blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : "");
       setFile(null); // Reset file input
-      console.log(formData.content);
+      setActiveLang(blog.lang ?? 'vi');
     } else {
       setFormData({
         title: "",
         content: "",
         image: "",
         author_id: 1,
+        lang: "vi",
         status: "draft",   // chỉ reset khi form add mới
         published_at: new Date().toISOString().slice(0, 16),
       });
       setPreview("");
       setFile(null);
+      setActiveLang('vi');
     }
   }, [blog]);
 
@@ -87,6 +93,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
     // Gom dữ liệu thành object thường
     const dataToSubmit = {
       ...formData,
+      lang: activeLang,
       title: formData.title.trim(),
       content: contentHTML,
     };
@@ -99,11 +106,40 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
   };
 
 
+  const handleActiveLangbtn = (lang) => {
+    if (lang !== activeLang) {
+      // cảnh báo nếu chuyển từ vi sang en
+      const confirmMsg =
+        lang === "en"
+          ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
+          : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
+
+      const proceed = window.confirm(confirmMsg);
+      if (!proceed) return; // nếu user nhấn Hủy thì không chuyển
+    }
+
+    setActiveLang(lang);
+    handleChangeLang(lang);
+  };
+
+
 
   return (
     <form onSubmit={handleSubmit} className=" text-black w-full flex justify-between items-start gap-5">
       {/* left column */}
       <div className="w-2/6 mx-auto space-y-5 admin-dark:bg-slate-800  sm:p-6 rounded-3xl">
+        <div className="flex justify-center items-center space-x-4">
+          <button type="button" name="vi"
+            onClick={() => handleActiveLangbtn("vi")}
+            className={`${activeLang === "vi" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+            <span className="font-semibold text-xl">Tiếng Việt</span>
+          </button>
+          <button hidden={!blog?.id ? true : false} type="button" name="en"
+            onClick={() => handleActiveLangbtn("en")}
+            className={`${activeLang === "en" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+            <span className="font-semibold text-xl">Tiếng Anh</span>
+          </button>
+        </div>
         <div className="w-full">
           {/* Tiêu đề */}
           <div>
@@ -139,6 +175,10 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
               src={preview}
               alt="Preview"
               className="h-32 w-92 object-cover rounded"
+              onError={(e) => {
+                e.currentTarget.src = "/images/error.png"; // ✅ đường dẫn ảnh dự phòng
+                e.currentTarget.onerror = null;        // tránh loop vô hạn nếu fallback cũng lỗi
+              }}
             />
           )}
           {!preview && <p className="text-center text-sm font-medium text-green-800 admin-dark:text-gray-200"> Nơi hiển thị ảnh</p>}
@@ -192,15 +232,15 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 w-full bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+            className="px-4 py-2 w-full bg-gray-900 text-white rounded-lg hover:bg-gray-600 transition duration-200"
           >
             Hủy
           </button>
           <button
             type="submit"
-            className="px-4 w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+            className="px-4 w-full py-2 bg-gray-700 text-white rounded-lg hover:bg-green-900 transition duration-200"
           >
-            {blog ? "Cập nhật" : "Thêm"}
+            <span className="font-semibold">{blog ? "Cập nhật" : "Thêm"} {activeLang === 'vi' ? '(Việt)' : '(Anh)'}</span>
           </button>
         </div>
       </div>
@@ -225,7 +265,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }) {
 
 
       </div>
-    </form>
+    </form >
 
   );
 }

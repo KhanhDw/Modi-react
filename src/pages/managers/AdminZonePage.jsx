@@ -95,7 +95,7 @@ export default function AdminZonePage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
           <h2 className="text-xl font-semibold text-gray-900 admin-dark:text-white flex-shrink-0 whitespace-nowrap">
-            Quản lý Tài khoản nhân viên
+            Quản lý tài khoản nhân viên
           </h2>
 
           <div className="relative w-full max-w-xs flex-grow">
@@ -148,9 +148,36 @@ export default function AdminZonePage() {
                       if (key === 'created_at' || key === 'updated_at') {
                         cellContent = formatValue(item[key]);
                       } else if (key === 'avatar_url') {
-                        const avatarUrl = item[key].startsWith('/image/') ? `${import.meta.env.VITE_MAIN_BE_URL}${item[key]}` : item[key];
-                        cellContent = <img src={avatarUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />;
+                        const rawUrl = item[key];
+                        let avatarUrl = null;
+
+                        if (rawUrl) {
+                          avatarUrl = rawUrl.startsWith('/image/')
+                            ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
+                            : rawUrl;
+                        }
+
+                        cellContent = avatarUrl ? (
+                          <img
+                            src={avatarUrl}
+                            alt="Avatar"
+                            className="w-10 h-10 rounded-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none"; // ẩn ảnh
+                              e.currentTarget.insertAdjacentHTML(
+                                "afterend",
+                                '<div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">N/A</div>'
+                              );
+                            }}
+
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">
+                            N/A
+                          </div>
+                        );
                       }
+
                       return (
                         <td
                           key={index}

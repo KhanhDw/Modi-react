@@ -5,77 +5,104 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import fetchWithAuth from "@/utils/fetchWithAuth";
+import { io } from "socket.io-client";
 
-const mockNotifications = [
-  {
-    id: "1",
-    title: "Đơn hàng mới",
-    message: "Bạn có một đơn hàng mới từ khách hàng Nguyễn Văn A",
-    time: "2 phút trước",
-    isRead: false,
-    type: "info",
-  },
-  {
-    id: "2",
-    title: "Thanh toán thành công",
-    message: "Giao dịch #12345 đã được xử lý thành công",
-    time: "15 phút trước",
-    isRead: false,
-    type: "success",
-  },
-  {
-    id: "3",
-    title: "Cảnh báo tồn kho",
-    message: "Sản phẩm ABC sắp hết hàng (còn 5 sản phẩm)",
-    time: "1 giờ trước",
-    isRead: true,
-    type: "warning",
-  },
-  {
-    id: "4",
-    title: "Lỗi hệ thống",
-    message: "Đã xảy ra lỗi trong quá trình đồng bộ dữ liệu",
-    time: "2 giờ trước",
-    isRead: true,
-    type: "error",
-  },
-  {
-    id: "5",
-    title: "Khách hàng mới",
-    message: "Trần Thị B vừa đăng ký tài khoản mới",
-    time: "3 giờ trước",
-    isRead: true,
-    type: "info",
-  },
-];
+const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
+
+
+
 
 export function NotificationBell() {
   useLenisLocal(".lenis-local");
   const { isDark } = useAdminTheme();
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
+  const [userId, setUserId] = useState(null)
+
+  const fetchNotifications = async (id) => {
+    try {
+      const data = await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${id}`);
+      setNotifications(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Lấy thông tin user hiện tại từ backend
+  const getCurrentUser = async () => {
+    try {
+      const data = await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`);
+      // { id, username, fullname, email, role, ... }
+      fetchNotifications(data.user.id);
+      setUserId(data.user.id);
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin user:", error);
+      return null;
+    }
+  };
+
+
+  // Fetch API lấy thông báo từ backend
+  useEffect(() => {
+    getCurrentUser()
+  }, []);
+
+  useEffect(() => {
+    socket.on("newLienHe", (data) => {
+      getCurrentUser()
+    });
+
+    return () => {
+      socket.off("newLienHe");
+    };
+  }, []);
+
+
+
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
-  const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id ? { ...notification, isRead: true } : notification
-      )
-    );
+  const markAsRead = async (id) => {
+    try {
+      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}/read`, {
+        method: "PATCH",
+      });
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+      getCurrentUser()
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const markAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((notification) => ({ ...notification, isRead: true }))
-    );
+  const markAllAsRead = async (userId) => {
+    try {
+      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${userId}/read-all`, {
+        method: "PATCH",
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      getCurrentUser()
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  const removeNotification = async (id) => {
+    try {
+      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}`, {
+        method: "DELETE",
+      });
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+      getCurrentUser()
+    } catch (err) {
+      console.error(err);
+    }
   };
+
 
   const getTypeColor = (type) => {
     switch (type) {
@@ -89,6 +116,7 @@ export function NotificationBell() {
         return "text-blue-600 admin-dark:text-blue-400";
     }
   };
+
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -108,6 +136,36 @@ export function NotificationBell() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
+
+
+  // Hàm xử lý chuỗi message
+  const renderMessage = (message) => {
+    // Tách chuỗi bằng dấu phân cách "khách hàng "
+    const parts = message.split("Khách hàng ");
+
+    // parts sẽ là ["", "xxx vừa liên hệ"]
+
+
+    if (parts.length > 1) {
+      // Tách tiếp phần tử thứ hai bằng dấu phân cách " vừa liên hệ"
+      const nameParts = parts[1].split(" vừa gửi liên hệ.");
+
+      // nameParts sẽ là ["xxx", ""]
+
+      if (nameParts.length > 0) {
+        const customerName = nameParts[0];
+        return (
+          <>
+            khách hàng <span className="font-bold">{customerName}</span> vừa liên hệ
+          </>
+        );
+      }
+    }
+
+    return message; // Trả về nguyên văn nếu không khớp
+  };
 
   return (
     <div className="relative inline-block">
@@ -141,7 +199,7 @@ export function NotificationBell() {
                 theme={isDark ? "admin" : "light"}
                 variant="ghost"
                 size="sm"
-                onClick={markAllAsRead}
+                onClick={() => markAllAsRead(userId)}
                 className="text-xs admin-dark:hover:bg-gray-600 text-blue-600 hover:text-blue-800 admin-dark:text-blue-400 admin-dark:hover:text-blue-300 cursor-pointer"
               >
                 Đánh dấu tất cả đã đọc
@@ -179,10 +237,19 @@ export function NotificationBell() {
                           )}
                         </div>
                         <p className="text-sm text-gray-600 admin-dark:text-gray-300 mb-2">
-                          {notification.message}
+                          {renderMessage(notification.message)}
                         </p>
                         <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-                          {notification.time}
+                          {/* {notification.createdAt} */}
+                          {
+                            new Date(notification.createdAt).toLocaleString("vi-VN", {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })
+                          }
                         </p>
                       </div>
 

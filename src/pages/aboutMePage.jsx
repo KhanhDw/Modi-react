@@ -35,12 +35,14 @@ import { TechnologiesSection } from "@/components/about_v2/technologies-section"
 export default function About() {
   return (
     <div className="min-h-screen transition-all duration-500 md:p-4">
-      {/* <HeroBanner />
+      {/* 
+      <HeroBanner />
       <Mission />
       <Services />
       <WhyChooseUs />
       <Customers />
-      <Contact /> */}
+      <Contact /> 
+      */}
 
       {/* -------- */}
       {/* Vesion 2 */}
@@ -60,3 +62,8 @@ export default function About() {
     </div>
   )
 }
+
+
+
+
+

@@ -1,98 +1,346 @@
-import React, { useState } from "react";
-import { FiCamera, FiUser, FiMail, FiLock, FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FiCamera, FiEdit, FiSave, FiX, FiEye, FiEyeOff } from "react-icons/fi";
+import axios from "axios";
 
 const ProfilePage = () => {
     const [avatar, setAvatar] = useState(null);
     const [preview, setPreview] = useState(null);
 
-    // trạng thái edit thông tin cá nhân và đổi mật khẩu
     const [isEditInfo, setIsEditInfo] = useState(false);
     const [isEditPassword, setIsEditPassword] = useState(false);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setAvatar(file);
-        setPreview(URL.createObjectURL(file));
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // Form states for info editing
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+
+    // Password states (giữ nguyên như code gốc)
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    // Password visibility states
+    const [showPasswords, setShowPasswords] = useState({
+        old: false,
+        new: false,
+        confirm: false
+    });
+
+    // Loading states
+    const [updatingInfo, setUpdatingInfo] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
+    const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+    // Gọi API lấy dữ liệu user (giữ nguyên logic gốc)
+    const fetchUser = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                console.error("Chưa có token, cần login trước");
+                return;
+            }
+
+            const res = await axios.get(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setUser(res.data.user);
+            setPreview(res.data.user.avatar_url);
+
+            // Initialize form data
+            setFullName(res.data.user.full_name || "");
+            setEmail(res.data.user.email || "");
+            setPhone(res.data.user.phone || "");
+        } catch (err) {
+            console.error("Lỗi lấy user:", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    useEffect(() => {
+        fetchUser();
+    }, []);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAvatar(file);
+            setPreview(URL.createObjectURL(file));
+            // Auto upload avatar
+            handleUploadAvatar(file);
+        }
+    };
+
+    // Upload avatar function
+    const handleUploadAvatar = async (file) => {
+        setUploadingAvatar(true);
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                alert("Chưa đăng nhập");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            const res = await axios.put(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/users/${user.id}/avatar`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+
+            if (res.data.success) {
+                setUser(prev => ({ ...prev, avatar_url: res.data.avatar_url }));
+                alert("Cập nhật ảnh đại diện thành công");
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.error || "Có lỗi xảy ra khi tải ảnh lên");
+            // Revert preview on error
+            setPreview(user.avatar_url);
+            setAvatar(null);
+        } finally {
+            setUploadingAvatar(false);
+        }
+    };
+
+    // Handle update user info
+    const handleUpdateInfo = async (e) => {
+        e.preventDefault();
+        setUpdatingInfo(true);
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                alert("Chưa đăng nhập");
+                return;
+            }
+
+            const res = await axios.put(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/users/${user.id}`,
+                {
+                    full_name: fullName,
+                    email: email,
+                    phone: phone
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (res.data.success) {
+                setUser(prev => ({
+                    ...prev,
+                    full_name: fullName,
+                    email: email,
+                    phone: phone
+                }));
+                setIsEditInfo(false);
+                alert("Cập nhật thông tin thành công");
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.error || "Có lỗi xảy ra");
+        } finally {
+            setUpdatingInfo(false);
+        }
+    };
+
+    // Handle change password (giữ nguyên logic gốc)
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+
+        // Validate inputs
+        if (!oldPassword.trim()) {
+            alert("Vui lòng nhập mật khẩu hiện tại");
+            return;
+        }
+
+        if (!newPassword.trim()) {
+            alert("Vui lòng nhập mật khẩu mới");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert("Mật khẩu mới phải có ít nhất 6 ký tự");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("Mật khẩu nhập lại không khớp");
+            return;
+        }
+
+        setChangingPassword(true);
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                alert("Chưa đăng nhập");
+                return;
+            }
+
+            console.log("Changing password for user ID:", user.id); // Debug
+            console.log("Password data:", {
+                oldPassword: oldPassword ? "***" : "empty",
+                newPassword: newPassword ? "***" : "empty"
+            }); // Debug without showing actual passwords
+
+            const res = await axios.put(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/users/${user.id}/change-password`,
+                { oldPassword, newPassword },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.success) {
+                alert("Đổi mật khẩu thành công");
+                setOldPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+                setIsEditPassword(false);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.error || "Có lỗi xảy ra");
+        } finally {
+            setChangingPassword(false);
+        }
+    };
+
+    // Toggle password visibility
+    const togglePasswordVisibility = (field) => {
+        setShowPasswords(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
+
+    // Cancel edit info
+    const cancelEditInfo = () => {
+        setIsEditInfo(false);
+        setFullName(user.full_name || "");
+        setEmail(user.email || "");
+        setPhone(user.phone || "");
+    };
+
+    // Cancel edit password
+    const cancelEditPassword = () => {
+        setIsEditPassword(false);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setShowPasswords({ old: false, new: false, confirm: false });
+    };
+
+    if (loading) return <p className="text-center">Đang tải...</p>;
+
+    if (!user) return <p className="text-center">Không tìm thấy người dùng</p>;
+
     return (
-        <div className="max-w-5xl mx-auto px-6 py-6 admin-dark:bg-gray-900 min-h-screen">
+        <div className="max-w-7xl mx-auto px-6 py-6 admin-dark:bg-gray-900">
             <h2 className="text-3xl font-extrabold text-gray-800 admin-dark:text-white mb-10 text-center">
                 Hồ sơ cá nhân
             </h2>
 
-            <div className="bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-10 transition-colors duration-300 border border-gray-200 admin-dark:border-gray-700">
-
-
-                {/* Avatar + Tên + Social + Edit */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-0 border-b border-gray-200 admin-dark:border-gray-700 pb-8">
-                    <div className="flex items-center gap-6">
+            <div className="bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300 border border-gray-200 admin-dark:border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Cột 1: Avatar */}
+                    <div className="flex flex-col items-center border-r border-gray-200 admin-dark:border-gray-700 pr-4">
                         <div className="relative group w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg cursor-pointer">
                             <img
                                 src={
                                     preview ||
+                                    user.avatar_url ||
                                     "https://randomuser.me/api/portraits/lego/1.jpg"
                                 }
-
                                 alt="avatar"
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             />
+                            {uploadingAvatar && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                                    <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                            )}
                             <label
                                 htmlFor="avatarUpload"
-                                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer bg-opacity-30 rounded-full"
+                                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer bg-black bg-opacity-30 rounded-full"
                                 title="Thay đổi ảnh đại diện"
                             >
                                 <FiCamera className="text-white text-3xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110" />
-
                                 <input
                                     type="file"
                                     id="avatarUpload"
                                     accept="image/*"
                                     onChange={handleImageChange}
                                     className="hidden"
+                                    disabled={uploadingAvatar}
                                 />
                             </label>
                         </div>
-
-                        <div>
-                            <h3 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
-                                Nguyễn Văn A
-                            </h3>
-                            <p className="text-gray-500 admin-dark:text-gray-400 mt-1">
-                                Team Manager | Arizona, United States
-                            </p>
-                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 admin-dark:text-white mt-4">
+                            {user.full_name}
+                        </h3>
+                        <p className="text-gray-500 admin-dark:text-gray-400 text-center">
+                            {user.role}
+                        </p>
                     </div>
-                </div>
 
-                {/* Form Thông tin cá nhân + đổi mật khẩu */}
-                <form className="space-y-10">
-                    {/* Thông tin cá nhân */}
+                    {/* Cột 2: Thông tin cá nhân */}
                     <section className="border rounded-2xl border-gray-200 admin-dark:border-gray-700 p-6">
                         <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-xl font-semibold text-gray-900 admin-dark:text-white">Thông tin cá nhân</h4>
+                            <h4 className="text-xl font-semibold text-gray-900 admin-dark:text-white">
+                                Thông tin cá nhân
+                            </h4>
                             <button
                                 type="button"
-                                onClick={() => setIsEditInfo(!isEditInfo)}
+                                onClick={isEditInfo ? cancelEditInfo : () => setIsEditInfo(true)}
                                 className="flex items-center gap-1 px-3 py-1 border border-gray-300 admin-dark:border-gray-600 rounded-full text-gray-700 admin-dark:text-gray-300 hover:bg-gradient-to-tr hover:from-purple-600 hover:via-pink-500 hover:to-red-400 hover:text-white transition-transform transform hover:scale-105 cursor-pointer"
                             >
-                                <FiEdit />
+                                {isEditInfo ? <FiX /> : <FiEdit />}
                                 {isEditInfo ? "Hủy" : "Edit"}
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/** Bỏ readOnly khi isEditInfo = true */}
+                        <form onSubmit={handleUpdateInfo} className="grid grid-cols-1 gap-4">
+                            <div>
+                                <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
+                                    Username
+                                </label>
+                                <input
+                                    type="text"
+                                    value={user.username}
+                                    readOnly
+                                    className="w-full rounded-lg admin-dark:bg-slate-800 border border-gray-300 admin-dark:border-gray-600 bg-gray-100 px-4 py-2 cursor-not-allowed"
+                                />
+                            </div>
+
                             <div>
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Họ và tên
                                 </label>
                                 <input
                                     type="text"
-                                    defaultValue="Nguyễn Văn A"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
                                     readOnly={!isEditInfo}
                                     className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
-                                        ${!isEditInfo ? 'cursor-not-allowed' : 'cursor-text'}`}
+                                    ${!isEditInfo ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                 />
                             </div>
 
@@ -102,10 +350,11 @@ const ProfilePage = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    defaultValue="email@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     readOnly={!isEditInfo}
                                     className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
-                                        ${!isEditInfo ? 'cursor-not-allowed' : 'cursor-text'}`}
+                                    ${!isEditInfo ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                 />
                             </div>
 
@@ -115,87 +364,163 @@ const ProfilePage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    defaultValue="+84 123 456 789"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
                                     readOnly={!isEditInfo}
                                     className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
-                                        ${!isEditInfo ? 'cursor-not-allowed' : 'cursor-text'}`}
+                                    ${!isEditInfo ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
-                                    Bio
+                                    Ngày tạo
                                 </label>
-                                <input
-                                    type="text"
-                                    defaultValue="Team Manager"
-                                    readOnly={!isEditInfo}
-                                    className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
-                                        ${!isEditInfo ? 'cursor-not-allowed' : 'cursor-text'}`}
-                                />
+                                <p className="text-gray-700 admin-dark:text-gray-300">
+                                    {new Date(user.created_at).toLocaleString()}
+                                </p>
                             </div>
-                        </div>
+                            <div>
+                                <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
+                                    Cập nhật lần cuối
+                                </label>
+                                <p className="text-gray-700 admin-dark:text-gray-300">
+                                    {new Date(user.updated_at).toLocaleString()}
+                                </p>
+                            </div>
+
+                            {isEditInfo && (
+                                <button
+                                    type="submit"
+                                    disabled={updatingInfo}
+                                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-sm px-4 py-2 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {updatingInfo ? (
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    ) : (
+                                        <FiSave />
+                                    )}
+                                    {updatingInfo ? "Đang lưu..." : "Lưu thông tin"}
+                                </button>
+                            )}
+                        </form>
                     </section>
 
-                    {/* Đổi mật khẩu */}
+                    {/* Cột 3: Đổi mật khẩu */}
                     <section className="border rounded-2xl border-gray-200 admin-dark:border-gray-700 p-6">
                         <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-xl font-semibold text-gray-900 admin-dark:text-white">Đổi mật khẩu</h4>
+                            <h4 className="text-xl font-semibold text-gray-900 admin-dark:text-white">
+                                Đổi mật khẩu
+                            </h4>
                             <button
                                 type="button"
-                                onClick={() => setIsEditPassword(!isEditPassword)}
-                                className="flex items-center gap-1 px-3 py-1 border border-gray-300 admin-dark:border-gray-600 rounded-full text-gray-700 admin-dark:text-gray-300 hover:bg-gradient-to-tr hover:from-purple-600 hover:via-pink-500 hover:to-red-400 hover:text-white transition-transform transform hover:scale-105 cursor-pointer"
+                                onClick={isEditPassword ? cancelEditPassword : () => setIsEditPassword(true)}
+                                className={`${isEditPassword ? "bg-green-600 text-white font-bold" : ""} flex items-center gap-1 px-3 py-1 border border-gray-300 admin-dark:border-gray-600 rounded-full text-gray-700 admin-dark:text-gray-300 hover:bg-gradient-to-tr hover:from-purple-600 hover:via-pink-500 hover:to-red-400 hover:text-white transition-transform transform hover:scale-105 cursor-pointer`}
                             >
-                                <FiEdit />
+                                {isEditPassword ? <FiX /> : <FiEdit />}
                                 {isEditPassword ? "Hủy" : "Edit"}
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Mật khẩu hiện tại */}
+                        <form onSubmit={handleChangePassword} className="grid grid-cols-1 gap-4">
                             <div className="relative">
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Mật khẩu hiện tại
                                 </label>
-                                <input
-                                    type={isEditPassword ? "text" : "password"}
-                                    placeholder="••••••••"
-                                    readOnly={!isEditPassword}
-                                    className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
-          ${!isEditPassword ? 'cursor-not-allowed' : 'cursor-text'}`}
-                                    style={{ lineHeight: '1.25rem' }}
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPasswords.old ? "text" : "password"}
+                                        placeholder="Mật khẩu hiện tại"
+                                        readOnly={!isEditPassword}
+                                        value={oldPassword}
+                                        onChange={(e) => setOldPassword(e.target.value)}
+                                        className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                        ${!isEditPassword ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
+                                        style={{ lineHeight: "1.25rem" }}
+                                    />
+                                    {isEditPassword && (
+                                        <button
+                                            type="button"
+                                            onClick={() => togglePasswordVisibility('old')}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                        >
+                                            {showPasswords.old ? <FiEyeOff /> : <FiEye />}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
-                            {/* Mật khẩu mới */}
                             <div className="relative">
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Mật khẩu mới
                                 </label>
-                                <input
-                                    type={isEditPassword ? "text" : "password"}
-                                    placeholder="••••••••"
-                                    readOnly={!isEditPassword}
-                                    className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
-          ${!isEditPassword ? 'cursor-not-allowed' : 'cursor-text'}`}
-                                    style={{ lineHeight: '1.25rem' }}
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPasswords.new ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        readOnly={!isEditPassword}
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                        ${!isEditPassword ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
+                                        style={{ lineHeight: "1.25rem" }}
+                                    />
+                                    {isEditPassword && (
+                                        <button
+                                            type="button"
+                                            onClick={() => togglePasswordVisibility('new')}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                        >
+                                            {showPasswords.new ? <FiEyeOff /> : <FiEye />}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+
+                            <div className="relative">
+                                <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
+                                    Nhập lại mật khẩu mới
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type={showPasswords.confirm ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        readOnly={!isEditPassword}
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                        ${!isEditPassword ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
+                                        style={{ lineHeight: "1.25rem" }}
+                                    />
+                                    {isEditPassword && (
+                                        <button
+                                            type="button"
+                                            onClick={() => togglePasswordVisibility('confirm')}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                        >
+                                            {showPasswords.confirm ? <FiEyeOff /> : <FiEye />}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {isEditPassword && (
+                                <button
+                                    type="submit"
+                                    disabled={changingPassword}
+                                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-sm px-4 py-2 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {changingPassword ? (
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    ) : (
+                                        <FiSave />
+                                    )}
+                                    {changingPassword ? "Đang đổi..." : "Đổi mật khẩu"}
+                                </button>
+                            )}
+                        </form>
                     </section>
-
-
-                    <div className="text-right">
-                        <button
-                            type="submit"
-                            className="inline-flex items-center justify-center bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-base px-4 py-2.5 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 select-none cursor-pointer"
-                        >
-                            Lưu thay đổi
-                        </button>
-
-                    </div>
-
-                </form>
+                </div>
             </div>
         </div>
     );

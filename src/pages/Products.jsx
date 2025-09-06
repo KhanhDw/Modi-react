@@ -1,4 +1,3 @@
-"use client"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -6,8 +5,10 @@ import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Search, Filter, Github, Eye, Star } from "lucide-react"
+// import languageAPI from "@/hook/currentLang";
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
-const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000"
+const baseUrl = import.meta.env.VITE_MAIN_BE_URL
 
 export default function Products() {
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState("")
   const [samples, setSamples] = useState([])
   const [filteredSamples, setFilteredSamples] = useState([])
+  const { lang, prefix } = useCurrentLanguage();
 
   // Đọc tham số category từ URL
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function Products() {
   useEffect(() => {
     const fetchSamples = async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/web-samples`)
+        const res = await fetch(`${baseUrl}${prefix}/api/web-samples`)
         if (!res.ok) throw new Error("Failed to fetch")
         const result = await res.json()
 
@@ -56,7 +58,7 @@ export default function Products() {
       }
     }
     fetchSamples()
-  }, [])
+  }, [prefix])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -84,7 +86,7 @@ export default function Products() {
     if (searchTerm) {
       filtered = filtered.filter(
         (sample) =>
-           sample.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          sample.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           sample.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           sample.tech?.some((tech) => tech.toLowerCase().includes(searchTerm.toLowerCase())),
       )
@@ -143,9 +145,8 @@ export default function Products() {
             {filteredSamples.map((sample, index) => (
               <Card
                 key={sample.id}
-                className={`group transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 hover:border-primary/50 ${
-                  visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+                className={`group transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 hover:border-primary/50 ${visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  }`}
               >
                 <CardContent className="p-0">
                   <div className="relative overflow-hidden rounded-t-lg">
@@ -188,7 +189,7 @@ export default function Products() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
-                        
+
                       </div>
                       <div className="flex gap-2">
                         {sample.url_github && (

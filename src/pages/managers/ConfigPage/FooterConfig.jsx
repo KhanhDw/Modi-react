@@ -188,14 +188,26 @@ export default function FooterConfigMultiLang() {
                 animate={{ opacity: 1, y: 0 }}
             >
                 <div className="flex flex-col md:flex-row md:justify-between items-center gap-6">
-                    <motion.img
-                        src={preview || defaultLogo}
-                        alt="Logo"
-                        className="h-40 w-40 rounded-lg object-fill"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        onError={(e) => (e.currentTarget.src = defaultLogo)}
-                    />
+                    {preview ? (
+                        <motion.img
+                            src={preview}
+                            alt="Logo"
+                            className="h-40 w-40 rounded-lg object-fill"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            onError={(e) => (e.currentTarget.src = defaultLogo)}
+                        />
+                    ) : (
+                        <motion.img
+                            src={defaultLogo}
+                            alt="Default Logo"
+                            className="h-40 w-40 rounded-lg object-fill"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                        />
+                    )}
+
+
 
                     <motion.div
                         className="text-center md:text-left space-y-2"

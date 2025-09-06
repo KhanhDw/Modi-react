@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter as Router, useLocation } from "react-router-dom";
 import { Suspense, useEffect, useRef } from "react";
 import { publicRoutes, privateRoutes } from "./routes";
-import PrivateRoute from "./components/guardRouter/PrivateRoute";
+import PrivateRoute from "@/guardRouter/PrivateRoute";
 import LenisProvider, { useLenisToggle } from "./contexts/LenisContext";
 import "./App.css";
 
@@ -38,6 +38,28 @@ function ScrollHandler() {
 }
 
 function App() {
+
+  useEffect(() => {
+    const key = "site_visit"
+    const now = Date.now()
+    const expireTime = 30 * 60 * 1000 // 30 phút
+
+    const lastVisit = localStorage.getItem(key)
+
+    if (!lastVisit || now - lastVisit > expireTime) {
+      // console.log("🔹 Người dùng vừa vào website, gửi log lên server")
+
+      // Gửi request log (toàn site)
+      fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visit`, {
+        method: "POST",
+      }).catch((err) => console.error("Không log được site visit:", err))
+
+      // Lưu lại timestamp
+      localStorage.setItem(key, now)
+    }
+  }, [])
+
+
   return (
     <ThemeProvider>
       <LanguageProvider>

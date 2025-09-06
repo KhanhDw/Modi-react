@@ -54,6 +54,7 @@ export default function useBlogs() {
                 })
                 : [];
 
+
             // set state
             setBlogs(blogsData);
             setColumns(cols);
@@ -69,6 +70,8 @@ export default function useBlogs() {
     useEffect(() => {
         fetchBlogs();
     }, [sortOrder]);
+
+
 
     const handleAdd = () => {
         // setEditingBlog(null); // Reset editingBlog để form trống
@@ -104,7 +107,7 @@ export default function useBlogs() {
         try {
 
 
-            console.log("-->", formData);
+            console.log("11-->11 ", formData);
 
 
             // Chuẩn bị FormData
@@ -120,16 +123,11 @@ export default function useBlogs() {
                 "translations",
                 JSON.stringify([
                     {
-                        lang: "vi",
+                        // lang: "vi",
+                        lang: formData.lang ?? 'vi',
                         title: formData.title,
                         content: formData.content,
                     },
-                    // bạn có thể thêm "en" nếu muốn song ngữ
-                    // {
-                    //   lang: "en",
-                    //   title: formData.title_en,
-                    //   content: formData.content_en,
-                    // }
                 ])
             );
 

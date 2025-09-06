@@ -1,7 +1,9 @@
 
 import ImageUpload from "./ImageUpload"
 import React, { useState, useEffect } from "react";
-
+// ======================================================
+// api server upload đã thay đổi - cấu hình lại api để dùng
+// ======================================================
 
 function FullUsageImageUpload({ fileImageUploadSuccess = "", isUploadNewImage, uploadedFilenameProps }) {
 
