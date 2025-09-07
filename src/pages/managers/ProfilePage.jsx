@@ -279,7 +279,7 @@ const ProfilePage = () => {
                             )}
                             <label
                                 htmlFor="avatarUpload"
-                                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer bg-black bg-opacity-30 rounded-full"
+                                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer bg-opacity-30 rounded-full"
                                 title="Thay đổi ảnh đại diện"
                             >
                                 <FiCamera className="text-white text-3xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110" />
@@ -326,7 +326,7 @@ const ProfilePage = () => {
                                     type="text"
                                     value={user.username}
                                     readOnly
-                                    className="w-full rounded-lg admin-dark:bg-slate-800 border border-gray-300 admin-dark:border-gray-600 bg-gray-100 px-4 py-2 cursor-not-allowed"
+                                    className="w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition cursor-not-allowed"
                                 />
                             </div>
 
