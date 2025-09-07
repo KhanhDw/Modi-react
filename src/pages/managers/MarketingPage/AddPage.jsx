@@ -93,40 +93,40 @@ export default function AddPage() {
                     <Button
                         variant="outline"
                         onClick={() => navigate(-1)}
-                        className="border-gray-300  admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-black hover:bg-gray-100 admin-dark:hover:bg-gray-700 text-base px-6 py-2 rounded-md" >
+                        className="border-gray-300  admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-base px-6 py-2 rounded-md cursor-pointer" >
                         Hủy
                     </Button>
                     <Button
                         onClick={onSubmit}
-                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-base px-6 py-2 rounded-md"
+                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-base px-6 py-2 rounded-md cursor-pointer"
                     >
                         Tạo mới
                     </Button>
                 </div>
             </div>
 
-            <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-6">
+            <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-3">
 
                 {/* Cột trái */}
                 {!isOpenEditNetwork ?
-                    <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-700 rounded-2xl overflow-hidden">
+                    <div className="grid grid-cols-1 p-3 h-fit border-2 border-slate-300 rounded-2xl overflow-hidden">
                         {/* Tiêu đề */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-900 rounded-lg ">
-                            <div className="grid grid-cols-1 gap-2 py-2 ">
+                        <div className="bg-gray-50 admin-dark:bg-gray-800 p-2 rounded-lg">
+                            <div className="grid grid-cols-1 gap-2">
                                 <div className="space-y-3">
                                     <Label>Tiêu đề</Label>
                                     <Input
                                         value={formData.title || ""}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         placeholder="Nhập tiêu đề bài viết"
-                                        className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
+                                        className={"border-2 border-slate-300 focus:border-none admin-dark:border-none rounded-lg"}
                                     />
                                 </div>
                             </div>
                         </div>
 
                         {/* Mạng xã hội + Trạng thái + Tags */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-900 py-4 rounded-lg  w-full">
+                        <div className="bg-gray-50 admin-dark:bg-gray-800 p-2 mt-3 rounded-lg w-full">
                             <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 mb-4">
                                 <div className="w-full space-y-3">
                                     <Label>Mạng xã hội</Label>
@@ -137,8 +137,7 @@ export default function AddPage() {
                                         }
                                         className={" w-full border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
                                     >
-
-                                        <SelectTrigger className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}>
+                                        <SelectTrigger className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer"}>
                                             <SelectValue placeholder="Chọn mạng xã hội" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -152,8 +151,7 @@ export default function AddPage() {
 
                                             <Button
                                                 onClick={handleOpenEditNetwork}
-
-                                                theme="admin" className="w-full  mt-4  ">
+                                                theme="admin" className="w-full cursor-pointer">
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
@@ -168,13 +166,13 @@ export default function AddPage() {
                                         onValueChange={(value) => setFormData({ ...formData, status: value })}
                                         className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
                                     >
-                                        <SelectTrigger className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}>
+                                        <SelectTrigger className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer"}>
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="draft">Bản nháp</SelectItem>
-                                            <SelectItem value="published">Đã xuất bản</SelectItem>
-                                            <SelectItem value="archived">Lưu trữ</SelectItem>
+                                            <SelectItem className="cursor-pointer" value="draft">Bản nháp</SelectItem>
+                                            <SelectItem className="cursor-pointer" value="published">Đã xuất bản</SelectItem>
+                                            <SelectItem className="cursor-pointer" value="archived">Lưu trữ</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -186,14 +184,14 @@ export default function AddPage() {
                                     value={formData.tags || ""}
                                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                     placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                    className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
+                                    className={"border-2 border-slate-300 admin-dark:border-none focus:border-none rounded-lg"}
 
                                 />
                             </div>
                         </div>
 
                         {/* Ảnh */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-900 pb-6 rounded-lg  space-y-3">
+                        <div className="bg-gray-50 p-2 mt-4 admin-dark:bg-gray-800 pb-6 rounded-lg space-y-3">
                             <Label>URL Hình ảnh</Label>
                             <div className="flex gap-2">
                                 <Input
@@ -203,15 +201,15 @@ export default function AddPage() {
                                         setError("");
                                     }}
                                     placeholder="Nhập URL hình ảnh"
-                                    className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
+                                    className={"border-2 border-slate-300 focus:border-none admin-dark:border-none rounded-lg"}
                                 />
                                 <Button
-
+                                    className="cursor-pointer admin-dark:bg-blue-600"
                                     type="button" onClick={() => setPreview(formData.image)}>
                                     Xem ảnh
                                 </Button>
                             </div>
-                            <div className="text-sm text-gray-500 mt-3 border-2 border-slate-400 admin-dark:border-slate-600 p-2 rounded-xl space-y-3">
+                            <div className="text-sm text-gray-500 mt-3 rounded-xl space-y-3">
                                 {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
                                 {error && <p className="text-red-500 font-medium">{error}</p>}
                                 {preview && (
@@ -219,7 +217,7 @@ export default function AddPage() {
                                         key={preview}
                                         src={preview}
                                         alt="Preview"
-                                        className="object-cover rounded mt-2 max-h-60 mx-auto"
+                                        className="object-cover rounded-xl max-h-60 w-full mx-auto"
                                         onError={() => {
                                             setError("Không tìm thấy hình ảnh từ URL đã nhập");
                                             setPreview("");

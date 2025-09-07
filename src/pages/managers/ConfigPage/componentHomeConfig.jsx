@@ -9,8 +9,8 @@ export function InputField({ label, value, onChange, type = "text", accept = "im
             <input
                 type={type}
                 {...(type === "file" ? { accept } : { value })}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
-        focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                className="w-full p-3 border border-gray-200 rounded-lg
+        focus:outline-none focus:ring-2 focus:ring-indigo-400 transition focus:border-none admin-dark:border-gray-400"
                 value={type === "file" ? undefined : value} // file input không nên có value
                 onChange={onChange}
             />
@@ -24,8 +24,8 @@ export function TextareaField({ label, value, onChange, rows = 6 }) {
             <label className="block font-semibold mb-2">{label}</label>
             <textarea
                 rows={rows}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm 
-        focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                className="w-full p-3 border border-gray-300 rounded-lg 
+        focus:outline-none focus:ring-2 focus:ring-indigo-400 transition focus:border-none admin-dark:border-gray-400"
                 value={value}
                 onChange={onChange}
             />

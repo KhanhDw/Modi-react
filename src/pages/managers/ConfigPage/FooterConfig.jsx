@@ -159,23 +159,6 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            const updatedData = await res.json();
-
-            setFooterData((prev) => ({
-                ...prev,
-                [activeLang]: {
-                    ...prev[activeLang],
-                    ...updatedData,
-                    logo: updatedData.logo || prev[activeLang].logo, // giữ logo cũ nếu không có mới
-                },
-            }));
-
-            if (updatedData.logo) {
-                setPreview(`${API_BASE_URL}${updatedData.logo}`);
-            } // nếu không có logo mới => không đổi preview
-
-            setFile(null);
-
             setToast({ message: "✅ Lưu footer thành công!", type: "success" });
             setFile(null);
             fetchFooter();
@@ -190,7 +173,7 @@ export default function FooterConfigMultiLang() {
     if (loading) return <p className="text-center">⏳ Đang tải...</p>;
 
     return (
-        <div className="p-6  mx-auto space-y-12">
+        <div className="p-6 mx-auto space-y-12 admin-dark:bg-gray-900 admin-dark:text-gray-100 transition">
             {/* Preview */}
             <FooterView
                 data={{
@@ -205,20 +188,22 @@ export default function FooterConfigMultiLang() {
                 }}
                 services={services.map(s => ({ title: s.title?.[activeLang], slug: s.description?.[activeLang] }))}
                 socials={socials.map(s => ({ title: s.title?.[activeLang], url: s.description?.[activeLang] }))}
-
                 privacy={[]}
                 lang={activeLang}
             />
 
             {/* Config */}
-            <div className="space-y-8 w-6xl mx-auto">
+            <div className="space-y-8 max-w-6xl w-full mx-auto px-4 mt-6">
                 {/* Lang Tabs */}
-                <div className="flex gap-4">
+                <div className="flex flex-wrap justify-center sm:justify-start gap-3">
                     {["vi", "en"].map((lang) => (
                         <button
                             key={lang}
                             onClick={() => setActiveLang(lang)}
-                            className={`px-5 py-2 rounded-full font-semibold shadow ${activeLang === lang ? "bg-indigo-600 text-white" : "bg-gray-200 hover:bg-gray-300"
+                            className={`px-5 py-2 rounded-full font-semibold shadow transition text-sm sm:text-base
+            ${activeLang === lang
+                                    ? "bg-indigo-600 text-white"
+                                    : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
                                 }`}
                         >
                             {lang === "vi" ? "🇻🇳 Tiếng Việt" : "🇬🇧 English"}
@@ -226,88 +211,110 @@ export default function FooterConfigMultiLang() {
                     ))}
                 </div>
 
-                {/* Logo
-                <div className="p-4 border rounded-xl bg-white shadow">
-                    <label className="block mb-2 font-semibold">Logo</label>
-                    <input type="file" accept="image/*" onChange={handleLogoChange} className="w-full" />
-                </div> */}
-
                 {/* Company Info */}
-                <div className="p-4 border rounded-xl bg-white shadow space-y-4">
-                    <h4 className="font-bold">Thông tin công ty</h4>
+                <div className="p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                    <h4 className="font-bold text-lg">Thông tin công ty</h4>
                     {companyInfo.map((info) => {
-                        if (info.position === 1) { return }
+                        if (info.position === 1) return null;
+                        const value = info.description?.[activeLang] || "";
+                        const isLongText = value.length > 80; // 👈 nếu dài quá thì dùng textarea
                         return (
                             <div key={info.id}>
-                                <label className="block text-sm mb-1 text-gray-600">{info.title?.[activeLang] || "Field"}</label>
-                                <input
-                                    type="text"
-                                    value={info.description?.[activeLang] || ""}
-                                    onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
-                                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"
-                                />
+                                <label className="block text-sm mb-1 text-gray-600 admin-dark:text-gray-300">
+                                    {info.title?.[activeLang] || "Field"}
+                                </label>
+                                {isLongText ? (
+                                    <textarea
+                                        value={value}
+                                        onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
+                                        rows={3}
+                                        className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        value={value}
+                                        onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
+                                        className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                    />
+                                )}
                             </div>
-                        )
+                        );
                     })}
                 </div>
 
                 {/* Services */}
-                <div className="p-4 border rounded-xl bg-white shadow space-y-4">
-                    <h4 className="font-bold">Dịch vụ</h4>
+                <div className="p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                    <h4 className="font-bold text-lg">Dịch vụ</h4>
                     {services.map((s) => (
-                        <div key={s.id} className="grid grid-cols-2 gap-4">
+                        <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <input
                                 type="text"
-                                className="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"
+                                className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
                                 placeholder="Tên dịch vụ"
                                 value={s.title?.[activeLang] || ""}
                                 onChange={(e) => updateService(s.id, "title", e.target.value)}
                             />
-                            <input
-                                type="text"
-                                className="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"
-                                placeholder="URL"
-                                value={s.description?.[activeLang] || ""}
-                                onChange={(e) => updateService(s.id, "description", e.target.value, true)}
-                            />
+                            {/* nếu URL dài quá thì textarea */}
+                            {s.description?.[activeLang]?.length > 70 ? (
+                                <textarea
+                                    className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                    placeholder="URL"
+                                    value={s.description?.[activeLang] || ""}
+                                    onChange={(e) => updateService(s.id, "description", e.target.value, true)}
+                                    rows={5}
+                                />
+                            ) : (
+                                <input
+                                    type="text"
+                                    className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                    placeholder="URL"
+                                    value={s.description?.[activeLang] || ""}
+                                    onChange={(e) => updateService(s.id, "description", e.target.value, true)}
+                                />
+                            )}
                         </div>
                     ))}
                 </div>
 
                 {/* ✅ Social */}
-                <div className="p-4 border rounded-xl bg-white shadow space-y-4">
-                    <div className="w-full items-center justify-between flex">
-                        <h4 className="font-bold">Mạng xã hội </h4>
-                        <h4 className="font-light">Không có URL mạng xã hội đó sẽ không được hiển thị</h4>
-
+                <div className="p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <h4 className="font-bold text-lg">Mạng xã hội</h4>
+                        <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                            Không có URL mạng xã hội đó sẽ không được hiển thị
+                        </p>
                     </div>
                     {socials.map((s) => (
-                        <div key={s.id} className="grid grid-cols-2 gap-4">
+                        <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <input
                                 type="text"
-                                className="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"
+                                className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
                                 placeholder="Tên MXH"
                                 value={s.title?.[activeLang] || ""}
                                 onChange={(e) => updateSocial(s.id, "title", e.target.value)}
                             />
-                            <input
-                                type="text"
-                                className="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"
-                                placeholder="URL"
-                                value={s.description?.[activeLang] || ""}
-                                onChange={(e) => updateSocial(s.id, "description", e.target.value, true)}
-                            />
+                            {/* textarea nếu URL quá dài */}
+                            {s.description?.[activeLang]?.length > 70 ? (
+                                <textarea
+                                    className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                    placeholder="URL"
+                                    value={s.description?.[activeLang] || ""}
+                                    onChange={(e) => updateSocial(s.id, "description", e.target.value, true)}
+                                    rows={5}
+                                />
+                            ) : (
+                                <input
+                                    type="text"
+                                    className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                    placeholder="URL"
+                                    value={s.description?.[activeLang] || ""}
+                                    onChange={(e) => updateSocial(s.id, "description", e.target.value, true)}
+                                />
+                            )}
                         </div>
                     ))}
                 </div>
-
-                {/* Save */}
-                <button
-                    onClick={handleSave}
-                    className="bg-indigo-600 text-white px-8 py-3 rounded-xl shadow hover:bg-indigo-700 transition"
-                >
-                    Lưu cấu hình
-                </button>
             </div>
 
             {toast && (

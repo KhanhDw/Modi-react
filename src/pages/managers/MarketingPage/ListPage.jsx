@@ -9,20 +9,11 @@ export default function ListPage() {
     const {
         posts,
         columns,
-        loading,
-        error,
-        searchPosts,
         searchTerm,
         setSearchTerm,
         selectedStatus,
         setSelectedStatus,
-        activeClass,
         handleDeletePost, // Thêm handleDeletePost vào destructuring
-        setIsEditDialogOpen,
-        setEditingPost,
-        setFormData,
-        handleAddPost,
-        handleEditPost,
     } = useOutletContext();
 
     const filteredPosts = posts.filter((post) => {
@@ -40,9 +31,6 @@ export default function ListPage() {
         return matchesSearch && matchesStatus;
     });
 
-
-
-
     return (
         <>
             <h1 className="mb-8 text-2xl font-bold text-gray-900 admin-dark:text-white">
@@ -56,8 +44,8 @@ export default function ListPage() {
                     setSelectedStatus={setSelectedStatus}
                 />
                 <Link to={`${location.pathname}/add`}>
-                    <Button className={activeClass}>
-                        <Plus className="h-4 w-4 mr-2" />
+                    <Button className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white">
+                        <Plus className="h-4 w-4" />
                         Thêm bài viết
                     </Button>
                 </Link>

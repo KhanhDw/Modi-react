@@ -2,7 +2,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
 import PageList from "@/components/feature/pagination";
 import PostRow from "./PostRow";
-// import { columns } from "./constants";
 import { useState, useEffect } from "react";
 
 export default function PostsTable({ posts, columns, handleDeletePost }) {
@@ -16,19 +15,18 @@ export default function PostsTable({ posts, columns, handleDeletePost }) {
         }
     }, [posts]);
 
-
     return (
-        <div className="bg-white admin-dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-400 admin-dark:border-gray-700">
+        <div className="bg-white admin-dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-300 admin-dark:border-gray-700 shadow-sm">
             <Table>
-                <TableHeader className="admin-dark:bg-gray-700">
-                    <TableRow className="border-b border-gray-200 admin-dark:border-gray-700">
-                        <TableHead className={`text-gray-900 admin-dark:text-white text-left`}>
+                <TableHeader>
+                    <TableRow className="border-b border-gray-200 admin-dark:border-gray-700 admin-dark:bg-gray-800 bg-gray-100">
+                        <TableHead className="text-gray-900 admin-dark:text-white text-left">
                             STT
                         </TableHead>
                         {columns.map((col, index) => (
                             <TableHead
                                 key={index}
-                                className={`text-gray-900 admin-dark:text-white text-left`}
+                                className="text-gray-900 admin-dark:text-white text-left"
                             >
                                 {col.label}
                             </TableHead>
@@ -38,30 +36,36 @@ export default function PostsTable({ posts, columns, handleDeletePost }) {
                         </TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="bg-white admin-dark:bg-gray-900">
                     {pagedPosts.length > 0 &&
-                        pagedPosts.map((post, index) => <PostRow key={post.id ?? index} post={post} indexSTT={index} handleDeletePost={handleDeletePost} />)}
+                        pagedPosts.map((post, index) => (
+                            <PostRow
+                                key={post.id ?? index}
+                                post={post}
+                                indexSTT={index}
+                                handleDeletePost={handleDeletePost}
+                            />
+                        ))
+                    }
                 </TableBody>
             </Table>
 
-            {
-                posts.length > 0 && (
-                    <PageList data={posts} pageSize={pageSize} onPageChange={setPagedPosts} />
-                )
-            }
+            {/* Pagination */}
+            {posts.length > 0 && (
+                <PageList data={posts} pageSize={pageSize} onPageChange={setPagedPosts} />
+            )}
 
-            {
-                posts.length === 0 && (
-                    <div className="text-center py-12">
-                        <div className="text-gray-500 admin-dark:text-gray-400 text-lg font-medium mb-2">
-                            Không tìm thấy bài viết nào
-                        </div>
-                        <p className="text-sm text-gray-400 admin-dark:text-gray-500">
-                            Thử thay đổi bộ lọc hoặc thêm bài viết mới
-                        </p>
+            {/* Empty state */}
+            {posts.length === 0 && (
+                <div className="text-center py-12 bg-white admin-dark:bg-gray-900">
+                    <div className="text-gray-600 admin-dark:text-gray-300 text-lg font-medium mb-2">
+                        Không tìm thấy bài viết nào
                     </div>
-                )
-            }
-        </div >
+                    <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                        Thử thay đổi bộ lọc hoặc thêm bài viết mới
+                    </p>
+                </div>
+            )}
+        </div>
     );
 }

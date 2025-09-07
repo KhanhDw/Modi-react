@@ -51,7 +51,7 @@ export default function RenderHomeConfig({
                                     <SafeImage
                                         src={previewBanner?.[b.id] || `${import.meta.env.VITE_MAIN_BE_URL}${b.banner}`}
                                         alt={`banner-${b.id}`}
-                                        className="rounded-xl shadow-md w-full h-60 object-cover"
+                                        className="rounded-xl shadow-md w-full h-60 object-cover mt-4"
                                     />
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ export default function RenderHomeConfig({
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("banner")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Banner
                             </button>
@@ -92,7 +92,7 @@ export default function RenderHomeConfig({
                                     <SafeImage
                                         src={n.banner}
                                         alt="nenTang-banner"
-                                        className="rounded-xl shadow-md w-full h-60 object-cover"
+                                        className="rounded-xl shadow-md w-full h-60 object-cover mt-4"
                                     />
                                 )}
                             </div>
@@ -100,7 +100,7 @@ export default function RenderHomeConfig({
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("nenTang")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Nền tảng
                             </button>
@@ -145,7 +145,7 @@ export default function RenderHomeConfig({
                                             <SafeImage
                                                 src={previewBanner?.[c.id] || `${import.meta.env.VITE_MAIN_BE_URL}${c.image_url}`}
                                                 alt={`image_url_customer-${c.id}`}
-                                                className="rounded-xl shadow-md w-full h-50 object-cover"
+                                                className="rounded-xl shadow-md w-full h-50 object-cover mt-4"
                                             />
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ export default function RenderHomeConfig({
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("cards")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Cards
                             </button>
@@ -189,29 +189,32 @@ export default function RenderHomeConfig({
                                         }
                                     />
                                     <div className="flex w-full items-center justify-center">
-                                        <div>
+                                        <div className="w-full">
                                             <InputField
                                                 label="Chọn ảnh"
                                                 type="file"
                                                 accept="image/*"
-                                                onChange={(e) =>
-                                                    handleFileChange("dichVu", d.id, e.target.files[0])
-                                                }
+                                                onChange={(e) => handleFileChange("dichVu", d.id, e.target.files[0])}
+                                                className="w-full"
                                             />
                                             <SafeImage
-                                                src={previewBanner?.[d.id] || `${import.meta.env.VITE_MAIN_BE_URL}${d.image_url}`}
+                                                src={
+                                                    previewBanner?.[d.id] ||
+                                                    `${import.meta.env.VITE_MAIN_BE_URL}${d.image_url}`
+                                                }
                                                 alt={`image_url_dichvu-${d.id}`}
-                                                className="rounded-xl shadow-md w-full h-50 object-cover"
+                                                className="rounded-xl shadow-md w-full h-52 object-cover mt-4"
                                             />
                                         </div>
                                     </div>
+
                                 </div>
                             ))}
                         </div>
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("dichVu")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Dịch vụ
                             </button>
@@ -226,7 +229,7 @@ export default function RenderHomeConfig({
                         {(currentData?.loiIch || []).map((item, i) => (
                             <div
                                 key={item.id ?? `li-${i}`}
-                                className="p-4 rounded-xl border shadow space-y-2"
+                                className="rounded-xl shadow space-y-2 p-3"
                             >
                                 <InputField
                                     label="Tiêu đề"
@@ -247,7 +250,7 @@ export default function RenderHomeConfig({
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("loiIch")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Lợi ích
                             </button>
@@ -269,11 +272,11 @@ export default function RenderHomeConfig({
                                     }
                                 />
 
-                                <div className="overflow-hidden whitespace-nowrap mt-4 bg-gray-100 p-3 rounded-lg">
+                                <div className="overflow-hidden whitespace-nowrap mt-4 bg-gray-100 p-3 rounded-lg admin-dark:bg-gray-900">
                                     <motion.div
                                         animate={{ x: ["100%", "-100%"] }}
                                         transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-                                        className="inline-block w-full font-semibold text-indigo-600"
+                                        className="inline-block w-full font-semibold text-indigo-600 admin-dark:text-white"
                                     >
                                         {k.title?.[activeLang] || ""}
                                     </motion.div>
@@ -284,7 +287,7 @@ export default function RenderHomeConfig({
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("khauHieu")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Khẩu hiệu
                             </button>
@@ -298,7 +301,7 @@ export default function RenderHomeConfig({
                 return (
                     <div className="space-y-6">
                         {(currentData?.khachHang || []).map((k, i) => (
-                            <div key={k.id ?? `kh-${i}`} className="space-y-4 border p-4 rounded-lg shadow-sm">
+                            <div key={k.id ?? `kh-${i}`} className="space-y-4 p-3 rounded-lg shadow-sm">
                                 <TextareaField
                                     label="Mô tả"
                                     value={k?.description?.[activeLang] || ""}
@@ -306,7 +309,7 @@ export default function RenderHomeConfig({
                                         handleChange("khachHang", k.id, "description", e.target.value)
                                     }
                                 />
-                                
+
                                 {/* không có chọn ảnh */}
                                 <div hidden className="flex w-full items-center justify-center">
                                     <div>
@@ -321,7 +324,7 @@ export default function RenderHomeConfig({
                                         <SafeImage
                                             src={previewBanner?.[k.id] || `${import.meta.env.VITE_MAIN_BE_URL}${k.image_url}`}
                                             alt={`image_url_customer-${k.id}`}
-                                            className="rounded-xl shadow-md w-200 h-100 object-cover"
+                                            className="rounded-xl shadow-md w-200 h-100 object-cover mt-2"
                                         />
                                     </div>
                                 </div>
@@ -332,7 +335,7 @@ export default function RenderHomeConfig({
                         <div className="text-right">
                             <button
                                 onClick={() => handleSave("khachHang")}
-                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700"
+                                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
                                 Lưu Khách hàng
                             </button>

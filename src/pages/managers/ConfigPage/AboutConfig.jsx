@@ -14,7 +14,7 @@ function BannerPreview({ banner, lang }) {
             transition={{ duration: 0.6 }}
         >
             <h1 className="text-4xl font-bold drop-shadow-lg">{banner?.title?.[lang] || "Chưa có tiêu đề"}</h1>
-            <p className="mt-2 text-lg italic opacity-90">{banner?.slogan?.[lang] || "Chưa có slogan"}</p>
+            <p className="mt-2 p-2 text-lg italic opacity-90">{banner?.slogan?.[lang] || "Chưa có slogan"}</p>
         </motion.div>
     );
 }
@@ -28,7 +28,7 @@ function AboutPreview({ about, lang }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-center text-3xl font-bold text-indigo-600">{about?.title?.[lang] || "Chưa có tiêu đề"}</h2>
+            <h2 className="text-center text-3xl font-bold text-indigo-600 admin-dark:text-white">{about?.title?.[lang] || "Chưa có tiêu đề"}</h2>
             <p className="text-gray-600 admin-dark:text-gray-300">{about?.description?.[lang] || "Chưa có mô tả"}</p>
         </motion.div>
     );
@@ -43,7 +43,7 @@ function VisionMissionPreview({ visionMission, lang }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-3xl font-bold text-indigo-600 text-center">
+            <h2 className="text-3xl font-bold text-indigo-600 text-center admin-dark:text-white">
                 {lang === "vi" ? "Tầm nhìn & Sứ mệnh" : "Vision & Mission"}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -62,7 +62,7 @@ function VisionMissionPreview({ visionMission, lang }) {
                                 className="w-28 h-28 object-cover rounded-full mb-4 shadow-lg"
                             />
                         )}
-                        <h3 className="text-xl font-semibold text-indigo-600">{item.title?.[lang]}</h3>
+                        <h3 className="text-xl font-semibold text-indigo-600 admin-dark:text-white">{item.title?.[lang]}</h3>
                         <p className="mt-2 text-gray-600 admin-dark:text-gray-300">{item.description?.[lang]}</p>
                     </motion.div>
                 ))}
@@ -187,7 +187,7 @@ const TextEditor = forwardRef(
         };
 
         return (
-            <div className="p-4 bg-gray-50 admin-dark:bg-gray-900 rounded-xl shadow space-y-2">
+            <div className="p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-xl shadow space-y-2">
                 <h3 className="font-bold text-lg">{label}</h3>
 
                 {fields.map((field) =>
@@ -261,10 +261,10 @@ function ListEditor({ section, data, onChange, lang }) {
     };
 
     return (
-        <div className="p-4 bg-gray-50 admin-dark:bg-gray-900 rounded-xl shadow space-y-4">
+        <div className="p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-xl shadow space-y-4">
             <h3 className="font-bold text-lg ">{section}</h3>
             {data.map((item, index) => (
-                <div key={index} className=" p-3 bg-white admin-dark:bg-gray-800 rounded-xl shadow space-y-2">
+                <div key={index} className="p-3 bg-white admin-dark:bg-gray-800 rounded-xl shadow space-y-2">
                     <input
                         type="text"
                         placeholder="Tiêu đề..."
@@ -363,11 +363,6 @@ export default function AboutConfig() {
 
     const handleSave = async () => {
         try {
-
-
-
-
-
             // Banner
             if (config.banner?.id) {
                 await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/${config.banner.id}`, {
@@ -432,17 +427,17 @@ export default function AboutConfig() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 items-start">
             {/* Form chỉnh sửa */}
-            <div className="flex flex-col  overflow-auto space-y-6">
+            <div className="flex flex-col overflow-auto space-y-6">
                 <div className="flex justify-between">
                     <button
                         onClick={handleSave}
-                        className="py-3 px-6 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition"
+                        className="py-2 px-2 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition cursor-pointer"
                     >
                         Lưu cấu hình
                     </button>
                     <button
                         onClick={() => setLang(lang === "vi" ? "en" : "vi")}
-                        className="py-3 px-6 bg-gray-900 admin-dark:bg-transparent admin-dark:border-2 text-white rounded-xl shadow hover:bg-gray-700 transition"
+                        className="py-2 px-2 bg-gray-900 admin-dark:bg-transparent admin-dark:border-1 text-white rounded-xl shadow hover:bg-gray-700 transition cursor-pointer"
                     >
                         <p className="font-semibold">{lang === "vi" ? "Tiếng Việt" : "English"}</p>
                     </button>

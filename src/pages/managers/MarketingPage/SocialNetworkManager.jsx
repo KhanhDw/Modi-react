@@ -117,12 +117,12 @@ export default function SocialNetworkManager({
     };
 
     return (
-        <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-700 rounded-2xl overflow-hidden">
+        <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-300 rounded-2xl overflow-hidden">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
                     Danh sách mạng xã hội
                 </h1>
-                <button type="button" onClick={onClose} className="text-blue-500 hover:underline font-bold">
+                <button type="button" onClick={onClose} className="text-blue-500 hover:underline font-bold cursor-pointer">
                     Quay lại
                 </button>
             </div>
@@ -162,15 +162,15 @@ export default function SocialNetworkManager({
                     ))}
                     <div>
                         {isOpenUpdateNetwork2 &&
-                            <div className="p-2 border-2 border-dashed border-gray-400 rounded-lg mt-4">
+                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-3">
                                 <h2 className="text-lg font-medium mb-2">Điều chỉnh thông tin mạng xã hội</h2>
-                                <div className="grid grid-cols-1 gap-2 border ">
+                                <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
                                         <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
                                     </div>
 
-                                    <div className="flex items-center justify-between gap-3">
+                                    <div className="flex items-center justify-between gap-2">
                                         <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
                                         <Button
                                             onClick={() => {
@@ -179,7 +179,7 @@ export default function SocialNetworkManager({
                                                 window.open(url, "_blank"); // mở tab mới
                                             }}
                                             variant="outline"
-                                            className="mt-2"
+                                            className="mt-2 cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                                         >
                                             Tìm trên Google
                                         </Button>
@@ -190,7 +190,7 @@ export default function SocialNetworkManager({
                                     <Button
                                         onClick={() => handleShowForm("close")}
                                         theme="admin"
-                                        className=" "
+                                        className="cursor-pointer admin-dark:bg-red-500 admin-dark:hover:bg-red-600 bg-red-500 hover:bg-red-600 text-white"
                                     >
                                         Hủy
                                     </Button>
@@ -198,7 +198,7 @@ export default function SocialNetworkManager({
                                     <Button
                                         onClick={handleUpdateNetwork}
                                         theme="admin"
-                                        className=""
+                                        className="cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                                     >
                                         Cập nhật
                                     </Button>
@@ -206,9 +206,9 @@ export default function SocialNetworkManager({
                             </div>
                         }
                         {isOpenUpdateNetwork &&
-                            <div className="p-2 border-2 border-dashed border-gray-400 rounded-lg mt-4">
+                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-2">
                                 <h2 className="text-lg font-medium mb-2">Thêm mạng xã hội mới</h2>
-                                <div className="grid grid-cols-1 gap-2 border ">
+                                <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
                                         <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
@@ -222,7 +222,7 @@ export default function SocialNetworkManager({
                                                 window.open(url, "_blank"); // mở tab mới
                                             }}
                                             variant="outline"
-                                            className="mt-2"
+                                            className="mt-2 cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                                         >
                                             Tìm trên Google
                                         </Button>
@@ -233,14 +233,14 @@ export default function SocialNetworkManager({
                                     <Button
                                         onClick={() => handleShowForm("close")}
                                         theme="admin"
-                                        className=" "
+                                        className="cursor-pointer admin-dark:bg-red-500 admin-dark:hover:bg-red-600 bg-red-500 hover:bg-red-600 text-white"
                                     >
                                         Hủy
                                     </Button>
                                     <Button
                                         onClick={handleAddNetwork}
                                         theme="admin"
-                                        className=""
+                                        className="cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                                     >
                                         Thêm mạng xã hội mới
                                     </Button>
@@ -250,11 +250,11 @@ export default function SocialNetworkManager({
                     </div>
 
                     {!isOpenUpdateNetwork && !isOpenUpdateNetwork2 &&
-                        <div className="flex justify-center mt-4">
+                        <div className="flex justify-center mt-2">
                             <Button
                                 onClick={() => handleShowForm("add")}
                                 theme="admin"
-                                className="w-full "
+                                className="cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                             >
                                 Thêm mạng xã hội mới
                             </Button>

@@ -17,7 +17,7 @@ export default function PageHeader({
       {/* Hàng chứa tiêu đề + search + nút */}
       <div className="flex flex-wrap items-center justify-between gap-3 w-full">
         {/* Title */}
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 admin-dark:text-gray-200">
+        <h1 className="text-xl sm:text-xl font-bold text-gray-900 admin-dark:text-gray-200">
           {title}
         </h1>
 
@@ -49,7 +49,7 @@ export default function PageHeader({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Tìm kiếm..."
-                  className="flex-1 border border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow-sm focus:border-green-500 focus:outline-none min-w-[250px] md:min-w-[300px] lg:min-w-[350px]"
+                  className="flex-1 border-2 border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow-sm focus:border-green-500 focus:outline-none min-w-[250px] md:min-w-[300px] lg:min-w-[350px]"
                 />
                 <button hidden type="submit"></button>
               </form>
