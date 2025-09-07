@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { newsData } from "../../data/MockData"; // Import dữ liệu mẫu
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 export default function NewsInterface() {
@@ -41,17 +40,11 @@ export default function NewsInterface() {
             ngay_dang: item.published_at,
           }));
           setNewsArticles(mappedData);
-        } else {
-          // Sử dụng dữ liệu mẫu nếu API không trả về dữ liệu hợp lệ
-          const sortedMockData = [...newsData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
-          setNewsArticles(sortedMockData);
-        }
+        } 
         setIsLoading(false);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
-        // Sử dụng dữ liệu mẫu khi API thất bại
-        const sortedMockData = [...newsData].sort((a, b) => new Date(b.ngay_dang) - new Date(a.ngay_dang));
         setNewsArticles(sortedMockData);
         setIsLoading(false);
       });
@@ -70,7 +63,7 @@ export default function NewsInterface() {
 
   // Hiển thị khi không có dữ liệu
   if (!newsArticles.length) {
-    return <div className="text-center py-20 text-gray-500">Không có tin tức nào.</div>;
+    return <div className="text-center py-20 text-gray-500">Chưa có tin tức.</div>;
   }
 
   // Tính toán dữ liệu hiển thị cho từng trang
@@ -104,7 +97,7 @@ export default function NewsInterface() {
               <div className="md:flex">
                 <div className="md:w-1/2">
                   <img
-                    src={heroArticle.hinh_anh || "/placeholder.svg"}
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${heroArticle.hinh_anh}` || "/placeholder.svg"}
                     alt={heroArticle.tieu_de}
                     className="w-full h-64 md:h-full object-cover"
                   />
@@ -141,7 +134,7 @@ export default function NewsInterface() {
               onClick={() => handleArticleClick(article.slug, article.id)}
             >
               <img
-                src={article.hinh_anh || "/placeholder.svg"}
+                src={`${import.meta.env.VITE_MAIN_BE_URL}${article.hinh_anh}` || "/placeholder.svg"}
                 alt={article.tieu_de}
                 className="w-full h-48 object-cover"
               />

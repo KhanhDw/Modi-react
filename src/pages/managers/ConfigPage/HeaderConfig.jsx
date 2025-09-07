@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import NotificationToast from "@/components/feature/notification-toast.jsx";
 
 // --- Custom File Input ---
 function FileInput({ label, onChange }) {
@@ -26,17 +27,23 @@ export default function HeaderConfigLogo() {
     const [logo, setLogo] = useState("/logoModi.png");
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const [logoItem, setLogoItem] = useState(null); // lưu section_item hiện tại
+    const [toast, setToast] = useState(null);
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:5000";
 
-    // 🔹 Load logo hiện tại từ server
+    // 🔹 Load logo từ section_items (slug=header, type=logo)
     const fetchLogo = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`${API_BASE_URL}/api/logo`);
+            const res = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
             if (!res.ok) throw new Error("Không thể tải logo");
             const data = await res.json();
-            setLogo(`${API_BASE_URL}${data.url_logo}`);
+
+            if (Array.isArray(data) && data.length > 0) {
+                const item = data[0];
+                setLogoItem(item);
+                setLogo(item.image_url ? `${API_BASE_URL}${item.image_url}` : "/logoModi.png");
+            }
         } catch (err) {
             console.error(err);
             alert("Lỗi tải logo: " + err.message);
@@ -57,31 +64,70 @@ export default function HeaderConfigLogo() {
         setLogo(URL.createObjectURL(selectedFile));
     };
 
-    // 🔹 Lưu logo lên server
+    // 🔹 Upload ảnh
+    const uploadImage = async (file, id, section = "logo", field = "image_url") => {
+        if (!file) return null;
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("id", id);
+        formData.append("field", field);
+        formData.append("section", section);
+
+        const res = await fetch(`${API_BASE_URL}/api/upload?field=${field}`, {
+            method: "POST",
+            body: formData,
+        });
+        const result = await res.json();
+        return result?.data?.url || result?.url || null;
+    };
+
+    function normalizeImageUrl(url) {
+        if (!url) return "";
+        try {
+            // Nếu là full URL => cắt domain, chỉ lấy pathname
+            const u = new URL(url, import.meta.env.VITE_MAIN_BE_URL);
+            return u.pathname;
+        } catch {
+            // Nếu đã là path rồi thì giữ nguyên
+            return url;
+        }
+    }
+
+    // 🔹 Lưu logo (update section_item)
     const handleSave = async () => {
-        if (!file) return alert("Chưa chọn file logo");
+        if (!logoItem) return alert("Chưa có logo trong database");
         try {
             setLoading(true);
-            const formData = new FormData();
-            formData.append("image", file);
 
-            const res = await fetch(`${API_BASE_URL}/api/logo`, {
-                method: "PUT",
-                body: formData,
-            });
+            let updatedItem = { ...logoItem };
 
-            if (!res.ok) {
-                const errData = await res.json();
-                throw new Error(errData.error || "Lỗi lưu logo");
+            // Nếu có file mới thì upload
+            if (file) {
+                const url = await uploadImage(file, logoItem.id, "logo");
+                if (url) {
+                    updatedItem.image_url = url;
+                }
             }
 
-            const data = await res.json();
-            alert("💾 Cập nhật logo thành công!");
+            // 🔹 Chuẩn hóa ảnh trước khi lưu
+            if (updatedItem.image_url) {
+                updatedItem.image_url = normalizeImageUrl(updatedItem.image_url);
+            }
+
+            await fetch(`${API_BASE_URL}/api/section-items/${logoItem.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedItem),
+            });
+
+
+            setToast({ message: "Lưu thành công!", type: "success" });
             setFile(null);
-            setLogo(`${API_BASE_URL}${data.data.url_logo}`);
+            setLogo(`${API_BASE_URL}${updatedItem.image_url}`);
+            setLogoItem(updatedItem);
         } catch (err) {
             console.error(err);
-            alert("❌ Lưu logo thất bại: " + err.message);
+            setToast({ message: "Lỗi khi lưu: " + err.message, type: "error" });
         } finally {
             setLoading(false);
         }
@@ -137,6 +183,14 @@ export default function HeaderConfigLogo() {
                     {loading ? "Đang lưu..." : "Save Logo"}
                 </motion.button>
             </motion.div>
+
+            {toast && (
+                <NotificationToast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
     );
 }

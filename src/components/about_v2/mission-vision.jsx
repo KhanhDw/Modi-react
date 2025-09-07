@@ -26,7 +26,7 @@ export function MissionVision() {
 
   useEffect(() => {
     // Fetch dữ liệu từ API
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items?sectionId=3`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/type/vision_mission?slug=about`)
       .then((res) => res.json())
       .then((data) => {
         setItems(data) // data là mảng các mục vision & mission

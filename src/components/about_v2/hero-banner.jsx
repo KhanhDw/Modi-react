@@ -13,11 +13,10 @@ export function HeroBanner() {
 
   // Fetch banner từ API
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items?sectionId=1`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/type/about_intro?slug=about`)
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) {
-          console.log("->>>>", data);
           const item = data[0]
           setBanner({
             title: item.title || { vi: "", en: "" },

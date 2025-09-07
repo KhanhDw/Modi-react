@@ -23,7 +23,7 @@ export function CompanyOverview() {
 
   // Fetch dữ liệu từ API section-items (section_id = 2)
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items?sectionId=2`)
+    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/type/company_intro?slug=about`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -40,8 +40,8 @@ export function CompanyOverview() {
           {/* Text content */}
           <div
             className={`transition-all duration-600 ${isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-8"
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 -translate-x-8"
               }`}
           >
             <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-6">
@@ -55,8 +55,8 @@ export function CompanyOverview() {
           {/* Image */}
           <div
             className={`transition-all duration-600 delay-200 ${isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-8"
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 translate-x-8"
               }`}
           >
             <div className="relative">
