@@ -17,7 +17,6 @@ export function HeroBanner() {
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) {
-          console.log("->>>>", data);
           const item = data[0]
           setBanner({
             title: item.title || { vi: "", en: "" },

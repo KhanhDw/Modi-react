@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaTrash } from "react-icons/fa";
 import useLenisLocal from '@/hook/useLenisLocal';
 
 

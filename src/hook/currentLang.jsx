@@ -17,7 +17,7 @@ function getPrefix() {
 }
 
 export default function useCurrentLanguage() {
-    const [lang, setLang] = useState(getLanguage);
+    const [lang, setLang] = useState(getLanguage); // vi en
     const [prefix, setPrefix] = useState(getPrefix);
 
     useEffect(() => {

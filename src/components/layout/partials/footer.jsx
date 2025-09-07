@@ -1,207 +1,107 @@
-import { useState, useEffect } from "react";
-import { MapPin, Phone, Mail } from "lucide-react";
-import { FaLinkedin, FaFacebookSquare } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useLanguage } from "../../../contexts/LanguageContext";
+import React, { useEffect, useState } from "react";
+import FooterView from "@/pages/managers/ConfigPage/FooterView";
+import useCurrentLanguage from "@/hook/currentLang";
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { lang } = useCurrentLanguage();
+  const [footerData, setFooterData] = useState({});
+  const [services, setServices] = useState({});
+  const [privacy, setPrivacy] = useState({});
+  const [socials, setSocials] = useState({});
   const [activeLang, setActiveLang] = useState("vi");
-  const [footerData, setFooterData] = useState({ vi: {}, en: {} });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:5000";
+  const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
-  // Hàm xử lý logo (ghép URL đầy đủ nếu DB chỉ lưu đường dẫn tương đối)
-  const getFullLogoUrl = (logoPath) => {
-    if (!logoPath) return "/logoModi.png"; // fallback
-    if (logoPath.startsWith("http")) return logoPath; // nếu DB đã lưu full URL
-    return `${API_BASE_URL}${logoPath}`; // ghép base URL
+  const fetchFooter = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch song song tất cả API
+      const [logoRes, infoRes, serviceRes, socialRes, privacyRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`),
+        fetch(`${API_BASE_URL}/api/section-items/type/company_info?slug=footer`),
+        fetch(`${API_BASE_URL}/api/section-items/type/services?slug=footer`),
+        fetch(`${API_BASE_URL}/api/section-items/type/social?slug=footer`),
+        fetch(`${API_BASE_URL}/api/section-items/type/privacy?slug=footer`),
+      ]);
+
+      const [logoData, companyInfo, serviceData, socialsData, privacyData] = await Promise.all([
+        logoRes.json(),
+        infoRes.json(),
+        serviceRes.json(),
+        socialRes.json(),
+        privacyRes.json(),
+      ]);
+
+      const logoItem = logoData[0] || null;
+
+      // Các ngôn ngữ cần hỗ trợ
+      const langs = ["vi", "en"];
+      const footerMap = {};
+      const serviceMap = {};
+      const socialMap = {};
+      const privacyMap = {};
+
+      langs.forEach((lng) => {
+        footerMap[lng] = {
+          logo: logoItem?.image_url ? `${API_BASE_URL}${logoItem.image_url}` : "/logoModi.png",
+          name_company: companyInfo.find((f) => f.position === 2)?.description?.[lng] || "",
+          content_about_us: companyInfo.find((f) => f.position === 6)?.description?.[lng] || "",
+          address_company: companyInfo.find((f) => f.position === 3)?.description?.[lng] || "",
+          phone: companyInfo.find((f) => f.position === 4)?.description?.[lng] || "",
+          email: companyInfo.find((f) => f.position === 5)?.description?.[lng] || "",
+        };
+
+        serviceMap[lng] = serviceData.map((s) => ({
+          title: s.title?.[lng],
+          slug: s.description?.[lng],
+        }));
+
+        socialMap[lng] = socialsData.map((s) => ({
+          title: s.title?.[lng],
+          url: s.description?.[lng],
+        }));
+
+        privacyMap[lng] = privacyData.map((p) => ({
+          title: p.title?.[lng],
+          link: p.description?.[lng],
+        }));
+      });
+
+      // Lưu toàn bộ data vào state
+      setFooterData(footerMap);
+      setServices(serviceMap);
+      setSocials(socialMap);
+      setPrivacy(privacyMap);
+    } catch (err) {
+      console.error("❌ Lỗi tải footer:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 🔹 Load dữ liệu từ API
+  // Fetch chỉ 1 lần
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const url = `${API_BASE_URL}/api/footer/${activeLang}`;
-        console.log("Fetching data from:", url);
-        const res = await fetch(url);
+    fetchFooter();
+  }, []);
 
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Không thể tải dữ liệu footer.");
-        }
+  // Cập nhật lang
+  useEffect(() => {
+    setActiveLang(lang);
+  }, [lang]);
 
-        const data = await res.json();
-
-        setFooterData((prev) => ({
-          ...prev,
-          [activeLang]: {
-            logo: getFullLogoUrl(data.logo),
-            name_company: data.name_company,
-            content_about_us: data.content_about_us,
-            address_company: data.address_company,
-            phone: data.phone,
-            email: data.email,
-          },
-        }));
-      } catch (err) {
-        console.error("Lỗi load footer config:", err);
-        alert("Lỗi tải dữ liệu footer: " + err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [activeLang]);
-
-  const currentData = footerData[activeLang] || {};
-
-  const services = [
-    { title: t("footer.listServices.0"), slug: "online-kickstart" },
-    { title: t("footer.listServices.1"), slug: "one-me" },
-    { title: t("footer.listServices.2"), slug: "brand-building" },
-    { title: t("footer.listServices.3"), slug: "online-store" },
-    { title: t("footer.listServices.4"), slug: "service-booking" },
-    { title: t("footer.listServices.5"), slug: "comprehensive-management" },
-    { title: t("footer.listServices.6"), slug: "website-app" },
-    { title: t("footer.listServices.7"), slug: "re-vision" },
-    { title: t("footer.listServices.8"), link: null },
-    { title: t("footer.listServices.9"), link: null },
-    { title: t("footer.listServices.10"), link: null },
-    { title: t("footer.listServices.11"), link: null },
-  ];
-
-  const privacy_statement = [
-    { link: "/about", title: t("footer.privacyStatement.0") },
-    { link: "/terms-of-services", title: t("footer.privacyStatement.1") },
-    { link: "/contact", title: t("footer.privacyStatement.2") },
-    { link: "/careers", title: t("footer.privacyStatement.3") },
-  ];
+  if (loading) {
+    return <p className="text-center py-6">⏳ Đang tải footer...</p>;
+  }
 
   return (
-    <footer className="md:mb-4 md:p-8 xs:p-4 xs:m-0 text-white bg-gray-900 md:rounded-2xl border-1 dark:border-slate-700 border-slate-300">
-      <div className="3xl:max-w-full 3xl:w-full md:max-w-6xl mx-auto 3xl:px-20">
-        <div className="grid grid-cols-1 gap-8 mb-8 md:grid-cols-3">
-          {/* Left Section - Company Info */}
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center justify-center xs:h-10 3xl:h-20 px-3 py-2 mb-3 overflow-hidden rounded-2xl w-fit">
-                <img
-                  src={currentData.logo}
-                  className='xs:h-10 3xl:h-20 w-fit object-fill'
-                  alt="logo"
-                  onError={(e) => (e.target.src = "/logoModi.png")}
-                />
-              </div>
-              <h2 className="mb-6 text-xl font-semibold 3xl:text-3xl">
-                {currentData.name_company}
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="flex-shrink-0 mt-1 text-red-500 xs:text-sm md:text-xl" size={20} />
-                <div className="xs:text-sm md:text-md 3xl:text-xl">
-                  <p>{currentData.address_company}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Phone className="flex-shrink-0 text-blue-500" size={20} />
-                <p className="xs:text-sm md:text-md 3xl:text-xl">{currentData.phone}</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Mail className="flex-shrink-0 text-red-500" size={20} />
-                <p className="xs:text-sm md:text-md 3xl:text-xl">{currentData.email}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Middle Section - Services */}
-          <div>
-            <h3 className="mb-6 text-xl font-semibold 3xl:text-3xl">{t("footer.services")}</h3>
-            <div className="grid grid-cols-2 gap-x-8">
-              <ul className="space-y-3">
-                {services.slice(0, Math.ceil(services.length / 2)).map((service, index) => (
-                  <li key={index} className="transition-all duration-200 hover:text-green-400">
-                    <Link
-                      to={service.slug ? `/services/${service.slug}` : "/services"}
-                      className="xs:text-sm md:text-md 3xl:text-xl"
-                    >
-                      {service.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              <ul className="space-y-3">
-                {services.slice(Math.ceil(services.length / 2)).map((service, index) => (
-                  <li key={index + 100} className="transition-all duration-200 hover:text-green-400">
-                    <Link
-                      to={service.slug ? `/services/${service.slug}` : "/services"}
-                      className="xs:text-sm md:text-md 3xl:text-xl"
-                    >
-                      {service.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Right Section - About & Links */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-4 text-xl font-semibold 3xl:text-3xl">{t("footer.aboutUs")}</h3>
-              <p className="text-sm leading-relaxed text-justify text-gray-300 3xl:text-xl">
-                {currentData.content_about_us}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="mb-4 text-xl font-semibold 3xl:text-3xl">{t("footer.privacy")}</h3>
-              <div className="grid grid-cols-2 gap-x-8">
-                <ul className="space-y-3">
-                  {privacy_statement.slice(0, Math.ceil(privacy_statement.length / 2)).map((service, index) => (
-                    <li key={index} className="transition-all duration-200 hover:text-green-400 3xl:text-xl">
-                      <Link to={service.link}>{service.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-                <ul className="space-y-3">
-                  {privacy_statement.slice(Math.ceil(privacy_statement.length / 2)).map((service, index) => (
-                    <li key={index + 100} className="transition-all duration-200 hover:text-green-400">
-                      <Link to={service.link} className="xs:text-sm md:text-md 3xl:text-xl">
-                        {service.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="flex flex-col items-center justify-between pt-6 border-t border-gray-700 md:flex-row">
-          <p className="mb-4 text-sm text-gray-400 md:mb-0 3xl:text-xl">
-            © Copyright 2025 All Rights Reserved
-          </p>
-
-          <div className="flex gap-3">
-            <div className="flex items-center justify-center w-10 h-10 transition-colors rounded cursor-pointer hover:bg-blue-700">
-              <FaLinkedin size={30} className="text-white 3xl:text-xl" />
-            </div>
-            <div className="flex items-center justify-center w-10 h-10 transition-colors rounded cursor-pointer hover:bg-blue-600">
-              <FaFacebookSquare size={30} className="text-white 3xl:text-xl" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <FooterView
+      data={footerData}
+      services={services[activeLang]}
+      socials={socials[activeLang]}
+      privacy={privacy[activeLang]}
+      lang={activeLang}
+    />
   );
 }

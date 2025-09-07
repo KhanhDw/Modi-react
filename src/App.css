@@ -100,3 +100,16 @@ html.lenis body {
     -webkit-text-size-adjust: none;
     spellcheck: false;
 }
+
+/* Áp dụng cho Chrome / Safari */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #f3f4f6 inset !important; /* bg-gray-100 */
+    -webkit-text-fill-color: #1f2937 !important; /* text-gray-700 */
+    transition: background-color 5000s ease-in-out 0s; /* tránh bị nhấp nháy */
+}
+
+/* Dark mode */
+.admin-dark input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; /* bg-gray-700 */
+    -webkit-text-fill-color: #f3f4f6 !important; /* text-gray-100 */
+}
