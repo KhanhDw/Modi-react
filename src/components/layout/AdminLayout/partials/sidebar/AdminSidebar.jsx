@@ -1,4 +1,3 @@
-import { useLocation, Link } from "react-router-dom";
 import {
   LayoutDashboard, Handshake, Newspaper, Users, ShieldMinus, Mail, Puzzle, Moon, SunMedium,
   X, ChevronLeft, ChevronRight,
@@ -12,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
@@ -25,7 +25,7 @@ const menuItems = [
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
   { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone },
   { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette },
-  { name: "Cấu hình trang web", path: "/managers/page-config/header", icon: Columns3Cog },
+  { name: "Cấu hình trang web", path: "/managers/page-config", icon: Columns3Cog },
   { name: "Khu vực quản trị", path: "/managers/admin-zone", icon: ShieldMinus },
   { name: "Component", path: "/managers/components", icon: Puzzle },
 ];
@@ -37,6 +37,14 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 
   const [todayVisits, setTodayVisits] = useState(0);
 
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (pathname === "/managers/page-config") {
+      navigate("/managers/page-config/header", { replace: true });
+    }
+  }, [pathname, navigate]);
 
   const fetchData = async () => {
     // Lấy tổng lượt truy cập hôm nay
