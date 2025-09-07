@@ -306,8 +306,9 @@ export default function RenderHomeConfig({
                                         handleChange("khachHang", k.id, "description", e.target.value)
                                     }
                                 />
-
-                                <div className="flex w-full items-center justify-center">
+                                
+                                {/* không có chọn ảnh */}
+                                <div hidden className="flex w-full items-center justify-center">
                                     <div>
                                         <InputField
                                             label="Chọn ảnh"
