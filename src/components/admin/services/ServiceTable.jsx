@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, MoreHorizontal, Filter } from "lucide-react";
+import { Search, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,27 +25,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export default function ServiceTable() {
-  const {
-    initDataService,
-    openEditServiceForm,
-    handleEditService,
-    viewDetail,
-    handleDeleteService,
-  } = useOutletContext();
-  const [search, setSearch] = useState("");
+  const { initDataService, openEditServiceForm, handleDeleteService } =
+    useOutletContext();
 
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // số dịch vụ trên 1 trang
+
+  // Lọc theo search
   const filteredService = initDataService.filter((service) =>
     service.ten_dich_vu.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Tính toán phân trang
+  const totalPages = Math.ceil(filteredService.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = filteredService.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
   return (
     <Card className="bg-gray-100">
       <CardHeader>
@@ -56,13 +57,16 @@ export default function ServiceTable() {
               Quản lý tất cả dịch vụ
             </CardDescription>
           </div>
-          {/* Code more for search, filter */}
+          {/* Search */}
           <div className="flex items-center gap-2">
             <div className="relative bg-white rounded-md shadow-sm text-black">
               <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground" />
               <Input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1); // reset về trang đầu khi tìm kiếm
+                }}
                 placeholder="Tìm kiếm dịch vụ..."
                 className="pl-10 w-64"
               />
@@ -78,25 +82,22 @@ export default function ServiceTable() {
                 <TableHead className="text-black">Tên dịch vụ</TableHead>
                 <TableHead className="text-black">Mô tả</TableHead>
                 <TableHead className="text-black">Giá</TableHead>
+                <TableHead className="text-black">Số lần đặt</TableHead>
                 <TableHead className="text-black">Trạng thái</TableHead>
                 <TableHead className="text-black">Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* Example data, replace with actual data */}
-              {filteredService.map((item) => (
+              {currentData.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>{item.ten_dich_vu}</TableCell>
                   <TableCell>{item.mo_ta}</TableCell>
                   <TableCell>{`₫${item.price.toLocaleString()}`}</TableCell>
+                  <TableCell>{item.booking_count}</TableCell>
                   <TableCell>
-                    {/* {item.status ? ( */}
-                    <Badge className="bg-green-500">Hoạt động</Badge>
-                    {/* // ) : (
-                  //   <Badge className="bg-red-500">Ngừng hoạt động</Badge>
-                  // )} */}
+                    <Badge className="bg-green-600 text-white">Hoạt động</Badge>
                   </TableCell>
-                  <TableCell className="flex items-center space-x-2">
+                  <TableCell>
                     <DropdownMenu modal={false}>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
@@ -104,20 +105,16 @@ export default function ServiceTable() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        {/* Add more actions here */}
-                        <DropdownMenuItem
-                          onClick={() => console.log("View Detail")}
-                        >
-                          Xem chi tiết
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => openEditServiceForm(item)}
                         >
+                          <Edit className="mr-2 h-4 w-4" />
                           Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDeleteService(item.id)}
                         >
+                          <Trash2 className="mr-2 h-4 w-4" />
                           Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -127,6 +124,41 @@ export default function ServiceTable() {
               ))}
             </TableBody>
           </Table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-end mt-4 gap-2">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            className="text-white disabled:opacity-50 border-gray-300"
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
+            Trước
+          </Button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <Button
+              key={i}
+              className={`px-3 ${
+                currentPage === i + 1
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+              }`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </Button>
+          ))}
+
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages}
+            className="text-white disabled:opacity-50 border-gray-300"
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
+            Sau
+          </Button>
         </div>
       </CardContent>
     </Card>

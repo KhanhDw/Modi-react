@@ -12,12 +12,11 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
 import { Globe } from "lucide-react";
 import { UploadAPI } from "@/api/serviceAPI";
-
+import ArticleDetailModal from "./articles/article_modal_detail";
+import * as XLSX from "xlsx";
 export default function ServiceForm() {
   // Cac state
   const [isAddingParagraph, setIsAddingParagraph] = useState(false);
@@ -40,6 +39,42 @@ export default function ServiceForm() {
   const [formData, setFormData] = useState({});
   const [partOfArticle, setPartOfArticle] = useState({});
   const [dataArticle, setDataArticle] = useState(null);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+  const [isEditingParagraph, setIsEditingParagraph] = useState(false);
+  const [editKey, setEditKey] = useState(null);
+  // Xu ly modal article detail
+  const handleDeleteParagraph = (key) => {
+    setDataArticle((prev) => {
+      const updated = { ...prev };
+      delete updated[key];
+      return updated;
+    });
+  };
+
+  const handleEditParagraph = (key, value) => {
+    const type = key.replace(/[0-9]/g, "");
+    setEditKey(key);
+    setPartOfArticle(value);
+
+    if (type === "content") {
+      setSelectedType("content");
+    } else if (type === "img") {
+      setSelectedType("img");
+      // nếu là URL (ảnh đã upload), set preview luôn
+      if (value?.img && typeof value.img === "string") {
+        setPreview(value.img);
+      }
+    } else if (type === "tbl") {
+      setSelectedType("tbl");
+    } else {
+      setSelectedType("link");
+    }
+
+    setOpenDetailModal(false);
+    setIsEditingParagraph(true);
+    setIsAddingParagraph(true);
+  };
+
   // xu ly event
 
   // khi co du lieu va yeu cau edit tu component cha
@@ -74,7 +109,7 @@ export default function ServiceForm() {
     }
 
     setDataArticle(null);
-    setPartOfArticle(null);
+    setPartOfArticle({});
   };
 
   const handleChange = (field, value) => {
@@ -88,51 +123,93 @@ export default function ServiceForm() {
   const openAddParagraph = () => {
     setIsAddingParagraph(true);
   };
+
   const newArticle = { ...partOfArticle };
 
   //Them tung phan cua bai viet vao BIG CONTENT
   const handleSubmitParagraph = async (field) => {
-    if (field === "content") {
-      field = field + countContent.toString();
-      setCountContent(countContent + 1);
-    } else if (field === "img") {
-      field = field + countImg.toString();
-      setCountImg(countImg + 1);
+    if (isEditingParagraph && editKey) {
+      const updatedArticle = { ...newArticle };
 
-      const data = new FormData();
-      data.append("image", newArticle.img);
-      try {
-        const res = await fetch(UploadAPI.uploadImg(), {
-          method: "POST",
-          body: data,
-        });
-        if (!res.ok) {
-          throw new Error("Error when upload file");
-        }
+      // Nếu đang sửa ảnh và img là File => upload lại
+      if (selectedType === "img" && newArticle.img instanceof File) {
+        const data = new FormData();
+        data.append("image", newArticle.img);
+        try {
+          const res = await fetch(UploadAPI.uploadImg(), {
+            method: "POST",
+            body: data,
+          });
+          if (!res.ok) throw new Error("Error when upload file");
 
-        const result = await res.json();
-        if (result.success) {
-          newArticle.img = result.data.url;
+          const result = await res.json();
+          if (result.success) {
+            updatedArticle.img = result.data.url; // cập nhật lại URL
+          }
+        } catch (err) {
+          console.log("Error upload khi edit: ", err);
         }
-      } catch (err) {
-        console.log("Error: ", err);
       }
-    } else if (field === "tbl") {
-      field = field + countTbl.toString();
-      setCountTbl(countTbl + 1);
+
+      setDataArticle((prev) => ({ ...prev, [editKey]: updatedArticle }));
     } else {
-      field = field + countLink.toString();
-      setCountLink(countLink + 1);
+      if (field === "content") {
+        field = field + countContent.toString();
+        setCountContent(countContent + 1);
+      } else if (field === "img") {
+        field = field + countImg.toString();
+        setCountImg(countImg + 1);
+
+        const data = new FormData();
+        data.append("image", newArticle.img);
+        try {
+          const res = await fetch(UploadAPI.uploadImg(), {
+            method: "POST",
+            body: data,
+          });
+          if (!res.ok) {
+            throw new Error("Error when upload file");
+          }
+
+          const result = await res.json();
+          if (result.success) {
+            newArticle.img = result.data.url;
+          }
+        } catch (err) {
+          console.log("Error: ", err);
+        }
+      } else if (field === "tbl") {
+        field = field + countTbl.toString();
+        setCountTbl(countTbl + 1);
+        console.log(newArticle);
+        if (newArticle.tbl) {
+          try {
+            const tableData = await handleExcelUpload(newArticle.tbl);
+            newArticle.tbl = tableData; // Lưu dữ liệu bảng
+          } catch (err) {
+            console.log("Error reading excel: ", err);
+          }
+        }
+      } else {
+        field = field + countLink.toString();
+        setCountLink(countLink + 1);
+      }
+      setDataArticle((prev) => ({ ...prev, [field]: newArticle }));
+      console.log(dataArticle);
     }
-    setDataArticle((prev) => ({ ...prev, [field]: newArticle }));
     setIsAddingParagraph(false);
+    setIsEditingParagraph(false);
+    setEditKey(null);
     setPartOfArticle({});
     setSelectedType("content");
   };
 
   const handleCancelAddParagraph = () => {
     setIsAddingParagraph(false);
-    setCancelAddParagraph(true);
+    setIsEditingParagraph(false);
+    setEditKey(null);
+    setPartOfArticle({});
+    setSelectedType("content");
   };
 
   const handleFileChange = (file) => {
@@ -144,6 +221,26 @@ export default function ServiceForm() {
   const handleChangeLang = () => {
     const newLang = lang === "vi" ? "en" : "vi"; // đổi giá trị trực tiếp
     setLang(newLang);
+  };
+  // Đọc file Excel
+  const handleExcelUpload = async (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Lấy sheet đầu tiên
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+
+        // Parse dữ liệu sheet ra mảng 2 chiều
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        resolve(jsonData);
+      };
+      reader.onerror = (err) => reject(err);
+      reader.readAsArrayBuffer(file);
+    });
   };
 
   return (
@@ -176,17 +273,7 @@ export default function ServiceForm() {
             </div>
           </CardHeader>
           <CardContent>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (editingService) {
-                  handleEditService(formData, editingService.id);
-                } else {
-                  handleSubmit(e);
-                }
-              }}
-              className="space-y-6"
-            >
+            <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
               <div className="space-y-6">
                 <div
                   className={`flex ${
@@ -258,24 +345,6 @@ export default function ServiceForm() {
                           required
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label className="text-black" htmlFor="footer">
-                          Tổng kết của bài viết *
-                        </Label>
-                        <Input
-                          className="text-black border border-black/30"
-                          // id="description"
-                          // value={
-                          //   editingService ? editingService.mo_ta : formData.desc
-                          // }
-                          value={formData.footer}
-                          onChange={(e) =>
-                            handleChange("footer", e.target.value)
-                          }
-                          placeholder="Nhập kết luận bài viết"
-                          required
-                        />
-                      </div>
                       {!isAddingParagraph ? (
                         <div className="space-y-2 flex">
                           <Button
@@ -288,7 +357,12 @@ export default function ServiceForm() {
 
                           {dataArticle && (
                             <div className="ml-2">
-                              <Button>Xem chi tiết</Button>
+                              <Button
+                                type="button"
+                                onClick={() => setOpenDetailModal(true)}
+                              >
+                                Xem chi tiết
+                              </Button>
                             </div>
                           )}
                         </div>
@@ -580,9 +654,23 @@ export default function ServiceForm() {
                                     // value={
                                     //   editingService ? editingService.mo_ta : formData.desc
                                     // }
-                                    onChange={(e) => {
-                                      const file = e.target.files[0];
-                                      handleChangeForArticle("tbl", file);
+                                    onChange={async (e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        try {
+                                          const tableData =
+                                            await handleExcelUpload(file);
+                                          handleChangeForArticle(
+                                            "tbl",
+                                            tableData
+                                          ); // Lưu data mảng vào state
+                                        } catch (err) {
+                                          console.error(
+                                            "Error parsing Excel: ",
+                                            err
+                                          );
+                                        }
+                                      }
                                     }}
                                     required
                                   />
@@ -700,10 +788,13 @@ export default function ServiceForm() {
                                   <Textarea
                                     className="text-black border border-black/30"
                                     id="linkPara"
-                                    // value={
-                                    //   editingService ? editingService.mo_ta : formData.desc
-                                    // }
-                                    // onChange={(e) => handleChange("desc", e.target.value)}
+                                    value={partOfArticle.linkPara}
+                                    onChange={(e) =>
+                                      handleChangeForArticle(
+                                        "linkPara",
+                                        e.target.value
+                                      )
+                                    }
                                     placeholder="Nhập nội dung"
                                     required
                                   />
@@ -743,7 +834,7 @@ export default function ServiceForm() {
                                 handleSubmitParagraph(selectedType)
                               }
                             >
-                              Thêm
+                              {isEditingParagraph ? "Chỉnh sửa" : "Thêm"}
                             </Button>
 
                             <Button
@@ -778,6 +869,13 @@ export default function ServiceForm() {
           </CardContent>
         </Card>
       </div>
+      <ArticleDetailModal
+        open={openDetailModal}
+        onOpenChange={setOpenDetailModal}
+        dataArticle={dataArticle}
+        onEdit={handleEditParagraph}
+        onDelete={handleDeleteParagraph}
+      />
     </>
   );
 }
