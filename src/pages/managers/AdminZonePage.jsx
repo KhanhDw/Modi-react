@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
 import axios from "axios";
-import UserForm from "@/components/admin/userForm/userForm.jsx"; 
+import UserForm from "@/components/admin/userForm/UserForm.jsx"; 
 import "../../styles/scrollbar.css";
 
 const PAGE_SIZE = 8;
