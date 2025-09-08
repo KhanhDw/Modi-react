@@ -447,14 +447,14 @@ function ServiceModi({ data, activeLang }) {
                 {isMobileView ? (
                     // ================= MOBILE =================
                     <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 px-4 sm:px-6 md:px-0 scrollbar-hide">
-                        {data.map((service) => (
+                        {data.map((service, index) => (
                             <div
                                 key={service.id}
                                 className="relative overflow-hidden cursor-pointer"
                                 onMouseEnter={() => handleMouseEnter(service.id, index)}
                                 onMouseLeave={handleMouseLeave}
                                 style={{
-                                    width: getItemWidth(service.id, index, isFirst, isLast),
+                                    width: getItemWidth(service.id, index), 
                                     transition: "width 0.2s ease-out",
                                 }}
                             >
@@ -566,8 +566,6 @@ function BenefitBusiness({ data, activeLang }) {
     const isInView = useInView(ref, { once: true, threshold: 0.8 });
     const [hovered, setHovered] = useState(null);
     const [openIndex, setOpenIndex] = useState(0);
-
-    console.log(data[0].description?.[activeLang]);
 
     return (
         <div

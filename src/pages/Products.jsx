@@ -145,15 +145,15 @@ export default function Products() {
             {filteredSamples.map((sample, index) => (
               <Card
                 key={sample.id}
-                className={`group transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 hover:border-primary/50 ${visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                className={`group  transition-all duration-500 hover:scale-105 hover:shadow-xl border-2 hover:border-primary/50 ${visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                   }`}
               >
-                <CardContent className="p-0">
-                  <div className="relative overflow-hidden rounded-t-lg">
+                <CardContent className="px-2">
+                  <div className="relative overflow-hidden rounded-lg ">
                     <img
                       src={`${baseUrl}${sample.image_url}`}
                       alt={`Website ${sample.category}`}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="w-full h-48  object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute top-4 right-4">
                       <Badge variant={sample.export_state ? "default" : "secondary"}>
@@ -187,9 +187,8 @@ export default function Products() {
                         </Badge>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div hidden className="flex items-center justify-between ">
                       <div>
-
                       </div>
                       <div className="flex gap-2">
                         {sample.url_github && (

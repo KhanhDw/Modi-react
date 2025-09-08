@@ -24,8 +24,8 @@ export default function ArticlesList({ articles }) {
             {articles.map((article) => (
                 <div
                     key={article.id}
-                    className="relative bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 
-                               overflow-hidden hover:shadow-md transition-shadow duration-200 break-inside-avoid mb-6 cursor-pointer"
+                    className="relative  bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 
+                               overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 break-inside-avoid mb-6 cursor-pointer"
                     onClick={() => handleArticleClick(article.slug)}
                 >
                     {/* Article Image */}

@@ -1,7 +1,7 @@
 import { use, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"
 import { motion } from "framer-motion";
-import Header from "./header";
+import Header from "./header/header";
 
 function AnimationHeader({ ActiveSideBarHeader }) {
     const location = useLocation()

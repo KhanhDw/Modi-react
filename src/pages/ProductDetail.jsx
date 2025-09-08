@@ -171,7 +171,7 @@ export default function ProductDetail() {
               <img
                 src={product.screenshots?.[selectedImage] || `${baseUrl}${product.image_url}`}
                 alt={`Website ${product.category}`}
-                className="w-full h-96 object-cover rounded-lg shadow-lg"
+                className="w-full h-96 object-cover rounded-lg shadow-lg border-2 dark:border-gray-700"
               />
 
               {product.url_github && (

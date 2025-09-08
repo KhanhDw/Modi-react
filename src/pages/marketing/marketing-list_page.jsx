@@ -72,7 +72,7 @@ export default function MarketingPage() {
     const visibleArticles = articles.slice(0, visibleCount)
 
     return (
-        <div className="min-h-screen bg-transparent dark:bg-background">
+        <div className="min-h-screen bg-transparent ">
             <main className="container mx-auto py-10 px-4">
                 <div className="mb-8 flex justify-between items-center">
                     <div className="flex flex-col">
@@ -113,7 +113,7 @@ export default function MarketingPage() {
 
                         {/* Nút xem thêm */}
                         {visibleCount < articles.length && (
-                            <div className="flex justify-center mt-6">
+                            <div className="flex justify-center mt-6 ">
                                 <button
                                     onClick={() => setVisibleCount((prev) => prev + pageSize)}
                                     className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg 
