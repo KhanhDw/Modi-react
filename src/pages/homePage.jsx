@@ -339,34 +339,37 @@ function ThreeCardBusiness({ data, activeLang }) {
                         initial={{ opacity: 0, y: 50 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.6, delay: index * 0.2 }}
-                        className="group flex flex-col items-center justify-start p-8 rounded-2xl 
-                                   bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl 
-                                   border border-gray-200 dark:border-gray-700 
-                                   transition-all duration-300 hover:-translate-y-2"
+                        className="relative flex flex-col items-center justify-start 
+                   rounded-3xl bg-white dark:bg-gray-900 shadow-lg 
+                   border border-gray-200 dark:border-gray-700 
+                   overflow-hidden transition-all duration-300 hover:shadow-2xl p-2"
                     >
-                        {/* Icon / Image */}
-                        <div className="w-20 h-20 flex items-center justify-center mb-5 rounded-full 
-                                        bg-gradient-to-tr from-blue-500 to-indigo-500 p-4 shadow-md">
+                        {/* Hình ảnh phía trên */}
+                        <div className="rounded-2xl w-full overflow-hidden h-56 bg-gradient-to-tr from-blue-200 to-indigo-300 flex items-center justify-center">
                             <img
                                 src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
                                 alt={item.title?.[activeLang]}
-                                className="w-12 h-12 object-contain"
+                                className="w-auto h-auto object-contain drop-shadow-lg"
                             />
                         </div>
 
-                        {/* Title */}
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center group-hover:text-indigo-500 transition-colors duration-300">
-                            {item.title?.[activeLang]}
-                        </h3>
+                        {/* Nội dung */}
+                        <div className="p-6 text-center">
+                            {/* Tiêu đề */}
+                            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                                {item.title?.[activeLang]}
+                            </h3>
 
-                        {/* Description */}
-                        <p className="mt-4 text-gray-600 dark:text-gray-300 text-sm md:text-base text-center leading-relaxed">
-                            {item.description?.[activeLang]}
-                        </p>
+                            {/* Mô tả */}
+                            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                                {item.description?.[activeLang]}
+                            </p>
+                        </div>
                     </motion.div>
                 ))}
             </div>
         </div>
+
     );
 }
 

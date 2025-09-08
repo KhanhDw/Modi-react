@@ -4,11 +4,10 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { HiX } from "react-icons/hi";
 import ThemeToggle from './ThemeToggle';
-import { useLanguage } from '../../../contexts/LanguageContext';
-import { motion } from "framer-motion";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 
-const baseUrl = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:3000";
+const baseUrl = import.meta.env.VITE_MAIN_BE_URL;
 
 function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
   const { t } = useLanguage();
@@ -17,6 +16,28 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
   const [isHoverServices, setIsHoverServices] = useState(false);
   const [isHoverDesignWeb, setIsHoverDesignWeb] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [logo, setLogo] = useState("/logoModi.png");
+  const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
+
+  const fetchLogo = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
+      if (!res.ok) throw new Error("Không thể tải logo");
+      const data = await res.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        const item = data[0];
+        setLogo(item.image_url ? `${API_BASE_URL}${item.image_url}` : "/logoModi.png");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchLogo();
+  }, []);
+
 
   const toggleSidebar = () => {
     const next = !isSidebarOpen;
@@ -34,7 +55,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
         } w-full  flex justify-between items-center xs:px-3 sm:px-3 md:px-10 lg:px-20 fixed top-0 left-0 z-40`}>
         {/* Logo Section */}
         <Link to={'/'} className='flex items-center justify-center xs:h-10 2xl:h-20 px-3 py-2 overflow-hidden rounded-2xl w-fit'>
-          <img src="/logoModi.png" className='xs:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
+          <img src={`${logo}`} className='xs:h-8 2xl:h-8 3xl:h-12 w-fit' alt='logo' />
         </Link>
 
         {/* Desktop Navigation - Hidden on mobile and tablet */}
@@ -383,13 +404,18 @@ function ModalDesignWeb() {
         const res = await fetch(`${baseUrl}/api/web-samples`);
         if (!res.ok) throw new Error("Failed to fetch");
         const result = await res.json();
-        const parsedData = (result.data || []).map((item) => ({
-          ...item,
-          tags: typeof item.tags === "string" ? JSON.parse(item.tags) : item.tags,
-          tech: typeof item.tech === "string" ? JSON.parse(item.tech) : item.tech,
-          top_features: typeof item.top_features === "string" ? JSON.parse(item.top_features) : item.top_features,
-          export_state: item.export_state ? 1 : 0,
-        }));
+        try {
+
+          const parsedData = (result.data || []).map((item) => ({
+            ...item,
+            tags: typeof item.tags === "string" ? JSON.parse(item.tags) : item.tags,
+            tech: typeof item.tech === "string" ? JSON.parse(item.tech) : item.tech,
+            top_features: typeof item.top_features === "string" ? JSON.parse(item.top_features) : item.top_features,
+            export_state: item.export_state ? 1 : 0,
+          }));
+        } catch (e) {
+          console.log("header fetchCategories:",e);
+        }
         const activeData = parsedData.filter((item) => item.export_state === 1);
         const uniqueCategories = [...new Set(activeData.map((s) => s.category))]; // Không thêm "Tất cả"
         setCategories(uniqueCategories.map(category => ({
@@ -424,7 +450,7 @@ function ModalDesignWeb() {
 
               return (
                 <div
-                  key={index}
+                  key={item.id}
                   className={`
                     group cursor-pointer transition-all duration-300 ease-in-out transform
                     px-3 py-2 rounded-lg border-l-4 relative

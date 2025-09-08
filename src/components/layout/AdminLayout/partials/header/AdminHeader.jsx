@@ -40,11 +40,13 @@ const AdminHeader = ({
   useEffect(() => {
     const storedUsername = localStorage.getItem("fullName");
     const storedAvatar_url = localStorage.getItem("avatar_url");
-    if (storedUsername && storedAvatar_url) {
+    if (storedUsername ) {
       setUsername(storedUsername);
+    }
+    if ( storedAvatar_url) {
       setAvatar_url(storedAvatar_url);
     }
-  }, []);
+  }, [username, avatar_url]);
 
 
 
@@ -76,6 +78,8 @@ const AdminHeader = ({
       left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
     }
     : {};
+
+
 
   return (
     <header

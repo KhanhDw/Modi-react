@@ -24,12 +24,12 @@ function FileInput({ label, onChange }) {
 }
 
 export default function HeaderConfigLogo() {
-    const [logo, setLogo] = useState("/logoModi.png");
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [logo, setLogo] = useState("/logoModi.png");
     const [logoItem, setLogoItem] = useState(null); // lưu section_item hiện tại
     const [toast, setToast] = useState(null);
-    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL || "http://localhost:5000";
+    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
     // 🔹 Load logo từ section_items (slug=header, type=logo)
     const fetchLogo = async () => {
@@ -140,7 +140,7 @@ export default function HeaderConfigLogo() {
 
             {/* ===== Header Preview ===== */}
             <motion.div
-                className="bg-indigo-50 admin-dark:bg-gray-800 rounded-3xl shadow-2xl p-8 flex flex-col md:flex-row items-center gap-8 justify-between"
+                className="flex items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-3xl shadow-2xl p-8  md:flex-row  gap-8 "
                 initial={{ opacity: 0, y: -40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
@@ -148,19 +148,11 @@ export default function HeaderConfigLogo() {
                 <motion.img
                     src={logo}
                     alt="Logo"
-                    className="h-30 w-80 shadow-lg rounded-xl object-cover cursor-pointer"
+                    className="w-60  shadow-lg rounded-xl object-cover cursor-pointer"
                     whileHover={{ scale: 1.1, rotate: 1 }}
                     onError={(e) => (e.currentTarget.src = "/logoModi.png")}
                 />
-                <motion.div
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, type: "spring" }}
-                    className="text-gray-700 admin-dark:text-gray-300"
-                >
-                    <h1 className="text-4xl font-extrabold text-indigo-600 admin-dark:text-indigo-400">Modi</h1>
-                    <p className="mt-1 text-gray-600 admin-dark:text-gray-300">Modern Header Preview with Live Logo</p>
-                </motion.div>
+                
             </motion.div>
 
             {/* ===== Config Form ===== */}
