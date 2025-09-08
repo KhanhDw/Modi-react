@@ -147,7 +147,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             <Textarea
               type="text"
               name="title"
-              value={formData.title.trim()}
+              value={formData.title}
               onChange={handleChange}
               required
               spellCheck="false"
