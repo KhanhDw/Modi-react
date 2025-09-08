@@ -125,84 +125,101 @@ export default function AdminZonePage() {
         {/* Table */}
         <div className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${fade ? "opacity-100 shadow-md" : "opacity-0"}`}>
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
-            <thead>
-              <tr className="bg-gray-100 admin-dark:bg-gray-800 text-left text-gray-600 admin-dark:text-gray-300 uppercase text-sm select-none border-b border-gray-200 admin-dark:border-gray-700">
-                {/* <th className="py-3 px-6 whitespace-nowrap">Tên nhân viên</th>
-                <th className="py-3 px-6 whitespace-nowrap">Email</th>
-                <th className="py-3 px-6 whitespace-nowrap">Tên đăng nhập</th>
-                <th className="py-3 px-6 whitespace-nowrap">Vai trò</th>
-                <th className="py-3 px-6 whitespace-nowrap text-center">Thao tác</th> */}
-                {columns.map(col => (
-                  <th key={col.name} className="px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold text-gray-800 admin-dark:text-gray-200">{col.label}</th>
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 uppercase tracking-wider text-xs sm:text-sm border-b border-gray-200 admin-dark:border-gray-700">
+                {columns.map((col) => (
+                  <th
+                    key={col.name}
+                    className="px-3 sm:px-4 py-3 text-left font-semibold whitespace-nowrap"
+                  >
+                    {col.label}
+                  </th>
                 ))}
-                <th className="py-3 px-6 whitespace-nowrap text-center">Thao tác</th>
+                <th className="px-3 sm:px-4 py-3 text-center font-semibold whitespace-nowrap">
+                  Thao tác
+                </th>
               </tr>
             </thead>
+
             <tbody>
               {paginatedData.length > 0 ? (
                 paginatedData.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer border-b border-gray-100 admin-dark:border-gray-700"
+                  >
+                    {Object.keys(item)
+                      .filter((key) => key !== "id")
+                      .map((key, index) => {
+                        let cellContent = item[key];
 
-                  <tr key={item.id} className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition duration-150 cursor-pointer border-b border-gray-100 admin-dark:border-gray-700">
-                    {Object.keys(item).filter(key => key !== 'id').map((key, index) => {
-                      let cellContent = item[key];
-                      if (key === 'created_at' || key === 'updated_at') {
-                        cellContent = formatValue(item[key]);
-                      } else if (key === 'avatar_url') {
-                        const rawUrl = item[key];
-                        let avatarUrl = null;
+                        if (key === "created_at" || key === "updated_at") {
+                          cellContent = formatValue(item[key]);
+                        } else if (key === "avatar_url") {
+                          const rawUrl = item[key];
+                          let avatarUrl = null;
 
-                        if (rawUrl) {
-                          avatarUrl = rawUrl.startsWith('/image/')
-                            ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
-                            : rawUrl;
+                          if (rawUrl) {
+                            avatarUrl = rawUrl.startsWith("/image/")
+                              ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
+                              : rawUrl;
+                          }
+
+                          cellContent = avatarUrl ? (
+                            <div className="flex justify-center items-center">
+                              <img
+                                src={avatarUrl}
+                                alt="Avatar"
+                                className="w-10 h-10 rounded-full object-cover border border-gray-200 admin-dark:border-gray-600"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                  e.currentTarget.insertAdjacentHTML(
+                                    "afterend",
+                                    '<div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">N/A</div>'
+                                  );
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex justify-center items-center">
+                              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
+                                N/A
+                              </div>
+                            </div>
+                          );
                         }
 
-                        cellContent = avatarUrl ? (
-                          <img
-                            src={avatarUrl}
-                            alt="Avatar"
-                            className="w-10 h-10 rounded-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none"; // ẩn ảnh
-                              e.currentTarget.insertAdjacentHTML(
-                                "afterend",
-                                '<div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">N/A</div>'
-                              );
-                            }}
-
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">
-                            N/A
-                          </div>
+                        return (
+                          <td
+                            key={index}
+                            className={`px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-sm
+    ${index === 0 ? "whitespace-nowrap font-medium" : ""}`}
+                          >
+                            {cellContent}
+                          </td>
                         );
-                      }
+                      })}
 
-                      return (
-                        <td
-                          key={index}
-                          className="py-3 px-6 text-gray-700 admin-dark:text-gray-300"
-                        >
-                          {cellContent}
-                        </td>
-                      );
-                    })}
-
-                    <td className="py-3 px-6 text-gray-700 admin-dark:text-gray-300 text-center">
+                    <td className="px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-center">
                       <div className="flex justify-center gap-4">
                         <button
                           title="Chỉnh sửa"
-                          onClick={() => { setEditingUser(item); setShowForm(true); }}
+                          onClick={() => {
+                            setEditingUser(item);
+                            setShowForm(true);
+                          }}
                           className="flex items-center gap-1 text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300 transition cursor-pointer"
                         >
-                          <FiEdit2 size={18} /><span className="text-sm font-medium">Sửa</span>
+                          <FiEdit2 size={18} />
+                          <span className="text-sm font-medium">Sửa</span>
                         </button>
                         <button
                           title="Xóa"
                           onClick={() => handleDelete(item.id)}
                           className="flex items-center gap-1 text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400 transition cursor-pointer"
                         >
-                          <FiTrash2 size={18} /><span className="text-sm font-medium">Xóa</span>
+                          <FiTrash2 size={18} />
+                          <span className="text-sm font-medium">Xóa</span>
                         </button>
                       </div>
                     </td>
@@ -210,10 +227,16 @@ export default function AdminZonePage() {
                 ))
               ) : (
                 <tr className="h-20">
-                  <td colSpan="6" className="text-center text-gray-500 admin-dark:text-gray-400">Không tìm thấy kết quả</td>
+                  <td
+                    colSpan={columns.length + 1}
+                    className="text-center text-gray-500 admin-dark:text-gray-400 text-sm"
+                  >
+                    Không tìm thấy kết quả
+                  </td>
                 </tr>
               )}
             </tbody>
+
           </table>
         </div>
 

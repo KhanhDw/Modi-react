@@ -95,7 +95,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
             theme={isDark ? "admin" : "light"}
             variant="ghost"
             size="icon"
-            className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100"
+            className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100 cursor-pointer"
             onClick={toggleCollapse}
             aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
           >
@@ -147,12 +147,12 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 
       <div className="px-2 flex items-center justify-between transition-all duration-300 ">
         {isCollapsed && !isMobile ? "" :
-          (<span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300">
+          (<span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300 mb-2">
             Lượt truy cập hôm nay:
           </span>)
         }
 
-        <span className={`${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50`}>
+        <span className={`${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50 mb-2`}>
           {todayVisits.toLocaleString("vi-VN")}
         </span>
 
@@ -166,7 +166,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
           onClick={toggleTheme}
           variant="outline"
           size="sm"
-          className="w-full text-xs border-gray-700  bg-gray-200 text-slate-800 admin-dark:text-slate-100"
+          className="w-full text-xs cursor-pointer border-gray-700  bg-gray-200 text-slate-800 admin-dark:text-slate-100"
         >
           <>
             {/* Icon (luôn hiện trừ khi mobile và thu gọn) */}

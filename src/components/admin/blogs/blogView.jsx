@@ -3,13 +3,13 @@ import { ChevronLeft } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 function BlogViewPage() {
-    const { id } = useParams(); // lấy id từ URL: /blogs/:id
-    const [blogs, setBlogs] = useState(null);
-    const [error, setError] = useState(null);
+    const { id } = useParams();
+    const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [lang, setLang] = useState("vi"); // ✅ mặc định tiếng Việt
+    const [error, setError] = useState(null);
+    const [lang, setLang] = useState("vi");
 
-    const fetchBlogs = async (id, lang) => {
+    const fetchBlog = async (id, lang) => {
         setLoading(true);
         try {
             const prefix = lang === "en" ? "/en" : "";
@@ -18,12 +18,11 @@ function BlogViewPage() {
             );
 
             if (!res.ok) throw new Error("Không thể tải dữ liệu");
-            let result = await res.json();
-
-            setBlogs(result); // dữ liệu từ API
+            const data = await res.json();
+            setBlog(data);
             setError(null);
         } catch (err) {
-            console.error("Lỗi khi lấy dữ liệu:", err);
+            console.error(err);
             setError("Không thể tải bài viết. Vui lòng thử lại.");
         } finally {
             setLoading(false);
@@ -31,26 +30,18 @@ function BlogViewPage() {
     };
 
     useEffect(() => {
-        if (id) fetchBlogs(id, lang);
-    }, [id, lang]); // ✅ gọi lại khi đổi ngôn ngữ
+        if (id) fetchBlog(id, lang);
+    }, [id, lang]);
 
-    // Loading state
-    if (loading) {
-        return <div className="p-8 text-center">Đang tải dữ liệu...</div>;
-    }
-
-    // Error state
-    if (error) {
+    if (loading)
+        return <div className="p-8 text-center text-gray-700">Đang tải dữ liệu...</div>;
+    if (error)
         return <div className="p-8 text-center text-red-500">{error}</div>;
-    }
+    if (!blog)
+        return <div className="p-8 text-center text-gray-500">Không tìm thấy bài viết</div>;
 
-    if (!blogs) {
-        return <div className="p-8 text-center">Không tìm thấy bài viết</div>;
-    }
-
-    // Format date
-    const formattedDate = blogs.updated_at
-        ? new Date(blogs.updated_at).toLocaleDateString("vi-VN", {
+    const formattedDate = blog.updated_at
+        ? new Date(blog.updated_at).toLocaleDateString("vi-VN", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -58,77 +49,66 @@ function BlogViewPage() {
         : "";
 
     return (
-        <div className="relative">
-            <div>
-                <div className="mx-auto px-4 py-8">
-                    {/* Blog Image */}
-                    <div className="mb-8">
-                        <img
-                            src={`${import.meta.env.VITE_MAIN_BE_URL}${blogs.image}`}
-                            alt={blogs.title}
-                            className="w-full h-96 object-cover rounded-lg shadow-md"
-                            onError={(e) => {
-                                e.currentTarget.src = "/fallback.png";
-                                e.currentTarget.onerror = null;
-                            }}
-                        />
-                    </div>
+        <div className="relative bg-gray-50 admin-dark:bg-gray-900 min-h-screen rounded-xl">
+            {/* Back Button */}
+            <div className="absolute top-4 left-4 z-20">
+                <button
+                    onClick={() => window.history.back()}
+                    className="inline-flex items-center p-3 bg-gray-700/70 hover:bg-gray-800 text-white rounded-full transition cursor-pointer"
+                >
+                    <ChevronLeft size={20} />
+                </button>
+            </div>
 
-                    {/* Blog Content */}
-                    <div className="bg-white admin-dark:bg-gray-800 rounded-lg shadow-md p-8">
-                        {/* Title */}
-                        <h1 className="text-4xl font-bold text-gray-900 admin-dark:text-gray-200 mb-4">
-                            {blogs.title}
-                        </h1>
-
-                        {/* Meta Information */}
-                        <div className="flex items-center justify-between mb-6 text-gray-600">
-                            <div className="flex items-center space-x-2">
-                                <span className="font-medium admin-dark:text-gray-200">
-                                    By {blogs.author_name || "Unknown"}
-                                </span>
-                            </div>
-                            <span>{formattedDate}</span>
-                        </div>
-
-                        {/* Content */}
-                        <div
-                            className="prose max-w-none text-gray-800 leading-relaxed admin-dark:text-gray-200"
-                            dangerouslySetInnerHTML={{ __html: blogs.content }}
-                        />
-                    </div>
-                </div>
-
-                {/* Back Button */}
-                <div className="absolute top-0 left-0">
+            {/* Language Switch */}
+            <div className="absolute top-4 right-4 flex space-x-2 z-20">
+                {["vi", "en"].map((l) => (
                     <button
-                        onClick={() => window.history.back()}
-                        className="admin-dark:text-gray-200 inline-flex items-center p-4 bg-gray-600/40 text-white rounded-full hover:bg-gray-700 transition-colors"
-                    >
-                        <ChevronLeft />
-                    </button>
-                </div>
-
-                {/* Language Switch */}
-                <div className="absolute top-0 right-0 flex space-x-2 p-4">
-                    <button
-                        onClick={() => setLang("en")}
-                        className={`px-4 py-2 rounded-md font-bold transition-colors ${lang === "en"
-                            ? "bg-purple-800 text-white border-2 admin-dark:border-white"
-                            : "bg-gray-600/80 text-white hover:bg-gray-700"
+                        key={l}
+                        onClick={() => setLang(l)}
+                        className={`px-4 py-2 rounded-md font-semibold transition-colors ${lang === l
+                            ? "bg-purple-800 text-white border-2 admin-dark:border-white cursor-pointer"
+                            : "bg-gray-600/80 text-white hover:bg-gray-700 cursor-pointer"
                             }`}
                     >
-                        <span className="font-semibold">Anh</span>
+                        {l === "vi" ? "Việt" : "Anh"}
                     </button>
-                    <button
-                        onClick={() => setLang("vi")}
-                        className={`px-4 py-2 rounded-md font-bold transition-colors ${lang === "vi"
-                            ? "bg-purple-800 text-white border-2 admin-dark:border-white"
-                            : "bg-gray-600/80 text-white hover:bg-gray-700"
-                            }`}
-                    >
-                        <span className="font-semibold">Việt</span>
-                    </button>
+                ))}
+            </div>
+
+            <div className="max-w-5xl mx-auto px-4 py-12 space-y-10">
+                {/* Blog Image */}
+                <div className="w-full h-80 sm:h-96 md:h-[28rem] mt-5 rounded-lg overflow-hidden shadow-lg bg-gray-100 admin-dark:bg-gray-700 flex items-center justify-center">
+                    <img
+                        src={
+                            blog.image
+                                ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}`
+                                : "/no-image.png"
+                        }
+                        alt={blog.title || "No Image"}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            e.currentTarget.src = "/no-image.png"; // fallback nếu load lỗi
+                            e.currentTarget.onerror = null;
+                        }}
+                    />
+                </div>
+
+                {/* Blog Content */}
+                <div className="bg-white admin-dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8 space-y-6">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 admin-dark:text-gray-200">
+                        {blog.title}
+                    </h1>
+
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-600 admin-dark:text-gray-400 text-sm sm:text-base space-y-2 sm:space-y-0">
+                        <span>By {blog.author_name || "Unknown"}</span>
+                        <span>{formattedDate}</span>
+                    </div>
+
+                    <div
+                        className="prose prose-sm sm:prose lg:prose-lg max-w-none text-gray-800 admin-dark:text-gray-200 leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: blog.content }}
+                    />
                 </div>
             </div>
         </div>

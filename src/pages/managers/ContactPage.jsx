@@ -406,7 +406,7 @@ export default function ContactPage() {
     <div className=" admin-dark:bg-gray-900 bg-white">
       <div className="mx-auto ">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold admin-dark:text-gray-100 text-gray-900">Quản lý liên hệ</h1>
+          <h1 className="text-xl font-bold admin-dark:text-gray-100 text-gray-900">Quản lý liên hệ</h1>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {/* Thanh tìm kiếm */}
             <input

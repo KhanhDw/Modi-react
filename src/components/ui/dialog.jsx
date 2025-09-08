@@ -115,7 +115,7 @@ function DialogFooter({ className, ...props }) {
 
 function DialogTitle({ className, ...props }) {
   return (
-    <h2 className={cn("text-lg font-semibold leading-none", className)} {...props} />
+    <h2 className={cn("text-sm font-semibold leading-none", className)} {...props} />
   );
 }
 

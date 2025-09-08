@@ -12,9 +12,7 @@ const sectionParsers = {
             description: { vi: item.description?.vi || "", en: item.description?.en || "" },
             banner: item.image_url ? `${item.image_url}` : "",
         })),
-
     nenTang: (data) => Array.isArray(data) ? data : [],
-
     cards: (data) =>
         data.map((item) => ({
             id: item.id,
@@ -22,7 +20,6 @@ const sectionParsers = {
             description: { vi: item.description?.vi || "", en: item.description?.en || "" },
             image_url: item.image_url ? `${item.image_url}` : "",
         })),
-
     dichVu: (data) =>
         data.map((item) => ({
             id: item.id,
@@ -30,14 +27,9 @@ const sectionParsers = {
             description: { vi: item.description?.vi || "", en: item.description?.en || "" },
             image_url: item.image_url ? `${item.image_url}` : "",
         })),
-
     loiIch: (data) => Array.isArray(data) ? data : [],
-
     khauHieu: (data) => Array.isArray(data) ? data : [],
-
     khachHang: (data) => Array.isArray(data) ? data : [],
-
-
 };
 
 export default function HomeConfigMultiLang() {
@@ -47,24 +39,8 @@ export default function HomeConfigMultiLang() {
     const [toast, setToast] = useState(null);
 
     const [homeData, setHomeData] = useState({
-        vi: {
-            banner: [],
-            nenTang: [],
-            cards: [],
-            dichVu: [],
-            loiIch: [],
-            khauHieu: [],
-            khachHang: [],
-        },
-        en: {
-            banner: [],
-            nenTang: [],
-            cards: [],
-            dichVu: [],
-            loiIch: [],
-            khauHieu: [],
-            khachHang: [],
-        },
+        vi: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        en: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
     });
 
     const currentData = homeData[activeLang];
@@ -99,7 +75,6 @@ export default function HomeConfigMultiLang() {
     const handleChange = (section, id, field, value) => {
         setHomeData((prev) => {
             const copy = structuredClone(prev);
-
             if (Array.isArray(copy[activeLang][section])) {
                 copy[activeLang][section] = copy[activeLang][section].map((item) =>
                     item.id === id
@@ -117,7 +92,6 @@ export default function HomeConfigMultiLang() {
                             : value,
                 };
             }
-
             return copy;
         });
     };
@@ -160,19 +134,15 @@ export default function HomeConfigMultiLang() {
         }
     };
 
-
     function normalizeImageUrl(url) {
         if (!url) return "";
         try {
-            // Nếu là full URL => cắt domain, chỉ lấy pathname
             const u = new URL(url, import.meta.env.VITE_MAIN_BE_URL);
             return u.pathname;
         } catch {
-            // Nếu đã là path rồi thì giữ nguyên
             return url;
         }
     }
-
 
     // ===================== SAVE =====================
     const handleSave = async (section) => {
@@ -194,14 +164,9 @@ export default function HomeConfigMultiLang() {
                             description: { ...(oldItem.description || {}), ...(item.description || {}) },
                         };
 
-
                         // Chuẩn hóa ảnh trước khi lưu
-                        if (mergedItem.image_url) {
-                            mergedItem.image_url = normalizeImageUrl(mergedItem.image_url);
-                        }
-                        if (mergedItem.banner) {
-                            mergedItem.banner = normalizeImageUrl(mergedItem.banner);
-                        }
+                        if (mergedItem.image_url) mergedItem.image_url = normalizeImageUrl(mergedItem.image_url);
+                        if (mergedItem.banner) mergedItem.banner = normalizeImageUrl(mergedItem.banner);
 
                         await fetch(
                             `${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/${item.id}`,
@@ -227,7 +192,6 @@ export default function HomeConfigMultiLang() {
                     })
                 );
             } else {
-                // Object section
                 const resOld = await fetch(
                     `${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/${data.id}`
                 );
@@ -250,16 +214,10 @@ export default function HomeConfigMultiLang() {
                 );
             }
 
-            setToast({
-                message: `Đã lưu ${section} (${activeLang})`,
-                type: "success",
-            });
+            setToast({ message: `Đã lưu ${section} (${activeLang})`, type: "success" });
         } catch (err) {
             console.error("Save failed:", err);
-            setToast({
-                message: "Lưu thất bại",
-                type: "error",
-            });
+            setToast({ message: "Lưu thất bại", type: "error" });
         }
     };
 
@@ -275,8 +233,8 @@ export default function HomeConfigMultiLang() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className={`px-4 py-2 rounded-lg font-semibold transition ${activeLang === lang
-                            ? "bg-indigo-600 text-white shadow-md"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            ? "bg-indigo-600 text-white shadow-md cursor-pointer"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700 cursor-pointer"
                             }`}
                     >
                         {lang === "vi" ? "Tiếng Việt" : "English"}
@@ -301,8 +259,8 @@ export default function HomeConfigMultiLang() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className={`px-4 py-2 rounded-lg font-semibold transition ${activeSection === sec.key
-                            ? "bg-indigo-600 text-white shadow-md"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            ? "bg-indigo-600 text-white shadow-md cursor-pointer"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700 cursor-pointer"
                             }`}
                     >
                         {sec.label}
@@ -311,7 +269,7 @@ export default function HomeConfigMultiLang() {
             </div>
 
             {/* SECTION CONTENT */}
-            <div className="bg-white p-6 rounded-xl shadow-md">
+            <div className="bg-white p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-xl shadow-md transition">
                 <RenderHomeConfig
                     activeSection={activeSection}
                     currentData={currentData}

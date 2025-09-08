@@ -113,8 +113,8 @@ export default function WebsiteTemplateList() {
       {/* Header */}
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Quản lý mẫu Website</h1>
-          <Button onClick={() => navigate("new")} className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">Quản lý mẫu Website</h1>
+          <Button onClick={() => navigate("new")} className="flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white">
             <Plus className="h-4 w-4" /> Thêm mẫu mới
           </Button>
         </div>
@@ -136,11 +136,11 @@ export default function WebsiteTemplateList() {
                 placeholder="Tìm kiếm mẫu website..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
+                className="pl-10 border-2 focus:border-none border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
               />
             </div>
           </div>
-          <div className="flex items-center gap-1 text-gray-600 admin-dark:text-gray-500 font-semibold">
+          <div className="flex items-center gap-1 text-gray-600 admin-dark:text-white font-semibold">
             <p>Hiện có</p> {templates.length} <p>website mẫu</p>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function WebsiteTemplateList() {
             <div className="text-muted-foreground mb-4">
               {searchTerm ? "Không tìm thấy mẫu website nào phù hợp" : "Chưa có mẫu website nào"}
             </div>
-            {!searchTerm && <Button onClick={() => navigate("new")}>Thêm mẫu đầu tiên</Button>}
+            {!searchTerm && <Button className="cursor-pointer bg-blue-700 hover:bg-blue-800 text-white" onClick={() => navigate("new")}>Thêm mẫu đầu tiên</Button>}
           </div>
         ) : (
           currentTemplates.map((t) => (

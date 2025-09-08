@@ -45,6 +45,21 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar, isDarkHeader }) {
     setActiveScoll_open_HeaderSideBar(next);
   };
 
+  // Gọi API lấy logo
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/logo`);
+        if (!res.ok) throw new Error("Failed to fetch logo");
+        const data = await res.json();
+        if (data?.url_logo) setLogoUrl(`${baseUrl}${data.url_logo}`);
+      } catch (error) {
+        console.error("Không lấy được logo, dùng fallback:", error);
+      }
+    };
+    fetchLogo();
+  }, []);
+
   return (
     <>
       <div className={`${location.pathname === "/"
@@ -521,6 +536,23 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
       }
     };
     fetchCategories();
+  }, []);
+
+  const [logoUrl, setLogoUrl] = useState("/logoModi.png");
+
+  // Gọi API lấy logo
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/logo`);
+        if (!res.ok) throw new Error("Failed to fetch logo");
+        const data = await res.json();
+        if (data?.url_logo) setLogoUrl(`${baseUrl}${data.url_logo}`);
+      } catch (error) {
+        console.error("Không lấy được logo, dùng fallback:", error);
+      }
+    };
+    fetchLogo();
   }, []);
 
   const MenuHeader = [

@@ -131,12 +131,12 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         <div className="flex justify-center items-center space-x-4">
           <button type="button" name="vi"
             onClick={() => handleActiveLangbtn("vi")}
-            className={`${activeLang === "vi" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+            className={`${activeLang === "vi" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex px-2 py-1 rounded-md cursor-pointer`}>
             <span className="font-semibold text-xl">Tiếng Việt</span>
           </button>
           <button hidden={!blog?.id ? true : false} type="button" name="en"
             onClick={() => handleActiveLangbtn("en")}
-            className={`${activeLang === "en" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
+            className={`${activeLang === "en" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md cursor-pointer`}>
             <span className="font-semibold text-xl">Tiếng Anh</span>
           </button>
         </div>
@@ -153,7 +153,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               spellCheck="false"
               placeholder="Nhập tiêu đề"
               rows={3}
-              className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
+              className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:border-none focus:ring-green-500 admin-dark:text-gray-200"
             />
           </div>
 
@@ -165,7 +165,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               accept="image/*"
               name="image"
               onChange={handleFileChange}
-              className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg admin-dark:text-gray-200"
+              className="w-full px-3 py-2 border border-slate-200 admin-dark:border-slate-700 rounded-lg admin-dark:text-gray-200 cursor-pointer"
             />
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             <img
               src={preview}
               alt="Preview"
-              className="h-32 w-92 object-cover rounded"
+              className="h-50 w-92 object-cover rounded"
               onError={(e) => {
                 e.currentTarget.src = "/images/error.png"; // ✅ đường dẫn ảnh dự phòng
                 e.currentTarget.onerror = null;        // tránh loop vô hạn nếu fallback cũng lỗi
@@ -204,7 +204,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-3 admin-dark:bg-gray-800 bg-white text-gray-800 py-2 border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 admin-dark:text-gray-200"
+              className="w-full px-3 admin-dark:bg-gray-800 bg-white text-gray-800 py-2 border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:border-none focus:ring-green-500 admin-dark:text-gray-200"
             >
               <option value="draft">Nháp</option>
               <option value="published">Công khai</option>
@@ -232,13 +232,13 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 w-full bg-gray-900 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+            className="px-4 py-2 w-full bg-gray-900 text-white rounded-lg hover:bg-gray-600 transition duration-200 cursor-pointer"
           >
             Hủy
           </button>
           <button
             type="submit"
-            className="px-4 w-full py-2 bg-gray-700 text-white rounded-lg hover:bg-green-900 transition duration-200"
+            className="px-4 w-full py-2 bg-gray-700 text-white rounded-lg hover:bg-green-900 transition duration-200 cursor-pointer"
           >
             <span className="font-semibold">{blog ? "Cập nhật" : "Thêm"} {activeLang === 'vi' ? '(Việt)' : '(Anh)'}</span>
           </button>

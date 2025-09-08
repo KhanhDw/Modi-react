@@ -15,18 +15,18 @@ export default function FilterCard({ searchTerm, setSearchTerm, selectedStatus, 
                             placeholder="Tìm kiếm theo tiêu đề, tác giả, tags..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10 border-2 border-gray-400 bg-white admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600 focus:ring-2 focus:ring-blue-500 admin-dark:focus:ring-blue-600"
+                            className="pl-10 border-2 border-gray-300 bg-white admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600 focus:ring-2 focus:ring-blue-500 admin-dark:focus:ring-blue-400 admin-dark:focus:border-none focus:border-none"
                         />
                     </div>
                     <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                        <SelectTrigger className="border-2 border-gray-400 w-full md:w-48 bg-white admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600">
+                        <SelectTrigger className="border-2 border-gray-300 w-full md:w-48 bg-white admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600 cursor-pointer">
                             <SelectValue placeholder="Lọc theo trạng thái" />
                         </SelectTrigger>
                         <SelectContent className="bg-white text-gray-800 admin-dark:bg-gray-700 admin-dark:text-white">
-                            <SelectItem value="all">Tất cả trạng thái</SelectItem>
-                            <SelectItem value="published">Đã xuất bản</SelectItem>
-                            <SelectItem value="draft">Bản nháp</SelectItem>
-                            <SelectItem value="archived">Lưu trữ</SelectItem>
+                            <SelectItem className="cursor-pointer" value="all">Tất cả trạng thái</SelectItem>
+                            <SelectItem className="cursor-pointer" value="published">Đã xuất bản</SelectItem>
+                            <SelectItem className="cursor-pointer" value="draft">Bản nháp</SelectItem>
+                            <SelectItem className="cursor-pointer" value="archived">Lưu trữ</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
