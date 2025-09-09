@@ -9,9 +9,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
-
-
-
 function HomePage({ activeSidebarHeader }) {
     const { t } = useLanguage();
     const { lang, prefix } = useCurrentLanguage();
@@ -20,7 +17,6 @@ function HomePage({ activeSidebarHeader }) {
     useEffect(() => {
         setActiveLang(lang);
     }, [lang]);
-
 
     const [homeData, setHomeData] = useState({
         vi: {
@@ -225,7 +221,7 @@ function BannerSilder({ data, activeLang }) {
                             : {}
                     }
                     transition={{ duration: 1 }}
-                    className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-20 xl:border-2 xl:border-gray-300"
+                    className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-20"
                     alt="banner"
                 />
 
@@ -238,10 +234,10 @@ function BannerSilder({ data, activeLang }) {
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent sm:px-12 md:px-20 md:pl-20 lg:pl-40 2xl:w-2/3"
                 >
-                    <h2 className="mb-4 text-2xl md:text-7xl 2xl:text-7xl font-bold bg-transparent text-start">
+                    <h2 className="mb-4 text-2xl xs:ml-4 md:text-5xl 2xl:text-5xl font-bold bg-transparent text-start">
                         {data[currentIndex].title[activeLang]}
                     </h2>
-                    <p className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start md:text-xl 2xl:text-3xl">
+                    <p className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start md:text-xl 2xl:text-3xl xs:ml-4">
                         {data[currentIndex].description[activeLang]}
                     </p>
                     {data[currentIndex].buttonText && (
@@ -249,7 +245,7 @@ function BannerSilder({ data, activeLang }) {
                             initial={{ opacity: 0 }}
                             animate={isInView ? { opacity: 1 } : {}}
                             transition={{ duration: 0.5, delay: 0.3 }}
-                            className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 md:text-xl 2xl:text-2xl"
+                            className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 md:text-xl 2xl:text-2xl xs:ml-4 cursor-pointer"
                         >
                             <Link to="/about">{t(data[currentIndex].buttonText)}</Link>
                         </motion.button>
@@ -298,13 +294,13 @@ function BaseModi({ data, activeLang }) {
     if (!data) return null;
 
     return (
-        <div ref={ref} className="flex flex-col items-center justify-center pb-10">
+        <div ref={ref} className="flex flex-col items-center justify-center sm:my-2 md:my-6 pb-10">
             <div className="w-3/4">
                 <motion.p
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={isInView ? { scale: 1, opacity: 1 } : {}}
                     transition={{ duration: 0.6 }}
-                    className={`mb-4 xs:text-xl md:text-4xl 3xl:text-6xl font-bold text-center dark:text-white text-black `}
+                    className={`mb-4 text-3xl sm:text-4xl xs:text-xl md:text-5xl 3xl:text-6xl font-bold text-center dark:text-white text-black `}
                 >
                     {data.title?.[activeLang]}
                 </motion.p>
@@ -312,7 +308,7 @@ function BaseModi({ data, activeLang }) {
                     initial={{ y: 40, opacity: 0 }}
                     animate={isInView ? { y: 0, opacity: 1 } : {}}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-center xs:text-sm md:text-md 3xl:text-xl dark:text-white text-black"
+                    className="text-center text-gray-600 sm:text-xl md:text-2xl 3xl:text-xl dark:text-gray-300"
                 >
                     {data.description?.[activeLang]}
                 </motion.p>
@@ -321,164 +317,274 @@ function BaseModi({ data, activeLang }) {
     );
 }
 
-
 function ThreeCardBusiness({ data, activeLang }) {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, threshold: 0.2 });
-
-    if (!data || data.length === 0) {
-        return <div className="text-center py-10">Loading...</div>;
-    }
-
-    return (
-        <div ref={ref} className="w-[80%] mx-auto py-12">
-            <div className="grid xs:grid-cols-1 md:grid-cols-3 gap-8">
-                {data.map((item, index) => (
-                    <motion.div
-                        key={item.id}
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: index * 0.2 }}
-                        className="relative flex flex-col items-center justify-start 
-                   rounded-3xl bg-white dark:bg-gray-900 shadow-lg 
-                   border border-gray-200 dark:border-gray-700 
-                   overflow-hidden transition-all duration-300 hover:shadow-2xl p-2"
-                    >
-                        {/* Hình ảnh phía trên */}
-                        <div className="rounded-2xl w-full overflow-hidden h-56 bg-gradient-to-tr from-blue-200 to-indigo-300 flex items-center justify-center">
-                            <img
-                                src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
-                                alt={item.title?.[activeLang]}
-                                className="w-auto h-auto object-contain drop-shadow-lg"
-                            />
-                        </div>
-
-                        {/* Nội dung */}
-                        <div className="p-6 text-center">
-                            {/* Tiêu đề */}
-                            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
-                                {item.title?.[activeLang]}
-                            </h3>
-
-                            {/* Mô tả */}
-                            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                                {item.description?.[activeLang]}
-                            </p>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-        </div>
-
-    );
-}
-
-
-function ServiceModi({ data, activeLang }) {
-
-    const [hoveredItemId, setHoveredItemId] = useState(null);
     const [isMobileView, setIsMobileView] = useState(false);
+    const [expandedCardId, setExpandedCardId] = useState(null);
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobileView(window.innerWidth < 768);
+            setIsMobileView(window.innerWidth <= 1024); // mobile + tablet
         };
         handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const handleMouseEnter = (id) => setHoveredItemId(id);
-    const handleMouseLeave = () => setHoveredItemId(null);
-
-    const getItemWidth = (id, index, isFirst, isLast) => {
-        const totalItems = data.length;
-
-        if (hoveredItemId === null) {
-            return `${100 / totalItems}%`; // Chưa hover → chia đều
-        }
-
-        const hoveredIndex = data.findIndex(item => item.id === hoveredItemId);
-
-        if (hoveredItemId === id) {
-            return "35%"; // item đang hover
-        }
-
-        // Nếu item khác bị ảnh hưởng
-        const remainingWidth = 100 - 35;
-        // === Logic mở rộng tùy hướng ===
-        if (hoveredIndex === 1) {
-            // Item 2 → mở sang phải
-            if (index < hoveredIndex) {
-                return `${100 / totalItems}%`; // giữ nguyên bên trái
-            } else {
-                return `${remainingWidth / (totalItems - 2)}%`; // chia phần còn lại bên phải
-            }
-        }
-
-        if (hoveredIndex === 3) {
-            // Item 4 → mở sang trái
-            if (index > hoveredIndex) {
-                return `${100 / totalItems}%`; // giữ nguyên bên phải
-            } else {
-                return `${remainingWidth / (totalItems - 2)}%`; // chia phần còn lại bên trái
-            }
-        }
-
-        // Item 3 hoặc các item khác → mở đều
-        return `${remainingWidth / (totalItems - 1)}%`;
+    const toggleExpand = (id) => {
+        setExpandedCardId((prev) => (prev === id ? null : id));
     };
-
 
     if (!data || data.length === 0) return null;
 
     return (
-        <section className="py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
-            <div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
-                <h3 className="text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
+        <section className="w-full rounded-2xl">
+
+            <div className="container mx-auto w-full my-4">
+                {isMobileView ? (
+
+                    // ================= MOBILE / TABLET =================
+                    <div className="flex items-start overflow-x-auto snap-x snap-mandatory gap-6 px-2 scrollbar-hide">
+                        {data.map((item) => {
+                            const isExpanded = expandedCardId === item.id;
+                            const description = item.description?.[activeLang] || "";
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className="snap-center shrink-0 
+                   w-[80%] sm:w-[70%] md:w-[60%] 
+                   bg-white dark:bg-gray-800 
+                   rounded-2xl shadow-lg overflow-hidden flex flex-col"
+                                >
+                                    {/* Hình ảnh */}
+                                    <div className="h-56 sm:h-60 md:h-70">
+                                        <img
+                                            src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
+                                            alt={item.title?.[activeLang]}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => (e.currentTarget.src = "/no-image.png")}
+                                        />
+                                    </div>
+
+                                    {/* Title + Mô tả */}
+                                    <div className="p-4 md:p-6 flex flex-col justify-start">
+                                        <h4 className={`text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2
+                                        ${isExpanded ? "line-clamp-none" : "line-clamp-1"}`}>
+                                            {item.title?.[activeLang]}
+                                        </h4>
+
+                                        <p
+                                            className={`text-gray-700 dark:text-gray-200 
+                        text-sm sm:text-base md:text-lg 
+                        transition-all duration-300 
+                        ${isExpanded ? "line-clamp-none" : "line-clamp-3"}`}
+                                        >
+                                            {description}
+                                        </p>
+
+                                        {/* Nút Xem thêm / Thu gọn */}
+                                        {description.length > 100 && (
+                                            <button
+                                                onClick={() => toggleExpand(item.id)}
+                                                className="text-blue-500 hover:underline text-sm self-start mt-2 cursor-pointer"
+                                            >
+                                                {isExpanded ? "Thu gọn" : "Xem thêm"}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                ) : (
+                    // ================= DESKTOP =================
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 items-start">
+                        {data.map((item) => {
+                            const isExpanded = expandedCardId === item.id;
+                            const description = item.description?.[activeLang] || "";
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col"
+                                >
+                                    {/* Hình ảnh */}
+                                    <div className="h-65">
+                                        <img
+                                            src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
+                                            alt={item.title?.[activeLang]}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => (e.currentTarget.src = "/no-image.png")}
+                                        />
+                                    </div>
+
+                                    {/* Title + Mô tả */}
+                                    <div className="p-6 flex flex-col">
+                                        <h4 className={`text-xl font-bold text-gray-900 dark:text-white mb-2
+                                             ${isExpanded ? "line-clamp-none" : "line-clamp-1"}`}>
+                                            {item.title?.[activeLang]}
+                                        </h4>
+
+                                        {/* Mô tả thu gọn/mở rộng */}
+                                        <p
+                                            className={`text-gray-700 dark:text-gray-200 text-base leading-relaxed transition-all duration-300 ${isExpanded ? "line-clamp-none" : "line-clamp-3"
+                                                }`}
+                                        >
+                                            {description}
+                                        </p>
+
+                                        {/* Nút Xem thêm / Thu gọn */}
+                                        {description.length > 120 && (
+                                            <button
+                                                onClick={() => toggleExpand(item.id)}
+                                                className="text-blue-500 hover:underline text-sm self-start mt-2 cursor-pointer"
+                                            >
+                                                {isExpanded ? "Thu gọn" : "Xem thêm"}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                )}
+            </div>
+        </section >
+    );
+}
+
+function ServiceModi({ data, activeLang }) {
+    const [hoveredItemId, setHoveredItemId] = useState(null);
+    const [isMobileView, setIsMobileView] = useState(false);
+    const [expandedCardId, setExpandedCardId] = useState(null); // card đang mở rộng
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 1024); // mobile & tablet
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const toggleExpand = (id) => {
+        setExpandedCardId((prev) => (prev === id ? null : id));
+    };
+
+    if (!data || data.length === 0) return null;
+
+    return (
+        <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
+            {/* Tiêu đề */}
+            <div className="container mx-auto text-center flex flex-col gap-4 px-4 sm:px-6 md:px-8 relative z-20">
+                <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-gray-100">
                     Dịch vụ
                 </h3>
-                <div className="text-lg xs:text-xl sm:text-2xl text-gray-600 dark:text-[#D1D5DB]">
-                    <p>Chúng tôi cung cấp giải pháp phù hợp cho doanh nghiệp của bạn.</p>
-                </div>
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300">
+                    Chúng tôi cung cấp giải pháp phù hợp cho doanh nghiệp của bạn.
+                </p>
             </div>
 
-            <div className="relative z-20 mt-6 xs:mt-8 sm:mt-10 md:mt-12 container mx-auto w-full">
+            <div className="relative z-20 mt-8 md:mt-12 container mx-auto w-full">
                 {isMobileView ? (
-                    // ================= MOBILE =================
-                    <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 px-4 sm:px-6 md:px-0 scrollbar-hide">
-                        {data.map((service, index) => (
-                            <div
-                                key={service.id}
-                                className="relative overflow-hidden cursor-pointer"
-                                onMouseEnter={() => handleMouseEnter(service.id, index)}
-                                onMouseLeave={handleMouseLeave}
-                                style={{
-                                    width: getItemWidth(service.id, index), 
-                                    transition: "width 0.2s ease-out",
-                                }}
-                            >
-                                <div className="relative overflow-hidden rounded-lg shadow-lg h-[400px] sm:h-[450px]">
-                                    <a
-                                        className="block w-full h-full"
-                                        href={service.href || "#"}
-                                        title={service.title?.[activeLang]}
-                                    >
+                    // ================= MOBILE / TABLET =================
+                    <div className="flex items-start overflow-x-auto snap-x snap-mandatory gap-6 px-4 pb-6 scrollbar-hide">
+
+                        {data.map((service) => {
+                            const isExpanded = expandedCardId === service.id;
+                            const description = service.description?.[activeLang] || "";
+
+                            return (
+                                <div
+                                    key={service.id}
+                                    className="snap-center shrink-0 w-[80%] sm:w-[60%] bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex flex-col"
+                                >
+                                    {/* Ảnh + overlay + title */}
+                                    <div className="relative h-65">
                                         <img
                                             src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image}`}
                                             alt={service.title?.[activeLang]}
-                                            className="w-full h-full object-cover xs:opacity-50 md:opacity-100"
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => (e.currentTarget.src = "/no-image.png")}
                                         />
-                                    </a>
-                                    <div className="absolute bottom-0 left-0 right-0 px-6 py-6 text-white z-10 bg-gradient-to-t from-black/80 dark:from-[#1F2937]/90 to-transparent">
-                                        <h4 className="text-xl md:text-2xl font-bold mb-3">
-                                            {service.title?.[activeLang]}
-                                        </h4>
-                                        <p className="text-base font-light mb-3">
+
+                                        {/* Overlay phủ toàn bộ ảnh */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/10"></div>
+
+                                        {/* Title nằm riêng dưới ảnh */}
+                                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                                            <h4 className="text-lg sm:text-xl font-bold text-white">
+                                                {service.title?.[activeLang]}
+                                            </h4>
+                                        </div>
+                                    </div>
+
+                                    {/* Nội dung bên dưới ảnh */}
+                                    <div className="p-4 flex flex-col justify-start">
+                                        <p
+                                            className={`text-gray-700 dark:text-gray-200 text-sm sm:text-base transition-all duration-300 ${isExpanded ? "line-clamp-none" : "line-clamp-3"
+                                                }`}
+                                        >
+                                            {description}
+                                        </p>
+
+                                        {/* Nút Xem thêm / Thu gọn */}
+                                        {description.length > 100 && (
+                                            <button
+                                                onClick={() => toggleExpand(service.id)}
+                                                className="text-blue-500 hover:underline text-sm self-start"
+                                            >
+                                                {isExpanded ? "Thu gọn" : "Xem thêm"}
+                                            </button>
+                                        )}
+
+                                        {/* CTA */}
+                                        <a
+                                            className="mt-3 inline-flex items-center justify-center px-5 py-2.5 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors focus:bg-blue-600"
+                                            href={service.href || "#"}
+                                        >
+                                            Tìm hiểu thêm
+                                        </a>
+                                    </div>
+                                </div>
+
+                            );
+                        })}
+                    </div>
+                ) : (
+                    // ================= DESKTOP =================
+                    <div className="flex w-full h-[400px] overflow-hidden rounded-lg shadow-lg">
+                        {data.map((service) => (
+                            <div
+                                key={service.id}
+                                onMouseEnter={() => setHoveredItemId(service.id)}
+                                onMouseLeave={() => setHoveredItemId(null)}
+                                className={`relative overflow-hidden cursor-pointer transition-[flex-grow] duration-500 ease-in-out ${hoveredItemId === service.id ? "flex-[4]" : "flex-[1]"
+                                    }`}
+                            >
+                                <img
+                                    src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image}`}
+                                    alt={service.title?.[activeLang]}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => (e.currentTarget.src = "/no-image.png")}
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 px-6 md:px-10 py-8 text-white z-10 bg-gradient-to-t from-black/80 dark:from-gray-900/90 to-transparent">
+                                    <h4 className="text-2xl font-bold mb-4">
+                                        {service.title?.[activeLang]}
+                                    </h4>
+                                    <div
+                                        className={`transition-all duration-300 ease-in-out ${hoveredItemId === service.id
+                                            ? "max-h-screen opacity-100"
+                                            : "max-h-0 opacity-0 overflow-hidden"
+                                            }`}
+                                    >
+                                        <p className="text-lg mb-4 font-light">
                                             {service.description?.[activeLang]}
                                         </p>
                                         <a
-                                            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
+                                            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-blue-500 hover:text-gray-900 transition-colors"
                                             href={service.href || "#"}
                                         >
                                             Tìm hiểu thêm
@@ -488,78 +594,11 @@ function ServiceModi({ data, activeLang }) {
                             </div>
                         ))}
                     </div>
-                ) : (
-                    // ================= DESKTOP =================
-                    <div className="flex w-full h-[450px] overflow-hidden rounded-lg shadow-lg">
-                        {data.map((service, index) => {
-                            const isFirst = index === 0;
-                            const isLast = index === data.length - 1;
-
-                            return (
-                                <div
-                                    key={service.id}
-                                    onMouseEnter={() => handleMouseEnter(service.id)}
-                                    onMouseLeave={handleMouseLeave}
-                                    style={{ flexBasis: 0 }}
-                                    className={`
-                                        relative overflow-hidden cursor-pointer
-                                        ${isLast ? "ml-auto" : ""}
-                                        ${hoveredItemId === service.id ? "flex-[4]" : "flex-[1]"}
-                                        transition-[flex-grow] duration-500 ease-in-out
-                                    `}
-
-                                >
-                                    <a
-                                        className="block w-full h-full"
-                                        href={service.href || "#"}
-                                        title={service.title?.[activeLang]}
-                                    >
-                                        <img
-                                            src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image}`}
-                                            alt={service.title?.[activeLang]}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </a>
-                                    <div className="absolute bottom-0 left-0 right-0 px-6 md:px-10 py-8 text-white z-10 bg-gradient-to-t from-black/80 dark:from-[#1F2937]/90 to-transparent">
-                                        <h4 className="text-2xl font-bold mb-4">
-                                            {service.title?.[activeLang]}
-                                        </h4>
-                                        <div
-                                            className={`transition-all duration-300 ease-in-out ${hoveredItemId === service.id
-                                                ? "max-h-screen opacity-100"
-                                                : "max-h-0 opacity-0 overflow-hidden"
-                                                }`}
-                                        >
-                                            <p className="text-xl mb-4 font-light">
-                                                {service.description?.[activeLang]}
-                                            </p>
-                                            <a
-                                                className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
-                                                href={service.href || "#"}
-                                            >
-                                                Tìm hiểu thêm
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-
-                {isMobileView && (
-                    <div className="text-center text-gray-500 dark:text-gray-400 mt-4 text-sm sm:text-base">
-                        Vuốt sang ngang để xem thêm dịch vụ
-                    </div>
                 )}
             </div>
         </section>
     );
 }
-
-
-
-
 
 function BenefitBusiness({ data, activeLang }) {
     const ref = useRef(null);
@@ -658,21 +697,17 @@ function BenefitBusiness({ data, activeLang }) {
     );
 }
 
-
-
 function BannerText({ data, activeLang }) {
     if (!data || !data.text) return null;
 
     return (
         <div className="w-full marquee">
-            <div className="xs:text-2xl md:text-6xl 3xl:text-6xl font-bold text-gray-400 dark:text-white marquee-content">
+            <div className="xs:text-2xl md:text-5xl 3xl:text-6xl font-bold text-gray-400 dark:text-gray-400 marquee-content">
                 {data.text?.[activeLang]}
             </div>
         </div>
     );
 }
-
-
 
 function Customer({ data, activeLang }) {
     const { t } = useLanguage()
@@ -717,7 +752,7 @@ function Customer({ data, activeLang }) {
                                     initial={{ y: -50, opacity: 0 }}
                                     animate={isInView ? { y: 0, opacity: 1 } : {}}
                                     transition={{ type: "spring", stiffness: 120 }}
-                                    className="mb-4 xs:text-2xl md:text-4xl 2xl:text-8xl 3xl:text-9xl font-bold xs:py-2 md:py-10 dark:text-slate-100"
+                                    className="mb-4 xs:text-2xl md:text-3xl 2xl:text-7xl 3xl:text-8xl font-bold xs:py-2 md:py-6 dark:text-slate-100"
                                 >
                                     {t("home.customer.title")}
                                 </motion.h2>
@@ -734,7 +769,7 @@ function Customer({ data, activeLang }) {
                                     </motion.p>
                                 ))}
                                 <div className="flex justify-center md:justify-start py-5">
-                                    <Button size={"lg"} className="bg-[#2C3E50] hover:bg-[#415263] text-white px-6 xs:py-2  rounded-md text-lg ">
+                                    <Button size={"lg"} className="bg-[#2C3E50] hover:bg-[#415263] text-white px-6 xs:py-2  rounded-md text-lg cursor-pointer">
                                         {t("home.customer.btn")}
                                     </Button>
                                 </div>
@@ -753,6 +788,5 @@ function Customer({ data, activeLang }) {
         </div>
     )
 }
-
 
 export default HomePage;
