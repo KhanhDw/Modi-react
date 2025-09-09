@@ -2,125 +2,26 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceBookingTable from "@/components/admin/services/booking/ServiceBookingTable";
 import ServiceBookingAnalytics from "@/components/admin/services/booking/service-booking-analytics";
-import { useLocation } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Target,
-  BadgeCheck,
-  Users,
-  Star,
-  Trash2,
-  Package,
-  Layers,
-} from "lucide-react";
-export default function ServiceBooking() {
-  const serviceBookings = [
-    {
-      id: 1,
-      customerName: "Nguyễn Văn A",
-      serviceName: "Thiết kế Website",
-      status: "completed", // pending | processing | completed | canceled
-      amount: 15000000,
-      bookingDate: "2025-08-01",
-      completedDate: "2025-08-05",
-      isRepeatCustomer: false,
-    },
-    {
-      id: 2,
-      customerName: "Trần Thị B",
-      serviceName: "Chạy quảng cáo Facebook",
-      status: "processing",
-      amount: 8000000,
-      bookingDate: "2025-08-10",
-      completedDate: null,
-      isRepeatCustomer: true,
-    },
-    {
-      id: 3,
-      customerName: "Lê Văn C",
-      serviceName: "SEO Website",
-      status: "pending",
-      amount: 12000000,
-      bookingDate: "2025-08-12",
-      completedDate: null,
-      isRepeatCustomer: false,
-    },
-    {
-      id: 4,
-      customerName: "Phạm Thị D",
-      serviceName: "Thiết kế Logo",
-      status: "completed",
-      amount: 3000000,
-      bookingDate: "2025-07-28",
-      completedDate: "2025-07-30",
-      isRepeatCustomer: true,
-    },
-    {
-      id: 5,
-      customerName: "Hoàng Văn E",
-      serviceName: "Tư vấn Marketing",
-      status: "canceled",
-      amount: 5000000,
-      bookingDate: "2025-08-03",
-      completedDate: null,
-      isRepeatCustomer: false,
-    },
-  ];
-  const services = [
-    {
-      id: 1,
-      name: "Thiết kế website",
-      price: 5000000,
-      orders_count: 12,
-      revenue: 60000000,
-      status: "Hoạt động",
-      created_at: "2025-07-01",
-    },
-    {
-      id: 2,
-      name: "Quản lý quảng cáo Facebook",
-      price: 3000000,
-      orders_count: 20,
-      revenue: 60000000,
-      status: "Hoạt động",
-      created_at: "2025-07-05",
-    },
-    {
-      id: 3,
-      name: "SEO tổng thể",
-      price: 7000000,
-      orders_count: 8,
-      revenue: 56000000,
-      status: "Hoạt động",
-      created_at: "2025-07-10",
-    },
-    {
-      id: 4,
-      name: "Thiết kế logo",
-      price: 1500000,
-      orders_count: 15,
-      revenue: 22500000,
-      status: "Ngừng cung cấp",
-      created_at: "2025-06-20",
-    },
-    {
-      id: 5,
-      name: "Chạy quảng cáo Google Ads",
-      price: 4000000,
-      orders_count: 10,
-      revenue: 40000000,
-      status: "Hoạt động",
-      created_at: "2025-07-15",
-    },
-  ];
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Target, BadgeCheck, Trash2, Package } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
+import DialogShowForm_Service from "./DialogShowForm.-service";
 
+export default function ServiceBooking() {
+  const { initDataService, initDataBooking } = useOutletContext();
+
+  const completedCount = initDataBooking.filter(
+    (booking) => booking.status === "completed"
+  ).length;
+
+  const pendingCount = initDataBooking.filter(
+    (booking) => booking.status === "pending"
+  ).length;
+
+  const cancelled = initDataBooking.filter(
+    (booking) => booking.status === "cancelled"
+  ).length;
+  const { handleOpen } = useOutletContext();
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -132,7 +33,9 @@ export default function ServiceBooking() {
         </div>
         <Button
           className="bg-primary hover:bg-primary/90"
-          onClick={() => setShowCampaignForm(true)}
+          onClick={() => {
+            handleOpen("booking");
+          }}
         >
           <Plus className="h-4 w-4 mr-2" />
           Tạo đơn mới
@@ -148,9 +51,9 @@ export default function ServiceBooking() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black">
-              {services.length}
+              {initDataBooking.length}
             </div>
-            <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p>
+            {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
           </CardContent>
         </Card>
         <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
@@ -160,9 +63,9 @@ export default function ServiceBooking() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black">
-              {services.length}
+              {completedCount}
             </div>
-            <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p>
+            {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
           </CardContent>
         </Card>
         <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
@@ -173,11 +76,9 @@ export default function ServiceBooking() {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">
-              {services.length}
-            </div>
+            <div className="text-2xl font-bold text-black">{pendingCount}</div>
             <p className="text-xs text-[#ac9a00]">
-              +{services.length} từ tháng trước
+              {/* +{initDataService.length} từ tháng trước */}
             </p>
           </CardContent>
         </Card>
@@ -187,17 +88,16 @@ export default function ServiceBooking() {
             <Trash2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">
-              {services.length}
-            </div>
+            <div className="text-2xl font-bold text-black">{cancelled}</div>
             <p className="text-xs text-[#d62727]">
-              +{services.length} từ tháng trước
+              {/* +{initDataService.length} từ tháng trước */}
             </p>
           </CardContent>
         </Card>
       </div>
-      <ServiceBookingTable bookings={serviceBookings} />
-      <ServiceBookingAnalytics services={services} />
+      <ServiceBookingTable />
+      <DialogShowForm_Service />
+      <ServiceBookingAnalytics services={initDataService} />
     </div>
   );
 }

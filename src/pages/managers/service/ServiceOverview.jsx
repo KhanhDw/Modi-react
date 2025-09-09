@@ -7,19 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Target,
-  DollarSign,
-  Users,
-  Star,
-  FileText,
-  Layers,
-} from "lucide-react";
+import { Target, DollarSign, Star, Layers } from "lucide-react";
 import SaleAnalytics from "@/components/admin/services/sales/sale-analytics";
 import { useOutletContext } from "react-router-dom";
 
 export default function ServiceOverview() {
-  const { initDataService } = useOutletContext();
+  const { initDataService, initDataBooking, initDataCustomer } =
+    useOutletContext();
   return (
     <div className="text-black">
       <div className="space-y-6">
@@ -35,7 +29,7 @@ export default function ServiceOverview() {
               <div className="text-2xl font-bold text-black">
                 {initDataService.length}
               </div>
-              <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p>
+              {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
             </CardContent>
           </Card>
           <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
@@ -58,7 +52,7 @@ export default function ServiceOverview() {
                     currency: "VND",
                   })}
               </div>
-              <p className="text-xs text-[#5ea25e]">+20.1% từ tháng trước</p>
+              {/* <p className="text-xs text-[#5ea25e]">+20.1% từ tháng trước</p> */}
             </CardContent>
           </Card>
           <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
@@ -68,25 +62,25 @@ export default function ServiceOverview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-black">
-                {initDataService.length}
+                {initDataBooking.length}
               </div>
-              <p className="text-xs text-[#5ea25e]">
+              {/* <p className="text-xs text-[#5ea25e]">
                 +{initDataService.length} từ tháng trước
-              </p>
+              </p> */}
             </CardContent>
           </Card>
           <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-medium">Đánh giá</CardTitle>
+              <CardTitle className="text-sm font-medium">Khách hàng</CardTitle>
               <Star className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-black">
-                {initDataService.length}
+                {initDataCustomer.filter((c) => c.status === "active").length}
               </div>
-              <p className="text-xs text-[#5ea25e]">
+              {/* <p className="text-xs text-[#5ea25e]">
                 +{initDataService.length} từ tháng trước
-              </p>
+              </p> */}
             </CardContent>
           </Card>
         </div>

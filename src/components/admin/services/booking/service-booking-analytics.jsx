@@ -26,37 +26,32 @@ const rankColors = [
   "bg-gray-100 text-gray-600",
 ];
 export default function ServiceBookingAnalytics({ services }) {
-  console.log("ServiceBookingAnalytics", services);
-  const topRevenueServices = services
-    .sort((a, b) => b.revenue - a.revenue)
-    .slice(0, 5)
-    .map((s) => ({
-      name: s.name,
-      revenue: s.revenue || 0,
-    }));
   const topServices = services
-    .filter((s) => s.orders_count > 10)
-    .sort((a, b) => b.orders_count - a.orders_count)
+    .filter((s) => s.booking_count > 10)
+    .sort((a, b) => b.booking_count - a.booking_count)
     .slice(0, 3)
     .map((s) => ({
-      name: s.name,
-      orders: s.orders_count || 0,
+      name: s.ten_dich_vu,
+      orders: s.booking_count || 0,
     }));
 
   const totalOrders = services.reduce(
-    (sum, s) => sum + (s.orders_count || 0),
+    (sum, s) => sum + (s.booking_count || 0),
     0
   );
 
-  const monthlyOrders = [
-    { month: "T1", orders: totalOrders },
-    { month: "T2", orders: Math.floor(totalOrders * 0.8) },
-    { month: "T3", orders: Math.floor(totalOrders * 1.2) },
-    { month: "T4", orders: Math.floor(totalOrders * 0.9) },
-    { month: "T5", orders: Math.floor(totalOrders * 1.1) },
-    { month: "T6", orders: Math.floor(totalOrders * 1.3) },
-    { month: "T7", orders: Math.floor(totalOrders * 0.95) },
-  ];
+  const months = Array.from({ length: 12 }, (_, i) => ({
+    month: `T${i + 1}`,
+    orders: 0,
+  }));
+
+  services.forEach((s) => {
+    if (s.created_at) {
+      const date = new Date(s.created_at);
+      const monthIndex = date.getMonth();
+      months[monthIndex].orders += s.booking_count || 0;
+    }
+  });
 
   return (
     <>
@@ -74,7 +69,7 @@ export default function ServiceBookingAnalytics({ services }) {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={monthlyOrders}>
+                <LineChart data={months}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -121,73 +116,6 @@ export default function ServiceBookingAnalytics({ services }) {
                   <Bar dataKey="orders" fill="#3b82f6" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
-          <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
-            <CardHeader>
-              <CardTitle className="admin-dark:text-primary">
-                Top 5 dịch vụ đóng góp doanh thu lớn nhất
-              </CardTitle>
-              <CardDescription className="text-[#f97316]">
-                Biểu đồ thể hiện mức doanh thu cao nhất của 5 dịch vụ, hỗ trợ
-                đánh giá dịch vụ mang lại lợi nhuận nhiều nhất.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={topRevenueServices}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis
-                    tickFormatter={(value) => {
-                      if (value >= 1000000) return value / 1000000 + "M";
-                      if (value >= 1000) return value / 1000 + "K";
-                      return value;
-                    }}
-                  />
-                  <Tooltip
-                    formatter={(value) => `${value.toLocaleString()} VNĐ`}
-                    labelFormatter={(label) => `Dịch vụ: ${label}`}
-                    labelStyle={{ color: "red", fontWeight: "bold" }} // màu label
-                    itemStyle={{ color: "blue" }} // màu value
-                    contentStyle={{
-                      backgroundColor: "#fff",
-                      borderRadius: "8px",
-                    }} // khung
-                  />
-                  <Bar dataKey="revenue" fill="#f97316" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-          <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
-            <CardHeader>
-              <CardTitle className="admin-dark:text-primary">
-                Chi tiết các dịch vụ mang lại doanh thu cao nhất
-              </CardTitle>
-              <CardDescription className="text-[#5ea25e]">
-                Danh sách chi tiết 5 dịch vụ mang lại doanh thu nhiều nhất.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {topRevenueServices.map((service, index) => (
-                  <li
-                    key={service.name}
-                    className={`flex items-center justify-between p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition ${rankColors[index]}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 font-semibold">
-                        {index + 1}
-                      </span>
-                      <span className="font-medium">{service.name}</span>
-                    </div>
-                    <span className="font-semibold text-gray-700">
-                      {service.revenue.toLocaleString()} đ
-                    </span>
-                  </li>
-                ))}
-              </ul>
             </CardContent>
           </Card>
         </div>

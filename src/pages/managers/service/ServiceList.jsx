@@ -1,19 +1,10 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceTable from "@/components/admin/services/ServiceTable";
-import ServiceForm from "@/components/admin/services/service-form";
 import { useOutletContext } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-
+import DialogShowForm_Service from "./DialogShowForm.-service";
 export default function ServiceList() {
-  const { handleOpen, showForm, setShowForm, editingService } =
-    useOutletContext();
+  const { handleOpen } = useOutletContext();
 
   return (
     <div className="space-y-6">
@@ -26,23 +17,16 @@ export default function ServiceList() {
         </div>
         <Button
           className="bg-primary hover:bg-gray-500/90"
-          onClick={handleOpen}
+          onClick={() => {
+            handleOpen("service");
+          }}
         >
           <Plus className="h-4 w-4 mr-2" />
           Tạo dịch vụ mới
         </Button>
       </div>
       <ServiceTable />
-
-      <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent
-          className={` ${
-            !editingService ? `min-w-[70vw]` : ``
-          } min-h-[60vh] bg-white p-6 text-black shadow-2xl`}
-        >
-          <ServiceForm />
-        </DialogContent>
-      </Dialog>
+      <DialogShowForm_Service />
     </div>
   );
 }

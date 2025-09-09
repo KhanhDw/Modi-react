@@ -19,9 +19,12 @@ import {
   Bar,
 } from "recharts";
 import { Car } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
 
-export default function ServiceCustomerAnalytics({ customers }) {
-  const sortCustomersByCreatedAt = customers
+export default function ServiceCustomerAnalytics() {
+  const { initDataCustomer, initDataBooking } = useOutletContext();
+
+  const sortCustomersByCreatedAt = initDataCustomer
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 5); // lấy 5 khách hàng mới nhất
   const latestCustomer = [
@@ -75,7 +78,7 @@ export default function ServiceCustomerAnalytics({ customers }) {
     },
   ];
 
-  customers.forEach((customer) => {
+  initDataCustomer.forEach((customer) => {
     const date = new Date(customer.created_at);
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -130,8 +133,10 @@ export default function ServiceCustomerAnalytics({ customers }) {
                         className="bg-primary/10 text-gray-800"
                       >
                         {
-                          customer.orders.filter(
-                            (o) => o.status !== "cancelled"
+                          initDataBooking.filter(
+                            (o) =>
+                              o.status !== "cancelled" &&
+                              o.customer_id === customer.id
                           ).length
                         }
                         đơn
