@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
 import axios from "axios";
-import UserForm from "@/components/admin/userForm/UserForm.jsx"; 
+import UserForm from "@/components/admin/userForm/UserForm.jsx";
 import "../../styles/scrollbar.css";
 
 const PAGE_SIZE = 8;
@@ -21,7 +21,7 @@ export default function AdminZonePage() {
   const [fade, setFade] = useState(true);
   const [users, setUsers] = useState([]);
   const [columns, setColumns] = useState([]);
-
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // quản lý form
@@ -40,7 +40,37 @@ export default function AdminZonePage() {
     }
   };
 
-  useEffect(() => { fetchUsers(); }, []);
+
+
+  // Gọi API lấy user hiện tại
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("Chưa có token, cần login trước");
+        return;
+      }
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setCurrentUser(res.data.user);
+    } catch (err) {
+      console.error("Lỗi lấy current user:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentUser(); // load user hiện tại
+    fetchUsers();       // load danh sách user
+  }, []);
+
 
   const filteredData = useMemo(() => {
     if (!search.trim()) return users;
@@ -203,24 +233,36 @@ export default function AdminZonePage() {
                     <td className="px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-center">
                       <div className="flex justify-center gap-4">
                         <button
-                          title="Chỉnh sửa"
-                          onClick={() => {
-                            setEditingUser(item);
-                            setShowForm(true);
-                          }}
-                          className="flex items-center gap-1 text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300 transition cursor-pointer"
-                        >
-                          <FiEdit2 size={18} />
-                          <span className="text-sm font-medium">Sửa</span>
-                        </button>
-                        <button
-                          title="Xóa"
-                          onClick={() => handleDelete(item.id)}
-                          className="flex items-center gap-1 text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400 transition cursor-pointer"
-                        >
-                          <FiTrash2 size={18} />
-                          <span className="text-sm font-medium">Xóa</span>
-                        </button>
+  title="Chỉnh sửa"
+  onClick={() => {
+    setEditingUser(item);
+    setShowForm(true);
+  }}
+  disabled={currentUser && item.id === currentUser.id} // disable nếu là user hiện tại
+  className={`flex items-center gap-1 transition cursor-pointer
+    ${currentUser && item.id === currentUser.id
+      ? "text-gray-400 cursor-not-allowed"
+      : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"}
+  `}
+>
+  <FiEdit2 size={18} />
+  <span className="text-sm font-medium">Sửa</span>
+</button>
+
+<button
+  title="Xóa"
+  onClick={() => handleDelete(item.id)}
+  disabled={currentUser && item.id === currentUser.id}
+  className={`flex items-center gap-1 transition cursor-pointer
+    ${currentUser && item.id === currentUser.id
+      ? "text-gray-400 cursor-not-allowed"
+      : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"}
+  `}
+>
+  <FiTrash2 size={18} />
+  <span className="text-sm font-medium">Xóa</span>
+</button>
+
                       </div>
                     </td>
                   </tr>
