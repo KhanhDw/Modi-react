@@ -42,6 +42,90 @@ export default function ServiceForm() {
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [isEditingParagraph, setIsEditingParagraph] = useState(false);
   const [editKey, setEditKey] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [paraErrors, setParaErrors] = useState({});
+
+  //Validation
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.serviceName?.trim()) {
+      newErrors.serviceName = "Tên dịch vụ không được bỏ trống";
+    }
+
+    if (!formData.desc?.trim()) {
+      newErrors.desc = "Mô tả không được bỏ trống";
+    }
+
+    if (
+      !formData.price?.trim() ||
+      isNaN(formData.price) ||
+      Number(formData.price) < 0
+    ) {
+      newErrors.price = "Giá phải là số và không âm";
+    }
+
+    if (!editingService) {
+      if (!formData.header?.trim()) {
+        newErrors.header = "Tiêu đề bài viết không được bỏ trống";
+      }
+      if (!dataArticle || Object.keys(dataArticle).length === 0) {
+        newErrors.dataArticle = "Bài viết phải có ít nhất một phần nội dung";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateParagraph = (type, part) => {
+    const newErrors = {};
+
+    if (type === "content") {
+      if (!part.paraTitle?.trim())
+        newErrors.paraTitle = "Tiêu đề đoạn văn không được bỏ trống";
+      if (!part.paragraph?.trim())
+        newErrors.paragraph = "Nội dung đoạn văn không được bỏ trống";
+      if (!part.subPara?.trim())
+        newErrors.subPara = "Nội dung nhỏ không được bỏ trống";
+    }
+
+    if (type === "img") {
+      if (!part.imgTitle?.trim())
+        newErrors.imgTitle = "Tiêu đề ảnh không được bỏ trống";
+      if (!part.img) newErrors.img = "Phải chọn ảnh";
+      if (!part.imgPara?.trim())
+        newErrors.imgPara = "Nội dung ảnh không được bỏ trống";
+      if (!part.imgSubPara?.trim())
+        newErrors.imgSubPara = "Nội dung nhỏ không được bỏ trống";
+    }
+
+    if (type === "tbl") {
+      if (!part.tblTitle?.trim())
+        newErrors.tblTitle = "Tiêu đề bảng không được bỏ trống";
+      if (!part.tbl || !Array.isArray(part.tbl) || part.tbl.length === 0)
+        newErrors.tbl = "Phải chọn file dữ liệu hợp lệ";
+      if (!part.tblPara?.trim())
+        newErrors.tblPara = "Nội dung bảng không được bỏ trống";
+      if (!part.tblSubPara?.trim())
+        newErrors.tblSubPara = "Nội dung nhỏ không được bỏ trống";
+    }
+
+    if (type === "link") {
+      if (!part.linkTitle?.trim())
+        newErrors.linkTitle = "Tiêu đề liên kết không được bỏ trống";
+      if (!part.link?.trim() || !/^https?:\/\/.+/.test(part.link))
+        newErrors.link = "URL không hợp lệ";
+      if (!part.linkPara?.trim())
+        newErrors.linkPara = "Nội dung liên kết không được bỏ trống";
+      if (!part.linkSubPara?.trim())
+        newErrors.linkSubPara = "Nội dung nhỏ không được bỏ trống";
+    }
+
+    setParaErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Xu ly modal article detail
   const handleDeleteParagraph = (key) => {
     setDataArticle((prev) => {
@@ -93,18 +177,20 @@ export default function ServiceForm() {
   // gui data ve component cha ServicesPage
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    const submitData = {
+      ...formData,
+      lg: lang,
+      ...(!editingService ? { content: dataArticle } : {}),
+    };
+
     if (!editingService) {
-      const submitData = {
-        ...formData,
-        lg: lang,
-        content: dataArticle,
-      };
       handleCreateService(submitData);
     } else {
-      const submitData = {
-        ...formData,
-        lg: lang,
-      };
       handleEditService(submitData, editingService.id);
     }
 
@@ -124,17 +210,26 @@ export default function ServiceForm() {
     setIsAddingParagraph(true);
   };
 
-  const newArticle = { ...partOfArticle };
+  // const newArticle = { ...partOfArticle };
 
   //Them tung phan cua bai viet vao BIG CONTENT
+  // Hàm thêm/sửa từng phần của bài viết vào BIG CONTENT
   const handleSubmitParagraph = async (field) => {
-    if (isEditingParagraph && editKey) {
-      const updatedArticle = { ...newArticle };
+    // 1. Validate trước khi thêm
+    if (!validateParagraph(selectedType, partOfArticle)) {
+      return;
+    }
 
-      // Nếu đang sửa ảnh và img là File => upload lại
-      if (selectedType === "img" && newArticle.img instanceof File) {
+    let updatedArticle = { ...partOfArticle }; // copy state hiện tại
+    let key = field;
+
+    // 2. Nếu đang sửa đoạn cũ
+    if (isEditingParagraph && editKey) {
+      // Nếu là ảnh và người dùng upload file mới thì re-upload
+      if (selectedType === "img" && updatedArticle.img instanceof File) {
         const data = new FormData();
-        data.append("image", newArticle.img);
+        data.append("image", updatedArticle.img);
+
         try {
           const res = await fetch(UploadAPI.uploadImg(), {
             method: "POST",
@@ -151,57 +246,75 @@ export default function ServiceForm() {
         }
       }
 
-      setDataArticle((prev) => ({ ...prev, [editKey]: updatedArticle }));
-    } else {
-      if (field === "content") {
-        field = field + countContent.toString();
-        setCountContent(countContent + 1);
-      } else if (field === "img") {
-        field = field + countImg.toString();
-        setCountImg(countImg + 1);
-
-        const data = new FormData();
-        data.append("image", newArticle.img);
+      // Nếu là bảng (tbl) thì đọc lại file Excel (nếu người dùng chọn lại file mới)
+      if (selectedType === "tbl" && updatedArticle.tbl instanceof File) {
         try {
-          const res = await fetch(UploadAPI.uploadImg(), {
-            method: "POST",
-            body: data,
-          });
-          if (!res.ok) {
-            throw new Error("Error when upload file");
-          }
-
-          const result = await res.json();
-          if (result.success) {
-            newArticle.img = result.data.url;
-          }
+          const tableData = await handleExcelUpload(updatedArticle.tbl);
+          updatedArticle.tbl = tableData;
         } catch (err) {
-          console.log("Error: ", err);
+          console.log("Error reading excel: ", err);
+        }
+      }
+
+      // Cập nhật vào dataArticle
+      setDataArticle((prev) => ({ ...prev, [editKey]: updatedArticle }));
+    }
+    // 3. Nếu thêm mới
+    else {
+      if (field === "content") {
+        key = field + countContent.toString();
+        setCountContent((c) => c + 1);
+      } else if (field === "img") {
+        key = field + countImg.toString();
+        setCountImg((c) => c + 1);
+
+        if (updatedArticle.img instanceof File) {
+          const data = new FormData();
+          data.append("image", updatedArticle.img);
+
+          try {
+            const res = await fetch(UploadAPI.uploadImg(), {
+              method: "POST",
+              body: data,
+            });
+            if (!res.ok) throw new Error("Error when upload file");
+
+            const result = await res.json();
+            if (result.success) {
+              updatedArticle.img = result.data.url;
+            }
+          } catch (err) {
+            console.log("Error: ", err);
+          }
         }
       } else if (field === "tbl") {
-        field = field + countTbl.toString();
-        setCountTbl(countTbl + 1);
-        console.log(newArticle);
-        if (newArticle.tbl) {
+        key = field + countTbl.toString();
+        setCountTbl((c) => c + 1);
+
+        if (updatedArticle.tbl instanceof File) {
           try {
-            const tableData = await handleExcelUpload(newArticle.tbl);
-            newArticle.tbl = tableData; // Lưu dữ liệu bảng
+            const tableData = await handleExcelUpload(updatedArticle.tbl);
+            updatedArticle.tbl = tableData; // Lưu dữ liệu bảng
           } catch (err) {
             console.log("Error reading excel: ", err);
           }
         }
-      } else {
-        field = field + countLink.toString();
-        setCountLink(countLink + 1);
+      } else if (field === "link") {
+        key = field + countLink.toString();
+        setCountLink((c) => c + 1);
       }
-      setDataArticle((prev) => ({ ...prev, [field]: newArticle }));
-      console.log(dataArticle);
+
+      // Thêm vào BIG CONTENT
+      setDataArticle((prev) => ({ ...prev, [key]: updatedArticle }));
     }
+
+    // 4. Reset state sau khi submit thành công
     setIsAddingParagraph(false);
     setIsEditingParagraph(false);
     setEditKey(null);
     setPartOfArticle({});
     setSelectedType("content");
+    setParaErrors({});
   };
 
   const handleCancelAddParagraph = () => {
@@ -241,6 +354,14 @@ export default function ServiceForm() {
       reader.onerror = (err) => reject(err);
       reader.readAsArrayBuffer(file);
     });
+  };
+
+  const formatCurrency = (value) => {
+    if (!value) return "";
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
   };
 
   return (
@@ -292,8 +413,12 @@ export default function ServiceForm() {
                         handleChange("serviceName", e.target.value)
                       }
                       placeholder="Nhập tên dịch vụ"
-                      required
                     />
+                    {errors.serviceName && (
+                      <p className="text-red-500 text-sm">
+                        {errors.serviceName}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2 flex-1/3">
                     <Label className="text-black" htmlFor="description">
@@ -305,8 +430,10 @@ export default function ServiceForm() {
                       value={formData.desc}
                       onChange={(e) => handleChange("desc", e.target.value)}
                       placeholder="Nhập mô tả dịch vụ"
-                      required
                     />
+                    {errors.desc && (
+                      <p className="text-red-500 text-sm">{errors.desc}</p>
+                    )}
                   </div>
                   <div className="space-y-2 flex-1/3">
                     <Label className="text-black" htmlFor="price">
@@ -316,10 +443,18 @@ export default function ServiceForm() {
                       className="text-black border border-black/30"
                       id="price"
                       value={formData.price}
-                      onChange={(e) => handleChange("price", e.target.value)}
+                      onChange={(e) => {
+                        const rawValue = e.target.value.replace(/\D/g, ""); // chỉ lấy số
+                        handleChange("price", rawValue);
+                      }}
+                      onBlur={(e) => {
+                        e.target.value = formatCurrency(formData.price);
+                      }}
                       placeholder="Nhập giá của dịch vụ"
-                      required
                     />
+                    {errors.price && (
+                      <p className="text-red-500 text-sm">{errors.price}</p>
+                    )}
                   </div>
                 </div>
                 {!editingService && (
@@ -342,8 +477,12 @@ export default function ServiceForm() {
                             handleChange("header", e.target.value)
                           }
                           placeholder="Nhập tiêu đề bài viết"
-                          required
                         />
+                        {errors.header && (
+                          <p className="text-red-500 text-sm">
+                            {errors.header}
+                          </p>
+                        )}
                       </div>
                       {!isAddingParagraph ? (
                         <div className="space-y-2 flex">
@@ -438,6 +577,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập tiêu đề đoạn văn"
                                     required
                                   />
+                                  {selectedType === "content" &&
+                                    paraErrors.paragraph && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.paragraph}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2 flex-1/3">
                                   <Label
@@ -462,6 +607,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung"
                                     required
                                   />
+                                  {selectedType === "content" &&
+                                    paraErrors.paraTitle && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.paraTitle}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2 flex-1/3">
                                   <Label
@@ -486,6 +637,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung nhỏ"
                                     required
                                   />
+                                  {selectedType === "content" &&
+                                    paraErrors.subPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.subPara}
+                                      </p>
+                                    )}
                                 </div>
                               </div>
                             </>
@@ -517,6 +674,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập tiêu đề "
                                     required
                                   />
+                                  {selectedType === "img" &&
+                                    paraErrors.imgTitle && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.imgTitle}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                   <div className="flex justify-center space-x-2">
@@ -546,6 +709,12 @@ export default function ServiceForm() {
                                         }}
                                         required
                                       />
+                                      {selectedType === "img" &&
+                                        paraErrors.img && (
+                                          <p className="text-red-500 text-xs">
+                                            {paraErrors.img}
+                                          </p>
+                                        )}
                                     </div>
                                     <div className="flex-1/2">
                                       {preview && (
@@ -581,6 +750,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung"
                                     required
                                   />
+                                  {selectedType === "img" &&
+                                    paraErrors.imgPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.imgPara}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                   <Label
@@ -605,6 +780,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung nhỏ"
                                     required
                                   />
+                                  {selectedType === "img" &&
+                                    paraErrors.imgSubPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.imgSubPara}
+                                      </p>
+                                    )}
                                 </div>
                               </div>
                             </>
@@ -635,6 +816,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập tiêu đề "
                                     required
                                   />
+                                  {selectedType === "tbl" &&
+                                    paraErrors.tblTitle && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.tblTitle}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-">
                                   <Label
@@ -674,6 +861,11 @@ export default function ServiceForm() {
                                     }}
                                     required
                                   />
+                                  {selectedType === "tbl" && paraErrors.tbl && (
+                                    <p className="text-red-500 text-xs">
+                                      {paraErrors.tbl}
+                                    </p>
+                                  )}
                                 </div>
                                 <div className="space-y-2">
                                   <Label
@@ -698,6 +890,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung"
                                     required
                                   />
+                                  {selectedType === "tbl" &&
+                                    paraErrors.tblPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.tblPara}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                   <Label
@@ -722,6 +920,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung nhỏ"
                                     required
                                   />
+                                  {selectedType === "tbl" &&
+                                    paraErrors.tblSubPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.tblSubPara}
+                                      </p>
+                                    )}
                                 </div>
                               </div>
                             </>
@@ -753,6 +957,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập tiêu đề "
                                     required
                                   />
+                                  {selectedType === "link" &&
+                                    paraErrors.linkTitle && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.linkTitle}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-">
                                   <Label
@@ -777,6 +987,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập đường dẫn URL..."
                                     required
                                   />
+                                  {selectedType === "link" &&
+                                    paraErrors.link && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.link}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                   <Label
@@ -798,6 +1014,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung"
                                     required
                                   />
+                                  {selectedType === "link" &&
+                                    paraErrors.linkPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.linkPara}
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                   <Label
@@ -822,6 +1044,12 @@ export default function ServiceForm() {
                                     placeholder="Nhập nội dung nhỏ"
                                     required
                                   />
+                                  {selectedType === "link" &&
+                                    paraErrors.linkSubPara && (
+                                      <p className="text-red-500 text-xs">
+                                        {paraErrors.linkSubPara}
+                                      </p>
+                                    )}
                                 </div>
                               </div>
                             </>

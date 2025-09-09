@@ -5,13 +5,6 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -19,9 +12,15 @@ import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 
 export default function CustomerForm() {
-  const { handleClose, editingCustomer, handleEditingCustomer } =
-    useOutletContext();
+  const {
+    handleClose,
+    editingCustomer,
+    handleEditingCustomer,
+    initDataCustomer,
+  } = useOutletContext();
+
   const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (editingCustomer) {
@@ -38,125 +37,159 @@ export default function CustomerForm() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Tên bắt buộc
+    if (!formData.cusName?.trim()) {
+      newErrors.cusName = "Tên khách hàng là bắt buộc.";
+    }
+
+    // Số điện thoại
+    if (!formData.cusPhone?.trim()) {
+      newErrors.cusPhone = "Số điện thoại là bắt buộc.";
+    } else if (!/^0\d{9}$/.test(formData.cusPhone.trim())) {
+      newErrors.cusPhone = "Số điện thoại phải bắt đầu bằng 0 và gồm 10 số.";
+    } else if (
+      initDataCustomer?.some(
+        (c) =>
+          c.phone === formData.cusPhone.trim() && c.id !== editingCustomer?.id // bỏ qua chính khách hàng đang edit
+      )
+    ) {
+      newErrors.cusPhone = "Số điện thoại đã tồn tại.";
+    }
+
+    // Email (nếu nhập thì validate + check trùng)
+    if (formData.cusEmail?.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.cusEmail.trim())) {
+        newErrors.cusEmail = "Email không hợp lệ.";
+      } else if (
+        initDataCustomer?.some(
+          (c) =>
+            c.email === formData.cusEmail.trim() && c.id !== editingCustomer?.id
+        )
+      ) {
+        newErrors.cusEmail = "Email đã tồn tại.";
+      }
+    }
+
+    // Địa chỉ bắt buộc
+    if (!formData.cusAddress?.trim()) {
+      newErrors.cusAddress = "Địa chỉ là bắt buộc.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (editingCustomer) {
-      handleEditingCustomer(formData, editingCustomer.id);
+    if (validateForm()) {
+      if (editingCustomer) {
+        handleEditingCustomer(formData, editingCustomer.id);
+      }
     }
   };
 
   return (
-    <>
-      <Card className="bg-white w-full mx-auto">
-        <CardHeader className="relative">
-          <CardTitle className="flex gap-2 items-center">
-            Chỉnh sửa người dùng
-          </CardTitle>
-          <CardDescription className="text-black/50">
-            Cập nhật thông tin người dùng
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit(e);
-            }}
-          >
-            <div className="gap-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-black" htmlFor="cusName">
-                    Tên khách hàng *
-                  </Label>
-                  <Input
-                    className="text-black border border-black/30"
-                    id="cusName"
-                    value={formData.cusName || ""}
-                    onChange={(e) => handleChange("cusName", e.target.value)}
-                    placeholder="Nhập Họ và Tên khách hàng... "
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-black" htmlFor="cusPhone">
-                    Số điện thoại *
-                  </Label>
-                  <Input
-                    className="text-black border border-black/30"
-                    id="cusPhone"
-                    value={formData.cusPhone || ""}
-                    onChange={(e) => handleChange("cusPhone", e.target.value)}
-                    placeholder="Nhập số điện thoại của khách hàng... "
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-black" htmlFor="cusEmail">
-                    Email
-                  </Label>
-                  <Input
-                    className="text-black border border-black/30"
-                    id="cusEmail"
-                    value={formData.cusEmail || ""}
-                    onChange={(e) => handleChange("cusEmail", e.target.value)}
-                    placeholder="Nhập email của khách hàng... "
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-black" htmlFor="cusAddress">
-                    Địa chỉ *
-                  </Label>
-                  <Input
-                    className="text-black border border-black/30"
-                    id="cusAddress"
-                    value={formData.cusAddress || ""}
-                    onChange={(e) => handleChange("cusAddress", e.target.value)}
-                    placeholder="Nhập địa chỉ của khách hàng... "
-                  />
-                </div>
-                {/* {editingCustomer && (
-                  <div className="space-y-2">
-                    <Label className="text-black" htmlFor="status">
-                      Trạng thái
-                    </Label>
-                    <Select
-                      value={formData.status || ""}
-                      onValueChange={(value) => handleChange("status", value)}
-                      key={formData.status}
-                    >
-                      <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
-                        <SelectValue placeholder="Chọn trạng thái">
-                        </SelectValue>
-                      </SelectTrigger>
-
-                      <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                        <SelectItem value="pending">Chưa hoàn thành</SelectItem>
-                        <SelectItem value="completed">Hoàn thành</SelectItem>
-                        <SelectItem value="cancelled">Hủy</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )} */}
+    <Card className="bg-white w-full mx-auto">
+      <CardHeader className="relative">
+        <CardTitle className="flex gap-2 items-center">
+          Chỉnh sửa người dùng
+        </CardTitle>
+        <CardDescription className="text-black/50">
+          Cập nhật thông tin người dùng
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit}>
+          <div className="gap-4">
+            <div className="space-y-4">
+              {/* Tên */}
+              <div className="space-y-2">
+                <Label className="text-black" htmlFor="cusName">
+                  Tên khách hàng *
+                </Label>
+                <Input
+                  className="text-black border border-black/30"
+                  id="cusName"
+                  value={formData.cusName || ""}
+                  onChange={(e) => handleChange("cusName", e.target.value)}
+                  placeholder="Nhập Họ và Tên khách hàng... "
+                />
+                {errors.cusName && (
+                  <p className="text-red-500 text-sm">{errors.cusName}</p>
+                )}
               </div>
-              <div className="space-y-4"></div>
+
+              {/* SĐT */}
+              <div className="space-y-2">
+                <Label className="text-black" htmlFor="cusPhone">
+                  Số điện thoại *
+                </Label>
+                <Input
+                  className="text-black border border-black/30"
+                  id="cusPhone"
+                  value={formData.cusPhone || ""}
+                  onChange={(e) => handleChange("cusPhone", e.target.value)}
+                  placeholder="Nhập số điện thoại của khách hàng... "
+                />
+                {errors.cusPhone && (
+                  <p className="text-red-500 text-sm">{errors.cusPhone}</p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <Label className="text-black" htmlFor="cusEmail">
+                  Email
+                </Label>
+                <Input
+                  className="text-black border border-black/30"
+                  id="cusEmail"
+                  value={formData.cusEmail || ""}
+                  onChange={(e) => handleChange("cusEmail", e.target.value)}
+                  placeholder="Nhập email của khách hàng... "
+                />
+                {errors.cusEmail && (
+                  <p className="text-red-500 text-sm">{errors.cusEmail}</p>
+                )}
+              </div>
+
+              {/* Địa chỉ */}
+              <div className="space-y-2">
+                <Label className="text-black" htmlFor="cusAddress">
+                  Địa chỉ *
+                </Label>
+                <Input
+                  className="text-black border border-black/30"
+                  id="cusAddress"
+                  value={formData.cusAddress || ""}
+                  onChange={(e) => handleChange("cusAddress", e.target.value)}
+                  placeholder="Nhập địa chỉ của khách hàng... "
+                />
+                {errors.cusAddress && (
+                  <p className="text-red-500 text-sm">{errors.cusAddress}</p>
+                )}
+              </div>
             </div>
-            <div className="flex gap-3 mt-6">
-              <Button type="submit" className="flex-1 hover:bg-gray-500/25">
-                Cập nhật người dùng
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                className="flex-1"
-              >
-                Thoát
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button type="submit" className="flex-1 hover:bg-gray-500/25">
+              Cập nhật người dùng
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="flex-1"
+            >
+              Thoát
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

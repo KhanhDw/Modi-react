@@ -212,6 +212,7 @@ export default function ServicesPage() {
     }
 
     await fetchBooking();
+    await fetchCustomer();
     handleClose();
   };
 
