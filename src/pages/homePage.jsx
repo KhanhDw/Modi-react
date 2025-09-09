@@ -374,8 +374,10 @@ function ThreeCardBusiness({ data, activeLang }) {
 }
 
 
+
 function ServiceModi({ data, activeLang }) {
 
+    const { t } = useLanguage();
     const [hoveredItemId, setHoveredItemId] = useState(null);
     const [isMobileView, setIsMobileView] = useState(false);
 
@@ -435,11 +437,12 @@ function ServiceModi({ data, activeLang }) {
     return (
         <section className="py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
             <div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
-                <h3 className="text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
-                    Dịch vụ
+                <h3 className="  text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
+                    {t("home.serviceModi.title")}
+                    
                 </h3>
                 <div className="text-lg xs:text-xl sm:text-2xl text-gray-600 dark:text-[#D1D5DB]">
-                    <p>Chúng tôi cung cấp giải pháp phù hợp cho doanh nghiệp của bạn.</p>
+                    {t("home.serviceModi.description")}
                 </div>
             </div>
 
@@ -481,7 +484,8 @@ function ServiceModi({ data, activeLang }) {
                                             className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
                                             href={service.href || "#"}
                                         >
-                                            Tìm hiểu thêm
+                                            {t("home.serviceModi.findOutMore")}
+                                            
                                         </a>
                                     </div>
                                 </div>
@@ -537,7 +541,7 @@ function ServiceModi({ data, activeLang }) {
                                                 className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
                                                 href={service.href || "#"}
                                             >
-                                                Tìm hiểu thêm
+                                                {t("home.serviceModi.findOutMore")}
                                             </a>
                                         </div>
                                     </div>
@@ -550,6 +554,7 @@ function ServiceModi({ data, activeLang }) {
                 {isMobileView && (
                     <div className="text-center text-gray-500 dark:text-gray-400 mt-4 text-sm sm:text-base">
                         Vuốt sang ngang để xem thêm dịch vụ
+                        
                     </div>
                 )}
             </div>
@@ -562,6 +567,7 @@ function ServiceModi({ data, activeLang }) {
 
 
 function BenefitBusiness({ data, activeLang }) {
+    const {t} = useLanguage();
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.8 });
     const [hovered, setHovered] = useState(null);
@@ -608,7 +614,8 @@ function BenefitBusiness({ data, activeLang }) {
                     transition={{ duration: 0.8 }}
                     className="mb-10 md:text-3xl xs:text-xl 3xl:text-6xl font-bold text-center dark:text-white text-black"
                 >
-                    {activeLang === "vi" ? "Lợi ích" : "Benefits"}
+                    {t("home.benefit.mainTitle")}
+                    
                 </motion.p>
                 {data.map((item, index) => (
                     <div key={item.id} className="mb-10">

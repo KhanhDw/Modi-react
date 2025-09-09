@@ -63,7 +63,7 @@ export function StartupJourney() {
             return (
               <Card
                 key={index}
-                className={`transition-all  duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${visibleCards.includes(index)
+                className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${visibleCards.includes(index)
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
                   }`}

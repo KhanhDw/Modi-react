@@ -114,6 +114,7 @@ export default {
             services: [
                 {
                     "title": "Website Design"
+                    
                 },
                 {
                     "title": "App Design"
@@ -129,8 +130,9 @@ export default {
                 },
                 {
                     "title": "Logo Design"
-                }
-            ]
+                },
+            ],
+            findOutMore: "Find out more"
         },
 
         // Benefit Business

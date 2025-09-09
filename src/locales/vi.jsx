@@ -114,13 +114,17 @@ export default {
             title: "Dịch vụ Modi",
             description: "Nền tảng kết nối, cung cấp dịch vụ toàn diện, đồng hành cùng doanh nghiệp Việt từ khởi nghiệp đến xuất khẩu quốc tế.",
             services: [
-                { title: "Thiết kế website" },
+                { 
+                    title: "Thiết kế website",
+                    description: "Website chuyên nghiệp, chuẩn SEO, tối ưu trải nghiệm người dùng trên mọi thiết bị."
+                },
                 { title: "Thiết kế App" },
                 { title: "Marketing sản phẩm" },
                 { title: "SEO" },
                 { title: "Mini ERP" },
                 { title: "Thiết kế Logo" },
-            ]
+            ],
+            findOutMore: "Tìm hiểu thêm"
         },
 
         // Benefit Business
