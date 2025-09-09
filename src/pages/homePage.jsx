@@ -626,7 +626,7 @@ function BenefitBusiness({ data, activeLang }) {
                             <TiArrowSortedDown
                                 className={`dark:text-white text-black transition-all duration-300 ${hovered === index ? "text-green-600 border-1 border-black rounded-2xl" : ""}`}
                             />
-                            <span className="dark:text-white text-black">
+                            <span className="dark:text-white text-black font-semibold text-3xl">
                                 {item.title?.[activeLang]}
                             </span>
                         </motion.button>
@@ -638,7 +638,7 @@ function BenefitBusiness({ data, activeLang }) {
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.4 }}
                                 >
-                                    <ul>
+                                    <ul className='pl-15 mt-5'>
                                         {item.description?.[activeLang]?.map((contentItem, subIndex) => (
                                             <li
                                                 key={subIndex}

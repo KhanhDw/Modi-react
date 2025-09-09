@@ -1,13 +1,13 @@
 import { MapPin, Phone, Mail } from "lucide-react";
 import {
     FaLinkedin, FaFacebookSquare, FaYoutube,
-    FaTiktok, FaInstagram, FaTwitter, FaWhatsapp
+    FaTiktok, FaInstagram, FaTwitter
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext"
-import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React from 'react';
 import zaloPng from "/icon-zalo.png";
+import boCongThuongBanner from '@/assets/images/boCongThuong/bocongthuong.png';
 
 
 // Map tên mạng xã hội -> icon
@@ -37,7 +37,7 @@ export default function FooterView({ data, services, socials = [], privacy, lang
         { link: "/about", title: t("footer.privacyStatement.0") },
         { link: "/terms-of-services", title: t("footer.privacyStatement.1") },
         { link: "/contact", title: t("footer.privacyStatement.2") },
-        { link: "/careers", title: t("footer.privacyStatement.3") },
+        // { link: "/careers", title: t("footer.privacyStatement.3") },
     ];
 
 
@@ -77,6 +77,14 @@ export default function FooterView({ data, services, socials = [], privacy, lang
                                 <Mail className="flex-shrink-0 text-red-500" size={20} />
                                 <p className="xs:text-sm md:text-md 3xl:text-xl">{currentData.email}</p>
                             </div>
+                            {currentData.urlBoCongThuong && (
+                                <div className="flex items-center gap-3">
+                                    <a href={`${currentData.urlBoCongThuong}`} target="_blank" rel="noopener noreferrer ">
+                                        <img src={boCongThuongBanner} alt="bộ công thương xác nhận"
+                                            className="w-35 h-auto object-contain" />
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     </div>
 

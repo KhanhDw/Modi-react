@@ -42,9 +42,9 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
   };
 
   return (
-    <div className="z-999">
+    <div className="z-2">
       <CustomDropdown
-        className="z-9"
+        className=""
         trigger={
           <Button
             variant="ghost"
