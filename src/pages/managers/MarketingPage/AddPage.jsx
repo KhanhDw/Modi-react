@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator"
 import SocialNetworkManager from "./SocialNetworkManager";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+import axios from "axios";
 
 
 export default function AddPage() {
@@ -19,6 +20,7 @@ export default function AddPage() {
     const [preview, setPreview] = useState("");
     const [error, setError] = useState("");
     const [isOpenEditNetwork, setIsOpenEditNetwork] = useState(false);
+    const [user, setUser] = useState(null);
 
     const handleOpenEditNetwork = () => {
         setIsOpenEditNetwork(true);
@@ -36,12 +38,37 @@ export default function AddPage() {
         }
     };
 
+    // Gọi API lấy dữ liệu user (giữ nguyên logic gốc)
+    const fetchUser = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                console.error("Chưa có token, cần login trước");
+                return;
+            }
+
+            const res = await axios.get(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setUser(res.data.user);
+        } catch (err) {
+            console.error("Lỗi lấy user:", err);
+        }
+    };
+
     // Reset form
     useEffect(() => {
+        fetchUser();
         setFormData({
             title: "",
             content: "",
-            author_id: 1,
+            author_id: user?.id || null,
             platform_id: null,
             status: "draft",
             tags: "",

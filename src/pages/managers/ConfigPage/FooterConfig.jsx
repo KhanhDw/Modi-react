@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import FooterView from "@/pages/managers/ConfigPage/FooterView";
-import { Button } from '@/components/ui/button'
-import boCongThuongBanner from '@/assets/images/boCongThuong/bocongthuong.png';
-
+import { Button } from "@/components/ui/button";
+import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
 
 export default function FooterConfigMultiLang() {
     const [activeLang, setActiveLang] = useState("vi");
@@ -18,34 +17,57 @@ export default function FooterConfigMultiLang() {
     const [toast, setToast] = useState(null);
     const [activeTab, setActiveTab] = useState("company");
     const [enableBoCongThuong, setEnableBoCongThuong] = useState(false);
+    const [urlBoCongThuong, setUrlBoCongThuong] = useState("");
 
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
     const fetchFooter = async () => {
         try {
             setLoading(true);
-            const logoRes = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
+            // Logo
+            const logoRes = await fetch(
+                `${API_BASE_URL}/api/section-items/type/logo?slug=header`
+            );
             const logoData = await logoRes.json();
             if (logoData.length > 0) {
                 setLogoItem(logoData[0]);
-                setPreview(logoData[0].image_url ? `${API_BASE_URL}${logoData[0].image_url}` : "");
+                setPreview(
+                    logoData[0].image_url
+                        ? `${API_BASE_URL}${logoData[0].image_url}`
+                        : ""
+                );
             }
 
-            const infoRes = await fetch(`${API_BASE_URL}/api/section-items/type/company_info?slug=footer`);
+            // Company Info
+            const infoRes = await fetch(
+                `${API_BASE_URL}/api/section-items/type/company_info?slug=footer`
+            );
             setCompanyInfo(await infoRes.json());
 
-            const serviceRes = await fetch(`${API_BASE_URL}/api/section-items/type/services?slug=footer`);
+            // Services
+            const serviceRes = await fetch(
+                `${API_BASE_URL}/api/section-items/type/services?slug=footer`
+            );
             setServices(await serviceRes.json());
 
-            // ✅ Fetch social
-            const socialRes = await fetch(`${API_BASE_URL}/api/section-items/type/social?slug=footer`);
+            // Socials
+            const socialRes = await fetch(
+                `${API_BASE_URL}/api/section-items/type/social?slug=footer`
+            );
             setSocials(await socialRes.json());
 
-            const thongBaoBoCongThuongRes = await fetch(`${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`);
-            setThongBaoBoCongThuong(await thongBaoBoCongThuongRes.json());
+            // Bộ Công Thương
+            const bctRes = await fetch(
+                `${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`
+            );
+            const bctData = await bctRes.json();
+            setThongBaoBoCongThuong(bctData);
 
-
-
+            if (bctData.length > 0) {
+                const item = bctData[0];
+                setEnableBoCongThuong(item.title?.vi === "true");
+                setUrlBoCongThuong(item.description?.vi || "");
+            }
         } catch (err) {
             console.error("Lỗi tải footer:", err);
             setToast({ message: "❌ Lỗi tải dữ liệu footer", type: "error" });
@@ -56,13 +78,9 @@ export default function FooterConfigMultiLang() {
 
     useEffect(() => {
         fetchFooter();
-
-        const isThongBao = String(thongBaoBoCongThuong[0]?.title?.[activeLang]).toLowerCase() === "true";
-        setEnableBoCongThuong(isThongBao)
-
     }, [activeLang]);
 
-    // ✅ Update Social
+    // --- Helpers update ---
     const updateSocial = (id, field, value, bothLang = false) => {
         setSocials((prev) =>
             prev.map((s) =>
@@ -109,6 +127,26 @@ export default function FooterConfigMultiLang() {
         );
     };
 
+    const updateThongBao = (id, field, value, bothLang = false) => {
+        setThongBaoBoCongThuong((prev) =>
+            prev.map((item) =>
+                item.id === id
+                    ? {
+                        ...item,
+                        [field]: bothLang
+                            ? { vi: value, en: value }
+                            : { ...item[field], [activeLang]: value },
+                    }
+                    : item
+            )
+        );
+        setUrlBoCongThuong(value);
+    };
+
+    const toggleThongBaoBoCongThuong = () => {
+        setEnableBoCongThuong((prev) => !prev);
+    };
+
     const handleLogoChange = (e) => {
         const selected = e.target.files[0];
         if (selected) {
@@ -125,38 +163,22 @@ export default function FooterConfigMultiLang() {
         formData.append("field", "image_url");
         formData.append("section", section);
 
-        const res = await fetch(`${API_BASE_URL}/api/upload?field=image_url`, {
-            method: "POST",
-            body: formData,
-        });
+        const res = await fetch(
+            `${API_BASE_URL}/api/upload?field=image_url`,
+            {
+                method: "POST",
+                body: formData,
+            }
+        );
         const result = await res.json();
         return result?.data?.url || result?.url || null;
     };
 
-
-    const toggleThongBaoBoCongThuong = () => {
-        setEnableBoCongThuong((prev) => !prev);
-    };
-
-    const updateThongBao = (id, field, value, bothLang = false) => {
-        setThongBaoBoCongThuong((prev) =>
-            prev.map((item) =>
-                item.id === id
-                    ? {
-                        ...item,
-                        [field]: bothLang
-                            ? { vi: value, en: value }
-                            : { ...item[field], [activeLang]: value },
-                    }
-                    : item
-            )
-        );
-    };
-
-
     const handleSave = async () => {
         try {
             setLoading(true);
+
+            // Save logo
             if (logoItem) {
                 let updatedLogo = { ...logoItem };
                 if (file) {
@@ -170,6 +192,7 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
+            // Save company info
             for (const info of companyInfo) {
                 await fetch(`${API_BASE_URL}/api/section-items/${info.id}`, {
                     method: "PUT",
@@ -178,6 +201,7 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
+            // Save services
             for (const srv of services) {
                 await fetch(`${API_BASE_URL}/api/section-items/${srv.id}`, {
                     method: "PUT",
@@ -186,7 +210,7 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            // ✅ Save socials
+            // Save socials
             for (const soc of socials) {
                 await fetch(`${API_BASE_URL}/api/section-items/${soc.id}`, {
                     method: "PUT",
@@ -195,18 +219,19 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
+            // Save Bộ Công Thương
             for (const bct of thongBaoBoCongThuong) {
                 const updatedBct = {
                     ...bct,
-                    // title chỉ lưu trạng thái true/false
-                    title: { vi: String(enableBoCongThuong), en: String(enableBoCongThuong) },
-                    // description lưu URL cho cả 2 ngôn ngữ
+                    title: {
+                        vi: String(enableBoCongThuong),
+                        en: String(enableBoCongThuong),
+                    },
                     description: {
-                        vi: bct.description?.vi || "",
-                        en: bct.description?.en || "",
+                        vi: urlBoCongThuong,
+                        en: urlBoCongThuong,
                     },
                 };
-
                 await fetch(`${API_BASE_URL}/api/section-items/${bct.id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -214,39 +239,54 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-
             setToast({ message: "✅ Lưu footer thành công!", type: "success" });
             setFile(null);
             fetchFooter();
         } catch (err) {
             console.error("Lỗi lưu footer:", err);
-            setToast({ message: "❌ Lỗi khi lưu: " + err.message, type: "error" });
+            setToast({
+                message: "❌ Lỗi khi lưu: " + err.message,
+                type: "error",
+            });
         } finally {
             setLoading(false);
         }
     };
 
-
     if (loading) return <p className="text-center">⏳ Đang tải...</p>;
 
     return (
-        <div className="p-6 mx-auto space-y-12 admin-dark:bg-gray-900 admin-dark:text-gray-100 transition">
+        <div className="p-6 mx-auto space-y-12">
             {/* Preview */}
             <FooterView
                 data={{
                     [activeLang]: {
                         logo: preview,
-                        name_company: companyInfo.find(f => f.section_type === "company_info" && f.position === 2)?.description?.[activeLang] || "",
-                        content_about_us: companyInfo.find(f => f.section_type === "company_info" && f.position === 6)?.description?.[activeLang] || "",
-                        address_company: companyInfo.find(f => f.section_type === "company_info" && f.position === 3)?.description?.[activeLang] || "",
-                        phone: companyInfo.find(f => f.section_type === "company_info" && f.position === 4)?.description?.[activeLang] || "",
-                        email: companyInfo.find(f => f.section_type === "company_info" && f.position === 5)?.description?.[activeLang] || "",
-                        urlBoCongThuong: thongBaoBoCongThuong.find(f => f.section_type === "ThongBaoBoCongThuong" && f.position === 1)?.description?.[activeLang] || ""
-                    }
+                        name_company:
+                            companyInfo.find((f) => f.position === 2)?.description?.[activeLang] || "",
+                        content_about_us:
+                            companyInfo.find((f) => f.position === 6)?.description?.[activeLang] || "",
+                        address_company:
+                            companyInfo.find((f) => f.position === 3)?.description?.[activeLang] || "",
+                        phone:
+                            companyInfo.find((f) => f.position === 4)?.description?.[activeLang] || "",
+                        email:
+                            companyInfo.find((f) => f.position === 5)?.description?.[activeLang] || "",
+                    },
                 }}
-                services={services.map(s => ({ title: s.title?.[activeLang], slug: s.description?.[activeLang] }))}
-                socials={socials.map(s => ({ title: s.title?.[activeLang], url: s.description?.[activeLang] }))}
+                services={services.map((s) => ({
+                    title: s.title?.[activeLang],
+                    slug: s.description?.[activeLang],
+                }))}
+                socials={socials.map((s) => ({
+                    title: s.title?.[activeLang],
+                    url: s.description?.[activeLang],
+                }))}
                 privacy={[]}
+                boCongThuong={{
+                    enable: enableBoCongThuong && urlBoCongThuong !== "",
+                    url: urlBoCongThuong,
+                }}
                 lang={activeLang}
             />
 

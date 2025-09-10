@@ -155,7 +155,7 @@ export default function AdminZonePage() {
         {/* Table */}
         <div className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${fade ? "opacity-100 shadow-md" : "opacity-0"}`}>
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
-            <thead className="sticky top-0 z-10">
+            <thead className="sticky top-0 z-1">
               <tr className="bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 uppercase tracking-wider text-xs sm:text-sm border-b border-gray-200 admin-dark:border-gray-700">
                 {columns.map((col) => (
                   <th
@@ -233,35 +233,35 @@ export default function AdminZonePage() {
                     <td className="px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-center">
                       <div className="flex justify-center gap-4">
                         <button
-  title="Chỉnh sửa"
-  onClick={() => {
-    setEditingUser(item);
-    setShowForm(true);
-  }}
-  disabled={currentUser && item.id === currentUser.id} // disable nếu là user hiện tại
-  className={`flex items-center gap-1 transition cursor-pointer
+                          title="Chỉnh sửa"
+                          onClick={() => {
+                            setEditingUser(item);
+                            setShowForm(true);
+                          }}
+                          disabled={currentUser && item.id === currentUser.id} // disable nếu là user hiện tại
+                          className={`flex items-center gap-1 transition cursor-pointer
     ${currentUser && item.id === currentUser.id
-      ? "text-gray-400 cursor-not-allowed"
-      : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"}
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"}
   `}
->
-  <FiEdit2 size={18} />
-  <span className="text-sm font-medium">Sửa</span>
-</button>
+                        >
+                          <FiEdit2 size={18} />
+                          <span className="text-sm font-medium">Sửa</span>
+                        </button>
 
-<button
-  title="Xóa"
-  onClick={() => handleDelete(item.id)}
-  disabled={currentUser && item.id === currentUser.id}
-  className={`flex items-center gap-1 transition cursor-pointer
+                        <button
+                          title="Xóa"
+                          onClick={() => handleDelete(item.id)}
+                          disabled={currentUser && item.id === currentUser.id}
+                          className={`flex items-center gap-1 transition cursor-pointer
     ${currentUser && item.id === currentUser.id
-      ? "text-gray-400 cursor-not-allowed"
-      : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"}
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"}
   `}
->
-  <FiTrash2 size={18} />
-  <span className="text-sm font-medium">Xóa</span>
-</button>
+                        >
+                          <FiTrash2 size={18} />
+                          <span className="text-sm font-medium">Xóa</span>
+                        </button>
 
                       </div>
                     </td>

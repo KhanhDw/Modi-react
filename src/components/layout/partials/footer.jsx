@@ -8,7 +8,7 @@ export default function Footer() {
   const [services, setServices] = useState({});
   const [privacy, setPrivacy] = useState({});
   const [socials, setSocials] = useState({});
-  const [boCongThuong, setBoCongThuong] = useState({}); // ✅ thêm state
+  const [boCongThuong, setBoCongThuong] = useState({});
   const [activeLang, setActiveLang] = useState("vi");
   const [loading, setLoading] = useState(true);
 
@@ -18,14 +18,13 @@ export default function Footer() {
     try {
       setLoading(true);
 
-      // ✅ gọi thêm API boCongThuong
       const [logoRes, infoRes, serviceRes, socialRes, privacyRes, bctRes] = await Promise.all([
         fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`),
         fetch(`${API_BASE_URL}/api/section-items/type/company_info?slug=footer`),
         fetch(`${API_BASE_URL}/api/section-items/type/services?slug=footer`),
         fetch(`${API_BASE_URL}/api/section-items/type/social?slug=footer`),
         fetch(`${API_BASE_URL}/api/section-items/type/privacy?slug=footer`),
-        fetch(`${API_BASE_URL}/api/section-items/type/bocongthuong?slug=footer`), // 👈 thêm API
+        fetch(`${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`),
       ]);
 
       const [logoData, companyInfo, serviceData, socialsData, privacyData, bctData] =
@@ -39,13 +38,14 @@ export default function Footer() {
         ]);
 
       const logoItem = logoData[0] || null;
+      const bctItem = bctData[0] || null; // ✅ chỉ lấy 1 item
 
       const langs = ["vi", "en"];
       const footerMap = {};
       const serviceMap = {};
       const socialMap = {};
       const privacyMap = {};
-      const bctMap = {}; // ✅ map cho Bộ Công Thương
+      const bctMap = {};
 
       langs.forEach((lng) => {
         footerMap[lng] = {
@@ -72,18 +72,20 @@ export default function Footer() {
           link: p.description?.[lng],
         }));
 
-        // ✅ Bộ Công Thương
-        bctMap[lng] = bctData.map((b) => ({
-          enable: b.title?.[lng] === "true", // title = "true"/"false"
-          url: b.description?.[lng],        // description = link xác thực
-        }));
+        // ✅ Bộ Công Thương (object, không phải array)
+        bctMap[lng] = {
+          enable: bctItem?.title?.[lng] === "true",
+          url: bctItem?.description?.[lng] || "",
+        };
       });
 
       setFooterData(footerMap);
       setServices(serviceMap);
       setSocials(socialMap);
       setPrivacy(privacyMap);
-      setBoCongThuong(bctMap); // ✅ set BCT
+      setBoCongThuong(bctMap);
+
+      console.log("✅ BCT Map:", bctMap);
     } catch (err) {
       console.error("❌ Lỗi tải footer:", err);
     } finally {
@@ -109,7 +111,7 @@ export default function Footer() {
       services={services[activeLang]}
       socials={socials[activeLang]}
       privacy={privacy[activeLang]}
-      boCongThuong={boCongThuong[activeLang]} // ✅ truyền xuống FooterView
+      boCongThuong={boCongThuong[activeLang]}
       lang={activeLang}
     />
   );

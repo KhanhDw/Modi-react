@@ -1,8 +1,6 @@
 import { useState, createContext, useEffect } from "react";
 import { Outlet, Routes, Route } from "react-router-dom";
-import ListPage from "@/pages/managers/MarketingPage/ListPage";
-import AddPage from "@/pages/managers/MarketingPage/AddPage";
-import EditPage from "@/pages/managers/MarketingPage/EditPage";
+import axios from "axios";
 
 export default function MarketingPage() {
   const activeClass =
@@ -15,6 +13,7 @@ export default function MarketingPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [socialNetworks, setSocialNetworks] = useState([]);
+  const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -27,6 +26,31 @@ export default function MarketingPage() {
     image: "",
     lang: "vi",
   });
+
+  // Gọi API lấy dữ liệu user (giữ nguyên logic gốc)
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("Chưa có token, cần login trước");
+        return;
+      }
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUser(res.data.user);
+    } catch (err) {
+      console.error("Lỗi lấy user:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchSocialNetWorks = async () => {
     try {
@@ -60,6 +84,7 @@ export default function MarketingPage() {
 
 
   useEffect(() => {
+    fetchUser();
     fetchSocialNetWorks();
     fetchPosts();
   }, []);
@@ -69,7 +94,7 @@ export default function MarketingPage() {
   const handleAddPost = async () => {
     try {
       const payload = {
-        author_id: formData.author_id || 1,
+        author_id: user?.id || null,
         platform_id: formData.platform_id || null,
         image: formData.image,
         tags: formData.tags,
@@ -126,7 +151,7 @@ export default function MarketingPage() {
   const handleEditPost = async () => {
     try {
       const payload = {
-        author_id: formData.author_id ?? 1,
+        // author_id: formData.author_id ?? null, không được thay đổi chủ bài viết
         platform_id: formData.platform_id ?? null,
         image: formData.image,
         tags: formData.tags,

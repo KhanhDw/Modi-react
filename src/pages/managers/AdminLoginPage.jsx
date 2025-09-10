@@ -79,7 +79,8 @@ function AdminLoginPage() {
             // Điều hướng sau khi login thành công
             navigate("/managers");
         } catch (e) {
-            setError(e.message);
+            console.log(e.message);
+            setError("Máy Chủ Đã Xảy Ra Lỗi!");
         } finally {
             setLoading(false);
         }

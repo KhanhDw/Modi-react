@@ -1,8 +1,11 @@
 // src/hooks/useBlogs.js
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function useBlogs() {
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
     const [blogs, setBlogs] = useState([]);
     const [columns, setColumns] = useState([]);
     const [showForm, setShowForm] = useState(false);
@@ -13,7 +16,30 @@ export default function useBlogs() {
     const [sortOrder, setSortOrder] = useState("desc");
     const itemsPerPage = 10;
 
-    const navigate = useNavigate();
+
+    // Gọi API lấy dữ liệu user (giữ nguyên logic gốc)
+    const fetchUser = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                console.error("Chưa có token, cần login trước");
+                return;
+            }
+
+            const res = await axios.get(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setUser(res.data.user);
+        } catch (err) {
+            console.error("Lỗi lấy user:", err);
+        }
+    };
 
     useEffect(() => {
         if (!showForm) return;
@@ -68,6 +94,7 @@ export default function useBlogs() {
     };
 
     useEffect(() => {
+        fetchUser();
         fetchBlogs();
     }, [sortOrder]);
 
@@ -105,16 +132,14 @@ export default function useBlogs() {
 
     const handleSubmit = async (formData, file) => {
         try {
-
-
-            console.log("11-->11 ", formData);
-
-
             // Chuẩn bị FormData
             const formDataUpload = new FormData();
 
-            // Gắn các field của blogs
-            formDataUpload.append("author_id", formData.author_id || 1);
+            // Nếu là thêm mới → gắn author_id
+            if (!editingBlog) {
+                formDataUpload.append("author_id", user?.id || 1);
+            }
+
             formDataUpload.append("status", formData.status || "draft");
             formDataUpload.append("published_at", formData.published_at || "");
 
@@ -123,15 +148,12 @@ export default function useBlogs() {
                 "translations",
                 JSON.stringify([
                     {
-                        // lang: "vi",
-                        lang: formData.lang ?? 'vi',
+                        lang: formData.lang ?? "vi",
                         title: formData.title,
                         content: formData.content,
                     },
                 ])
             );
-
-
 
             const method = editingBlog ? "PUT" : "POST";
 
@@ -139,7 +161,8 @@ export default function useBlogs() {
             if (file) {
                 formDataUpload.append("image", file);
             } else {
-                if (!editingBlog) {   // 👈 chỉ khi thêm mới thì ép có ảnh
+                if (!editingBlog) {
+                    // 👈 chỉ khi thêm mới thì ép có ảnh
                     setError("Ảnh là bắt buộc");
                     return;
                 }
@@ -171,6 +194,7 @@ export default function useBlogs() {
             setError("Thao tác thất bại. Vui lòng kiểm tra dữ liệu.");
         }
     };
+
 
 
     const handleCancel = () => {
