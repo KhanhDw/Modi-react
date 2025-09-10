@@ -40,10 +40,10 @@ const AdminHeader = ({
   useEffect(() => {
     const storedUsername = localStorage.getItem("fullName");
     const storedAvatar_url = localStorage.getItem("avatar_url");
-    if (storedUsername ) {
+    if (storedUsername) {
       setUsername(storedUsername);
     }
-    if ( storedAvatar_url) {
+    if (storedAvatar_url) {
       setAvatar_url(storedAvatar_url);
     }
   }, [username, avatar_url]);
@@ -129,12 +129,15 @@ const AdminHeader = ({
             rel="noopener noreferrer">
             <Button
               variant="ghost"
-              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 admin-dark:bg-gray-400/10 hover:bg-gray-200 bg-slate-100 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
+              className="group flex items-center gap-2 text-black admin-dark:text-gray-100 admin-dark:bg-gray-400/10 hover:bg-gray-900 bg-slate-100 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />
-              <span className="hidden md:inline text-sm ">Xem Website</span>
+              <span className="hidden md:inline text-sm text-black group-hover:text-white admin-dark:text-gray-100">
+                Xem Website
+              </span>
             </Button>
+
           </NavLink>
 
           {/* Notifications */}

@@ -3,8 +3,11 @@ import NotificationToast from "@/components/feature/notification-toast.jsx";
 import FooterView from "@/pages/managers/ConfigPage/FooterView";
 import { Button } from "@/components/ui/button";
 import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
+import useLenisLocal from '@/hook/useLenisLocal'
+
 
 export default function FooterConfigMultiLang() {
+    useLenisLocal(".lenis-local")
     const [activeLang, setActiveLang] = useState("vi");
     const [companyInfo, setCompanyInfo] = useState([]);
     const [services, setServices] = useState([]);
@@ -354,10 +357,11 @@ export default function FooterConfigMultiLang() {
                                     </label>
                                     {isLongText ? (
                                         <textarea
+                                            data-lenis-prevent
                                             value={value}
                                             onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
-                                            rows={3}
-                                            className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                            rows={15}
+                                            className="lenis-local w-full px-4 py-8 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
                                         />
                                     ) : (
                                         <input

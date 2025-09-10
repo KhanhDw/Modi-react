@@ -1,21 +1,14 @@
-import React, { useState, useMemo } from "react";
-
+import React, { useState, useMemo, useRef } from "react";
 import { ChevronDown } from 'lucide-react';
 
 function ModalServices() {
- 
-  
-
-
-
-  
 
   // Mock translation function
   const t = (key) => {
     const translations = {
       "header.services.listServices.0": "Online Kickstart",
       "header.services.listServices.1": "One Me",
-      "header.services.listServices.2": "Brand Building", 
+      "header.services.listServices.2": "Brand Building",
       "header.services.listServices.3": "Online Store",
       "header.services.listServices.4": "Service Booking",
       "header.services.listServices.5": "Comprehensive Management",
@@ -30,7 +23,7 @@ function ModalServices() {
     };
     return translations[key] || key;
   };
-  
+
   // Data structure
   const services = useMemo(() => [
     {
@@ -59,15 +52,15 @@ function ModalServices() {
         { title: "Quản Lý Thương Hiệu", href: "/services/brand-building/brand-management" },
       ],
     },
-    { 
+    {
       id: 3,
-      title: t("header.services.listServices.3"), 
-      href: "/services/online-store" 
+      title: t("header.services.listServices.3"),
+      href: "/services/online-store"
     },
-    { 
+    {
       id: 4,
-      title: t("header.services.listServices.4"), 
-      href: "/services/service-booking" 
+      title: t("header.services.listServices.4"),
+      href: "/services/service-booking"
     },
     {
       id: 5,
@@ -79,30 +72,30 @@ function ModalServices() {
         { title: "Tối Ưu Hóa", href: "/services/comprehensive-management/optimization" },
       ],
     },
-    { 
+    {
       id: 6,
-      title: t("header.services.listServices.6"), 
-      href: "/services/website-app" 
+      title: t("header.services.listServices.6"),
+      href: "/services/website-app"
     },
-    { 
+    {
       id: 7,
-      title: t("header.services.listServices.7"), 
-      href: "/services/re-vision" 
+      title: t("header.services.listServices.7"),
+      href: "/services/re-vision"
     },
-    { 
+    {
       id: 8,
-      title: t("header.services.listServices.8"), 
-      href: "/services/digital-marketing" 
+      title: t("header.services.listServices.8"),
+      href: "/services/digital-marketing"
     },
-    { 
+    {
       id: 9,
-      title: t("header.services.listServices.9"), 
-      href: "/services/seo" 
+      title: t("header.services.listServices.9"),
+      href: "/services/seo"
     },
-    { 
+    {
       id: 10,
-      title: t("header.services.listServices.10"), 
-      href: "/services/social-media" 
+      title: t("header.services.listServices.10"),
+      href: "/services/social-media"
     },
     {
       id: 11,
@@ -114,25 +107,40 @@ function ModalServices() {
         { title: "Tư Vấn Marketing", href: "/services/consulting/marketing" },
       ],
     },
-    { 
+    {
       id: 12,
-      title: t("header.services.listServices.12"), 
-      href: "/services/training" 
+      title: t("header.services.listServices.12"),
+      href: "/services/training"
     },
-    { 
+    {
       id: 13,
-      title: t("header.services.listServices.13"), 
-      href: "/services/support" 
+      title: t("header.services.listServices.13"),
+      href: "/services/support"
     },
   ], []);
 
   const [hoveredItem, setHoveredItem] = useState(null);
+  const hoverTimeout = useRef(null);
 
-  const handleMouseEnterItem = (serviceId) => {
-    setHoveredItem(serviceId);
+  const handleMouseEnterItem = (serviceId, hasSubItems) => {
+    // Nếu item có submenu thì delay 1s mới mở
+    if (hasSubItems) {
+      hoverTimeout.current = setTimeout(() => {
+        setHoveredItem(serviceId);
+      }, 250);
+    } else {
+      // Item không có submenu thì mở ngay
+      setHoveredItem(serviceId);
+    }
+  };
+
+  const handleMouseLeaveItem = () => {
+    // Clear timeout nếu chuột rời đi trước khi đủ 1s
+    clearTimeout(hoverTimeout.current);
   };
 
   const handleMouseLeaveContainer = () => {
+    clearTimeout(hoverTimeout.current);
     setHoveredItem(null);
   };
 
@@ -148,7 +156,13 @@ function ModalServices() {
       <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl overflow-hidden">
         <div className="flex">
           {/* Cột 1: Menu cấp 1 */}
-          <div className="flex-shrink-0 w-80 p-4 border-r border-gray-200/50 dark:border-gray-700/50 h-72 overflow-y-auto overscroll-contain"onWheel={(e) => e.stopPropagation()}>
+          <div
+            className={`
+              flex-shrink-0 w-80 p-4 border-r border-gray-200/50 dark:border-gray-700/50
+              ${services.length > 9 ? "h-120 overflow-y-auto scrollbar-hide" : "h-auto"}
+            `}
+            onWheel={(e) => e.stopPropagation()}
+          >
             <div className="space-y-1">
               {services.map((service) => {
                 const isActive = hoveredItem === service.id;
@@ -165,7 +179,8 @@ function ModalServices() {
                         : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
                       }
                     `}
-                    onMouseEnter={() => handleMouseEnterItem(service.id)}
+                    onMouseEnter={() => handleMouseEnterItem(service.id, hasSubItems)}
+                    onMouseLeave={handleMouseLeaveItem}
                   >
                     <div
                       className={`
@@ -203,22 +218,22 @@ function ModalServices() {
           </div>
 
           {/* Cột 2: Menu cấp 2 - chỉ hiển thị khi có submenu */}
-          <div 
+          <div
             className={`
-              transition-all duration-300 ease-in-out overflow-hidden
-              ${hasActiveSubmenu ? 'w-72 opacity-100' : 'w-0 opacity-0'}
-            `}
+    transition-all duration-300 ease-in-out overflow-hidden
+    ${hasActiveSubmenu ? (activeService.subItems.length > 10 ? "w-72 opacity-100 h-100 overflow-y-auto" : "w-72 opacity-100 h-auto") : "w-0 opacity-0"}
+  `}
           >
             {hasActiveSubmenu && (
-              <div className="p-4 min-h-full bg-gray-50/50 dark:bg-gray-800/50 h-72 overflow-y-auto "onWheel={(e) => e.stopPropagation()}>
-                
+              <div className="p-4 min-h-full bg-gray-50/50 dark:bg-gray-800/50 h-72 overflow-y-auto " onWheel={(e) => e.stopPropagation()}>
+
                 <div className="mb-4">
                   <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">
                     {activeService.title}
                   </h3>
                   <div className="h-0.5 w-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" />
                 </div>
-                
+
                 <ul className="space-y-2">
                   {activeService.subItems.map((sub, subIndex) => (
                     <li key={subIndex} className="group">

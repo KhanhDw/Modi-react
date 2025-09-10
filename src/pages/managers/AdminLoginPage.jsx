@@ -134,7 +134,7 @@ function AdminLoginPage() {
                                         id="password"
                                         type={isShowPassword ? "text" : "password"}
                                         name="password"
-                                        placeholder="Nhập mật khẩu (1234)"
+                                        placeholder="Nhập mật khẩu (111111) (6 số 1)"
                                         autoComplete="off"
                                         value={form.password}
                                         onChange={handleChange}

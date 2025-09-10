@@ -12,35 +12,35 @@ import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 
 function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
+    useEffect(() => {
+        const toggleVisibility = () => {
+            if (window.scrollY > 300) {
+                setVisible(true);
+            } else {
+                setVisible(false);
+            }
+        };
+
+        window.addEventListener("scroll", toggleVisibility);
+        return () => window.removeEventListener("scroll", toggleVisibility);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  return (
-    visible && (
-      <button
-        onClick={scrollToTop}
-        className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition duration-300 z-50"
-      >
-        <FaArrowUp className="w-5 h-5" />
-      </button>
-    )
-  );
+    return (
+        visible && (
+            <button
+                onClick={scrollToTop}
+                className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition duration-300 z-50"
+            >
+                <FaArrowUp className="w-5 h-5" />
+            </button>
+        )
+    );
 }
 
 
@@ -48,10 +48,10 @@ function HomePage({ activeSidebarHeader }) {
     const { t } = useLanguage();
     const { lang, prefix } = useCurrentLanguage();
     const [activeLang, setActiveLang] = useState("vi"); // vi en
-   
+
     useEffect(() => {
         setActiveLang(lang);
-        
+
     }, [lang]);
 
     useEffect(() => {
@@ -68,7 +68,7 @@ function HomePage({ activeSidebarHeader }) {
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-        }, []);
+    }, []);
 
 
     const [homeData, setHomeData] = useState({
@@ -489,7 +489,7 @@ function ServiceModi({ data, activeLang }) {
             <div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
                 <h3 className="  text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
                     {t("home.serviceModi.title")}
-                    
+
                 </h3>
                 <div className="text-lg xs:text-xl sm:text-2xl text-gray-600 dark:text-[#D1D5DB]">
                     {t("home.serviceModi.description")}
@@ -507,7 +507,7 @@ function ServiceModi({ data, activeLang }) {
                                 onMouseEnter={() => handleMouseEnter(service.id, index)}
                                 onMouseLeave={handleMouseLeave}
                                 style={{
-                                    width: getItemWidth(service.id, index), 
+                                    width: getItemWidth(service.id, index),
                                     transition: "width 0.2s ease-out",
                                 }}
                             >
@@ -535,7 +535,7 @@ function ServiceModi({ data, activeLang }) {
                                             href={service.href || "#"}
                                         >
                                             {t("home.serviceModi.findOutMore")}
-                                            
+
                                         </a>
                                     </div>
                                 </div>
@@ -604,7 +604,7 @@ function ServiceModi({ data, activeLang }) {
                 {isMobileView && (
                     <div className="text-center text-gray-500 dark:text-gray-400 mt-4 text-sm sm:text-base">
                         Vuốt sang ngang để xem thêm dịch vụ
-                        
+
                     </div>
                 )}
             </div>
@@ -617,7 +617,7 @@ function ServiceModi({ data, activeLang }) {
 
 
 function BenefitBusiness({ data, activeLang }) {
-    const {t} = useLanguage();
+    const { t } = useLanguage();
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.8 });
     const [hovered, setHovered] = useState(null);
@@ -665,7 +665,7 @@ function BenefitBusiness({ data, activeLang }) {
                     className="mb-10 md:text-3xl xs:text-xl 3xl:text-6xl font-bold text-center dark:text-white text-black"
                 >
                     {t("home.benefit.mainTitle")}
-                    
+
                 </motion.p>
                 {data.map((item, index) => (
                     <div key={item.id} className="mb-10">
@@ -808,7 +808,7 @@ function Customer({ data, activeLang }) {
                 </div>
             </div>
         </div>
-        
+
     )
 }
 
