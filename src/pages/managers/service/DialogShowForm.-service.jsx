@@ -18,19 +18,23 @@ export default function DialogShowForm_Service() {
         }}
       >
         <DialogContent
-          className={` ${
-            !editingService && typeForm === "service" ? `min-w-[70vw]` : ``
-          } min-h-[60vh] bg-white p-6 text-black shadow-2xl`}
+          className={` ${!editingService && typeForm === "service" ? `min-w-[70vw]` : ``
+            } min-h-[60vh] bg-white p-6 text-black shadow-2xl`}
         >
           {typeForm === "service" ? (
-            <ServiceForm />
+            editingService ? (
+              <ArticleDetailModal dataArticle={editingService} />
+            ) : (
+              <ServiceForm />
+            )
           ) : typeForm === "booking" ? (
-            <BookingForm />
+            <BookingForm editingBooking={editingBooking} />
           ) : typeForm === "customer" ? (
-            <CustomerForm />
+            <CustomerForm editingCustomer={editingCustomer} />
           ) : (
             <p>Not found form - typeForm: {typeForm}</p>
           )}
+
         </DialogContent>
       </Dialog>
     </>

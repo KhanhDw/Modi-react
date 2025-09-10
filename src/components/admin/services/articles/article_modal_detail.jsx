@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
+import React, { useEffect } from 'react'
 export default function ArticleDetailModal({
   open,
   onOpenChange,
@@ -15,7 +13,12 @@ export default function ArticleDetailModal({
   onEdit,
   onDelete,
 }) {
-  console.log(dataArticle);
+  useEffect(() => {
+    if (dataArticle) {
+      console.log("dataArticle:", dataArticle);
+    }
+  }, [dataArticle]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="!max-w-7xl w-full max-h-[85vh] overflow-y-auto">

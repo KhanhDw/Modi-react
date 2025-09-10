@@ -74,24 +74,72 @@ export default function ServicesPage() {
   }, [location, Navigate]);
 
   // Xu ly gui du lieu ve server thuc hien tao dich vu
+  // const handleCreateService = async (formData) => {
+
+  //   console.log("dsds:", formData);
+
+  //   let price = formData.price;
+
+  //   // Loại bỏ dấu chấm hoặc dấu phẩy hàng nghìn
+  //   price = price.replace(/[.,]/g, "");
+  //   price = parseFloat(price);
+
+  //   const dataService = {
+  //     name: formData.serviceName,
+  //     desc: formData.desc,
+  //     headerArticle: formData.header,
+  //     footerArticle: formData.footer,
+  //     contentArticle: JSON.stringify(formData.content || {}),
+  //     lang: formData.lang || "vi",
+  //     price: price || 0,
+  //   };
+
+  //   console.log("Dữ liệu gửi đi:", dataService);
+
+  //   try {
+  //     const res = await fetch(ServiceAPI.create(), {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(dataService),
+  //     });
+
+  //     if (!res.ok) {
+  //       const errorText = await res.text();
+  //       console.error("Server trả về lỗi:", errorText);
+  //       throw new Error("Loi khi tao dich vu");
+  //     }
+
+  //     const result = await res.json();
+  //     console.log("Kết quả tạo dịch vụ:", result);
+
+  //     await fetchServices();
+  //     handleClose();
+  //   } catch (err) {
+  //     console.error("Loi khi tao dich vu:", err);
+  //   }
+  // };
+
+  // File: ServicesPage.jsx
+
   const handleCreateService = async (formData) => {
-    let price = formData.price;
+    console.log("Dữ liệu nhận được từ form:", formData);
 
-    // Loại bỏ dấu chấm hoặc dấu phẩy hàng nghìn
-    price = price.replace(/[.,]/g, "");
-    price = parseFloat(price);
+    // formData.price đã là một con số sạch (ví dụ: 100000)
+    // Chúng ta sẽ sử dụng nó trực tiếp.
 
-    const dataService = {
+    const payloadForAPI = {
       name: formData.serviceName,
       desc: formData.desc,
       headerArticle: formData.header,
-      footerArticle: formData.footer,
+      footerArticle: formData.footer || "", // Thêm giá trị dự phòng
       contentArticle: JSON.stringify(formData.content || {}),
       lang: formData.lang || "vi",
-      price: price || 0,
+      price: formData.price || 0, // Sử dụng trực tiếp giá trị số từ formData
     };
 
-    console.log("Dữ liệu gửi đi:", dataService);
+    console.log("Dữ liệu chuẩn bị gửi lên API:", payloadForAPI);
 
     try {
       const res = await fetch(ServiceAPI.create(), {
@@ -99,22 +147,22 @@ export default function ServicesPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataService),
+        body: JSON.stringify(payloadForAPI), // Gửi object đã chuẩn bị
       });
 
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Server trả về lỗi:", errorText);
-        throw new Error("Loi khi tao dich vu");
+        throw new Error("Lỗi khi tạo dịch vụ");
       }
 
       const result = await res.json();
       console.log("Kết quả tạo dịch vụ:", result);
 
-      await fetchServices();
-      handleClose();
+      await fetchServices(); // Tải lại danh sách dịch vụ
+      handleClose(); // Đóng form
     } catch (err) {
-      console.error("Loi khi tao dich vu:", err);
+      console.error("Lỗi khi tạo dịch vụ:", err);
     }
   };
 
@@ -384,10 +432,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive || location.pathname === "/managers/services"
-                    ? "bg-muted text-white"
-                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
+                  ? "bg-muted text-white"
+                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
@@ -397,10 +444,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_list"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted text-white"
-                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted text-white"
+                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
@@ -410,10 +456,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_booking"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted text-white"
-                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted text-white"
+                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
@@ -423,10 +468,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_customer"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted text-white"
-                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted text-white"
+                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
