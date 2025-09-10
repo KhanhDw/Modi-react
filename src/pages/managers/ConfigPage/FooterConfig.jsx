@@ -70,7 +70,7 @@ export default function FooterConfigMultiLang() {
             }
         } catch (err) {
             console.error("Lỗi tải footer:", err);
-            setToast({ message: "❌ Lỗi tải dữ liệu footer", type: "error" });
+            setToast({ message: "Lỗi tải dữ liệu footer", type: "error" });
         } finally {
             setLoading(false);
         }
@@ -239,13 +239,13 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            setToast({ message: "✅ Lưu footer thành công!", type: "success" });
+            setToast({ message: "Lưu thành công!", type: "success" });
             setFile(null);
             fetchFooter();
         } catch (err) {
             console.error("Lỗi lưu footer:", err);
             setToast({
-                message: "❌ Lỗi khi lưu: " + err.message,
+                message: "Lỗi khi lưu: " + err.message,
                 type: "error",
             });
         } finally {

@@ -26,26 +26,35 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
   useEffect(() => {
     const cachedLogo = localStorage.getItem("header_logo");
     if (cachedLogo) {
-      setLogo(cachedLogo);
-      return;
+      setLogo(cachedLogo); // ✅ hiển thị tức thì logo cũ
     }
+
     const fetchLogo = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
         if (!res.ok) throw new Error("Không thể tải logo");
         const data = await res.json();
+
         if (Array.isArray(data) && data.length > 0) {
           const item = data[0];
-          const finalLogo = item.image_url ? `${API_BASE_URL}${item.image_url}` : "/logoModi.png";
-          setLogo(finalLogo);
-          localStorage.setItem("header_logo", finalLogo);
+          const finalLogo = item.image_url
+            ? `${API_BASE_URL}${item.image_url}`
+            : "/logoModi.png";
+
+          // Nếu logo mới khác logo cũ thì update
+          if (finalLogo !== cachedLogo) {
+            setLogo(finalLogo);
+            localStorage.setItem("header_logo", finalLogo);
+          }
         }
       } catch (err) {
         console.error(err);
       }
     };
+
     fetchLogo();
   }, []);
+
 
   const toggleSidebar = () => {
     const next = !isSidebarOpen;
