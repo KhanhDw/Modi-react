@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import NavItem from './NavItem';
 import NavDropdown from './NavDropdown';
 
+
 const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
 function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {

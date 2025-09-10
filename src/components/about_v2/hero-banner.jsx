@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+import { useLanguage } from "@/contexts/LanguageContext";
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 
+
 export function HeroBanner() {
+  const {t} = useLanguage();
   const { lang, prefix } = useCurrentLanguage();
   const [isVisible, setIsVisible] = useState(false)
   const [banner, setBanner] = useState({
@@ -67,7 +70,8 @@ export function HeroBanner() {
           className={`bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
-          Liên hệ ngay
+          
+          {t("aboutV2.button")}
         </Button>
       </div>
 

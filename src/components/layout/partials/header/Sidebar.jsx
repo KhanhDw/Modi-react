@@ -117,7 +117,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     },
     { id: 6, name: t("header.news.title"), link: '/news' },
     { id: 7, name: t("header.contact.title"), link: '/contact' },
-    { id: 8, name: t("header.recruitment.title"), link: '/careers' },
+    // { id: 8, name: t("header.recruitment.title"), link: '/careers' },
   ];
 
   const [openItems, setOpenItems] = useState({});

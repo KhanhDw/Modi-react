@@ -1,38 +1,16 @@
-
-
 import { Card, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
-
-const teamMembers = [
-  {
-    name: "Đội Lập trình",
-    role: "Development Team",
-    description: "Đội ngũ kỹ sư phần mềm giàu kinh nghiệm, đảm bảo mọi sản phẩm đều hoạt động ổn định, bảo mật và hiệu quả.",
-    image: "/CodeTeam.jpg",
-  },
-  {
-    name: "Đội Thiết kế & Sáng tạo",
-    role: "Design & Creative Team",
-    description: "Đội ngũ thiết kế UX/UI và sáng tạo biến ý tưởng thành trải nghiệm hình ảnh độc đáo, thu hút và chuyên nghiệp.",
-    image: "/CreativeTeam.jpg",
-  },
-  {
-    name: "Đội Marketing",
-    role: "Marketing Team",
-    description: "Chuyên gia marketing và truyền thông giúp thương hiệu tiếp cận đúng khách hàng, xây dựng chiến lược tăng trưởng bền vững.",
-    image: "/MarketingTeam.jpg",
-  },
-
-]
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function TeamSection() {
   const [visibleCards, setVisibleCards] = useState([])
+  const { t } = useLanguage();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          teamMembers.forEach((_, index) => {
+          t("aboutV2.TeamSection.teamMembers").forEach((_, index) => {
             setTimeout(() => {
               setVisibleCards((prev) => [...prev, index])
             }, index * 200)
@@ -46,19 +24,22 @@ export function TeamSection() {
     if (element) observer.observe(element)
 
     return () => observer.disconnect()
-  }, [])
+  }, [t])
 
   return (
     <section id="team-section" className="py-20 px-4">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-12">Đội ngũ của chúng tôi</h2>
+        <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-12">
+          {t("aboutV2.TeamSection.title")}
+        </h2>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {teamMembers.map((member, index) => (
+          {t("aboutV2.TeamSection.teamMembers").map((member, index) => (
             <Card
               key={index}
-              className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+              className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${
+                visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
             >
               <CardContent className="p-6 text-center">
                 <div className="relative mb-6 group">

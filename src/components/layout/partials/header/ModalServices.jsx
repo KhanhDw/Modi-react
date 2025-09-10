@@ -1,7 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
+
 import { ChevronDown } from 'lucide-react';
 
 function ModalServices() {
+ 
+  
+
+
+
+  
+
   // Mock translation function
   const t = (key) => {
     const translations = {
@@ -140,7 +148,7 @@ function ModalServices() {
       <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl overflow-hidden">
         <div className="flex">
           {/* Cột 1: Menu cấp 1 */}
-          <div className="flex-shrink-0 w-80 p-4 border-r border-gray-200/50 dark:border-gray-700/50">
+          <div className="flex-shrink-0 w-80 p-4 border-r border-gray-200/50 dark:border-gray-700/50 h-72 overflow-y-auto overscroll-contain"onWheel={(e) => e.stopPropagation()}>
             <div className="space-y-1">
               {services.map((service) => {
                 const isActive = hoveredItem === service.id;
@@ -202,7 +210,8 @@ function ModalServices() {
             `}
           >
             {hasActiveSubmenu && (
-              <div className="p-4 min-h-full bg-gray-50/50 dark:bg-gray-800/50">
+              <div className="p-4 min-h-full bg-gray-50/50 dark:bg-gray-800/50 h-72 overflow-y-auto "onWheel={(e) => e.stopPropagation()}>
+                
                 <div className="mb-4">
                   <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">
                     {activeService.title}

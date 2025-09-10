@@ -1,5 +1,5 @@
 
-
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 
@@ -15,6 +15,7 @@ import {
   Code2,         // PHP
   Boxes,         // NestJS (hoặc dùng Layers nếu muốn)
 } from "lucide-react"
+import { above } from "slate";
 
 const technologies = [
   { name: "React", icon: Atom },
@@ -52,11 +53,11 @@ export function TechnologiesSection() {
 
     return () => observer.disconnect()
   }, [])
-
+  const { t } = useLanguage();
   return (
     <section id="technologies-section" className="py-20 px-4">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-12">Công nghệ chúng tôi sử dụng</h2>
+        <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-12">{t("aboutV2.TechnologiesSection")}</h2>
 
         <div className="flex flex-wrap justify-center gap-6">
           {technologies.map((tech, index) => (
