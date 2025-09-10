@@ -193,6 +193,7 @@ export default function ServicesPage() {
       address: formData.cusAddress,
       service: formData.service,
       bookingDate: formData.bookingDate,
+      completedDate: formData.completedDate,
     };
 
     try {
@@ -383,9 +384,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
+                  isActive || location.pathname === "/managers/services"
+                    ? "bg-muted text-white"
+                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
@@ -395,9 +397,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_list"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
+                  isActive
+                    ? "bg-muted text-white"
+                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
@@ -407,9 +410,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_booking"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
+                  isActive
+                    ? "bg-muted text-white"
+                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
@@ -419,9 +423,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_customer"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
+                  isActive
+                    ? "bg-muted text-white"
+                    : "bg-gray-200 hover:bg-muted/80 hover:text-white"
                 }`
               }
             >
