@@ -54,6 +54,9 @@ export default function BookingForm() {
           : "",
         status: editingBooking.status || "",
         bookingDate: dateOnly,
+        completedDate: editingBooking.completed_date
+          ? formatDate(editingBooking.completed_date)
+          : "",
       });
     } else {
       const today = new Date().toISOString().split("T")[0];
@@ -66,6 +69,30 @@ export default function BookingForm() {
     setErrors((prev) => ({ ...prev, [field]: "" })); // reset lỗi khi người dùng nhập
   };
 
+  const handleCheckCustomer = () => {
+    const phone = formData.cusPhone?.trim();
+    if (!phone) return;
+
+    const existCustomer = initDataCustomer?.find((c) => c.phone === phone);
+    if (existCustomer) {
+      // Nếu có thì fill dữ liệu khách cũ
+      setFormData({
+        ...formData,
+        cusName: existCustomer.name,
+        cusEmail: existCustomer.email,
+        cusAddress: existCustomer.address,
+        // có thể thêm các field khác nếu có
+      });
+    } else {
+      // Nếu không có thì clear name/email/address để nhập mới
+      setFormData({
+        ...formData,
+        cusName: "",
+        cusEmail: "",
+        cusAddress: "",
+      });
+    }
+  };
   // Validation logic
   const validateForm = () => {
     let newErrors = {};
@@ -79,25 +106,12 @@ export default function BookingForm() {
         newErrors.cusPhone = "Số điện thoại là bắt buộc.";
       } else if (!/^\d{10}$/.test(formData.cusPhone.trim())) {
         newErrors.cusPhone = "Số điện thoại phải gồm 10 chữ số.";
-      } else if (
-        initDataCustomer?.some(
-          (c) =>
-            c.phone === formData.cusPhone.trim() && c.id !== editingBooking?.id
-        )
-      ) {
-        newErrors.cusPhone = "Số điện thoại đã tồn tại.";
       }
 
       if (!formData.cusEmail) {
         newErrors.cusEmail = "Vui lòng nhập email khách hàng";
       } else if (!/\S+@\S+\.\S+/.test(formData.cusEmail)) {
         newErrors.cusEmail = "Email không hợp lệ";
-      } else if (
-        initDataCustomer.some(
-          (c) => c.email === formData.cusEmail && c.id !== editingBooking?.id
-        )
-      ) {
-        newErrors.cusEmail = "Email đã tồn tại";
       }
 
       if (!formData.cusAddress?.trim()) {
@@ -111,6 +125,15 @@ export default function BookingForm() {
 
     if (!formData.bookingDate) {
       newErrors.bookingDate = "Vui lòng chọn ngày đặt.";
+    }
+
+    if (!formData.completedDate) {
+      newErrors.completedDate = "Vui lòng chọn ngày hoàn thành.";
+    }
+    if (formData.completedDate) {
+      if (new Date(formData.completedDate) < new Date(formData.bookingDate)) {
+        newErrors.completedDate = "Ngày hoàn thành phải sau ngày đặt.";
+      }
     }
 
     setErrors(newErrors);
@@ -146,7 +169,27 @@ export default function BookingForm() {
         <form onSubmit={handleSubmit}>
           <div className="gap-4">
             <div className="space-y-4">
+              {/* Số điện thoại */}
+              <div className="space-y-2">
+                <Label className="text-black" htmlFor="cusPhone">
+                  Số điện thoại *
+                </Label>
+                <Input
+                  className="text-black border border-black/30"
+                  id="cusPhone"
+                  value={formData.cusPhone || ""}
+                  onChange={(e) => handleChange("cusPhone", e.target.value)}
+                  onBlur={handleCheckCustomer}
+                  placeholder="Nhập số điện thoại của khách hàng... "
+                  // required={!editingBooking}
+                  readOnly={editingBooking}
+                />
+                {errors.cusPhone && (
+                  <p className="text-red-500 text-sm">{errors.cusPhone}</p>
+                )}
+              </div>
               {/* Tên khách hàng */}
+
               <div className="space-y-2">
                 <Label className="text-black" htmlFor="cusName">
                   Tên khách hàng *
@@ -158,32 +201,18 @@ export default function BookingForm() {
                   onChange={(e) => handleChange("cusName", e.target.value)}
                   placeholder="Nhập Họ và Tên khách hàng... "
                   // required={!editingBooking}
-                  readOnly={editingBooking}
+                  readOnly={
+                    (!!formData.cusPhone &&
+                      initDataCustomer.some(
+                        (c) => c.phone === formData.cusPhone
+                      )) ||
+                    editingBooking
+                  }
                 />
                 {errors.cusName && (
                   <p className="text-red-500 text-sm">{errors.cusName}</p>
                 )}
               </div>
-
-              {/* Số điện thoại */}
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusPhone">
-                  Số điện thoại *
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusPhone"
-                  value={formData.cusPhone || ""}
-                  onChange={(e) => handleChange("cusPhone", e.target.value)}
-                  placeholder="Nhập số điện thoại của khách hàng... "
-                  // required={!editingBooking}
-                  readOnly={editingBooking}
-                />
-                {errors.cusPhone && (
-                  <p className="text-red-500 text-sm">{errors.cusPhone}</p>
-                )}
-              </div>
-
               {/* Email + Address (chỉ khi tạo mới) */}
               {!editingBooking && (
                 <>
@@ -197,6 +226,13 @@ export default function BookingForm() {
                       value={formData.cusEmail || ""}
                       onChange={(e) => handleChange("cusEmail", e.target.value)}
                       placeholder="Nhập email của khách hàng... "
+                      readOnly={
+                        (!!formData.cusPhone &&
+                          initDataCustomer.some(
+                            (c) => c.phone === formData.cusPhone
+                          )) ||
+                        editingBooking
+                      }
                     />
                     {errors.cusEmail && (
                       <p className="text-red-500 text-sm">{errors.cusEmail}</p>
@@ -215,6 +251,13 @@ export default function BookingForm() {
                         handleChange("cusAddress", e.target.value)
                       }
                       placeholder="Nhập địa chỉ của khách hàng... "
+                      readOnly={
+                        (!!formData.cusPhone &&
+                          initDataCustomer.some(
+                            (c) => c.phone === formData.cusPhone
+                          )) ||
+                        editingBooking
+                      }
                     />
                     {errors.cusAddress && (
                       <p className="text-red-500 text-sm">
@@ -255,37 +298,36 @@ export default function BookingForm() {
                   </Select>
                 </div>
               )}
-
+              {initDataService && (
+                <div className="space-y-2">
+                  <Label className="text-black">Chọn dịch vụ*</Label>
+                  <Select
+                    value={formData.service || ""}
+                    onValueChange={(value) => handleChange("service", value)}
+                    key={formData.service}
+                  >
+                    <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
+                      <SelectValue placeholder="Chọn dịch vụ" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white text-black rounded-lg shadow-lg">
+                      {initDataService.map((service) => (
+                        <SelectItem
+                          key={service.id}
+                          value={service.id.toString()}
+                          className="cursor-pointer px-3 py-2 hover:bg-blue-50"
+                        >
+                          {service.ten_dich_vu}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.service && (
+                    <p className="text-red-500 text-sm">{errors.service}</p>
+                  )}
+                </div>
+              )}
               {/* Dịch vụ + ngày đặt */}
               <div className="flex gap-4">
-                {initDataService && (
-                  <div className="space-y-2 flex-1">
-                    <Label className="text-black">Chọn dịch vụ*</Label>
-                    <Select
-                      value={formData.service || ""}
-                      onValueChange={(value) => handleChange("service", value)}
-                      key={formData.service}
-                    >
-                      <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
-                        <SelectValue placeholder="Chọn dịch vụ" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                        {initDataService.map((service) => (
-                          <SelectItem
-                            key={service.id}
-                            value={service.id.toString()}
-                            className="cursor-pointer px-3 py-2 hover:bg-blue-50"
-                          >
-                            {service.ten_dich_vu}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.service && (
-                      <p className="text-red-500 text-sm">{errors.service}</p>
-                    )}
-                  </div>
-                )}
                 <div className="space-y-2 relative">
                   <Label className="text-black">Ngày đặt đơn</Label>
                   <input
@@ -299,6 +341,23 @@ export default function BookingForm() {
                   />
                   {errors.bookingDate && (
                     <p className="text-red-500 text-sm">{errors.bookingDate}</p>
+                  )}
+                </div>
+                <div className="space-y-2 relative">
+                  <Label className="text-black">Ngày Hoàn thành</Label>
+                  <input
+                    type="date"
+                    value={formData.completedDate || ""}
+                    onChange={(e) =>
+                      handleChange("completedDate", e.target.value)
+                    }
+                    className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
+                    // required
+                  />
+                  {errors.completedDate && (
+                    <p className="text-red-500 text-sm">
+                      {errors.completedDate}
+                    </p>
                   )}
                 </div>
               </div>
