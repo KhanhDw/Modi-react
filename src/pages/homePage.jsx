@@ -221,124 +221,127 @@ function HomePage({ activeSidebarHeader }) {
     );
 
 }
-
 function BannerSilder({ data, activeLang }) {
-    const { t } = useLanguage();
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [nextIndex, setNextIndex] = useState(1);
-    const [showNext, setShowNext] = useState(false);
+  const { t } = useLanguage();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState(1);
+  const [showNext, setShowNext] = useState(false);
 
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, threshold: 0.8 });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold: 0.8 });
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setShowNext(true);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowNext(true);
 
-            const timeout = setTimeout(() => {
-                setCurrentIndex((prev) => (prev + 1) % data.length);
-                setNextIndex((prev) => (prev + 1) % data.length);
-                setShowNext(false);
-            }, 1000);
+      const timeout = setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % data.length);
+        setNextIndex((prev) => (prev + 1) % data.length);
+        setShowNext(false);
+      }, 1000);
 
-            return () => clearTimeout(timeout);
-        }, 10000);
+      return () => clearTimeout(timeout);
+    }, 10000);
 
-        return () => clearInterval(interval);
-    }, [data]);
+    return () => clearInterval(interval);
+  }, [data]);
 
-    // Nếu chưa có data thì return null (tránh crash)
-    if (!data || data.length === 0) {
-        return <div className="text-center py-10">Loading...</div>
-    }
+  // Nếu chưa có data thì return loading
+  if (!data || data.length === 0) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
 
-    return (
-        <><motion.div
-            ref={ref}
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="relative h-[80vh] w-full md:rounded-[40px] overflow-hidden mb-10"
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 1.5, ease: "easeOut" }}
+      className="relative h-[80vh] w-full md:rounded-[40px] overflow-hidden mb-10"
+    >
+      <AnimatePresence>
+        {/* Ảnh hiện tại */}
+        <motion.img
+          key={`current-image-${currentIndex}`}
+          src={data[currentIndex].banner}
+          initial={{ opacity: 1, filter: "brightness(100%)" }}
+          animate={
+            isInView
+              ? {
+                  opacity: showNext ? 0 : 1,
+                  filter: showNext
+                    ? "brightness(100%)"
+                    : "brightness(50%)",
+                }
+              : {}
+          }
+          transition={{ duration: 1 }}
+          className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-20 xl:border-2 xl:border-gray-300"
+          alt="banner"
+        />
+
+        {/* Nội dung */}
+        <motion.div
+          key={`content-${currentIndex}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: showNext ? 0 : 1, y: 0 } : {}}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent px-4 sm:px-12 md:px-20 lg:pl-40 2xl:w-2/3"
         >
-            <AnimatePresence>
-                {/* Ảnh hiện tại */}
-                <motion.img
-                    key={`current-image-${currentIndex}`}
-                    src={data[currentIndex].banner}
-                    initial={{ opacity: 1, filter: "brightness(100%)" }}
-                    animate={
-                        isInView
-                            ? {
-                                opacity: showNext ? 0 : 1,
-                                filter: showNext ? "brightness(100%)" : "brightness(50%)",
-                            }
-                            : {}
-                    }
-                    transition={{ duration: 1 }}
-                    className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-20 xl:border-2 xl:border-gray-300"
-                    alt="banner"
-                />
+          <h2 className="mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-transparent text-start">
+            {data[currentIndex].title[activeLang]}
+          </h2>
+          <p className="mb-8 w-full text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-justify">
+            {data[currentIndex].description[activeLang]}
+          </p>
+          {data[currentIndex].buttonText && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="px-4 py-2 sm:px-6 sm:py-3 text-base sm:text-lg md:text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700"
+            >
+              <Link to="/about">{t(data[currentIndex].buttonText)}</Link>
+            </motion.button>
+          )}
+        </motion.div>
+      </AnimatePresence>
 
-                {/* Nội dung */}
-                <motion.div
-                    key={`content-${currentIndex}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: showNext ? 0 : 1, y: 0 } : {}}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent sm:px-12 md:px-20 md:pl-20 lg:pl-40 2xl:w-2/3"
-                >
-                    <h2 className="mb-4 text-2xl md:text-7xl 2xl:text-7xl font-bold bg-transparent text-start">
-                        {data[currentIndex].title[activeLang]}
-                    </h2>
-                    <p className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start md:text-xl 2xl:text-3xl">
-                        {data[currentIndex].description[activeLang]}
-                    </p>
-                    {data[currentIndex].buttonText && (
-                        <motion.button
-                            initial={{ opacity: 0 }}
-                            animate={isInView ? { opacity: 1 } : {}}
-                            transition={{ duration: 0.5, delay: 0.3 }}
-                            className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 md:text-xl 2xl:text-2xl"
-                        >
-                            <Link to="/about">{t(data[currentIndex].buttonText)}</Link>
-                        </motion.button>
-                    )}
-                </motion.div>
-            </AnimatePresence>
+      {/* Ảnh kế tiếp */}
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={`next-image-${nextIndex}`}
+          src={data[nextIndex].banner}
+          initial={{ opacity: 0, filter: "blur(5px)" }}
+          animate={
+            isInView
+              ? {
+                  opacity: showNext ? 1 : 0,
+                  filter: "blur(0px)",
+                }
+              : {}
+          }
+          transition={{ duration: 1 }}
+          className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-10"
+          alt="next banner"
+        />
+      </AnimatePresence>
 
-            {/* Ảnh kế tiếp */}
-            <AnimatePresence mode="wait">
-                <motion.img
-                    key={`next-image-${nextIndex}`}
-                    src={data[nextIndex].banner}
-                    initial={{ opacity: 0, filter: "blur(5px)" }}
-                    animate={
-                        isInView
-                            ? {
-                                opacity: showNext ? 1 : 0,
-                                filter: "blur(0px)",
-                            }
-                            : {}
-                    }
-                    transition={{ duration: 1 }}
-                    className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-10"
-                    alt="next banner"
-                />
-            </AnimatePresence>
-
-            {/* Nút dot chọn banner */}
-            <div className="absolute right-0 flex md:flex-col items-center justify-center h-[80vh] md:mx-4 md:transform xs:-translate-y-1/2 z-51 xs:bottom md:top-1/2 xs:gap-1 md:gap-2">
-                {data.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`${currentIndex === index ? "bg-gray-100" : "bg-gray-600"} w-3 h-3 xs:h-2 xs:w-2 md:w-4 md:h-4 mb-3 rounded-full cursor-pointer`}
-                    />
-                ))}
-            </div>
-        </motion.div></>
-    )
+      {/* Nút dot chọn banner */}
+      <div className="absolute right-0 flex md:flex-col items-center justify-center h-[80vh] md:mx-4 md:transform xs:-translate-y-1/2 z-51 xs:bottom md:top-1/2 xs:gap-1 md:gap-2">
+        {data.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`${
+              currentIndex === index ? "bg-gray-100" : "bg-gray-600"
+            } xs:h-2 md:w-4 xs:w-2 md:h-4 mb-3 rounded-full cursor-pointer`}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
 }
 
 function BaseModi({ data, activeLang }) {
@@ -443,44 +446,15 @@ function ServiceModi({ data, activeLang }) {
     const handleMouseEnter = (id) => setHoveredItemId(id);
     const handleMouseLeave = () => setHoveredItemId(null);
 
-    const getItemWidth = (id, index, isFirst, isLast) => {
-        const totalItems = data.length;
-
+    const getItemWidth = (id) => {
         if (hoveredItemId === null) {
-            return `${100 / totalItems}%`; // Chưa hover → chia đều
+            return `${100 / data.length}%`;
         }
-
-        const hoveredIndex = data.findIndex(item => item.id === hoveredItemId);
-
         if (hoveredItemId === id) {
-            return "35%"; // item đang hover
+            return "35%";
         }
-
-        // Nếu item khác bị ảnh hưởng
-        const remainingWidth = 100 - 35;
-        // === Logic mở rộng tùy hướng ===
-        if (hoveredIndex === 1) {
-            // Item 2 → mở sang phải
-            if (index < hoveredIndex) {
-                return `${100 / totalItems}%`; // giữ nguyên bên trái
-            } else {
-                return `${remainingWidth / (totalItems - 2)}%`; // chia phần còn lại bên phải
-            }
-        }
-
-        if (hoveredIndex === 3) {
-            // Item 4 → mở sang trái
-            if (index > hoveredIndex) {
-                return `${100 / totalItems}%`; // giữ nguyên bên phải
-            } else {
-                return `${remainingWidth / (totalItems - 2)}%`; // chia phần còn lại bên trái
-            }
-        }
-
-        // Item 3 hoặc các item khác → mở đều
-        return `${remainingWidth / (totalItems - 1)}%`;
+        return `${(100 - 35) / (data.length - 1)}%`;
     };
-
 
     if (!data || data.length === 0) return null;
 
@@ -500,17 +474,8 @@ function ServiceModi({ data, activeLang }) {
                 {isMobileView ? (
                     // ================= MOBILE =================
                     <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 px-4 sm:px-6 md:px-0 scrollbar-hide">
-                        {data.map((service, index) => (
-                            <div
-                                key={service.id}
-                                className="relative overflow-hidden cursor-pointer"
-                                onMouseEnter={() => handleMouseEnter(service.id, index)}
-                                onMouseLeave={handleMouseLeave}
-                                style={{
-                                    width: getItemWidth(service.id, index), 
-                                    transition: "width 0.2s ease-out",
-                                }}
-                            >
+                        {data.map((service) => (
+                            <div key={service.id} className="flex-shrink-0 w-full snap-center px-2">
                                 <div className="relative overflow-hidden rounded-lg shadow-lg h-[400px] sm:h-[450px]">
                                     <a
                                         className="block w-full h-full"
@@ -531,7 +496,7 @@ function ServiceModi({ data, activeLang }) {
                                             {service.description?.[activeLang]}
                                         </p>
                                         <a
-                                            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
+                                            className="inline-flex items-center justify-center justify-center px-5 py-2.5 rounded-full text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
                                             href={service.href || "#"}
                                         >
                                             {t("home.serviceModi.findOutMore")}
@@ -545,59 +510,51 @@ function ServiceModi({ data, activeLang }) {
                 ) : (
                     // ================= DESKTOP =================
                     <div className="flex w-full h-[450px] overflow-hidden rounded-lg shadow-lg">
-                        {data.map((service, index) => {
-                            const isFirst = index === 0;
-                            const isLast = index === data.length - 1;
-
-                            return (
-                                <div
-                                    key={service.id}
-                                    onMouseEnter={() => handleMouseEnter(service.id)}
-                                    onMouseLeave={handleMouseLeave}
-                                    style={{ flexBasis: 0 }}
-                                    className={`
-                                        relative overflow-hidden cursor-pointer
-                                        ${isLast ? "ml-auto" : ""}
-                                        ${hoveredItemId === service.id ? "flex-[4]" : "flex-[1]"}
-                                        transition-[flex-grow] duration-500 ease-in-out
-                                    `}
-
+                        {data.map((service) => (
+                            <div
+                                key={service.id}
+                                className="relative overflow-hidden cursor-pointer"
+                                onMouseEnter={() => handleMouseEnter(service.id)}
+                                onMouseLeave={handleMouseLeave}
+                                style={{
+                                    width: getItemWidth(service.id),
+                                    transition: "width 0.5s ease-in-out",
+                                }}
+                            >
+                                <a
+                                    className="block w-full h-full"
+                                    href={service.href || "#"}
+                                    title={service.title?.[activeLang]}
                                 >
-                                    <a
-                                        className="block w-full h-full"
-                                        href={service.href || "#"}
-                                        title={service.title?.[activeLang]}
+                                    <img
+                                        src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image}`}
+                                        alt={service.title?.[activeLang]}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </a>
+                                <div className="absolute bottom-0 left-0 right-0 px-6 md:px-10 py-8 text-white z-10 bg-gradient-to-t from-black/80 dark:from-[#1F2937]/90 to-transparent">
+                                    <h4 className="text-2xl font-bold mb-4">
+                                        {service.title?.[activeLang]}
+                                    </h4>
+                                    <div
+                                        className={`transition-all duration-300 ease-in-out ${hoveredItemId === service.id
+                                            ? "max-h-screen opacity-100"
+                                            : "max-h-0 opacity-0 overflow-hidden"
+                                            }`}
                                     >
-                                        <img
-                                            src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image}`}
-                                            alt={service.title?.[activeLang]}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </a>
-                                    <div className="absolute bottom-0 left-0 right-0 px-6 md:px-10 py-8 text-white z-10 bg-gradient-to-t from-black/80 dark:from-[#1F2937]/90 to-transparent">
-                                        <h4 className="text-2xl font-bold mb-4">
-                                            {service.title?.[activeLang]}
-                                        </h4>
-                                        <div
-                                            className={`transition-all duration-300 ease-in-out ${hoveredItemId === service.id
-                                                ? "max-h-screen opacity-100"
-                                                : "max-h-0 opacity-0 overflow-hidden"
-                                                }`}
+                                        <p className="text-xl mb-4 font-light">
+                                            {service.description?.[activeLang]}
+                                        </p>
+                                        <a
+                                            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
+                                            href={service.href || "#"}
                                         >
-                                            <p className="text-xl mb-4 font-light">
-                                                {service.description?.[activeLang]}
-                                            </p>
-                                            <a
-                                                className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-[#3B82F6] hover:text-[#1F2937] transition-colors"
-                                                href={service.href || "#"}
-                                            >
-                                                {t("home.serviceModi.findOutMore")}
-                                            </a>
-                                        </div>
+                                            {t("home.serviceModi.findOutMore")}
+                                        </a>
                                     </div>
                                 </div>
-                            );
-                        })}
+                            </div>
+                        ))}
                     </div>
                 )}
 
