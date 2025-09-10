@@ -17,6 +17,8 @@ import { CommitmentSection } from "@/components/about_v2/commitment-section"
 import { TechnologiesSection } from "@/components/about_v2/technologies-section"
 
 
+
+
 /**
  * About Page Component
  * Trang giới thiệu công ty với đầy đủ tính năng:
@@ -47,6 +49,7 @@ export default function About() {
       {/* -------- */}
       {/* Vesion 2 */}
       {/* -------- */}
+
 
       <HeroBanner />
       <CompanyOverview />

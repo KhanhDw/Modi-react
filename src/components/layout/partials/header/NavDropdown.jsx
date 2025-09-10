@@ -25,9 +25,10 @@ function NavDropdown({ to, label, isHover, setIsHover, children, scrolled }) {
 
       {isHover && (
         <div className="absolute top-full left-1/2 -translate-x-1/2 z-50 min-w-max pt-2 pointer-events-auto">
-          {children}
+          {children}   
         </div>
       )}
+
     </div>
   );
 }

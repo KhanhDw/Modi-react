@@ -6,20 +6,69 @@ import "../assets/css/MarqueeBanner.css"
 import { useLanguage } from '../contexts/LanguageContext';
 import PricingPage from '../components/home/pricingPage';
 import { Link } from 'react-router-dom';
+import { FaArrowUp } from "react-icons/fa";
 import { Button } from '@/components/ui/button';
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    visible && (
+      <button
+        onClick={scrollToTop}
+        className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition duration-300 z-50"
+      >
+        <FaArrowUp className="w-5 h-5" />
+      </button>
+    )
+  );
+}
 
 
 function HomePage({ activeSidebarHeader }) {
     const { t } = useLanguage();
     const { lang, prefix } = useCurrentLanguage();
     const [activeLang, setActiveLang] = useState("vi"); // vi en
-
+   
     useEffect(() => {
         setActiveLang(lang);
+        
     }, [lang]);
+
+    useEffect(() => {
+        // Khi load lại trang thì reset scroll
+        window.history.scrollRestoration = "manual";
+        window.scrollTo(0, 0);
+
+        // Khi chuẩn bị reload/đóng tab -> về top
+        const handleBeforeUnload = () => {
+            window.scrollTo(0, 0);
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+        }, []);
 
 
     const [homeData, setHomeData] = useState({
@@ -167,6 +216,7 @@ function HomePage({ activeSidebarHeader }) {
             {currentData.khachHang.length > 0 && (
                 <Customer data={currentData.khachHang} activeLang={activeLang} />
             )}
+            <ScrollToTopButton />
         </div>
     );
 
@@ -758,6 +808,7 @@ function Customer({ data, activeLang }) {
                 </div>
             </div>
         </div>
+        
     )
 }
 

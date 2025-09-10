@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 
 export function CTASection() {
@@ -22,6 +23,7 @@ export function CTASection() {
 
     return () => observer.disconnect()
   }, [])
+  const { t } = useLanguage()
 
   return (
     <section
@@ -49,7 +51,7 @@ export function CTASection() {
             : "opacity-0 translate-y-8"
             }`}
         >
-          Bắt đầu dự án của bạn ngay hôm nay
+          {t("aboutV2.CTASection.title")}
         </h2>
 
         <p
@@ -58,7 +60,7 @@ export function CTASection() {
             : "opacity-0 translate-y-8"
             }`}
         >
-          Hãy để Mộc Điền giúp bạn xây dựng website mơ ước. Liên hệ ngay để nhận tư vấn miễn phí!
+          {t("aboutV2.CTASection.description")}
         </p>
 
         <Button
@@ -70,7 +72,7 @@ export function CTASection() {
             }`}
           onClick={() => navigate("/contact")}
         >
-          Liên hệ ngay
+          {t("aboutV2.CTASection.contactButton")}
         </Button>
       </div>
 
