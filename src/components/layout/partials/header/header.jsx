@@ -22,14 +22,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logo, setLogo] = useState(null);
 
-  // fetch logo
-  useEffect(() => {
-    const cachedLogo = localStorage.getItem("header_logo");
-    if (cachedLogo) {
-      setLogo(cachedLogo); // ✅ hiển thị tức thì logo cũ
-    }
-
-    const fetchLogo = async () => {
+  const fetchLogo = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
         if (!res.ok) throw new Error("Không thể tải logo");
@@ -50,9 +43,20 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
       } catch (err) {
         console.error(err);
       }
-    };
+  };
 
+  
+  
+
+  // fetch logo
+  useEffect(() => {
+    const cachedLogo = localStorage.getItem("header_logo");
+    if (cachedLogo) {
+      setLogo(cachedLogo); // ✅ hiển thị tức thì logo cũ
+    }
     fetchLogo();
+ 
+ 
   }, []);
 
 

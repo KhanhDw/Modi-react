@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import HierarchicalMenu from "./headerConfig/ServiceDropdown.jsx";
+
 
 // --- Custom File Input ---
 function FileInput({ label, onChange }) {
@@ -23,12 +25,15 @@ function FileInput({ label, onChange }) {
     );
 }
 
+
 export default function HeaderConfigLogo() {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState("/logoModi.png");
     const [logoItem, setLogoItem] = useState(null); // lưu section_item hiện tại
+    const [servicesMenu, setServicesMenu] = useState([]);
     const [toast, setToast] = useState(null);
+    const lang = "vi";
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
     // 🔹 Chuẩn hóa image_url (tránh lưu cả domain)
@@ -68,6 +73,39 @@ export default function HeaderConfigLogo() {
         }
     };
 
+
+    const fetchAllServicesMenu = async () => {
+        try {
+            const types = ["services_thietke", "services_sangtao", "services_hotro"];
+
+            const requests = types.map(type =>
+                fetch(`${API_BASE_URL}/api/section-items/type/${type}?slug=header`).then(res => {
+                    if (!res.ok) throw new Error(`Không thể tải ${type}`);
+                    return res.json();
+                })
+            );
+
+            const results = await Promise.all(requests);
+
+            // Gộp thành format 2 cấp
+            const merged = results.map((items, idx) => {
+                const parentType = types[idx];
+                return {
+                    id: parentType,
+                    name: items[0]?.section_title,
+                    children: items.map(child => ({
+                        id: child.id,
+                        name: child.title?.[lang], // hoặc en // cần điều chỉnh vi en
+                    })),
+                };
+            });
+            setServicesMenu(merged);
+            console.log(merged);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     // 🔹 Lấy logo ban đầu từ localStorage (nếu có) → rồi fetch từ API để làm mới
     useEffect(() => {
         const cachedLogo = localStorage.getItem("app_logo");
@@ -75,6 +113,7 @@ export default function HeaderConfigLogo() {
             setLogo(cachedLogo);
         }
         fetchLogo();
+        fetchAllServicesMenu();
     }, []);
 
     // 🔹 Chọn file mới
@@ -168,7 +207,13 @@ export default function HeaderConfigLogo() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
             >
-                <FileInput label="Upload New Logo" onChange={handleLogoChange} />
+                <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
+
+                <HierarchicalMenu
+                    menu={servicesMenu}   // menu đã chuẩn hóa
+                    setMenu={setServicesMenu} // nếu muốn vẫn update menu sau này
+                    lang={lang}
+                />
 
                 <motion.button
                     onClick={handleSave}
@@ -178,9 +223,11 @@ export default function HeaderConfigLogo() {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                 >
-                    {loading ? "Đang lưu..." : "Save Logo"}
+                    {loading ? "Đang lưu..." : "Lưu Logo"}
                 </motion.button>
             </motion.div>
+
+
 
             {toast && (
                 <NotificationToast
