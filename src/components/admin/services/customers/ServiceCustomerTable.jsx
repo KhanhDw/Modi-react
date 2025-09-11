@@ -83,155 +83,157 @@ export default function ServiceCustomerTable() {
   );
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-gray-100">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Danh sách khách hàng</CardTitle>
-              <CardDescription className="text-gray-600">
-                Quản lý tất cả khách hàng đã sử dụng dịch vụ
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="relative bg-white rounded-md shadow-sm text-black">
-                <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground" />
-                <Input
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setCurrentPage(1); // reset trang khi search thay đổi
-                  }}
-                  placeholder="Tìm kiếm khách hàng..."
-                  className="pl-10 w-64"
-                />
-              </div>
-              <Select value={statusFilter} onValueChange={changeStatus}>
-                <SelectTrigger className="w-40 bg-white text-black border border-gray-300 rounded">
-                  <Filter className="h-4 w-4 mr-2 text-black" />
-                  <SelectValue placeholder="Trạng thái" />
-                </SelectTrigger>
-                <SelectContent className="bg-white text-black">
-                  <SelectItem value="all">Tất cả</SelectItem>
-                  <SelectItem value="new">Thường</SelectItem>
-                  <SelectItem value="vip">Vip</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+  <div className="space-y-6">
+    <Card className="bg-gray-100 admin-dark:bg-gray-900 admin-dark:border-gray-700">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="admin-dark:text-white">Danh sách khách hàng</CardTitle>
+            <CardDescription className="text-gray-600 admin-dark:text-gray-400">
+              Quản lý tất cả khách hàng đã sử dụng dịch vụ
+            </CardDescription>
           </div>
-        </CardHeader>
-        <CardContent className="text-black">
-          <div className="rounded-md border border-gray-300 bg-white shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-black">Tên khách hàng</TableHead>
-                  <TableHead className="text-black">Đã đặt</TableHead>
-                  <TableHead className="text-black">Email</TableHead>
-                  <TableHead className="text-black">SĐT</TableHead>
-                  <TableHead className="text-black">Hoàn thành</TableHead>
-                  <TableHead className="text-black">Chi</TableHead>
-                  <TableHead className="text-black">Thao tác</TableHead>
+          <div className="flex items-center gap-2">
+            <div className="relative bg-white admin-dark:bg-gray-800 rounded-md shadow-sm text-black admin-dark:text-white">
+              <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
+              <Input
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1); // reset trang khi search thay đổi
+                }}
+                placeholder="Tìm kiếm khách hàng..."
+                className="pl-10 w-64 admin-dark:bg-gray-800 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={changeStatus}>
+              <SelectTrigger className="w-40 bg-white admin-dark:bg-gray-800 text-black admin-dark:text-white border border-gray-300 admin-dark:border-gray-600 rounded">
+                <Filter className="h-4 w-4 mr-2 text-black admin-dark:text-white" />
+                <SelectValue placeholder="Trạng thái" />
+              </SelectTrigger>
+              <SelectContent className="bg-white admin-dark:bg-gray-800 admin-dark:border-gray-600 text-black admin-dark:text-white">
+                <SelectItem value="all" className="admin-dark:hover:bg-gray-700">Tất cả</SelectItem>
+                <SelectItem value="new" className="admin-dark:hover:bg-gray-700">Thường</SelectItem>
+                <SelectItem value="vip" className="admin-dark:hover:bg-gray-700">Vip</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="text-black admin-dark:text-white">
+        <div className="rounded-md border border-gray-300 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800 shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow className="admin-dark:border-gray-700">
+                <TableHead className="text-black admin-dark:text-white">Tên khách hàng</TableHead>
+                <TableHead className="text-black admin-dark:text-white">Đã đặt</TableHead>
+                <TableHead className="text-black admin-dark:text-white">Email</TableHead>
+                <TableHead className="text-black admin-dark:text-white">SĐT</TableHead>
+                <TableHead className="text-black admin-dark:text-white">Hoàn thành</TableHead>
+                <TableHead className="text-black admin-dark:text-white">Chi</TableHead>
+                <TableHead className="text-black admin-dark:text-white">Thao tác</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {currentData.map((customer) => (
+                <TableRow key={customer.id} className="admin-dark:border-gray-700 admin-dark:hover:bg-gray-750">
+                  <TableCell className="text-black admin-dark:text-white">
+                    {customer.name}
+                  </TableCell>
+                  <TableCell className="text-black admin-dark:text-white pl-6">
+                    {customer.booking_count || 0}
+                  </TableCell>
+                  <TableCell className="text-black admin-dark:text-white">
+                    {customer.email || "Chưa cập nhật"}
+                  </TableCell>
+                  <TableCell className="text-black admin-dark:text-white">
+                    {customer.phone || "Chưa cập nhật"}
+                  </TableCell>
+                  <TableCell className="text-black admin-dark:text-white pl-9">
+                    {
+                      initDataBooking.filter(
+                        (c) =>
+                          c.customer_id === customer.id &&
+                          c.status === "completed"
+                      ).length
+                    }
+                  </TableCell>
+                  <TableCell className="text-black admin-dark:text-white">
+                    {(customer.total_spent || 0).toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </TableCell>
+                  <TableCell className="flex items-center space-x-2">
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="admin-dark:hover:bg-gray-700 admin-dark:text-white">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="admin-dark:bg-gray-800 admin-dark:border-gray-600">
+                        <DropdownMenuItem className="admin-dark:text-white admin-dark:hover:bg-gray-700">
+                          <Eye className="mr-2 h-4 w-4" />
+                          Xem chi tiết
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => openEditCustomerForm(customer)}
+                          className="admin-dark:text-white admin-dark:hover:bg-gray-700"
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Chỉnh sửa
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteCustomer(customer.id)}
+                          className="admin-dark:text-white admin-dark:hover:bg-gray-700"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Xóa
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentData.map((customer) => (
-                  <TableRow key={customer.id}>
-                    <TableCell className="text-black">
-                      {customer.name}
-                    </TableCell>
-                    <TableCell className="text-black pl-6">
-                      {customer.booking_count || 0}
-                    </TableCell>
-                    <TableCell className="text-black">
-                      {customer.email || "Chưa cập nhật"}
-                    </TableCell>
-                    <TableCell className="text-black">
-                      {customer.phone || "Chưa cập nhật"}
-                    </TableCell>
-                    <TableCell className="text-black pl-9">
-                      {
-                        initDataBooking.filter(
-                          (c) =>
-                            c.customer_id === customer.id &&
-                            c.status === "completed"
-                        ).length
-                      }
-                    </TableCell>
-                    <TableCell className="text-black">
-                      {(customer.total_spent || 0).toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </TableCell>
-                    <TableCell className="flex items-center space-x-2">
-                      <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="mr-2 h-4 w-4" />
-                            Xem chi tiết
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => openEditCustomerForm(customer)}
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Chỉnh sửa
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteCustomer(customer.id)}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Xóa
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
-          {/* Pagination */}
-          <div className="flex justify-end mt-4 gap-2">
+        {/* Pagination */}
+        <div className="flex justify-end mt-4 gap-2">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="text-white admin-dark:text-gray-300 disabled:opacity-50 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700"
+          >
+            Trước
+          </Button>
+          {Array.from({ length: totalPages }, (_, i) => (
             <Button
-              variant="outline"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="text-white disabled:opacity-50 border-gray-300"
+              key={i}
+              variant={currentPage === i + 1 ? "default" : "outline"}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 ${
+                currentPage === i + 1
+                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-700 admin-dark:hover:bg-blue-800"
+                  : "bg-white admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 border border-gray-300 admin-dark:border-gray-600 hover:bg-gray-100 admin-dark:hover:bg-gray-700"
+              }`}
             >
-              Trước
+              {i + 1}
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <Button
-                key={i}
-                variant={currentPage === i + 1 ? "default" : "outline"}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 ${
-                  currentPage === i + 1
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
-                }`}
-              >
-                {i + 1}
-              </Button>
-            ))}
-            <Button
-              variant="outline"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="text-white disabled:opacity-50 border-gray-300"
-            >
-              Sau
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+          ))}
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="text-white admin-dark:text-gray-300 disabled:opacity-50 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700"
+          >
+            Sau
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+);
 }

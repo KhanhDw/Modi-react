@@ -425,16 +425,16 @@ export default function ServicesPage() {
   }
 
   return (
-    <div className=" bg-white rounded-2xl ">
-      <div className="container mx-auto ">
+    <div className="bg-white admin-dark:bg-gray-900 rounded-2xl admin-dark:border admin-dark:border-gray-700">
+      <div className="container mx-auto">
         <div className="mb-6">
           <nav className="flex justify-center">
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -445,8 +445,8 @@ export default function ServicesPage() {
               to="service_list"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -457,8 +457,8 @@ export default function ServicesPage() {
               to="service_booking"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -469,8 +469,8 @@ export default function ServicesPage() {
               to="service_customer"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -478,17 +478,18 @@ export default function ServicesPage() {
               Khách hàng
             </NavLink>
             {/* <NavLink
-              to="service_review"
-              className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
-                }`
-              }
-            >
-              <Target className="h-4 w-4" />
-              Đánh giá dịch vụ
-            </NavLink> */}
+            to="service_review"
+            className={({ isActive }) =>
+              `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
+                isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+              }`
+            }
+          >
+            <Target className="h-4 w-4" />
+            Đánh giá dịch vụ
+          </NavLink> */}
           </nav>
         </div>
         {content}
