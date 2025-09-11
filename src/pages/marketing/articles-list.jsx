@@ -20,21 +20,21 @@ export default function ArticlesList({ articles }) {
     }
 
     return (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article) => (
                 <div
                     key={article.id}
-                    className="relative  bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 
-                               overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 break-inside-avoid mb-6 cursor-pointer"
+                    className="relative flex flex-col bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 
+                 overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 h-full cursor-pointer"
                     onClick={() => handleArticleClick(article.slug)}
                 >
-                    {/* Article Image */}
+                    {/* Image */}
                     <div className="bg-gray-100 dark:bg-gray-800 overflow-hidden">
                         {article.image ? (
                             <img
                                 src={article.image}
                                 alt={article.title}
-                                className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+                                className="w-full h-60 object-cover hover:scale-105 transition-transform duration-300"
                             />
                         ) : (
                             <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
@@ -43,9 +43,9 @@ export default function ArticlesList({ articles }) {
                         )}
                     </div>
 
-                    {/* Article Content */}
-                    <div className="p-4">
-                        {/* Platform Badge */}
+                    {/* Content */}
+                    <div className="p-3 flex flex-col flex-1">
+                        {/* Platform badge */}
                         {article.platform_name && (
                             <div className="mb-2 absolute top-0 left-0 right-0 flex items-center justify-end p-2">
                                 <span
@@ -62,9 +62,9 @@ export default function ArticlesList({ articles }) {
                             {article.title}
                         </h3>
 
-                        {/* Content Preview */}
-                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 leading-relaxed">
-                            {article.content.replace(/<[^>]*>/g, "").substring(0, Math.floor(Math.random() * 100) + 80)}...
+                        {/* Content preview */}
+                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed flex-1">
+                            {article.content.replace(/<[^>]*>/g, "")} ...
                         </p>
 
                         {/* Tags */}
@@ -73,7 +73,7 @@ export default function ArticlesList({ articles }) {
                                 <div className="flex flex-wrap gap-1">
                                     {article.tags
                                         .split(",")
-                                        .slice(0, 3)
+                                        .slice(0, 5)
                                         .map((tag, index) => (
                                             <span
                                                 key={index}
@@ -86,7 +86,7 @@ export default function ArticlesList({ articles }) {
                             </div>
                         )}
 
-                        {/* Meta Information */}
+                        {/* Meta */}
                         <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-700">
                             <span className="font-medium">{article.author_name}</span>
                             <span>{new Date(article.created_at).toLocaleDateString("vi-VN")}</span>
@@ -95,5 +95,6 @@ export default function ArticlesList({ articles }) {
                 </div>
             ))}
         </div>
+
     )
 }

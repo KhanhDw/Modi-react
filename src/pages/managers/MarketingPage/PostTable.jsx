@@ -6,8 +6,9 @@ import { useState, useEffect } from "react";
 
 export default function PostsTable({ posts, columns, handleDeletePost }) {
     // phân trang
-    const [pageSize, setPageSize] = useState(8);
+    const [pageSize, setPageSize] = useState(6);
     const [pagedPosts, setPagedPosts] = useState([]); // 👉 dữ liệu sau khi phân trang
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         if (posts.length === 0) {
@@ -42,7 +43,7 @@ export default function PostsTable({ posts, columns, handleDeletePost }) {
                             <PostRow
                                 key={post.id ?? index}
                                 post={post}
-                                indexSTT={index}
+                                indexSTT={(currentPage - 1) * pageSize + index}
                                 handleDeletePost={handleDeletePost}
                             />
                         ))
@@ -52,7 +53,12 @@ export default function PostsTable({ posts, columns, handleDeletePost }) {
 
             {/* Pagination */}
             {posts.length > 0 && (
-                <PageList data={posts} pageSize={pageSize} onPageChange={setPagedPosts} />
+                <PageList
+                    data={posts}
+                    pageSize={pageSize}
+                    onPageChange={setPagedPosts}
+                    onPageNumberChange={setCurrentPage}
+                />
             )}
 
             {/* Empty state */}

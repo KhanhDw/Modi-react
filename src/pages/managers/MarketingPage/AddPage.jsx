@@ -126,7 +126,7 @@ export default function AddPage() {
                         </div>
 
                         {/* Mạng xã hội + Trạng thái + Tags */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-800 p-2 mt-3 rounded-lg w-full">
+                        <div className="bg-gray-50 admin-dark:bg-gray-800 p-2 mt-2 rounded-lg w-full">
                             <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 mb-4">
                                 <div className="w-full space-y-3">
                                     <Label>Mạng xã hội</Label>
@@ -147,11 +147,11 @@ export default function AddPage() {
                                                 </SelectItem>
                                             ))}
 
-                                            <Separator />
+                                            <Separator className="mt-2" />
 
                                             <Button
                                                 onClick={handleOpenEditNetwork}
-                                                theme="admin" className="w-full cursor-pointer">
+                                                theme="admin" className="w-full mt-2 cursor-pointer">
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
@@ -191,7 +191,7 @@ export default function AddPage() {
                         </div>
 
                         {/* Ảnh */}
-                        <div className="bg-gray-50 p-2 mt-4 admin-dark:bg-gray-800 pb-6 rounded-lg space-y-3">
+                        <div className="bg-gray-50 p-2 mt-2 admin-dark:bg-gray-800 rounded-lg space-y-3">
                             <Label>URL Hình ảnh</Label>
                             <div className="flex gap-2">
                                 <Input

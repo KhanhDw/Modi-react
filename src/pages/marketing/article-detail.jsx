@@ -34,15 +34,15 @@ export default function ArticleDetail() {
     if (!post) return <p className="text-muted-foreground dark:text-gray-400">Không có dữ liệu.</p>;
 
     return (
-        <div className="max-w-4xl mx-auto mt-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-10">
             {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold mb-4 text-foreground dark:text-white">
+            <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-foreground dark:text-white leading-snug">
                     {post.title}
                 </h1>
 
-                <div className="flex items-center justify-between flex-wrap gap-4 pb-6 border-b border-border dark:border-gray-700">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground dark:text-gray-400">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-border dark:border-gray-700">
+                    <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted-foreground dark:text-gray-400">
                         <div className="flex items-center gap-2">
                             <User className="w-4 h-4" />
                             <span className="font-medium">{post.author_name}</span>
@@ -54,7 +54,7 @@ export default function ArticleDetail() {
                         {post.platform_name && (
                             <div className="flex items-center gap-2">
                                 <span
-                                    className="px-2 py-1 rounded text-xs font-medium"
+                                    className="px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium"
                                     style={{
                                         backgroundColor: post.platform_color || "#0891b2",
                                         color: "white",
@@ -66,7 +66,11 @@ export default function ArticleDetail() {
                         )}
                     </div>
 
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2 cursor-pointer self-start sm:self-auto"
+                    >
                         <Share2 className="w-4 h-4" />
                         Chia sẻ
                     </Button>
@@ -75,27 +79,25 @@ export default function ArticleDetail() {
 
             {/* Featured Image */}
             {post.image && (
-                <div className="mb-8">
+                <div className="mb-6 sm:mb-8">
                     <img
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-64 md:h-96 object-cover rounded-lg shadow-sm"
+                        className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-sm"
                     />
                 </div>
             )}
 
             {/* Content */}
             <Card className="mb-8 bg-white dark:bg-gray-900 border border-border dark:border-gray-700">
-                <CardContent className="p-8">
+                <CardContent className="px-3">
                     <div
-                        className="prose prose-lg max-w-none leading-relaxed 
-                                   text-foreground dark:text-gray-300
-                                   prose-headings:text-foreground prose-headings:dark:text-white
-                                   prose-a:text-blue-600 prose-a:dark:text-blue-400"
+                        className="prose prose-lg max-w-none leading-relaxed text-foreground dark:text-gray-300 prose-headings:text-foreground prose-headings:dark:text-white prose-a:text-blue-600 prose-a:dark:text-blue-400"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                     />
                 </CardContent>
             </Card>
+
         </div>
     );
 }

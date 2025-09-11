@@ -132,7 +132,7 @@ export default function SocialNetworkManager({
                         <div key={network.id ?? `tempsocialNetworks-${index}`} className="p-2 border-b border-gray-200 admin-dark:border-gray-700">
                             <div className="grid grid-cols-3 space-x-2">
                                 <div className="flex justify-start items-center gap-2 ">
-                                    <span className="flex justify-start font-medium text-gray-900 admin-dark:text-white px-2 py-1 rounded-lg"
+                                    <span className="flex justify-start font-medium text-white admin-dark:text-white px-2 py-1 rounded-lg"
                                         style={{ background: network.HEX_color }}>{network.name}</span>
                                 </div>
 
@@ -145,14 +145,14 @@ export default function SocialNetworkManager({
                                     <Button variant="outline"
                                         size="sm"
                                         onClick={() => handleShowForm("edit", network)}
-                                        className="border-gray-300 bg-gray-400 text-xs text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700 px-1 py-2 rounded-md">
+                                        className="border-gray-300 bg-gray-400 text-xs text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-600 admin-dark:hover:bg-gray-700 px-1 py-2 rounded-md cursor-pointer">
                                         <SquarePen />
                                     </Button>
                                     <Button
                                         variant="outline"
                                         size="sm"
                                         onClick={() => handleDeleteNetwork(network.id, network.name, network.total_posts)}
-                                        className="border-red-400 text-red-500 hover:bg-red-50 admin-dark:text-red-400 admin-dark:hover:bg-red-900"
+                                        className="border-red-400 admin-dark:bg-red-100 bg-red-100 hover:bg-red-400 text-gray-600 admin-dark:text-red-400 admin-dark:hover:bg-red-900 cursor-pointer"
                                     >
                                         <Trash2 />
                                     </Button>

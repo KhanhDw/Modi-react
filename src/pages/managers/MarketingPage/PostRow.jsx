@@ -81,8 +81,6 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                 </div>
             </TableCell>
 
-
-
             {/* Ngày tạo */}
             <TableCell>
                 {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "—"}
@@ -93,8 +91,6 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                 {post.updated_at ? new Date(post.updated_at).toLocaleDateString("vi-VN") : "—"}
             </TableCell>
 
-
-
             {/* Actions */}
             <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
@@ -103,7 +99,7 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                             theme="admin"
                             variant="outline"
                             size="sm"
-                            className="bg-white hover:text-black border-gray-300 text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700"
+                            className="bg-white hover:text-black border-gray-300 text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700 cursor-pointer"
                         >
                             <SquarePen className="h-4 w-4" />
                         </Button>
