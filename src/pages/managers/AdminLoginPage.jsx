@@ -79,7 +79,8 @@ function AdminLoginPage() {
             // Điều hướng sau khi login thành công
             navigate("/managers");
         } catch (e) {
-            setError(e.message);
+            console.log(e.message);
+            setError("Máy Chủ Đã Xảy Ra Lỗi!");
         } finally {
             setLoading(false);
         }
@@ -133,7 +134,7 @@ function AdminLoginPage() {
                                         id="password"
                                         type={isShowPassword ? "text" : "password"}
                                         name="password"
-                                        placeholder="Nhập mật khẩu (1234)"
+                                        placeholder="Nhập mật khẩu (111111) (6 số 1)"
                                         autoComplete="off"
                                         value={form.password}
                                         onChange={handleChange}

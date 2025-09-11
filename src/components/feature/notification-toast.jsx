@@ -49,7 +49,7 @@ export default function NotificationToast({ message, type = "success", duration 
 
   return (
     <div
-      className={`fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-top-2 duration-300 ${getColorClasses()}`}
+      className={`z-3 fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-top-2 duration-300 ${getColorClasses()}`}
     >
       {getIcon()}
       <span>{message}</span>

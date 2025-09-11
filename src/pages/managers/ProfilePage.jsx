@@ -17,7 +17,7 @@ const ProfilePage = () => {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
 
-    // Password states (giữ nguyên như code gốc)
+    // Password states
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,7 +34,7 @@ const ProfilePage = () => {
     const [changingPassword, setChangingPassword] = useState(false);
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-    // Gọi API lấy dữ liệu user (giữ nguyên logic gốc)
+    // Gọi API lấy dữ liệu user
     const fetchUser = async () => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -53,7 +53,11 @@ const ProfilePage = () => {
             );
 
             setUser(res.data.user);
-            setPreview(res.data.user.avatar_url);
+            // Sử dụng đường dẫn đầy đủ từ server
+            const avatarUrl = res.data.user.avatar_url
+                ? `${import.meta.env.VITE_MAIN_BE_URL}${res.data.user.avatar_url}`
+                : null;
+            setPreview(avatarUrl);
 
             // Initialize form data
             setFullName(res.data.user.full_name || "");
@@ -73,6 +77,17 @@ const ProfilePage = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Kiểm tra định dạng file
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                alert("Vui lòng chọn file ảnh (JPEG, PNG, GIF)");
+                return;
+            }
+            // Kiểm tra kích thước file (tối đa 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert("File ảnh quá lớn, tối đa 5MB");
+                return;
+            }
             setAvatar(file);
             setPreview(URL.createObjectURL(file));
             // Auto upload avatar
@@ -87,6 +102,8 @@ const ProfilePage = () => {
             const token = localStorage.getItem("accessToken");
             if (!token) {
                 alert("Chưa đăng nhập");
+                setPreview(user.avatar_url ? `${import.meta.env.VITE_MAIN_BE_URL}${user.avatar_url}` : null);
+                setAvatar(null);
                 return;
             }
 
@@ -94,7 +111,7 @@ const ProfilePage = () => {
             formData.append('avatar', file);
 
             const res = await axios.put(
-                `${import.meta.env.VITE_MAIN_BE_URL}/api/users/${user.id}/avatar`,
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/users/${user.id}`,
                 formData,
                 {
                     headers: {
@@ -105,14 +122,16 @@ const ProfilePage = () => {
             );
 
             if (res.data.success) {
+                const newAvatarUrl = `${import.meta.env.VITE_MAIN_BE_URL}${res.data.avatar_url}`;
                 setUser(prev => ({ ...prev, avatar_url: res.data.avatar_url }));
+                setPreview(newAvatarUrl);
                 alert("Cập nhật ảnh đại diện thành công");
             }
         } catch (err) {
-            console.error(err);
+            console.error("Lỗi upload avatar:", err);
             alert(err.response?.data?.error || "Có lỗi xảy ra khi tải ảnh lên");
             // Revert preview on error
-            setPreview(user.avatar_url);
+            setPreview(user.avatar_url ? `${import.meta.env.VITE_MAIN_BE_URL}${user.avatar_url}` : null);
             setAvatar(null);
         } finally {
             setUploadingAvatar(false);
@@ -156,14 +175,14 @@ const ProfilePage = () => {
                 alert("Cập nhật thông tin thành công");
             }
         } catch (err) {
-            console.error(err);
+            console.error("Lỗi cập nhật thông tin:", err);
             alert(err.response?.data?.error || "Có lỗi xảy ra");
         } finally {
             setUpdatingInfo(false);
         }
     };
 
-    // Handle change password (giữ nguyên logic gốc)
+    // Handle change password
     const handleChangePassword = async (e) => {
         e.preventDefault();
 
@@ -196,12 +215,6 @@ const ProfilePage = () => {
                 return;
             }
 
-            console.log("Changing password for user ID:", user.id); // Debug
-            console.log("Password data:", {
-                oldPassword: oldPassword ? "***" : "empty",
-                newPassword: newPassword ? "***" : "empty"
-            }); // Debug without showing actual passwords
-
             const res = await axios.put(
                 `${import.meta.env.VITE_MAIN_BE_URL}/api/users/${user.id}/change-password`,
                 { oldPassword, newPassword },
@@ -216,7 +229,7 @@ const ProfilePage = () => {
                 setIsEditPassword(false);
             }
         } catch (err) {
-            console.error(err);
+            console.error("Lỗi đổi mật khẩu:", err);
             alert(err.response?.data?.error || "Có lỗi xảy ra");
         } finally {
             setChangingPassword(false);
@@ -266,7 +279,6 @@ const ProfilePage = () => {
                             <img
                                 src={
                                     preview ||
-                                    user.avatar_url ||
                                     "https://randomuser.me/api/portraits/lego/1.jpg"
                                 }
                                 alt="avatar"
@@ -286,7 +298,7 @@ const ProfilePage = () => {
                                 <input
                                     type="file"
                                     id="avatarUpload"
-                                    accept="image/*"
+                                    accept="image/jpeg,image/png,image/gif"
                                     onChange={handleImageChange}
                                     className="hidden"
                                     disabled={uploadingAvatar}

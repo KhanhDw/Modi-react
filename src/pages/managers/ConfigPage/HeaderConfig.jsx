@@ -31,7 +31,18 @@ export default function HeaderConfigLogo() {
     const [toast, setToast] = useState(null);
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
-    // 🔹 Load logo từ section_items (slug=header, type=logo)
+    // 🔹 Chuẩn hóa image_url (tránh lưu cả domain)
+    function normalizeImageUrl(url) {
+        if (!url) return "";
+        try {
+            const u = new URL(url, import.meta.env.VITE_MAIN_BE_URL);
+            return u.pathname; // chỉ lấy path
+        } catch {
+            return url;
+        }
+    }
+
+    // 🔹 Load logo từ API
     const fetchLogo = async () => {
         try {
             setLoading(true);
@@ -41,8 +52,13 @@ export default function HeaderConfigLogo() {
 
             if (Array.isArray(data) && data.length > 0) {
                 const item = data[0];
+                const fullUrl = item.image_url ? `${API_BASE_URL}${item.image_url}` : "/logoModi.png";
+
                 setLogoItem(item);
-                setLogo(item.image_url ? `${API_BASE_URL}${item.image_url}` : "/logoModi.png");
+                setLogo(fullUrl);
+
+                // ✅ cập nhật localStorage
+                localStorage.setItem("app_logo", fullUrl);
             }
         } catch (err) {
             console.error(err);
@@ -52,7 +68,12 @@ export default function HeaderConfigLogo() {
         }
     };
 
+    // 🔹 Lấy logo ban đầu từ localStorage (nếu có) → rồi fetch từ API để làm mới
     useEffect(() => {
+        const cachedLogo = localStorage.getItem("app_logo");
+        if (cachedLogo) {
+            setLogo(cachedLogo);
+        }
         fetchLogo();
     }, []);
 
@@ -81,18 +102,6 @@ export default function HeaderConfigLogo() {
         return result?.data?.url || result?.url || null;
     };
 
-    function normalizeImageUrl(url) {
-        if (!url) return "";
-        try {
-            // Nếu là full URL => cắt domain, chỉ lấy pathname
-            const u = new URL(url, import.meta.env.VITE_MAIN_BE_URL);
-            return u.pathname;
-        } catch {
-            // Nếu đã là path rồi thì giữ nguyên
-            return url;
-        }
-    }
-
     // 🔹 Lưu logo (update section_item)
     const handleSave = async () => {
         if (!logoItem) return alert("Chưa có logo trong database");
@@ -105,13 +114,8 @@ export default function HeaderConfigLogo() {
             if (file) {
                 const url = await uploadImage(file, logoItem.id, "logo");
                 if (url) {
-                    updatedItem.image_url = url;
+                    updatedItem.image_url = normalizeImageUrl(url);
                 }
-            }
-
-            // 🔹 Chuẩn hóa ảnh trước khi lưu
-            if (updatedItem.image_url) {
-                updatedItem.image_url = normalizeImageUrl(updatedItem.image_url);
             }
 
             await fetch(`${API_BASE_URL}/api/section-items/${logoItem.id}`, {
@@ -120,11 +124,15 @@ export default function HeaderConfigLogo() {
                 body: JSON.stringify(updatedItem),
             });
 
+            const fullUrl = `${API_BASE_URL}${updatedItem.image_url}`;
+            setLogo(fullUrl);
+            setLogoItem(updatedItem);
+
+            // ✅ cập nhật localStorage sau khi save
+            localStorage.setItem("app_logo", fullUrl);
 
             setToast({ message: "Lưu thành công!", type: "success" });
             setFile(null);
-            setLogo(`${API_BASE_URL}${updatedItem.image_url}`);
-            setLogoItem(updatedItem);
         } catch (err) {
             console.error(err);
             setToast({ message: "Lỗi khi lưu: " + err.message, type: "error" });
@@ -137,7 +145,6 @@ export default function HeaderConfigLogo() {
 
     return (
         <div className="p-6 max-w-4xl mx-auto space-y-12">
-
             {/* ===== Header Preview ===== */}
             <motion.div
                 className="flex items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-3xl shadow-2xl p-8  md:flex-row  gap-8 "
@@ -148,11 +155,10 @@ export default function HeaderConfigLogo() {
                 <motion.img
                     src={logo}
                     alt="Logo"
-                    className="w-60  shadow-lg rounded-xl object-cover cursor-pointer"
+                    className="w-60 shadow-lg rounded-xl object-cover cursor-pointer"
                     whileHover={{ scale: 1.1, rotate: 1 }}
                     onError={(e) => (e.currentTarget.src = "/logoModi.png")}
                 />
-                
             </motion.div>
 
             {/* ===== Config Form ===== */}

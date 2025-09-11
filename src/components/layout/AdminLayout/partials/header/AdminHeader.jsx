@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { useLocation, NavLink, Link } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
 import { CgWebsite } from "react-icons/cg";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { AlignJustify } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdminSettingsDropdown from "@/components/layout/AdminLayout/partials/header/AdminSettingsDropdown";
 import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
-import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSearch"
-
+import AdminSearch from "@/components/layout/AdminLayout/partials/header/AdminSearch";
+import axios from "axios";
 
 const breadcrumbMap = {
   "/managers/dashboard": "Tổng quan",
@@ -33,30 +32,51 @@ const AdminHeader = ({
   sidebarCollapsed,
 }) => {
   const location = useLocation();
-
   const [username, setUsername] = useState("");
-  const [avatar_url, setAvatar_url] = useState("");
+  const [avatar_url, setAvatarUrl] = useState("");
 
+  // Gọi API lấy dữ liệu user
   useEffect(() => {
-    const storedUsername = localStorage.getItem("fullName");
-    const storedAvatar_url = localStorage.getItem("avatar_url");
-    if (storedUsername ) {
-      setUsername(storedUsername);
-    }
-    if ( storedAvatar_url) {
-      setAvatar_url(storedAvatar_url);
-    }
-  }, [username, avatar_url]);
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          console.error("Chưa có token, cần login trước");
+          return;
+        }
 
+        const res = await axios.get(
+          `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
+        const user = res.data.user;
+        setUsername(user.full_name || "");
+        // Sử dụng đường dẫn đầy đủ từ server
+        const avatarUrl = user.avatar_url
+          ? `${import.meta.env.VITE_MAIN_BE_URL}${user.avatar_url}`
+          : "";
+        setAvatarUrl(avatarUrl);
 
-  // Lấy trạng thái sticky header từ localStorage
-  useEffect(() => {
-    const savedSticky = localStorage.getItem("headerSticky");
-    if (savedSticky !== null) {
-      setIsHeaderSticky(savedSticky === "true");
-    }
-  }, [setIsHeaderSticky]);
+        // Lưu vào localStorage để sử dụng lại (tùy chọn)
+        localStorage.setItem("fullName", user.full_name || "");
+        localStorage.setItem("avatar_url", user.avatar_url || "");
+      } catch (err) {
+        console.error("Lỗi lấy dữ liệu user:", err);
+        // Fallback nếu API lỗi, thử lấy từ localStorage
+        const storedUsername = localStorage.getItem("fullName");
+        const storedAvatar_url = localStorage.getItem("avatar_url");
+        if (storedUsername) setUsername(storedUsername);
+        if (storedAvatar_url) setAvatarUrl(`${import.meta.env.VITE_MAIN_BE_URL}${storedAvatar_url}`);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   // Lưu trạng thái sticky header
   useEffect(() => {
@@ -64,22 +84,15 @@ const AdminHeader = ({
   }, [isHeaderSticky]);
 
   const pathnames = location.pathname.split("/").filter(Boolean);
-  // ["managers", "dashboard", "extra"]
-
   const firstLevel = `/${pathnames.slice(0, 2).join("/")}`;
-  // -> "/managers/dashboard"
-
   const pageTitle = breadcrumbMap[firstLevel] || "Null";
-
 
   const headerStyle = isHeaderSticky
     ? {
-      width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
-      left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
-    }
+        width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
+        left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
+      }
     : {};
-
-
 
   return (
     <header
@@ -105,7 +118,6 @@ const AdminHeader = ({
           <div className="flex flex-col min-w-0">
             <div className="flex text-sm text-gray-500 admin-dark:text-gray-400 truncate">
               <span>Admin</span>
-
               {pathnames[1] && (
                 <>
                   <span className="mx-1">/</span>
@@ -119,21 +131,20 @@ const AdminHeader = ({
           </div>
         </div>
 
-
         {/* Right */}
         <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
           <AdminSearch />
           {/* Website link */}
-          <NavLink to={`${import.meta.env.VITE_MAIN_FE_URL}`}
-            target="_blank"
-            rel="noopener noreferrer">
+          <NavLink to={`${import.meta.env.VITE_MAIN_FE_URL}`} target="_blank" rel="noopener noreferrer">
             <Button
               variant="ghost"
-              className="flex items-center gap-2 text-gray-600  admin-dark:text-gray-300 admin-dark:bg-gray-400/10 hover:bg-gray-200 bg-slate-100 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
+              className="group flex items-center gap-2 text-black admin-dark:text-gray-100 admin-dark:bg-gray-400/10 hover:bg-gray-900 bg-slate-100 admin-dark:hover:bg-gray-700 flex-shrink-0 cursor-pointer"
               aria-label="Quay lại trang web"
             >
               <CgWebsite className="h-5 w-5" />
-              <span className="hidden md:inline text-sm ">Xem Website</span>
+              <span className="hidden md:inline text-sm text-black group-hover:text-white admin-dark:text-gray-100">
+                Xem Website
+              </span>
             </Button>
           </NavLink>
 
@@ -143,18 +154,16 @@ const AdminHeader = ({
           {/* Avatar */}
           <NavLink to="/managers/profile">
             <Button
-              theme="admin"
               variant="ghost"
               className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer"
             >
               <Avatar>
-                <AvatarImage src={`${import.meta.env.VITE_MAIN_BE_URL}${avatar_url}`} />
+                <AvatarImage src={avatar_url || "https://randomuser.me/api/portraits/lego/1.jpg"} />
                 <AvatarFallback>😢</AvatarFallback>
               </Avatar>
-              <span className="hidden md:inline text-sm font-bold">{username}</span>
+              <span className="hidden md:inline text-sm font-bold">{username || "Khách"}</span>
             </Button>
           </NavLink>
-
 
           {/* Settings */}
           <AdminSettingsDropdown

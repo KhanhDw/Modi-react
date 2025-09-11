@@ -185,26 +185,26 @@ export default function WebsiteTemplateList() {
 
                   {/* Nội dung */}
                   <div className="flex-1 px-6 pr-0">
-                    <h3 className="font-semibold text-xl mb-1 line-clamp-2">{t.name}</h3>
+                    <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-xl mb-1 line-clamp-2">{t.name}</h3>
                     <p className="text-sm text-gray-600 admin-dark:text-gray-400">
-                      Người đăng: <span className="text-blue-600 font-medium">Admin</span>
+                      Người đăng: <span className="text-blue-600 font-medium ">Admin</span>
                     </p>
-                    <p className="text-sm">Danh mục: {t.category}</p>
+                    <p className="text-sm text-gray-900 admin-dark:text-gray-100 ">Danh mục: {t.category}</p>
 
                     <div className="mt-3">
-                      <p className="text-sm font-medium">Công nghệ:</p>
+                      <p className="text-sm font-medium text-gray-900 admin-dark:text-gray-100 ">Công nghệ:</p>
                       <div className="flex flex-wrap gap-1">
                         {t.tech?.map((item) => (
-                          <Badge key={item} variant="outline" className="text-xs text-foreground">{item}</Badge>
+                          <Badge key={item} variant="outline" className="text-xs  text-gray-900 admin-dark:text-gray-100 ">{item}</Badge>
                         ))}
                       </div>
                     </div>
 
                     <div className="mt-3">
-                      <p className="text-sm font-medium">Các loại File:</p>
+                      <p className="text-sm font-medium text-gray-900 admin-dark:text-gray-100 ">Các loại File:</p>
                       <div className="flex flex-wrap gap-2">
                         {t.tags?.slice(0, 6).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs text-foreground">{tag}</Badge>
+                          <Badge key={tag} variant="outline" className="text-xs  text-gray-900 admin-dark:text-gray-100 ">{tag}</Badge>
                         ))}
                         {t.tags?.length > 6 && (
                           <Badge variant="outline" className="text-xs text-gray-500">
@@ -255,12 +255,14 @@ export default function WebsiteTemplateList() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-3xl font-bold mb-2">
+                      <div className="text-3xl font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">
                         {t.price ? <ProductPrice price={t.price} /> : 0}
                         <span className="text-xs ml-1">Vnđ</span>
                       </div>
-                      <p className="text-xs">Lượt xem: <span className="font-semibold">{t.views}</span></p>
-                      <p className="text-xs">Cập nhật: {formatDate(t.updated_at)}</p>
+                      <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Lượt xem:
+                        <span className="font-semibold text-gray-900 admin-dark:text-gray-100 ">{t.views}</span>
+                      </p>
+                      <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
                     </div>
 
                     <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white">

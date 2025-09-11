@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useOutletContext } from "react-router-dom";
 import {
   LineChart,
   Line,
@@ -18,15 +19,24 @@ import {
 } from "recharts";
 
 export default function SaleAnalytics() {
-  const monthlyRevenue = [
-    { month: "T1", revenue: 1200000 },
-    { month: "T2", revenue: 1500000 },
-    { month: "T3", revenue: 900000 },
-    { month: "T4", revenue: 1800000 },
-    { month: "T5", revenue: 2000000 },
-    { month: "T6", revenue: 1700000 },
-    { month: "T7", revenue: 1500000 },
-  ];
+  const { initDataService } = useOutletContext();
+  console.log(initDataService);
+  const months = Array.from({ length: 12 }, (_, i) => ({
+    month: `T${i + 1}`,
+    revenue: 0,
+  }));
+
+  initDataService.forEach((s) => {
+    const revenue = s.revenue ? s.revenue : 0;
+    if (s.created_at) {
+      const date = new Date(s.created_at);
+      const monthIndex = date.getMonth();
+
+      const serviceRevenue = revenue || 0;
+
+      months[monthIndex].revenue += parseFloat(serviceRevenue) || 0;
+    }
+  });
 
   return (
     <>
@@ -39,7 +49,7 @@ export default function SaleAnalytics() {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyRevenue}>
+            <LineChart data={months}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis

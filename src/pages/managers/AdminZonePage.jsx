@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
 import axios from "axios";
-import UserForm from "@/components/admin/userForm/UserForm.jsx"; 
+import UserForm from "@/components/admin/userForm/UserForm.jsx";
 import "../../styles/scrollbar.css";
 
 const PAGE_SIZE = 8;
@@ -21,7 +21,7 @@ export default function AdminZonePage() {
   const [fade, setFade] = useState(true);
   const [users, setUsers] = useState([]);
   const [columns, setColumns] = useState([]);
-
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // quản lý form
@@ -40,7 +40,37 @@ export default function AdminZonePage() {
     }
   };
 
-  useEffect(() => { fetchUsers(); }, []);
+
+
+  // Gọi API lấy user hiện tại
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("Chưa có token, cần login trước");
+        return;
+      }
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setCurrentUser(res.data.user);
+    } catch (err) {
+      console.error("Lỗi lấy current user:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentUser(); // load user hiện tại
+    fetchUsers();       // load danh sách user
+  }, []);
+
 
   const filteredData = useMemo(() => {
     if (!search.trim()) return users;
@@ -125,7 +155,7 @@ export default function AdminZonePage() {
         {/* Table */}
         <div className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${fade ? "opacity-100 shadow-md" : "opacity-0"}`}>
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
-            <thead className="sticky top-0 z-10">
+            <thead className="sticky top-0 z-1">
               <tr className="bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 uppercase tracking-wider text-xs sm:text-sm border-b border-gray-200 admin-dark:border-gray-700">
                 {columns.map((col) => (
                   <th
@@ -208,19 +238,31 @@ export default function AdminZonePage() {
                             setEditingUser(item);
                             setShowForm(true);
                           }}
-                          className="flex items-center gap-1 text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300 transition cursor-pointer"
+                          disabled={currentUser && item.id === currentUser.id} // disable nếu là user hiện tại
+                          className={`flex items-center gap-1 transition cursor-pointer
+    ${currentUser && item.id === currentUser.id
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"}
+  `}
                         >
                           <FiEdit2 size={18} />
                           <span className="text-sm font-medium">Sửa</span>
                         </button>
+
                         <button
                           title="Xóa"
                           onClick={() => handleDelete(item.id)}
-                          className="flex items-center gap-1 text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400 transition cursor-pointer"
+                          disabled={currentUser && item.id === currentUser.id}
+                          className={`flex items-center gap-1 transition cursor-pointer
+    ${currentUser && item.id === currentUser.id
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"}
+  `}
                         >
                           <FiTrash2 size={18} />
                           <span className="text-sm font-medium">Xóa</span>
                         </button>
+
                       </div>
                     </td>
                   </tr>

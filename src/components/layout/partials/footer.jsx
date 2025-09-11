@@ -8,6 +8,7 @@ export default function Footer() {
   const [services, setServices] = useState({});
   const [privacy, setPrivacy] = useState({});
   const [socials, setSocials] = useState({});
+  const [boCongThuong, setBoCongThuong] = useState({});
   const [activeLang, setActiveLang] = useState("vi");
   const [loading, setLoading] = useState(true);
 
@@ -17,31 +18,34 @@ export default function Footer() {
     try {
       setLoading(true);
 
-      // Fetch song song tất cả API
-      const [logoRes, infoRes, serviceRes, socialRes, privacyRes] = await Promise.all([
+      const [logoRes, infoRes, serviceRes, socialRes, privacyRes, bctRes] = await Promise.all([
         fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`),
         fetch(`${API_BASE_URL}/api/section-items/type/company_info?slug=footer`),
         fetch(`${API_BASE_URL}/api/section-items/type/services?slug=footer`),
         fetch(`${API_BASE_URL}/api/section-items/type/social?slug=footer`),
         fetch(`${API_BASE_URL}/api/section-items/type/privacy?slug=footer`),
+        fetch(`${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`),
       ]);
 
-      const [logoData, companyInfo, serviceData, socialsData, privacyData] = await Promise.all([
-        logoRes.json(),
-        infoRes.json(),
-        serviceRes.json(),
-        socialRes.json(),
-        privacyRes.json(),
-      ]);
+      const [logoData, companyInfo, serviceData, socialsData, privacyData, bctData] =
+        await Promise.all([
+          logoRes.json(),
+          infoRes.json(),
+          serviceRes.json(),
+          socialRes.json(),
+          privacyRes.json(),
+          bctRes.json(),
+        ]);
 
       const logoItem = logoData[0] || null;
+      const bctItem = bctData[0] || null; // ✅ chỉ lấy 1 item
 
-      // Các ngôn ngữ cần hỗ trợ
       const langs = ["vi", "en"];
       const footerMap = {};
       const serviceMap = {};
       const socialMap = {};
       const privacyMap = {};
+      const bctMap = {};
 
       langs.forEach((lng) => {
         footerMap[lng] = {
@@ -67,13 +71,21 @@ export default function Footer() {
           title: p.title?.[lng],
           link: p.description?.[lng],
         }));
+
+        // ✅ Bộ Công Thương (object, không phải array)
+        bctMap[lng] = {
+          enable: bctItem?.title?.[lng] === "true",
+          url: bctItem?.description?.[lng] || "",
+        };
       });
 
-      // Lưu toàn bộ data vào state
       setFooterData(footerMap);
       setServices(serviceMap);
       setSocials(socialMap);
       setPrivacy(privacyMap);
+      setBoCongThuong(bctMap);
+
+      console.log("✅ BCT Map:", bctMap);
     } catch (err) {
       console.error("❌ Lỗi tải footer:", err);
     } finally {
@@ -81,12 +93,10 @@ export default function Footer() {
     }
   };
 
-  // Fetch chỉ 1 lần
   useEffect(() => {
     fetchFooter();
   }, []);
 
-  // Cập nhật lang
   useEffect(() => {
     setActiveLang(lang);
   }, [lang]);
@@ -101,6 +111,7 @@ export default function Footer() {
       services={services[activeLang]}
       socials={socials[activeLang]}
       privacy={privacy[activeLang]}
+      boCongThuong={boCongThuong[activeLang]}
       lang={activeLang}
     />
   );

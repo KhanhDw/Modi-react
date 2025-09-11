@@ -2,14 +2,15 @@ export const BASE_URL = import.meta.env.VITE_MAIN_BE_URL + "/api";
 
 export const ENDPOINT = {
   services: "/services",
+  bookings: "/bookings",
   upload: "/upload",
+  customers: "/customers",
 };
 
 
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "http://localhost:3000",
   baseURL: BASE_URL,
 });
 

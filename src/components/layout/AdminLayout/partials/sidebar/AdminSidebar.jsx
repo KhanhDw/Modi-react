@@ -1,9 +1,6 @@
 import {
   LayoutDashboard, Handshake, Newspaper, Users, ShieldMinus, Mail, Puzzle, Moon, SunMedium,
-  X, ChevronLeft, ChevronRight,
-  Palette,
-  Info,
-  Megaphone, Columns3Cog
+  X, ChevronLeft, ChevronRight, Palette, Megaphone, Columns3Cog
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -12,12 +9,11 @@ import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import axios from "axios";
 
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
-
-
-// { name: "Tuyển dụng", path: "/managers/recruitment", icon: Users },
+// Menu gốc
 const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
   { name: "Liên hệ", path: "/managers/contact", icon: Mail },
@@ -33,48 +29,85 @@ const menuItems = [
 const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false }) => {
   const { pathname } = useLocation();
   const { isDark, toggleTheme } = useAdminTheme();
-  const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
-
-  const [todayVisits, setTodayVisits] = useState(0);
-
-
   const navigate = useNavigate();
 
+  const [todayVisits, setTodayVisits] = useState(0);
+  const [user, setUser] = useState(null);
+
+  // Check active path
+  const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
+
+  // Fetch user
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setUser(res.data.user);
+    } catch (err) {
+      console.error("Lỗi lấy user:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  // Filter menu theo role
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (user?.role === "dev") {
+      return true; // dev thấy tất cả
+    }
+
+    if (user?.role === "admin") {
+      // admin không thấy component
+      if (item.path === "/managers/components") return false;
+      return true;
+    }
+
+    // user thường: ẩn admin-zone + component
+    if (item.path === "/managers/admin-zone" || item.path === "/managers/components") {
+      return false;
+    }
+    return true;
+  });
+
+  // Redirect khi vào page-config
   useEffect(() => {
     if (pathname === "/managers/page-config") {
       navigate("/managers/page-config/header", { replace: true });
     }
   }, [pathname, navigate]);
 
+  // Fetch lượt truy cập
   const fetchData = async () => {
-    // Lấy tổng lượt truy cập hôm nay
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setTodayVisits(data.total))
-      .catch((err) => console.error("Không lấy được visit:", err))
+    try {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`);
+      const data = await res.json();
+      setTodayVisits(data.total);
+    } catch (err) {
+      console.error("Không lấy được visit:", err);
+    }
   };
-
 
   useEffect(() => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
-    socket.on("newVisit", (data) => {
-      fetchData()
+    socket.on("newVisit", () => {
+      fetchData();
     });
 
     return () => {
       socket.off("newVisit");
     };
   }, []);
-
 
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
@@ -111,7 +144,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
           isCollapsed && !isMobile ? "px-2" : "px-3",
         )}
       >
-        {menuItems.map((item) => (
+        {filteredMenuItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
@@ -145,6 +178,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
         ))}
       </nav>
 
+      {/* Today visits */}
       <div className="px-2 flex items-center justify-between transition-all duration-300 ">
         {isCollapsed && !isMobile ? "" :
           (<span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300 mb-2">
@@ -155,9 +189,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
         <span className={`${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50 mb-2`}>
           {todayVisits.toLocaleString("vi-VN")}
         </span>
-
       </div>
-
 
       {/* Theme Toggle */}
       <div className="p-3 border-t border-gray-200 admin-dark:border-gray-600 overflow-hidden">
@@ -169,15 +201,12 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
           className="w-full text-xs cursor-pointer border-gray-700  bg-gray-200 text-slate-800 admin-dark:text-slate-100"
         >
           <>
-            {/* Icon (luôn hiện trừ khi mobile và thu gọn) */}
             {!(isCollapsed && isMobile) && (isDark ? <SunMedium /> : <Moon />)}
-            {/* Chữ (chỉ hiện khi không thu gọn) */}
             {!isCollapsed && (isDark ? "Chế độ sáng" : "Chế độ tối")}
           </>
-
         </Button>
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -182,7 +182,6 @@ const privateRoutes = [
     component: ServicesPage,
     layout: AdminLayout,
     children: [
-      { index: true, component: ServiceOverview },
       { path: "service_overview", component: ServiceOverview },
       { path: "service_list", component: ServiceList },
       { path: "service_booking", component: ServiceBooking },
