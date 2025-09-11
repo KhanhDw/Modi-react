@@ -10,7 +10,7 @@ import {
 import ServiceCustomerAnalytics from "@/components/admin/services/customers/service-customer-analystics";
 import ServiceCustomerTable from "@/components/admin/services/customers/ServiceCustomerTable";
 import { useOutletContext } from "react-router-dom";
-import DialogShowForm_Service from "./DialogShowForm.-service";
+import DialogShowForm_Service from "./DialogShowFormService";
 export default function ServiceCustomers() {
   const { initDataCustomer, initDataBooking } = useOutletContext();
 

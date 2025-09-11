@@ -15,8 +15,10 @@ export default function ArticleDetailModal({
 }) {
   useEffect(() => {
     if (dataArticle) {
-      console.log("dataArticle:", dataArticle);
+      console.log("dataArticle11:", dataArticle);
     }
+    console.log(open);
+    console.log(onOpenChange);
   }, [dataArticle]);
 
   return (

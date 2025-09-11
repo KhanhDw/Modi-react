@@ -5,7 +5,7 @@ import ServiceBookingAnalytics from "@/components/admin/services/booking/service
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, BadgeCheck, Trash2, Package } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
-import DialogShowForm_Service from "./DialogShowForm.-service";
+import DialogShowForm_Service from "./DialogShowFormService";
 
 export default function ServiceBooking() {
   const { initDataService, initDataBooking } = useOutletContext();
