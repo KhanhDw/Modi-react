@@ -425,7 +425,7 @@ export default function ServicesPage() {
   }
 
   return (
-    <div className="bg-white admin-dark:bg-gray-900 rounded-2xl admin-dark:border admin-dark:border-gray-700">
+    <div className="bg-white admin-dark:bg-gray-900 rounded-2xl ">
       <div className="container mx-auto">
         <div className="mb-6">
           <nav className="flex justify-center">
