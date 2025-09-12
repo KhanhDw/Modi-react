@@ -114,9 +114,10 @@ input:-webkit-autofill {
     -webkit-text-fill-color: #f3f4f6 !important; /* text-gray-100 */
 }
 
-.preview-html p {
-    display: inline; /* ép p thành inline để line-clamp không bị phá */
-    margin: 0; /* bỏ margin mặc định */
+.preview-html p,
+.preview-html div {
+    display: inline; /* ép p/div thành inline text */
+    margin: 0;
 }
 
 .preview-html img {

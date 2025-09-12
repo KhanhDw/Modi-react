@@ -30,17 +30,20 @@ export default function NewsInterface() {
             (a, b) => new Date(b.published_at) - new Date(a.published_at)
           );
           // Ánh xạ các trường dữ liệu
-          const mappedData = sorted.map(item => ({
+          const mappedData = sorted.filter(
+            (item) => item.status !== "draft"
+          ).map(item => ({
             id: item.id,
             tieu_de: item.title,
             slug: item.slug,
+            status: item.status,
             noi_dung: item.content,
             hinh_anh: item.image,
             tac_gia: item.author_name,
             ngay_dang: item.published_at,
           }));
           setNewsArticles(mappedData);
-        } 
+        }
         setIsLoading(false);
       })
       .catch((error) => {
@@ -104,11 +107,16 @@ export default function NewsInterface() {
                 </div>
                 <div className="md:w-1/2 p-8">
                   <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">{heroArticle.tieu_de}</h1>
-                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed line-clamp-5"
+                  <div className="preview-html prose prose-sm max-w-none line-clamp-3 break-words admin-dark:text-gray-500 text-[15px]"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 3
+                    }}
                     dangerouslySetInnerHTML={{ __html: heroArticle.noi_dung }}
                   >
                     {/* {heroArticle.noi_dung} */}
-                  </p>
+                  </div>
                   <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4" />
@@ -142,8 +150,13 @@ export default function NewsInterface() {
                 <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white line-clamp-2">
                   {article.tieu_de}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3"
-                dangerouslySetInnerHTML={{ __html: article.noi_dung }}
+                <div className="preview-html prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-gray-500 text-[15px]"
+                  style={{
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2
+                  }}
+                  dangerouslySetInnerHTML={{ __html: article.noi_dung }}
                 />
                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex items-center gap-2">

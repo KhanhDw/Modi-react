@@ -74,23 +74,23 @@ function BlogViewPage() {
           {/* Blog Image */}
           <div className="mb-8">
             <img
-              src={blog.image || "/placeholder.svg"}
+              src={`${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` || "/placeholder.svg"}
               alt={blog.title}
               className="w-full h-96 object-cover rounded-lg shadow-md"
             />
           </div>
 
           {/* Blog Content */}
-          <div className="bg-white admin-dark:bg-gray-800 rounded-lg shadow-md p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
             {/* Title */}
-            <h1 className="text-4xl font-bold text-gray-900 admin-dark:text-gray-200 mb-4">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200 mb-4">
               {blog.title}
             </h1>
 
             {/* Meta Information */}
             <div className="flex items-center justify-between mb-6 text-gray-600">
               <div className="flex items-center space-x-2">
-                <span className="font-medium admin-dark:text-gray-200">
+                <span className="font-medium dark:text-gray-200">
                   By {blog.author_name || "Unknown"}
                 </span>
               </div>
@@ -99,7 +99,7 @@ function BlogViewPage() {
 
             {/* Content */}
             <div
-              className="prose max-w-none text-gray-800 leading-relaxed admin-dark:text-gray-200"
+              className="prose max-w-none text-gray-800 leading-relaxed dark:text-gray-200"
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
           </div>
@@ -108,7 +108,7 @@ function BlogViewPage() {
         <div className="absolute top-0 right-0 left-0">
           <button
             onClick={() => navigate(-1)}
-            className="admin-dark:text-gray-200 inline-flex items-center p-4 bg-gray-600/40 text-white rounded-full hover:bg-gray-700 transition-colors"
+            className="dark:text-gray-200 inline-flex items-center p-4 bg-gray-600/40 text-white rounded-full hover:bg-gray-700 transition-colors"
           >
             <ChevronLeft />
           </button>
