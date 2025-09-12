@@ -119,7 +119,6 @@ export default function ViewPage() {
                 return;
             }
 
-
             setLoading(true);
             setImageError(false);
             const langPath = lang === 'en' ? `/${lang}` : "";
@@ -178,9 +177,10 @@ export default function ViewPage() {
                 <article className="p-8">
                     {/* Header bài viết */}
                     <header className="mb-8 text-center">
-                        <h1 className="text-4xl font-extrabold text-gray-900 admin-dark:text-white leading-tight mb-4">
+                        <h1 className="text-2xl sm:text-2xl xs:mt-3 md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 admin-dark:text-white leading-tight mb-4">
                             {post.title}
                         </h1>
+
                         <div className="flex flex-wrap justify-center items-center text-gray-600 admin-dark:text-gray-400 text-sm">
                             <span className="font-medium mr-2">Bởi: {post.author_name || "Ẩn danh"}</span>
                             <span className="mx-2">•</span>
@@ -200,15 +200,34 @@ export default function ViewPage() {
                                 </>
                             )}
                         </div>
+
                     </header>
+
+                    {/* Tags */}
+                    {post.tags && post.tags.length > 0 && (
+                        <footer className="pt-2 pb-4 border-t border-gray-200 admin-dark:border-gray-700">
+                            <h3 className="text-lg font-semibold text-gray-800 admin-dark:text-white mb-3 inline">Tags:</h3>
+                            <div className="inline-flex gap-2 ml-2">
+                                {post.tags.split(',').map((tag, index) => (
+                                    <span
+                                        key={index}
+                                        className="px-3 py-1 bg-blue-100 admin-dark:bg-blue-800 text-blue-800 admin-dark:text-blue-100 rounded-full text-xs sm:text-sm font-medium hover:bg-blue-200 admin-dark:hover:bg-blue-700 transition-colors cursor-pointer"
+                                    >
+                                        {tag.trim()}
+                                    </span>
+                                ))}
+                            </div>
+                        </footer>
+                    )}
+
 
                     {/* Hình ảnh nổi bật hoặc thông báo lỗi */}
                     <div className="mb-8">
                         {post.image && !imageError ? ( // Chỉ hiển thị img nếu có post.image và không có lỗi
                             <img
-                                src={post.image}
+                                src={`${import.meta.env.VITE_MAIN_BE_URL}${post.image}`}
                                 alt={post.title}
-                                className="w-full max-h-96 object-cover rounded-lg shadow-md mx-auto"
+                                className="w-full max-h-[550px] object-cover rounded-lg shadow-md mx-auto"
                                 onError={handleImageError} // Gọi hàm handleImageError khi có lỗi
                             />
                         ) : (
@@ -228,40 +247,25 @@ export default function ViewPage() {
                         />
                     </section>
 
-                    {/* Tags */}
-                    {post.tags && post.tags.length > 0 && (
-                        <footer className="pt-6 border-t border-gray-200 admin-dark:border-gray-700 mt-8">
-                            <h3 className="text-lg font-semibold text-gray-800 admin-dark:text-white mb-3">Tags:</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {post.tags.split(',').map((tag, index) => (
-                                    <span
-                                        key={index}
-                                        className="px-3 py-1 bg-blue-100 admin-dark:bg-blue-800 text-blue-800 admin-dark:text-blue-100 rounded-full text-sm font-medium hover:bg-blue-200 admin-dark:hover:bg-blue-700 transition-colors cursor-pointer"
-                                    >
-                                        {tag.trim()}
-                                    </span>
-                                ))}
-                            </div>
-                        </footer>
-                    )}
                 </article>
 
             </div>
 
-            <div className="absolute p-4 top-0 left-0 border-gray-200 admin-dark:border-gray-700  ">
+            {/* Nút Quay Về */}
+            <div className="absolute top-0 left-0 p-2 sm:p-4 border-gray-200 admin-dark:border-gray-700">
                 <button
                     onClick={() => navigate(-1)}
-                    className="p-2 bg-gray-200/20 hover:bg-gray-200/70 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow admin-dark:hover:bg-gray-600 transition-colors duration-300 cursor-pointer"
+                    className="p-2 sm:p-3 bg-gray-200/20 hover:bg-gray-200/70 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow-sm sm:shadow-md admin-dark:hover:bg-gray-600 transition-colors duration-300 cursor-pointer flex items-center justify-center"
                 >
-                    <ChevronLeft />
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
             </div>
 
             {/* Language Switch */}
-            <div className="absolute top-0 right-0 flex space-x-2 p-4">
+            <div className="absolute top-0 right-0 flex space-x-2 p-2 sm:p-4">
                 <button
                     onClick={() => setLang("vi")}
-                    className={`px-4 py-2 rounded-md cursor-pointer font-bold transition-colors ${lang === "vi"
+                    className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md cursor-pointer font-bold text-xs sm:text-sm md:text-base transition-colors ${lang === "vi"
                         ? "bg-blue-800 text-white border-2 admin-dark:border-white"
                         : "bg-gray-600/80 text-white hover:bg-gray-700"
                         }`}
@@ -270,15 +274,16 @@ export default function ViewPage() {
                 </button>
                 <button
                     onClick={() => setLang("en")}
-                    className={`px-4 py-2 cursor-pointer rounded-md font-bold transition-colors ${lang === "en"
+                    className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md cursor-pointer font-bold text-xs sm:text-sm md:text-base transition-colors ${lang === "en"
                         ? "bg-blue-800 text-white border-2 admin-dark:border-white"
                         : "bg-gray-600/80 text-white hover:bg-gray-700"
                         }`}
                 >
                     <span className="font-semibold">Anh</span>
                 </button>
-
             </div>
+
+
         </div>
     );
 }

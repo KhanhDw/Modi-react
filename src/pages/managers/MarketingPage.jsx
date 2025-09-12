@@ -57,38 +57,24 @@ export default function MarketingPage() {
     }
   };
 
-
-
   useEffect(() => {
     fetchSocialNetWorks();
     fetchPosts();
   }, []);
 
-
-
-  const handleAddPost = async () => {
+  const handleAddPost = async (payload, file) => {
     try {
-      const payload = {
-        author_id: formData.author_id || 1,
-        platform_id: formData.platform_id || null,
-        image: formData.image,
-        tags: formData.tags,
-        status: formData.status || "draft",
-        translations: [
-          {
-            lang: formData.lang || "vi",
-            title: formData.title,
-            content: formData.content,
-          },
-        ],
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("author_id", payload.author_id);
+      formDataToSend.append("platform_id", payload.platform_id);
+      formDataToSend.append("status", payload.status);
+      formDataToSend.append("tags", payload.tags);
+      if (file) formDataToSend.append("image", file); // Multer sẽ nhận file
+      formDataToSend.append("translations", JSON.stringify(payload.translations));
 
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: formDataToSend,
       });
 
       if (!res.ok) {
@@ -100,64 +86,55 @@ export default function MarketingPage() {
 
       const newPost = await res.json();
       console.log("Thêm dữ liệu mới thành công:", newPost);
-
-      setPosts([...posts, newPost]);
-
-      // Reset form
-      setFormData({
-        title: "",
-        content: "",
-        author_id: 1,
-        status: "draft",
-        tags: "",
-        image: "",
-        lang: "vi",
-        platform_name: "",
-      });
-
       fetchPosts();
+
     } catch (error) {
       console.error("Lỗi khi thêm bài viết:", error);
       alert("Có lỗi xảy ra, vui lòng thử lại.");
     }
   };
 
-
-  const handleEditPost = async () => {
+  const handleEditPost = async (payload, file) => {
     try {
-      const payload = {
-        author_id: formData.author_id ?? 1,
-        platform_id: formData.platform_id ?? null,
-        image: formData.image,
-        tags: formData.tags,
-        status: formData.status ?? "draft",
-        translations: [
-          {
-            lang: formData.lang,
-            title: formData.title,
-            content: formData.content,
-          },
-        ],
-      };
+      const formDataToSend = new FormData();
 
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${formData.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      formDataToSend.append("author_id", payload.author_id ?? 1);
+      formDataToSend.append("platform_id", payload.platform_id ?? null);
+      formDataToSend.append("status", payload.status ?? "draft");
+      formDataToSend.append("tags", payload.tags ?? "");
+
+      // Chỉ append file nếu người dùng chọn ảnh mới
+      if (file) formDataToSend.append("image", file);
+
+      // translations vẫn gửi JSON string
+      formDataToSend.append("translations", JSON.stringify(payload.translations));
+
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/${payload.id}`,
+        {
+          method: "PUT",
+          body: formDataToSend, // Multer trên backend sẽ nhận được
+        }
+      );
 
       if (!res.ok) {
-        throw new Error("Lỗi khi cập nhật bài viết");
+        const errData = await res.json().catch(() => ({}));
+        console.error("Backend error:", errData);
+        alert("Cập nhật bài viết thất bại. Vui lòng thử lại.");
+        return;
       }
 
+      const updatedPost = await res.json();
+      console.log("Cập nhật thành công:", updatedPost);
+
+      // Reload posts
       fetchPosts();
+
     } catch (err) {
-      console.error("PUT thất bại:", err);
+      console.error("Lỗi khi cập nhật bài viết:", err);
+      alert("Có lỗi xảy ra, vui lòng thử lại.");
     }
   };
-
 
 
   const handleDeletePost = async (id) => {

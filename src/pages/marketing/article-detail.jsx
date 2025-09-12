@@ -3,10 +3,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, Share2 } from "lucide-react"
 import { useParams } from 'react-router-dom';
+import useCurrentLanguage from "@/hook/currentLang";
 
 export default function ArticleDetail() {
     const { slug } = useParams();
-
+    const { prefix } = useCurrentLanguage();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,7 +16,7 @@ export default function ArticleDetail() {
         const fetchArticle = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/slug/${slug}`
+                    `${import.meta.env.VITE_MAIN_BE_URL}${prefix}/api/marketing/slug/${slug}`
                 );
                 if (!res.ok) throw new Error("Không thể tải dữ liệu");
                 const data = await res.json();
@@ -27,7 +28,7 @@ export default function ArticleDetail() {
             }
         };
         if (slug) fetchArticle();
-    }, [slug]);
+    }, [slug, prefix]); // nhớ thêm prefix vào dependency
 
     if (loading) return <p className="text-foreground dark:text-gray-300">Đang tải dữ liệu...</p>;
     if (error) return <p className="text-red-500 dark:text-red-400">{error}</p>;
