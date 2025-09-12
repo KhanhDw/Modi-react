@@ -281,16 +281,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         }
     };
 
-    const handleSubmitDialog = () => {
-        if (dialog.type === "category") {
-            if (!dialog.valueEn.trim() || !dialog.valueVi.trim()) return;
-            addCategory(dialog.valueEn, dialog.valueVi);
-        } else if (dialog.type === "child") {
-            if (!dialog.valueEn.trim() || !dialog.valueVi.trim()) return;
-            addChild(dialog.valueEn, dialog.valueVi);
-        }
-    };
-
     const selectSubItemSection = (cat) => {
         console.log("ds:::", cat);
         setSelectedCategory(cat);
