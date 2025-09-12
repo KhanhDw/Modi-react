@@ -1,12 +1,11 @@
 // src\components\feature\pagination.jsx
 import React, { useState, useEffect } from "react";
 
-export default function PageList({ data, pageSize = 5, onPageChange }) {
+export default function PageList({ data, pageSize = 6, onPageChange, onPageNumberChange }) {
     const [page, setPage] = useState(1);
 
     const totalRows = data.length;
     const totalPages = Math.ceil(totalRows / pageSize);
-
 
     // mỗi lần page đổi thì gọi callback để PostsTable nhận dữ liệu đã cắt
     useEffect(() => {
@@ -26,7 +25,10 @@ export default function PageList({ data, pageSize = 5, onPageChange }) {
         if (onPageChange) {
             onPageChange(paginatedData);
         }
-    }, [page, data, onPageChange]);
+        if (onPageNumberChange) {
+            onPageNumberChange(page); // 👉 báo cho PostsTable biết trang hiện tại
+        }
+    }, [page, data, onPageChange, onPageNumberChange]);
 
     const renderPageNumbers = () => {
         let pages = [];
@@ -43,7 +45,7 @@ export default function PageList({ data, pageSize = 5, onPageChange }) {
                 <button
                     key={num}
                     onClick={() => setPage(num)}
-                    className={`px-3 py-1 rounded-lg border ${page === num ? "bg-blue-500 text-white border-blue-500" : "hover:bg-gray-100"
+                    className={`px-3 py-1 rounded-lg border cursor-pointer ${page === num ? "bg-blue-500 text-white border-blue-500" : "hover:bg-gray-100"
                         }`}
                 >
                     {num}
@@ -53,7 +55,7 @@ export default function PageList({ data, pageSize = 5, onPageChange }) {
     };
 
     return (
-        <div className="w-full p-4 border-t flex items-center justify-between">
+        <div className="w-full p-3 flex items-center justify-between">
             <div className="text-sm text-gray-600">
                 Hiển thị <span className="font-medium">{startIndex + 1}</span> –{" "}
                 <span className="font-medium">{endIndex}</span> trong{" "}
@@ -64,7 +66,7 @@ export default function PageList({ data, pageSize = 5, onPageChange }) {
                 <button
                     onClick={() => setPage((p) => Math.max(p - 1, 1))}
                     disabled={page === 1}
-                    className="px-3 py-1 border rounded-lg disabled:opacity-50"
+                    className="px-3 py-1 border rounded-lg disabled:opacity-50 cursor-pointer"
                 >
                     ←
                 </button>
@@ -74,7 +76,7 @@ export default function PageList({ data, pageSize = 5, onPageChange }) {
                 <button
                     onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                     disabled={page === totalPages}
-                    className="px-3 py-1 border rounded-lg disabled:opacity-50"
+                    className="px-3 py-1 border rounded-lg disabled:opacity-50 cursor-pointer"
                 >
                     →
                 </button>

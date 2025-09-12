@@ -24,18 +24,17 @@ export default function ArticlesList({ articles }) {
             {articles.map((article) => (
                 <div
                     key={article.id}
-                    className="relative bg-white dark:bg-gray-900 rounded-lg shadow-sm border 
-                 border-gray-200 dark:border-gray-700 overflow-hidden hover:-translate-y-1 
-                 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                    className="relative flex flex-col bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 
+                 overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 h-full cursor-pointer"
                     onClick={() => handleArticleClick(article.slug)}
                 >
-                    {/* Article Image */}
+                    {/* Image */}
                     <div className="bg-gray-100 dark:bg-gray-800 overflow-hidden">
                         {article.image ? (
                             <img
                                 src={article.image}
                                 alt={article.title}
-                                className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                                className="w-full h-60 object-cover hover:scale-105 transition-transform duration-300"
                             />
                         ) : (
                             <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
@@ -44,9 +43,9 @@ export default function ArticlesList({ articles }) {
                         )}
                     </div>
 
-                    {/* Article Content */}
-                    <div className="p-4">
-                        {/* Platform Badge */}
+                    {/* Content */}
+                    <div className="p-3 flex flex-col flex-1">
+                        {/* Platform badge */}
                         {article.platform_name && (
                             <div className="absolute top-0 left-0 right-0 flex items-center justify-end p-2">
                                 <span
@@ -63,25 +62,27 @@ export default function ArticlesList({ articles }) {
                             {article.title}
                         </h3>
 
-                        {/* Content Preview */}
-                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 leading-relaxed line-clamp-3">
-                            {article.content.replace(/<[^>]*>/g, "")}
+                        {/* Content preview */}
+                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed flex-1">
+                            {article.content.replace(/<[^>]*>/g, "")} ...
                         </p>
 
                         {/* Tags */}
                         {article.tags && (
-                            <div className="mb-3 flex flex-wrap gap-1">
-                                {article.tags
-                                    .split(",")
-                                    .slice(0, 3)
-                                    .map((tag, index) => (
-                                        <span
-                                            key={index}
-                                            className="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md"
-                                        >
-                                            #{tag.trim()}
-                                        </span>
-                                    ))}
+                            <div className="mb-3">
+                                <div className="flex flex-wrap gap-1">
+                                    {article.tags
+                                        .split(",")
+                                        .slice(0, 5)
+                                        .map((tag, index) => (
+                                            <span
+                                                key={index}
+                                                className="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md"
+                                            >
+                                                #{tag.trim()}
+                                            </span>
+                                        ))}
+                                </div>
                             </div>
                         )}
 
