@@ -238,8 +238,12 @@ export default function BlogsListPage() {
                                             return (
                                                 <td key={col.name} className="px-3 sm:px-4 py-3 text-gray-500 max-w-[300px]">
                                                     <div
-                                                        className="prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-white text-[15px]"
-                                                        style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                                                        className="preview-html prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-gray-500 text-[15px]"
+                                                        style={{
+                                                            display: "-webkit-box",
+                                                            WebkitBoxOrient: "vertical",
+                                                            WebkitLineClamp: 2
+                                                        }}
                                                         dangerouslySetInnerHTML={{ __html: htmlContent }}
                                                     />
                                                 </td>
