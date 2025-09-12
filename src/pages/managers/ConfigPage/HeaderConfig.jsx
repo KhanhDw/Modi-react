@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
-import HierarchicalMenu from "./headerConfig/ServiceDropdown.jsx";
+import ServiceDropdownHeaderMenu from "@/pages/managers/ConfigPage/headerConfig/ServiceDropdownHeaderMenu.jsx";
 
 
 // --- Custom File Input ---
@@ -31,7 +31,6 @@ export default function HeaderConfigLogo() {
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState("/logoModi.png");
     const [logoItem, setLogoItem] = useState(null); // lưu section_item hiện tại
-    const [servicesMenu, setServicesMenu] = useState([]);
     const [toast, setToast] = useState(null);
     const lang = "vi";
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
@@ -73,39 +72,6 @@ export default function HeaderConfigLogo() {
         }
     };
 
-
-    const fetchAllServicesMenu = async () => {
-        try {
-            const types = ["services_thietke", "services_sangtao", "services_hotro"];
-
-            const requests = types.map(type =>
-                fetch(`${API_BASE_URL}/api/section-items/type/${type}?slug=header`).then(res => {
-                    if (!res.ok) throw new Error(`Không thể tải ${type}`);
-                    return res.json();
-                })
-            );
-
-            const results = await Promise.all(requests);
-
-            // Gộp thành format 2 cấp
-            const merged = results.map((items, idx) => {
-                const parentType = types[idx];
-                return {
-                    id: parentType,
-                    name: items[0]?.section_title,
-                    children: items.map(child => ({
-                        id: child.id,
-                        name: child.title?.[lang], // hoặc en // cần điều chỉnh vi en
-                    })),
-                };
-            });
-            setServicesMenu(merged);
-            console.log(merged);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
     // 🔹 Lấy logo ban đầu từ localStorage (nếu có) → rồi fetch từ API để làm mới
     useEffect(() => {
         const cachedLogo = localStorage.getItem("app_logo");
@@ -113,7 +79,7 @@ export default function HeaderConfigLogo() {
             setLogo(cachedLogo);
         }
         fetchLogo();
-        fetchAllServicesMenu();
+
     }, []);
 
     // 🔹 Chọn file mới
@@ -207,24 +173,33 @@ export default function HeaderConfigLogo() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
             >
-                <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
+                <div className="space-y-4 flex items-center justify-between gap-3">
+                    <div className="w-full">
 
-                <HierarchicalMenu
-                    menu={servicesMenu}   // menu đã chuẩn hóa
-                    setMenu={setServicesMenu} // nếu muốn vẫn update menu sau này
-                    lang={lang}
-                />
+                        <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
+                    </div>
+                    <div className="flex items-end gap-2">
+                        <motion.button
+                            onClick={handleSave}
+                            disabled={loading}
+                            className="py-3 px-4  bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg
+                         transition-all flex justify-center items-center gap-2 cursor-pointer"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                        >
+                            {loading ? "Đang lưu..." : "Lưu Logo"}
+                        </motion.button>
+                    </div>
+                </div>
 
-                <motion.button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl shadow-lg
-                     transition-all flex justify-center items-center gap-2 cursor-pointer"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                >
-                    {loading ? "Đang lưu..." : "Lưu Logo"}
-                </motion.button>
+                <div className="w-full flex flex-col space-y-3">
+                    <label className="font-semibold text-gray-700 admin-dark:text-gray-300"> Cấu hình danh sách dịch vụ</label>
+                    <ServiceDropdownHeaderMenu
+                        lang={lang}
+                    />
+                </div>
+
+
             </motion.div>
 
 
