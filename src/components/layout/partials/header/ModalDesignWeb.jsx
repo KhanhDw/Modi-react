@@ -52,6 +52,11 @@ function ModalDesignWeb() {
     setHoveredItem(null);
   };
 
+  if (!categories.length) {
+    return null; // không render gì cả
+  }
+
+
   return (
     <div
       className="w-fit animate-in slide-in-from-top-2 duration-200 relative"
