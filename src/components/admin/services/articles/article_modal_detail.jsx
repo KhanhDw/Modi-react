@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog";
-import React, { useEffect } from 'react'
+import { X } from "lucide-react";
+import React, { useEffect } from "react";
 export default function ArticleDetailModal({
   open,
   onOpenChange,
@@ -13,19 +16,11 @@ export default function ArticleDetailModal({
   onEdit,
   onDelete,
 }) {
-  useEffect(() => {
-    if (dataArticle) {
-      console.log("dataArticle11:", dataArticle);
-    }
-    console.log(open);
-    console.log(onOpenChange);
-  }, [dataArticle]);
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-7xl w-full max-h-[85vh] overflow-y-auto">
+      <DialogContent className="!max-w-7xl w-full max-h-[85vh] overflow-y-auto [&>button]:hover:bg-gray-700/30 [&>button]:text-white">
         <DialogHeader>
-          <DialogTitle>Nội dung bài viết</DialogTitle>
+          <DialogTitle className="text-white">Nội dung bài viết</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -33,7 +28,9 @@ export default function ArticleDetailModal({
             Object.entries(dataArticle).map(([key, value]) => (
               <div key={key} className="border rounded-xl p-3 space-y-2">
                 <div className="flex justify-between items-center">
-                  <h3 className="font-semibold text-lg">Phần: {key}</h3>
+                  <h3 className="font-semibold text-lg text-gray-500">
+                    Phần: {key}
+                  </h3>
                   <div className="flex gap-2">
                     <Button
                       size="sm"
@@ -55,13 +52,15 @@ export default function ArticleDetailModal({
                 {key.startsWith("content") && (
                   <>
                     {value.paraTitle && (
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-white">
                         <strong>Tiêu đề:</strong> {value.paraTitle}
                       </p>
                     )}
-                    {value.paragraph && <p>Nội dung: {value.paragraph}</p>}
+                    {value.paragraph && (
+                      <p className="text-white">Nội dung: {value.paragraph}</p>
+                    )}
                     {value.subPara && (
-                      <p className="text-gray-500">
+                      <p className="text-white">
                         Nội dung phụ: {value.subPara}
                       </p>
                     )}
@@ -103,7 +102,7 @@ export default function ArticleDetailModal({
                                 {row.map((cell, colIndex) => (
                                   <td
                                     key={colIndex}
-                                    className="border border-gray-300 px-2 py-1 text-center"
+                                    className="border border-gray-300 px-2 py-1 text-center text-white"
                                   >
                                     {cell}
                                   </td>

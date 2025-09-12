@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
+import ServiceForm from "./service-form";
+import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormService";
 
 export default function ServiceTable() {
   const { initDataService, openEditServiceForm, handleDeleteService } =
@@ -81,7 +83,11 @@ export default function ServiceTable() {
               <TableRow>
                 <TableHead className="text-black">Tên dịch vụ</TableHead>
                 <TableHead className="text-black">Mô tả</TableHead>
+                <TableHead className="text-black">Bài viết</TableHead>
                 <TableHead className="text-black">Giá</TableHead>
+                <TableHead className="text-black">
+                  Tổng doanh thu mang lại
+                </TableHead>
                 <TableHead className="text-black">Số lần đặt</TableHead>
                 <TableHead className="text-black">Trạng thái</TableHead>
                 <TableHead className="text-black">Thao tác</TableHead>
@@ -89,10 +95,26 @@ export default function ServiceTable() {
             </TableHeader>
             <TableBody>
               {currentData.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item.service_id}>
                   <TableCell>{item.ten_dich_vu}</TableCell>
                   <TableCell>{item.mo_ta}</TableCell>
-                  <TableCell>{`₫${item.price.toLocaleString()}`}</TableCell>
+                  <TableCell>{item.headerTitle}</TableCell>
+                  <TableCell>
+                    {item.price != null
+                      ? Number(item.price).toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })
+                      : "0 ₫"}
+                  </TableCell>
+                  <TableCell>
+                    {item.revenue != null
+                      ? Number(item.revenue).toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })
+                      : "0 ₫"}
+                  </TableCell>
                   <TableCell>{item.booking_count}</TableCell>
                   <TableCell>
                     <Badge className="bg-green-600 text-white">Hoạt động</Badge>
@@ -112,7 +134,7 @@ export default function ServiceTable() {
                           Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDeleteService(item.id)}
+                          onClick={() => handleDeleteService(item.service_id)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Xóa
@@ -125,7 +147,6 @@ export default function ServiceTable() {
             </TableBody>
           </Table>
         </div>
-
         {/* Pagination */}
         <div className="flex justify-end mt-4 gap-2">
           <Button
