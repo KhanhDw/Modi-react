@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 const ModalServices = forwardRef((props, ref) => {
+
   const [services, setServices] = useState([]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [childrenMap, setChildrenMap] = useState({});
@@ -12,12 +15,13 @@ const ModalServices = forwardRef((props, ref) => {
   // normalize child -> trả về object chuẩn dùng cho UI
   const normalizeChild = (child) => ({
     id: child.id,
-    // child.title có thể là object {vi, en} theo mẫu
     title: (child.title && (child.title.vi || child.title.en)) || "",
-    href: "#", // nếu backend có slug/route thì map ở đây
+    href: "#",
     section_id: child.section_id,
     section_type: child.section_type,
+    description: child.description || { en: slugify(child.title?.en || ""), vi: "" }
   });
+
   const loadAllData = async () => {
     try {
       // 1) fetch danh mục cha
@@ -69,8 +73,8 @@ const ModalServices = forwardRef((props, ref) => {
           // CHÚ Ý: item mẫu có field section_id = id của section cha
           // defensive: lọc theo section_id === service.id (để đảm bảo đúng cha)
           const linked = itemsArray
-            .filter((ch) => ch.section_id === service.id || ch.section_type === service.type)
-            .map(normalizeChild);
+            .filter(ch => ch.section_id === service.id || ch.section_type === service.type)
+            .map(ch => normalizeChild(ch));
 
           return [service.id, linked];
         })
@@ -109,16 +113,21 @@ const ModalServices = forwardRef((props, ref) => {
   };
 
   const activeService = memoizedServices.find((s) => s.id === hoveredItem);
-  const activeChildren = activeService ? childrenMap[activeService.id] || [] : [];
+  const activeChildren = useMemo(() =>
+    activeService ? childrenMap[activeService.id] || [] : [],
+    [activeService, childrenMap]
+  );
+
   const hasActiveSubmenu = activeChildren.length > 0;
+
 
   return (
     <div
-      className="w-fit backdrop-blur-xl animate-in slide-in-from-top-2 duration-200 relative rounded-md"
+      className="w-fit backdrop-blur-xl animate-in slide-in-from-top-2 duration-200 relative rounded-sm"
       onMouseLeave={handleMouseLeaveContainer}
     >
       <div
-        className="rounded-md border border-gray-200/50 dark:border-gray-700/50 
+        className="rounded-sm border border-gray-200/50 dark:border-gray-700/50 
                 dark:bg-gray-800/70 dark:from-gray-800 dark:to-gray-900 
                shadow-2xl overflow-hidden transition-all duration-300"
       >
@@ -159,15 +168,18 @@ const ModalServices = forwardRef((props, ref) => {
 
                     {/* Nội dung item */}
                     <div className="flex items-center justify-between relative z-10">
-                      <a
-                        href={service.href}
+                      <Link
+                        to={{
+                          pathname: "/services",
+                          search: `?q=${service.type}`
+                        }}
                         className={`
-                      flex-1 text-md transition-all duration-100
+                      flex-1 text-sm transition-all duration-100
                       ${isActive && hasSubItems ? "font-semibold" : "font-medium group-hover:font-semibold"}
                     `}
                       >
                         {service.title}
-                      </a>
+                      </Link>
                       {hasSubItems && (
                         <ChevronDown
                           className={`
@@ -208,7 +220,7 @@ const ModalServices = forwardRef((props, ref) => {
               {hasActiveSubmenu ? (
                 <>
                   <div className="mb-4">
-                    <h3 className="text-md font-bold text-gray-200 dark:text-gray-100 mb-2">
+                    <h3 className="text-sm font-bold text-gray-200 dark:text-gray-100 mb-2">
                       {activeService?.title}
                     </h3>
                     <div className="h-0.5 w-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" />
@@ -217,19 +229,22 @@ const ModalServices = forwardRef((props, ref) => {
                   <ul className="space-y-2">
                     {activeChildren.map((sub) => (
                       <li key={sub.id} className="group">
-                        <a
-                          href={sub.href}
+                        <Link
+                          to={{
+                            pathname: "/services",
+                            search: `?q=${sub.section_type}&sub=${sub.description?.en}`
+                          }}
                           className="
                         flex items-center px-3 py-2.5 
                         text-gray-200 dark:text-gray-300 
                         hover:bg-slate-800 hover:text-white 
                         transition-all duration-300 
-                        cursor-pointer rounded-lg text-md font-medium 
+                        cursor-pointer rounded-lg text-sm font-medium 
                         hover:font-semibold hover:translate-x-1
                       "
                         >
                           {sub.title}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>

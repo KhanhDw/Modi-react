@@ -4,6 +4,7 @@ import ConfirmDialog from "@/pages/managers/ConfigPage/headerConfig/serviceHeade
 import DialogForm from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/DialogForm";
 import ChildList from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/ChildList";
 import CategoryList from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/CategoryList";
+import slugify from "@/utils/slug";
 
 export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     const [menuData, setMenuData] = useState([]);
@@ -51,6 +52,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                             children: items.data?.map(child => ({
                                 id: child.id,
                                 title: child.title,
+                                description: child.description,
                             })) || [],
                         }))
                 );
@@ -77,31 +79,18 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             // data là mảng trực tiếp
             const childrenArray = Array.isArray(data) ? data : [];
 
-            setMenuData((prev) =>
-                prev.map((cat) =>
-                    cat.id === category.id
-                        ? {
-                            ...cat,
-                            children: childrenArray.map(child => ({
-                                id: child.id,
-                                title: child.title,
-                            })),
-                        }
-                        : cat
-                )
+            const updatedChildren = childrenArray.map(child => ({
+                id: child.id,
+                title: child.title,
+                description: child.description,
+            }));
+
+            setMenuData(prev =>
+                prev.map(cat => cat.id === category.id ? { ...cat, children: updatedChildren } : cat)
             );
 
-            // Cập nhật selectedCategory để render luôn
-            setSelectedCategory((prev) =>
-                prev && prev.id === category.id
-                    ? {
-                        ...prev,
-                        children: childrenArray.map(child => ({
-                            id: child.id,
-                            title: child.title,
-                        })),
-                    }
-                    : prev
+            setSelectedCategory(prev =>
+                prev && prev.id === category.id ? { ...prev, children: updatedChildren } : prev
             );
 
         } catch (err) {
@@ -163,7 +152,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 type: selectedCategory.type,
                 slug: "header", // vì bạn đang thao tác với menu header
                 title: { en: nameEn, vi: nameVi },
-                description: { en: "", vi: "" }, // nếu không có thì để trống
+                description: { en: slugify(nameEn), vi: "" }, // nếu không có thì để trống
                 image_url: ""
             };
 
@@ -180,6 +169,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             const newChild = {
                 id: data.data.id,
                 title: data.data.title,
+                description: body.description,
             };
 
             const updatedCat = {
@@ -207,6 +197,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
             const body = {
                 title: { en: nameEn, vi: nameVi },
+                description: { en: slugify(nameEn), vi: "" },
             };
 
             const res = await fetch(`${API_BASE_URL}/api/sections/${catId}`, {
@@ -246,6 +237,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
             const body = {
                 title: { en: nameEn, vi: nameVi },
+                description: { en: slugify(nameEn), vi: "" },
             };
 
             const res = await fetch(`${API_BASE_URL}/api/section-items/${childId}`, {
@@ -260,6 +252,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             const updatedChild = {
                 id: data.data.id,
                 title: data.data.title,
+                description: body.description,
             };
 
             const updatedCat = {
@@ -281,11 +274,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         }
     };
 
-    const selectSubItemSection = (cat) => {
-        console.log("ds:::", cat);
-        setSelectedCategory(cat);
-        fetchChildren(cat);
-    }
+
 
     const deleteCategory = async (cat) => {
         try {
@@ -333,6 +322,10 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         }
     };
 
+    const selectSubItemSection = (cat) => {
+        setSelectedCategory(cat);
+        fetchChildren(cat);
+    }
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">

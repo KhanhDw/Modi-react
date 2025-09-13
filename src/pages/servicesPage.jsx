@@ -15,6 +15,12 @@ export default function ServicePage() {
 
     return (
         <div className="min-h-screen text-gray-800 dark:text-white transition-all duration-500">
+
+            <div className="flex w-full items-center justify-center">
+                adasd
+            </div>
+
+
             {/* Banner */}
             <div className="px-4 mt-4 mb-12">
                 <motion.div
