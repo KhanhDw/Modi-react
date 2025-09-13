@@ -130,9 +130,14 @@ export default function NewsInterface() {
                     {heroArticle.tieu_de}
                   </motion.h1>
 
-                  <motion.p
+                  <motion.div
                     variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                    className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed line-clamp-5"
+                    className="preview-html prose prose-sm max-w-none line-clamp-3 break-words admin-dark:text-gray-500 text-[15px]"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 3
+                    }}
                     dangerouslySetInnerHTML={{ __html: heroArticle.noi_dung }}
                   />
 
@@ -185,8 +190,12 @@ export default function NewsInterface() {
                 <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                   {article.tieu_de}
                 </h3>
-                <p
-                  className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3"
+                <div className="preview-html prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-gray-500 text-[15px]"
+                  style={{
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2
+                  }}
                   dangerouslySetInnerHTML={{ __html: article.noi_dung }}
                 />
                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
