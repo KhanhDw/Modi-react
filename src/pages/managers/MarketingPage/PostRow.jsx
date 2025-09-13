@@ -19,7 +19,7 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
             <TableCell className="w-1/20 pl-0">
                 {post.image ? (
                     <img
-                        src={post.image}
+                        src={`${import.meta.env.VITE_MAIN_BE_URL}${post.image}`}
                         alt="Ảnh bài viết"
                         className="w-12 h-12 rounded-md object-cover border border-gray-200 admin-dark:border-gray-600"
                         onError={(e) => {
