@@ -53,12 +53,12 @@ export default function NewsInterface() {
 
   if (isLoading)
     return (
-      <div className="text-center py-20 admin-dark:text-white text-gray-500 animate-pulse">
+      <div className="text-center py-20 text-gray-500 animate-pulse">
         Đang tải tin tức...
       </div>
     );
   if (!newsArticles.length)
-    return <div className="text-center py-20 admin-dark:text-white text-gray-500">Chưa có tin tức.</div>;
+    return <div className="text-center py-20 text-gray-500">Chưa có tin tức.</div>;
 
   let heroArticle = null;
   let articlesToShow = [];
@@ -163,19 +163,20 @@ export default function NewsInterface() {
               key={article.id}
               className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md cursor-pointer group"
               onClick={() => handleArticleClick(article.slug, article.id)}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: idx * 0.1, duration: 0.5, ease: "easeOut" }}
-              whileHover={{ scale: 1.02 }}
+              transition={{ delay: idx * 0.12, type: "spring", stiffness: 80 }}
+              whileHover={{ scale: 1.03 }}
             >
               {/* Image wrapper */}
               <div className="relative w-full h-48 overflow-hidden">
-                <img
+                <motion.img
                   src={`${import.meta.env.VITE_MAIN_BE_URL}${article.hinh_anh}`}
                   alt={article.tieu_de}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+                {/* Overlay khi hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
 
