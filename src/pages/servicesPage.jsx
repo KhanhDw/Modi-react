@@ -2,6 +2,8 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from "react";
 
 const bannerStyle = {
     backgroundImage: "url('/images/banner2.jpg')",
@@ -11,16 +13,70 @@ const bannerStyle = {
 
 export default function ServicePage() {
     const { t } = useLanguage();
-    const services = t("servicesPage.services");
+    const location = useLocation();
+    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
+    const [services, setServices] = useState([]);
+    const [servicesDetail, setServicesDetail] = useState([]);
+    const [servicesItemDetail, setServicesItemDetail] = useState([]);
+
+    const queryParams = new URLSearchParams(location.search);
+
+    const queryParams_q = queryParams.get("q");
+    const queryParams_i = queryParams.get("i");
+    const queryParams_sub = queryParams.get("sub");
+
+    const servicesLocales = t("servicesPage.services");
+
+    const loadAllDataSection = async () => {
+        try {
+            // 1) fetch danh mục cha
+            const res = await fetch(`${API_BASE_URL}/api/sections/type/${queryParams_q}`);
+            if (!res.ok) throw new Error("Không thể tải danh mục cha");
+            const sectionsRes = await res.json();
+
+            setServicesDetail(sectionsRes.data);
+
+            // setServices();
+        } catch (err) {
+            console.error("Lỗi loadAllDataSection:", err);
+        }
+    };
+    const loadAllDataSectionItem = async () => {
+        try {
+            // 1) fetch danh mục cha
+            const res = await fetch(`${API_BASE_URL}/api/section-items/${queryParams_i}`);
+            if (!res.ok) throw new Error("Không thể tải danh mục cha");
+            const sectionsRes = await res.json();
+
+            setServicesItemDetail(sectionsRes);
+
+            // setServices();
+        } catch (err) {
+            console.error("Lỗi loadAllDataSection:", err);
+        }
+    };
+
+
+    useEffect(() => {
+        loadAllDataSection();
+        loadAllDataSectionItem()
+    }, [queryParams_q, queryParams_sub]);
+
+
 
     return (
         <div className="min-h-screen text-gray-800 dark:text-white transition-all duration-500">
 
-            <div className="flex w-full items-center justify-center">
-                adasd
+            <div className="flex w-full items-center justify-center flex-col">
+                adasd: {queryParams_q} & {queryParams_sub}
+
+                <div>
+                    {servicesDetail.title?.vi}
+                </div>
+                <div>
+                    {servicesItemDetail.title?.vi}
+                </div>
             </div>
-
-
             {/* Banner */}
             <div className="px-4 mt-4 mb-12">
                 <motion.div
@@ -56,7 +112,7 @@ export default function ServicePage() {
 
                 {/* Danh sách dịch vụ - KHÔNG animation */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {services.map((service) => (
+                    {servicesLocales.map((service) => (
                         <div
                             key={service.slug}
                             className="relative bg-white dark:bg-[#1f1f1f] p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group hover:-translate-y-1 hover:shadow-xl transition-all duration-300"

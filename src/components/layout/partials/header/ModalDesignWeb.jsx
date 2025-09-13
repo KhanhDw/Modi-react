@@ -62,8 +62,8 @@ function ModalDesignWeb() {
       className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md"
       onMouseLeave={handleMouseLeaveContainer}
     >
-      <div className="rounded-md bg-transparent dark:bg-gray-800/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
-        <div className="min-w-[300px] lg:min-w-[400px] xl:min-w-[200px] relative">
+      <div className="rounded-md bg-gray-700/60 dark:bg-gray-800/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
+        <div className="w-50 lg:min-w-[400px] xl:min-w-[200px] relative">
           <div className="space-y-1">
             {categories.map((item, index) => {
               const isActive = hoveredItem === index;
