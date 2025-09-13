@@ -146,7 +146,7 @@
 
 // export default Header;
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { TiThMenu } from "react-icons/ti";
 import ThemeToggle from '../ThemeToggle';
@@ -169,42 +169,54 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
   const [isHoverDesignWeb, setIsHoverDesignWeb] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [logo, setLogo] = useState(null);
+  const [cachedLogo, setCachedLogo] = useState(null);
 
-  const fetchLogo = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
-        if (!res.ok) throw new Error("Không thể tải logo");
-        const data = await res.json();
+  const [servicesPreloaded, setServicesPreloaded] = useState(false);
+  const modalServicesRef = useRef(null);
 
-        if (Array.isArray(data) && data.length > 0) {
-          const item = data[0];
-          const finalLogo = item.image_url
-            ? `${API_BASE_URL}${item.image_url}`
-            : "/logoModi.png";
-
-          // Nếu logo mới khác logo cũ thì update
-          if (finalLogo !== cachedLogo) {
-            setLogo(finalLogo);
-            localStorage.setItem("header_logo", finalLogo);
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
+  const preloadServicesData = () => {
+    if (modalServicesRef.current && !servicesPreloaded) {
+      modalServicesRef.current.loadAllData(); // gọi hàm fetch trong ModalServices
+      setServicesPreloaded(true);
+    }
   };
 
-  
-  
+
+  const fetchLogo = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`);
+      if (!res.ok) throw new Error("Không thể tải logo");
+      const data = await res.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        const item = data[0];
+        const finalLogo = item.image_url
+          ? `${API_BASE_URL}${item.image_url}`
+          : "/logoModi.png";
+
+        // Nếu logo mới khác logo cũ thì update
+        if (finalLogo !== cachedLogo) {
+          setLogo(finalLogo);
+          localStorage.setItem("header_logo", finalLogo);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
+
 
   // fetch logo
   useEffect(() => {
-    const cachedLogo = localStorage.getItem("header_logo");
+    setCachedLogo(localStorage.getItem("header_logo"))
     if (cachedLogo) {
       setLogo(cachedLogo); // ✅ hiển thị tức thì logo cũ
     }
     fetchLogo();
- 
- 
+    preloadServicesData(); // gọi trước 1 lần
+
   }, []);
 
 
@@ -219,7 +231,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     { type: "link", to: "/", label: t("header.home.title") },
     { type: "link", to: "/about", label: t("header.about.title") },
     { type: "dropdown", to: "/Products", label: t("header.designweb.title"), hoverState: [isHoverDesignWeb, setIsHoverDesignWeb], component: <ModalDesignWeb /> },
-    { type: "dropdown", to: "/services", label: t("header.services.title"), hoverState: [isHoverServices, setIsHoverServices], component: <ModalServices /> },
+    { type: "dropdown", to: "/services", label: t("header.services.title"), hoverState: [isHoverServices, setIsHoverServices], component: <ModalServices ref={modalServicesRef} /> },
     { type: "link", to: "/marketing", label: t("header.marketing.title") },
     { type: "link", to: "/news", label: t("header.news.title") },
     { type: "link", to: "/contact", label: t("header.contact.title") },

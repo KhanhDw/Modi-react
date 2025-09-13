@@ -59,10 +59,10 @@ function ModalDesignWeb() {
 
   return (
     <div
-      className="w-fit animate-in slide-in-from-top-2 duration-200 relative"
+      className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md"
       onMouseLeave={handleMouseLeaveContainer}
     >
-      <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl p-4 relative">
+      <div className="rounded-md bg-transparent dark:bg-gray-800/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
         <div className="min-w-[300px] lg:min-w-[400px] xl:min-w-[200px] relative">
           <div className="space-y-1">
             {categories.map((item, index) => {
@@ -72,32 +72,31 @@ function ModalDesignWeb() {
                 <div
                   key={item.id + index}
                   className={`
-                    group cursor-pointer transition-all duration-300 ease-in-out transform
-                    px-3 py-2 rounded-lg border-l-4 relative
-                    ${isActive
-                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1 z-20'
-                      : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
-                    }
-                  `}
+                group cursor-pointer transition-all duration-200 ease-in-out transform
+                px-3 py-2 rounded-lg relative
+                ${isActive
+                      ? "text-white"
+                      : "hover:bg-slate-900 text-gray-300 dark:text-gray-200 hover:text-white"}
+              `}
                   onMouseEnter={() => handleMouseEnterItem(index)}
                 >
+                  {/* Overlay effect */}
                   <div
                     className={`
-                      absolute inset-0 rounded-lg transition-opacity duration-300
-                      ${isActive
-                        ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
-                        : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
-                      }
-                    `}
+                  absolute inset-0 rounded-lg transition-opacity duration-100
+                  ${isActive
+                        ? "bg-gray-900"
+                        : ""}
+                `}
                   ></div>
 
                   <div className="flex items-center justify-between relative z-10">
                     <Link
-                      to={`/Products?category=${encodeURIComponent(item.title)}`} // Encode trực tiếp category
+                      to={`/Products?category=${encodeURIComponent(item.title)}`}
                       className={`
-                        flex-1 text-xs lg:text-sm transition-all duration-300
-                        ${isActive ? 'font-bold' : 'font-medium group-hover:font-semibold'}
-                      `}
+                    flex-1 text-xs lg:text-sm transition-all duration-100
+                    ${isActive ? "font-semibold" : "font-medium group-hover:font-semibold"}
+                  `}
                     >
                       {item.title}
                     </Link>
@@ -109,6 +108,7 @@ function ModalDesignWeb() {
         </div>
       </div>
     </div>
+
   );
 }
 
