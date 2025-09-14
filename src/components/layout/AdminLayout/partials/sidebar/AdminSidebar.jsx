@@ -112,31 +112,32 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
       {/* Header */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 admin-dark:border-gray-700">
-        <h1
-          className={cn(
-            "font-bold text-gray-900 admin-dark:text-gray-50 transition-all duration-300 ease-in-out",
-            isCollapsed && !isMobile ? "text-2xl" : "text-xl",
-          )}
-        >
-          {isCollapsed && !isMobile ? "M" : "Modi"}
-        </h1>
-
-        {/* Collapse Button */}
-        {!isMobile && (
-          <Button
-            theme={isDark ? "admin" : "light"}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100 cursor-pointer"
-            onClick={toggleCollapse}
-            aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+      {!isMobile && (
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 admin-dark:border-gray-700">
+          <h1
+            className={cn(
+              "font-bold text-gray-900 admin-dark:text-gray-50 transition-all duration-300 ease-in-out",
+              isCollapsed && !isMobile ? "text-2xl" : "text-xl",
+            )}
           >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
-        )}
-      </div>
+            {isCollapsed && !isMobile ? "M" : "Modi"}
+          </h1>
 
+          {/* Collapse Button */}
+          {!isMobile && (
+            <Button
+              theme={isDark ? "admin" : "light"}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100 cursor-pointer"
+              onClick={toggleCollapse}
+              aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+            >
+              {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            </Button>
+          )}
+        </div>
+      )}
       {/* Menu */}
       <nav
         className={cn(
@@ -211,6 +212,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 };
 
 const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
+  const { isDark } = useAdminTheme(); // 👈 thêm dòng này
   return (
     <>
       {/* Desktop */}
@@ -228,8 +230,16 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
 
       {/* Mobile */}
       <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent side="left" className="w-64 p-0 transition-transform duration-300 ease-in-out">
-          <SheetHeader className="h-16 flex items-center justify-between flex-row px-4 border-b border-gray-200 admin-dark:border-gray-800">
+        <SheetContent
+          side="left"
+          className={cn(
+            "w-64 p-0 overflow-hidden shadow-lg border-r transition-transform duration-300 ease-in-out",
+            isDark
+              ? "bg-gray-800 border-gray-700 text-gray-50"
+              : "bg-white border-gray-200 text-gray-900"
+          )}
+        >
+          <SheetHeader className="h-16 admin-dark:bg-gray-800 flex items-center justify-between flex-row px-4 border-b border-gray-200 admin-dark:border-gray-800">
             <SheetTitle className="text-xl font-bold text-gray-900 admin-dark:text-gray-50">Modi</SheetTitle>
             <SheetDescription className="sr-only">
               Menu điều hướng admin

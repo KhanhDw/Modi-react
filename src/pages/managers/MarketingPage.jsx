@@ -123,10 +123,8 @@ export default function MarketingPage() {
         return;
       }
 
-      const newPost = await res.json();
-      console.log("Thêm dữ liệu mới thành công:", newPost);
-
-      setPosts([...posts, newPost]);
+      // const newPost = await res.json();
+      // setPosts([...posts, newPost]);
 
       // Reset form
       setFormData({
