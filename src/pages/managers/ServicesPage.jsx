@@ -434,8 +434,8 @@ export default function ServicesPage() {
               to="service_overview"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -446,8 +446,8 @@ export default function ServicesPage() {
               to="service_list"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -458,8 +458,8 @@ export default function ServicesPage() {
               to="service_booking"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -470,8 +470,8 @@ export default function ServicesPage() {
               to="service_customer"
               className={({ isActive }) =>
                 `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted text-white"
-                  : "bg-gray-200 hover:bg-muted/80 hover:text-white"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
