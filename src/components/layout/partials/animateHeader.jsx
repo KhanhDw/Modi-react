@@ -10,9 +10,6 @@ function AnimationHeader({ ActiveSideBarHeader }) {
     const [animatedBackgroundColor, setAnimatedBackgroundColor] = useState("rgba(0,0,0,0)");
 
     useEffect(() => {
-
-        console.log("AnimationHeader mounted: ", location.pathname);
-
         const onScroll = () => {
             setScrolled(window.scrollY > 50);
         };

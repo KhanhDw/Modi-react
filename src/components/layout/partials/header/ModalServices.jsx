@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, us
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 const ModalServices = forwardRef((props, ref) => {
 
   const [services, setServices] = useState([]);
@@ -127,20 +126,20 @@ const ModalServices = forwardRef((props, ref) => {
       onMouseLeave={handleMouseLeaveContainer}
     >
       <div
-        className="rounded-sm border border-gray-200/50 dark:border-gray-700/50 
+        className="rounded-sm bg-gray-700/60 border border-gray-200/50 dark:border-gray-700/50 
                 dark:bg-gray-800/70 dark:from-gray-800 dark:to-gray-900 
                shadow-2xl overflow-hidden transition-all duration-300"
       >
-        <div className="flex">
+        <div className="flex bg-gray-700/60">
           {/* Cột 1: Menu cấp 1 */}
           <div
             className={`
-          flex-shrink-0 w-80 transition-all duration-300
+          flex-shrink-0 w-60 transition-all duration-300 bg-gray-700/60
           ${memoizedServices.length > 9 ? "h-120 overflow-y-auto scrollbar-hide" : "h-fit"}
         `}
             onWheel={(e) => e.stopPropagation()}
           >
-            <div className="space-y-1">
+            <div className="space-y-1 bg-gray-700/60">
               {memoizedServices.map((service) => {
                 const isActive = hoveredItem === service.id;
                 const hasSubItems =
@@ -232,7 +231,7 @@ const ModalServices = forwardRef((props, ref) => {
                         <Link
                           to={{
                             pathname: "/services",
-                            search: `?q=${sub.section_type}&sub=${sub.description?.en}`
+                            search: `?q=${sub.section_type}&i=${sub.id}&sub=${sub.description?.en}`
                           }}
                           className="
                         flex items-center px-3 py-2.5 
