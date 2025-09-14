@@ -113,3 +113,13 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; /* bg-gray-700 */
     -webkit-text-fill-color: #f3f4f6 !important; /* text-gray-100 */
 }
+
+.preview-html p,
+.preview-html div {
+    display: inline; /* ép p/div thành inline text */
+    margin: 0;
+}
+
+.preview-html img {
+    display: none; /* ẩn ảnh trong đoạn preview */
+}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import ServiceDropdownHeaderMenu from "@/pages/managers/ConfigPage/headerConfig/ServiceDropdownHeaderMenu.jsx";
+
 
 // --- Custom File Input ---
 function FileInput({ label, onChange }) {
@@ -23,12 +25,14 @@ function FileInput({ label, onChange }) {
     );
 }
 
+
 export default function HeaderConfigLogo() {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState("/logoModi.png");
     const [logoItem, setLogoItem] = useState(null); // lưu section_item hiện tại
     const [toast, setToast] = useState(null);
+    const lang = "vi";
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
     // 🔹 Chuẩn hóa image_url (tránh lưu cả domain)
@@ -75,6 +79,7 @@ export default function HeaderConfigLogo() {
             setLogo(cachedLogo);
         }
         fetchLogo();
+
     }, []);
 
     // 🔹 Chọn file mới
@@ -168,19 +173,36 @@ export default function HeaderConfigLogo() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
             >
-                <FileInput label="Upload New Logo" onChange={handleLogoChange} />
+                <div className="space-y-4 flex items-center justify-between gap-3">
+                    <div className="w-full">
 
-                <motion.button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl shadow-lg
-                     transition-all flex justify-center items-center gap-2 cursor-pointer"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                >
-                    {loading ? "Đang lưu..." : "Save Logo"}
-                </motion.button>
+                        <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
+                    </div>
+                    <div className="flex items-end gap-2">
+                        <motion.button
+                            onClick={handleSave}
+                            disabled={loading}
+                            className="py-3 px-4  bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg
+                         transition-all flex justify-center items-center gap-2 cursor-pointer"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                        >
+                            {loading ? "Đang lưu..." : "Lưu Logo"}
+                        </motion.button>
+                    </div>
+                </div>
+
+                <div className="w-full flex flex-col space-y-3">
+                    <label className="font-semibold text-gray-700 admin-dark:text-gray-300"> Cấu hình danh sách dịch vụ</label>
+                    <ServiceDropdownHeaderMenu
+                        lang={lang}
+                    />
+                </div>
+
+
             </motion.div>
+
+
 
             {toast && (
                 <NotificationToast

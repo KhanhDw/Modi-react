@@ -1,0 +1,84 @@
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Folder, Plus, Pencil } from "lucide-react";
+import { cn } from "@/lib/utils";
+import EmptyState from "./EmptyState";
+import useLenisLocal from "@/hook/useLenisLocal";
+
+export default function CategoryList({
+    categories,
+    selectedCategory,
+    lang,
+    onSelect,
+    onAdd,
+    onDelete,
+    onEdit,
+}) {
+    useLenisLocal(".lenis-local");
+
+    return (
+        <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700">
+            <CardHeader className="pb-4 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                    <Folder className="h-5 w-5 text-gray-700 admin-dark:text-gray-300" />
+                    <CardTitle className="text-gray-800 admin-dark:text-gray-100 font-semibold">
+                        Danh mục cha
+                    </CardTitle>
+                </div>
+                <Button
+                    size="sm"
+                    className="bg-primary text-black/80 admin-dark:text-white hover:bg-primary/90 transition-colors"
+                    onClick={onAdd}
+                >
+                    <Plus className="h-4 w-4 mr-1" /> Thêm
+                </Button>
+            </CardHeader>
+
+            <CardContent
+                data-lenis-prevent
+                className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-1"
+            >
+                {categories?.length > 0 ? (
+                    categories.map((cat) => (
+                        <div
+                            key={cat.id}
+                            className={cn(
+                                "p-3 rounded-lg text-gray-900 admin-dark:text-white font-semibold border flex items-center justify-between cursor-pointer transition-colors",
+                                selectedCategory?.id === cat.id
+                                    ? "bg-primary border-primary"
+                                    : "bg-gray-50 hover:bg-gray-100 border-gray-200 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:border-gray-600"
+                            )}
+                            onClick={() => onSelect(cat)}
+                        >
+                            <span className="truncate">{cat.name?.[lang] || cat.name}</span>
+                            <div className="flex gap-2">
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(cat); // 👈 gọi hàm edit
+                                    }}
+                                >
+                                    <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDelete(cat);
+                                    }}
+                                >
+                                    Xóa
+                                </Button>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <EmptyState text="Chưa có danh mục cha" />
+                )}
+            </CardContent>
+        </Card>
+    );
+}

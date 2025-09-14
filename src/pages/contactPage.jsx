@@ -149,7 +149,7 @@ export default function ContactPage() {
                   value={formData.ho_ten}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition"
+                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
                 <input
                   type="tel"
@@ -158,7 +158,7 @@ export default function ContactPage() {
                   value={formData.so_dien_thoai}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition"
+                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition"
+                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
               </div>
 
@@ -182,7 +182,7 @@ export default function ContactPage() {
                   value={formData.securityCode}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition"
+                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
                 <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-2 rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
                   <div className="w-full h-12 rounded-lg">
@@ -198,12 +198,12 @@ export default function ContactPage() {
                 onChange={handleInputChange}
                 required
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg resize-none focus:ring-2 focus:ring-red-500 outline-none transition"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg resize-none focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
               />
 
               <button
                 type="submit"
-                className="w-full h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-semibold text-lg rounded-lg transition-transform transform hover:scale-105"
+                className="w-full h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-semibold text-lg rounded-lg transition-transform transform hover:scale-105 cursor-pointer"
               >
                 {t("contactPage.btnSendContact")}
               </button>

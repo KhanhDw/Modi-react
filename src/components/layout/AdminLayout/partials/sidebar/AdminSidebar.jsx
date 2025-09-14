@@ -268,7 +268,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
         className={cn(
           "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-2 lg:top-2 lg:bottom-2",
           "lg:rounded-2xl lg:border lg:border-gray-200 admin-dark:lg:border-gray-700",
-          "overflow-hidden bg-white admin-dark:bg-gray-800 shadow-lg z-50",
+          "overflow-hidden bg-white admin-dark:bg-gray-800 shadow-lg z-10",
           "transition-all duration-300 ease-in-out transform",
           isCollapsed ? "lg:w-16" : "lg:w-64"
         )}

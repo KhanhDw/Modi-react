@@ -67,18 +67,29 @@ export default function ServiceBookingTable() {
   );
 
   return (
-    <Card className="bg-gray-100">
+    <Card
+      className="bg-gray-100 rounded-xl border border-gray-300 shadow-sm 
+        admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Danh sách đơn đặt dịch vụ</CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardTitle className="text-gray-900 admin-dark:text-gray-100">
+              Danh sách đơn đặt dịch vụ
+            </CardTitle>
+            <CardDescription className="text-gray-600 admin-dark:text-gray-400">
               Quản lý tất cả đơn đặt dịch vụ
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            <div className="relative bg-white rounded-md shadow-sm text-black">
-              <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground" />
+            <div
+              className="relative bg-white rounded-md shadow-sm text-black 
+                admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:shadow-gray-900/50"
+            >
+              <Search
+                className="absolute left-3 top-[10px] h-4 w-4 text-gray-500 
+                  admin-dark:text-gray-400"
+              />
               <Input
                 value={search}
                 onChange={(e) => {
@@ -86,15 +97,25 @@ export default function ServiceBookingTable() {
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm kiếm đơn đặt..."
-                className="pl-10 w-64"
+                className="pl-10 w-64 bg-transparent border-gray-300 
+                  admin-dark:border-gray-600 admin-dark:text-gray-200 
+                  admin-dark:placeholder-gray-400"
               />
             </div>
             <Select value={statusFilter} onValueChange={changeStatus}>
-              <SelectTrigger className="w-40 bg-white text-black border border-gray-300 rounded">
-                <Filter className="h-4 w-4 mr-2 text-black" />
+              <SelectTrigger
+                className="w-40 bg-white text-black border border-gray-300 rounded 
+                  admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+              >
+                <Filter
+                  className="h-4 w-4 mr-2 text-black admin-dark:text-gray-200"
+                />
                 <SelectValue placeholder="Trạng thái" />
               </SelectTrigger>
-              <SelectContent className="bg-white text-black">
+              <SelectContent
+                className="bg-white text-black border-gray-300 
+                  admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+              >
                 <SelectItem value="all">Tất cả</SelectItem>
                 <SelectItem value="completed">Hoàn thành</SelectItem>
                 <SelectItem value="pending">Chưa hoàn thành</SelectItem>
@@ -104,57 +125,98 @@ export default function ServiceBookingTable() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="text-black">
-        <div className="rounded-md border border-gray-300 bg-white shadow-sm">
+      <CardContent className="text-black admin-dark:text-gray-200">
+        <div
+          className="rounded-md border border-gray-300 bg-white shadow-sm 
+            admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
+        >
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="text-black">Tên khách hàng</TableHead>
-                <TableHead className="text-black">Tên dịch vụ</TableHead>
-                <TableHead className="text-black">Trạng thái</TableHead>
-                <TableHead className="text-black">Giá</TableHead>
-                <TableHead className="text-black">Ngày đặt</TableHead>
-                <TableHead className="text-black">Ngày hoàn thành</TableHead>
-                <TableHead className="text-black">Thao tác</TableHead>
+              <TableRow
+                className="bg-gray-50 admin-dark:bg-gray-900 
+                  hover:bg-gray-100 admin-dark:hover:bg-gray-800"
+              >
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Tên khách hàng
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Tên dịch vụ
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Trạng thái
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Giá
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Ngày đặt
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Ngày hoàn thành
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Thao tác
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentData.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.ten_dich_vu}</TableCell>
+                <TableRow
+                  key={item.id}
+                  className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
+                >
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {item.name}
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {item.ten_dich_vu}
+                  </TableCell>
                   <TableCell>
                     {item.status === "completed" ? (
-                      <Badge className="bg-green-500">Hoàn thành</Badge>
+                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">
+                        Hoàn thành
+                      </Badge>
                     ) : item.status !== "cancelled" ? (
-                      <Badge className="bg-red-900 text-white">
+                      <Badge className="bg-red-900 text-white admin-dark:bg-red-800">
                         Chưa hoàn thành
                       </Badge>
                     ) : (
-                      <Badge className="bg-red-500">Đơn bị hủy</Badge>
+                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">
+                        Đơn bị hủy
+                      </Badge>
                     )}
                   </TableCell>
-                  <TableCell>{`₫${item.price.toLocaleString()}`}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {`₫${item.price.toLocaleString()}`}
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {new Date(item.booking_date).toLocaleDateString("vi-VN")}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {item.completed_date
-                      ? new Date(item.completed_date).toLocaleDateString(
-                          "vi-VN"
-                        )
+                      ? new Date(item.completed_date).toLocaleDateString("vi-VN")
                       : "Không có"}
                   </TableCell>
                   <TableCell className="flex items-center space-x-2">
                     <DropdownMenu modal={false}>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-gray-600 hover:bg-gray-200 
+                            admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                        >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent
+                        align="end"
+                        className="bg-white text-black border-gray-300 
+                          admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                      >
                         <DropdownMenuItem
                           onClick={() => openEditBookingForm(item)}
+                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
                         >
                           <Edit className="mr-2 h-4 w-4" />
                           Chỉnh sửa
@@ -162,6 +224,7 @@ export default function ServiceBookingTable() {
                         <DropdownMenuItem
                           key={item.id}
                           onClick={() => handleDeleteBooking(item.id)}
+                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Xóa
@@ -181,7 +244,9 @@ export default function ServiceBookingTable() {
             variant="outline"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="text-white disabled:opacity-50 border-gray-300"
+            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
+              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
+              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
           >
             Trước
           </Button>
@@ -192,8 +257,8 @@ export default function ServiceBookingTable() {
               onClick={() => setCurrentPage(i + 1)}
               className={`px-3 ${
                 currentPage === i + 1
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
               }`}
             >
               {i + 1}
@@ -203,7 +268,9 @@ export default function ServiceBookingTable() {
             variant="outline"
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="text-white disabled:opacity-50 border-gray-300"
+            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
+              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
+              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
           >
             Sau
           </Button>

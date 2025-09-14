@@ -33,7 +33,7 @@ export default function ListPage() {
 
     return (
         <>
-            <h1 className="mb-8 text-2xl font-bold text-gray-900 admin-dark:text-white">
+            <h1 className="mb-2 text-2xl font-bold text-gray-900 admin-dark:text-white">
                 Quản lý bài viết Marketing
             </h1>
             <div className="flex justify-between items-center">

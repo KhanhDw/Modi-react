@@ -88,7 +88,7 @@ export default function BlogsNewPage() {
 
     return (
         <div className="p-2">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-4">
                 <PageHeader
                     isHiddenFilter={id ? true : true} // id có hay không, miến trong form là không được hiển thị
                     title={id ? "Sửa tin tức" : "Thêm tin tức"}
@@ -98,7 +98,7 @@ export default function BlogsNewPage() {
                 />
             </div>
 
-            <div className=" bg-white admin-dark:bg-slate-900 rounded-lg shadow-md ">
+            <div className="bg-white admin-dark:bg-slate-900">
                 <BlogForm
                     blog={editingBlog}
                     handleChangeLang={handleChangeLang}

@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 
 export default function FilterCard({ searchTerm, setSearchTerm, selectedStatus, setSelectedStatus }) {
     return (
-        <div className=" bg-transparent admin-dark:bg-slate-900  px-2 py-8  w-1/2">
+        <div className="bg-transparent admin-dark:bg-slate-900 py-4 w-1/2">
             <div className={"p-0 shadow-none rounded-none border-none"}>
                 <div className="flex flex-col md:flex-row gap-4">
                     {/* <div className="flex items-center"><span className="font-bold">Bộ lọc tìm kiếm</span></div> */}

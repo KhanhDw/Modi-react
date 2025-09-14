@@ -122,7 +122,7 @@ export default function EditPage() {
 
 
     if (loading) {
-        return <p className="text-center py-6">Đang tải dữ liệu...</p>;
+        return <p className="text-center py-6 admin-dark:text-white">Đang tải dữ liệu...</p>;
     }
 
     if (error) {
@@ -130,7 +130,7 @@ export default function EditPage() {
             <div className="text-center py-6 text-red-500">
                 {error}
                 <div>
-                    <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">
+                    <Button variant="outline" onClick={() => navigate(-1)} className="mt-4 cursor-pointer">
                         Quay lại
                     </Button>
                 </div>
@@ -155,76 +155,85 @@ export default function EditPage() {
     };
 
     return (
-        <div className="w-full admin-dark:bg-gray-900 rounded-xl">
+        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-6">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-gray-900 admin-dark:text-white">
                     Chỉnh sửa bài viết
                 </h2>
 
-                <div className="flex justify-center items-center space-x-4">
-                    <button type="button" name="vi"
+                {/* Ngôn ngữ */}
+                <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2 sm:gap-4">
+                    <button
+                        type="button"
+                        name="vi"
                         onClick={() => handleActiveLangbtn("vi")}
-                        className={`${activeLang === "vi" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
-                        <span className="font-semibold text-xl">Tiếng Việt</span>
+                        className={`${activeLang === "vi"
+                            ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
+                            : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
+                            } cursor-pointer flex px-2 py-1 rounded-md`}
+                    >
+                        <span className="font-semibold text-sm sm:text-base lg:text-lg">Tiếng Việt</span>
                     </button>
-                    <button type="button" name="en"
+                    <button
+                        type="button"
+                        name="en"
                         onClick={() => handleActiveLangbtn("en")}
-                        className={`${activeLang === "en" ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200" : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"}  flex  px-2 py-1 rounded-md `}>
-                        <span className="font-semibold text-xl">Tiếng Anh</span>
+                        className={`${activeLang === "en"
+                            ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
+                            : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
+                            } cursor-pointer flex px-2 py-1 rounded-md`}
+                    >
+                        <span className="font-semibold text-sm sm:text-base lg:text-lg">Tiếng Anh</span>
                     </button>
                 </div>
 
-                <div className="flex justify-end gap-4 mt-8">
+                {/* Nút hành động */}
+                <div className="flex justify-end gap-3 sm:gap-4 mt-2 sm:mt-0">
                     <Button
                         variant="outline"
                         onClick={() => navigate(-1)}
-                        className="border-gray-300  admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-black hover:bg-gray-100 admin-dark:hover:bg-gray-700 text-base px-6 py-2 rounded-md"
+                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md cursor-pointer"
                     >
                         Hủy
                     </Button>
                     <Button
                         onClick={onSubmit}
-                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-base px-6 py-2 rounded-md"
+                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md cursor-pointer"
                     >
                         Cập nhật
                     </Button>
                 </div>
             </div>
 
-            {/* Form */}
-            <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-6">
+            {/* Form Responsive */}
+            <div className="flex flex-col lg:flex-row gap-6">
                 {/* Cột trái */}
-                {!isOpenEditNetwork ?
-                    <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-300 admin-dark:border-slate-600 rounded-2xl overflow-hidden">
-                        {/* Tiêu đề & tác giả */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-900 rounded-lg ">
-                            <div className="grid grid-cols-1 gap-2 py-2 ">
-                                <div className="space-y-3">
-                                    <Label>Tiêu đề</Label>
-                                    <Input
-                                        value={formData.title || ""}
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        placeholder="Nhập tiêu đề bài viết"
-                                        className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-
-                                    />
-                                </div>
-                                <div hidden>
-                                    <Label>Tác giả</Label>
-                                    <Input
-                                        value={formData.author || ""}
-                                        onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                        placeholder="Nhập tên tác giả"
-                                        className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-                                    />
-                                </div>
+                <div className="lg:w-1/3">
+                    {!isOpenEditNetwork ? (
+                        <div className="flex flex-col gap-4 p-3 border-2 border-slate-300 admin-dark:border-slate-600 rounded-2xl bg-gray-50 admin-dark:bg-gray-900">
+                            {/* Tiêu đề & tác giả */}
+                            <div className="space-y-3">
+                                <Label>Tiêu đề</Label>
+                                <Input
+                                    value={formData.title || ""}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    placeholder="Nhập tiêu đề bài viết"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
+                                />
                             </div>
-                        </div>
+                            <div hidden>
+                                <Label>Tác giả</Label>
+                                <Input
+                                    value={formData.author || ""}
+                                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                                    placeholder="Nhập tên tác giả"
+                                    className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                />
+                            </div>
 
-                        {/* Mạng xã hội + Trạng thái + Tags */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-900 py-4 rounded-lg ">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            {/* Mạng xã hội + Trạng thái */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-3">
                                     <Label>Mạng xã hội</Label>
                                     <Select
@@ -232,9 +241,9 @@ export default function EditPage() {
                                         onValueChange={(value) =>
                                             setFormData({ ...formData, platform_id: Number(value) })
                                         }
-                                        className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
+                                        className="w-full border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                     >
-                                        <SelectTrigger className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}>
+                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
                                             <SelectValue placeholder="Chọn mạng xã hội" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -243,28 +252,26 @@ export default function EditPage() {
                                                     {network.name}
                                                 </SelectItem>
                                             ))}
-                                            <Separator />
-
+                                            <Separator className="mt-2" />
                                             <Button
                                                 onClick={handleOpenEditNetwork}
-
-                                                theme="admin" className="w-full  mt-4  ">
+                                                theme="admin"
+                                                className="w-full mt-2 cursor-pointer"
+                                            >
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
                                     </Select>
-
-
-
                                 </div>
+
                                 <div className="space-y-3">
                                     <Label>Trạng thái</Label>
                                     <Select
                                         value={formData.status || ""}
                                         onValueChange={(value) => setFormData({ ...formData, status: value })}
-                                        className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
+                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                     >
-                                        <SelectTrigger className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}>
+                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -275,74 +282,67 @@ export default function EditPage() {
                                     </Select>
                                 </div>
                             </div>
+
+                            {/* Tags */}
                             <div className="space-y-3">
                                 <Label>Tags</Label>
                                 <Input
                                     value={formData.tags || ""}
                                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                     placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                    className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none focus:border-none"
                                 />
                             </div>
-                        </div>
 
-                        {/* Hình ảnh */}
-                        <div className="bg-gray-50 admin-dark:bg-gray-900 pb-6 rounded-lg  space-y-3">
-                            <Label>URL Hình ảnh</Label>
-                            <div className="flex gap-2">
-                                <Input
-                                    value={formData.image || ""}
-                                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                    placeholder="Nhập URL hình ảnh"
-                                    className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-                                />
-                                <Button type="button" onClick={() => setPreview(formData.image)}
-                                    className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}>
-                                    Xem ảnh
-                                </Button>
-                            </div>
-                            <div className="text-sm text-gray-500 mt-3 border-2 border-slate-400 admin-dark:border-slate-600 p-2 rounded-xl space-y-3">
-                                {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
-                                {preview && (
-                                    <img
-                                        src={preview}
-                                        alt="Preview"
-                                        className="object-cover rounded mt-2 max-h-60 mx-auto"
-                                        onError={() => setPreview("")}
+                            {/* Hình ảnh */}
+                            <div className="space-y-3">
+                                <Label>URL Hình ảnh</Label>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <Input
+                                        value={formData.image || ""}
+                                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                        placeholder="Nhập URL hình ảnh"
+                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none flex-1 focus:border-none"
                                     />
-                                )}
+                                    <Button
+                                        type="button"
+                                        onClick={() => setPreview(formData.image)}
+                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer"
+                                    >
+                                        Xem ảnh
+                                    </Button>
+                                </div>
+                                <div className="text-sm text-gray-500 mt-3 border-2 border-slate-300 admin-dark:border-slate-600 p-2 rounded-xl space-y-3">
+                                    {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
+                                    {preview && (
+                                        <img
+                                            src={preview}
+                                            alt="Preview"
+                                            className="object-cover w-full rounded max-h-60 mx-auto"
+                                            onError={() => setPreview("")}
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    :
-                    <SocialNetworkManager
-                        socialNetworks={socialNetworks}
-                        setSocialNetworks={setSocialNetworks}
-                        fetchSocialNetworks={fetchSocialNetworks}
-                        reloadPostsAndSocialNetWorks={reloadPostsAndSocialNetWorks}
-                        onClose={() => setIsOpenEditNetwork(false)}
-                    />
-                }
+                    ) : (
+                        <SocialNetworkManager
+                            socialNetworks={socialNetworks}
+                            setSocialNetworks={setSocialNetworks}
+                            fetchSocialNetworks={fetchSocialNetworks}
+                            reloadPostsAndSocialNetWorks={reloadPostsAndSocialNetWorks}
+                            onClose={() => setIsOpenEditNetwork(false)}
+                        />
+                    )}
+                </div>
+
                 {/* Cột phải */}
-                <div className="space-y-3 box-border col-span-2 p-4 border-2 border-slate-300 admin-dark:border-slate-600 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
+                <div className="lg:w-2/3 flex flex-col gap-3 p-4 border-2 border-slate-300 admin-dark:border-slate-600 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
                     <Label>Nội dung bài viết</Label>
-                    {/* <Textarea
-                        value={formData.content || ""}
-                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                        placeholder="Nhập nội dung bài viết"
-                        rows={6}
-                        className={"border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"}
-                    /> */}
-
-                    {/* <TextEditor
-                        valueContextNews={formData.content}
-                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    /> */}
-
                     <TextEditorWrapper ref={editorRef} value={formData.content} />
                 </div>
             </div>
         </div>
     );
+
 }

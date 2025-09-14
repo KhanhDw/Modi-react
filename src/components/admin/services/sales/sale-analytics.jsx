@@ -3,9 +3,9 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { useOutletContext } from "react-router-dom";
 import {
@@ -40,19 +40,20 @@ export default function SaleAnalytics() {
 
   return (
     <>
-      <Card className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]">
+      <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md shadow-gray-300/50 admin-dark:shadow-gray-700/50 border border-[#e5e7eb] admin-dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="admin-dark:text-primary">Doanh thu</CardTitle>
-          <CardDescription className="text-[#5ea25e]">
+          <CardTitle className="text-gray-900 admin-dark:text-white">Doanh thu</CardTitle>
+          <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
             Biểu đồ hiển thị doanh thu tổng hợp theo tháng từ tất cả dịch vụ,
           </CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={months}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" admin-dark:stroke="#374151" />
+              <XAxis dataKey="month" stroke="#374151" admin-dark:stroke="#9ca3af" />
               <YAxis
+                stroke="#374151" admin-dark:stroke="#9ca3af"
                 tickFormatter={(value) => {
                   if (value >= 1000000) return value / 1000000 + "M"; // 1,200,000 → 1.2M
                   if (value >= 1000) return value / 1000 + "k"; // 12,000 → 12k
@@ -66,11 +67,22 @@ export default function SaleAnalytics() {
                     currency: "VND",
                   })
                 }
+                contentStyle={{
+                  backgroundColor: "#ffffff",
+                  borderColor: "#e5e7eb",
+                  color: "#374151",
+                }}
+                admin-dark:contentStyle={{
+                  backgroundColor: "#1f2937",
+                  borderColor: "#374151",
+                  color: "#d1d5db",
+                }}
               />
               <Line
                 type="monotone"
                 dataKey="revenue"
                 stroke="#22c55e"
+                admin-dark:stroke="#4ade80"
                 strokeWidth={2}
               />
             </LineChart>
