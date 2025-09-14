@@ -58,13 +58,10 @@ export const useServiceForm = (
     }
 
     // 🔹 Giá
-    if (
-      formData.price === null ||
-      formData.price === undefined ||
-      formData.price === "" ||
-      isNaN(Number(formData.price)) ||
-      Number(formData.price) < 0
-    ) {
+    const priceRaw = formData.price
+      ? formData.price.replace(/[^0-9]/g, "")
+      : "";
+    if (priceRaw === "" || isNaN(Number(priceRaw)) || Number(priceRaw) < 0) {
       newErrors.price = "Giá phải là số và không âm";
     }
 
