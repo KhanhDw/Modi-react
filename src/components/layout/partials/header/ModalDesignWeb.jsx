@@ -59,11 +59,11 @@ function ModalDesignWeb() {
 
   return (
     <div
-      className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md"
+      className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md bg-gray-700/60"
       onMouseLeave={handleMouseLeaveContainer}
     >
-      <div className="rounded-md bg-gray-700/60 dark:bg-gray-800/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
-        <div className="w-50 lg:min-w-[400px] xl:min-w-[200px] relative">
+      <div className="rounded-md overflow-hidden bg-gray-700/60 dark:bg-gray-800/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
+        <div className="w-50 lg:min-w-[400px] xl:min-w-[200px] relative bg-gray-700/60 dark:bg-gray-800/70">
           <div className="space-y-1">
             {categories.map((item, index) => {
               const isActive = hoveredItem === index;
@@ -73,7 +73,7 @@ function ModalDesignWeb() {
                   key={item.id + index}
                   className={`
                 group cursor-pointer transition-all duration-200 ease-in-out transform
-                px-3 py-2 rounded-lg relative
+                px-3 py-2 rounded-lg relative 
                 ${isActive
                       ? "text-white"
                       : "hover:bg-slate-900 text-gray-300 dark:text-gray-200 hover:text-white"}

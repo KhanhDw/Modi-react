@@ -121,9 +121,9 @@ export default function ServiceTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((item) => (
+              {currentData.map((item, index) => (
                 <TableRow
-                  key={item.id}
+                  key={`service-table-admin${index}`}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
@@ -198,11 +198,10 @@ export default function ServiceTable() {
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}
-              className={`px-3 ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-              }`}
+              className={`px-3 ${currentPage === i + 1
+                ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
+                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
+                }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}
