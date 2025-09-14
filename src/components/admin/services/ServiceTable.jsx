@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
+import ServiceForm from "./service-form";
+import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormService";
 
 export default function ServiceTable() {
   const { initDataService, openEditServiceForm, handleDeleteService } =
@@ -180,7 +182,6 @@ export default function ServiceTable() {
             </TableBody>
           </Table>
         </div>
-
         {/* Pagination */}
         <div className="flex justify-end mt-4 gap-2">
           <Button

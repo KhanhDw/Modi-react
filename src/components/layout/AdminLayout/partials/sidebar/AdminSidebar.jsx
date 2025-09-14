@@ -1,9 +1,28 @@
 import {
-  LayoutDashboard, Handshake, Newspaper, Users, ShieldMinus, Mail, Puzzle, Moon, SunMedium,
-  X, ChevronLeft, ChevronRight, Palette, Megaphone, Columns3Cog
+  LayoutDashboard,
+  Handshake,
+  Newspaper,
+  Users,
+  ShieldMinus,
+  Mail,
+  Puzzle,
+  Moon,
+  SunMedium,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Palette,
+  Megaphone,
+  Columns3Cog,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import React, { useEffect, useState } from "react";
@@ -20,13 +39,26 @@ const menuItems = [
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
   { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone },
-  { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette },
-  { name: "Cấu hình trang web", path: "/managers/page-config", icon: Columns3Cog },
+  {
+    name: "Thiết kế Website",
+    path: "/managers/website-templates",
+    icon: Palette,
+  },
+  {
+    name: "Cấu hình trang web",
+    path: "/managers/page-config",
+    icon: Columns3Cog,
+  },
   { name: "Khu vực quản trị", path: "/managers/admin-zone", icon: ShieldMinus },
   { name: "Component", path: "/managers/components", icon: Puzzle },
 ];
 
-const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false }) => {
+const SidebarContent = ({
+  isCollapsed,
+  toggleCollapse,
+  onClose,
+  isMobile = false,
+}) => {
   const { pathname } = useLocation();
   const { isDark, toggleTheme } = useAdminTheme();
   const navigate = useNavigate();
@@ -35,7 +67,8 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   const [user, setUser] = useState(null);
 
   // Check active path
-  const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
+  const isActive = (path) =>
+    pathname === path || pathname.startsWith(path + "/");
 
   // Fetch user
   const fetchUser = async () => {
@@ -71,7 +104,10 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
     }
 
     // user thường: ẩn admin-zone + component
-    if (item.path === "/managers/admin-zone" || item.path === "/managers/components") {
+    if (
+      item.path === "/managers/admin-zone" ||
+      item.path === "/managers/components"
+    ) {
       return false;
     }
     return true;
@@ -87,7 +123,9 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   // Fetch lượt truy cập
   const fetchData = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`);
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`
+      );
       const data = await res.json();
       setTodayVisits(data.total);
     } catch (err) {
@@ -142,7 +180,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
       <nav
         className={cn(
           "flex-1 py-4 space-y-1 overflow-y-auto transition-all duration-300 ease-in-out",
-          isCollapsed && !isMobile ? "px-2" : "px-3",
+          isCollapsed && !isMobile ? "px-2" : "px-3"
         )}
       >
         {filteredMenuItems.map((item) => (
@@ -155,7 +193,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
               isCollapsed && !isMobile ? "justify-center" : "px-3",
               isActive(item.path)
                 ? "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
-                : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99] admin-dark:text-gray-300 admin-dark:hover:bg-gray-700",
+                : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99] admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
             )}
             title={isCollapsed && !isMobile ? item.name : undefined}
             aria-label={item.name}
@@ -163,14 +201,16 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
             <item.icon
               className={cn(
                 "h-5 w-5 transition-all duration-200 ease-in-out group-hover:scale-110",
-                isCollapsed && !isMobile ? "" : "mr-3",
+                isCollapsed && !isMobile ? "" : "mr-3"
               )}
             />
             <span
               className={cn(
                 "transition-opacity duration-300 ease-in-out",
-                isCollapsed && !isMobile ? "opacity-0 w-0 overflow-hidden" : "opacity-100",
-                !isMobile && "whitespace-nowrap",
+                isCollapsed && !isMobile
+                  ? "opacity-0 w-0 overflow-hidden"
+                  : "opacity-100",
+                !isMobile && "whitespace-nowrap"
               )}
             >
               {item.name}
@@ -181,13 +221,18 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 
       {/* Today visits */}
       <div className="px-2 flex items-center justify-between transition-all duration-300 ">
-        {isCollapsed && !isMobile ? "" :
-          (<span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300 mb-2">
+        {isCollapsed && !isMobile ? (
+          ""
+        ) : (
+          <span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300 mb-2">
             Lượt truy cập hôm nay:
-          </span>)
-        }
+          </span>
+        )}
 
-        <span className={`${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50 mb-2`}>
+        <span
+          className={`${isCollapsed && !isMobile ? "w-full" : ""
+            } font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50 mb-2`}
+        >
           {todayVisits.toLocaleString("vi-VN")}
         </span>
       </div>
@@ -222,10 +267,13 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
           "lg:rounded-2xl lg:border lg:border-gray-200 admin-dark:lg:border-gray-700",
           "overflow-hidden bg-white admin-dark:bg-gray-800 shadow-lg z-10",
           "transition-all duration-300 ease-in-out transform",
-          isCollapsed ? "lg:w-16" : "lg:w-64",
+          isCollapsed ? "lg:w-16" : "lg:w-64"
         )}
       >
-        <SidebarContent isCollapsed={isCollapsed} toggleCollapse={toggleCollapse} />
+        <SidebarContent
+          isCollapsed={isCollapsed}
+          toggleCollapse={toggleCollapse}
+        />
       </div>
 
       {/* Mobile */}
@@ -254,7 +302,12 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
               <X className="h-4 w-4" />
             </Button>
           </SheetHeader>
-          <SidebarContent isCollapsed={false} toggleCollapse={toggleCollapse} onClose={onClose} isMobile />
+          <SidebarContent
+            isCollapsed={false}
+            toggleCollapse={toggleCollapse}
+            onClose={onClose}
+            isMobile
+          />
         </SheetContent>
       </Sheet>
     </>

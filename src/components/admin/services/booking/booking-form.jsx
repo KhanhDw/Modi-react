@@ -312,8 +312,8 @@ export default function BookingForm() {
                     <SelectContent className="bg-white text-black rounded-lg shadow-lg">
                       {initDataService.map((service) => (
                         <SelectItem
-                          key={service.id}
-                          value={service.id.toString()}
+                          key={service.service_id}
+                          value={service.service_id.toString()}
                           className="cursor-pointer px-3 py-2 hover:bg-blue-50"
                         >
                           {service.ten_dich_vu}
