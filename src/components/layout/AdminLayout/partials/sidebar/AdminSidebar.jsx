@@ -110,7 +110,7 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
+    <div className="flex flex-col h-full bg-white admin-dark:bg-slate-900 border-r border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100">
       {/* Header */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 admin-dark:border-gray-700">
         <h1
@@ -218,7 +218,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
         className={cn(
           "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-2 lg:top-2 lg:bottom-2",
           "lg:rounded-2xl lg:border lg:border-gray-200 admin-dark:lg:border-gray-700",
-          "overflow-hidden bg-white admin-dark:bg-gray-800 shadow-lg z-50",
+          "overflow-hidden bg-white admin-dark:bg-slate-900 text-gray-900 admin-dark:text-gray-100 shadow-lg z-50",
           "transition-all duration-300 ease-in-out transform",
           isCollapsed ? "lg:w-16" : "lg:w-64",
         )}
@@ -228,7 +228,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
 
       {/* Mobile */}
       <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent side="left" className="w-64 p-0 transition-transform duration-300 ease-in-out">
+        <SheetContent side="left" className="w-64 p-0 transition-transform duration-300 ease-in-out bg-white admin-dark:bg-slate-900 text-gray-900 admin-dark:text-gray-100">
           <SheetHeader className="h-16 flex items-center justify-between flex-row px-4 border-b border-gray-200 admin-dark:border-gray-800">
             <SheetTitle className="text-xl font-bold text-gray-900 admin-dark:text-gray-50">Modi</SheetTitle>
             <SheetDescription className="sr-only">
