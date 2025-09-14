@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
+import ServiceForm from "./service-form";
+import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormService";
 
 export default function ServiceTable() {
   const { initDataService, openEditServiceForm, handleDeleteService } =
@@ -94,48 +96,42 @@ export default function ServiceTable() {
         >
           <Table>
             <TableHeader>
-              <TableRow
-                className="bg-gray-50 admin-dark:bg-gray-900 
-                  hover:bg-gray-100 admin-dark:hover:bg-gray-800"
-              >
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Tên dịch vụ
+              <TableRow>
+                <TableHead className="text-black">Tên dịch vụ</TableHead>
+                <TableHead className="text-black">Mô tả</TableHead>
+                <TableHead className="text-black">Bài viết</TableHead>
+                <TableHead className="text-black">Giá</TableHead>
+                <TableHead className="text-black">
+                  Tổng doanh thu mang lại
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Mô tả
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Giá
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Số lần đặt
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Trạng thái
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Thao tác
-                </TableHead>
+                <TableHead className="text-black">Số lần đặt</TableHead>
+                <TableHead className="text-black">Trạng thái</TableHead>
+                <TableHead className="text-black">Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentData.map((item) => (
-                <TableRow
-                  key={item.id}
-                  className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
-                >
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.ten_dich_vu}
+                <TableRow key={item.service_id}>
+                  <TableCell>{item.ten_dich_vu}</TableCell>
+                  <TableCell>{item.mo_ta}</TableCell>
+                  <TableCell>{item.headerTitle}</TableCell>
+                  <TableCell>
+                    {item.price != null
+                      ? Number(item.price).toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })
+                      : "0 ₫"}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.mo_ta}
+                  <TableCell>
+                    {item.revenue != null
+                      ? Number(item.revenue).toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })
+                      : "0 ₫"}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {`₫${item.price.toLocaleString()}`}
-                  </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.booking_count}
-                  </TableCell>
+                  <TableCell>{item.booking_count}</TableCell>
                   <TableCell>
                     <Badge className="bg-green-600 text-white admin-dark:bg-green-500">
                       Hoạt động
@@ -166,8 +162,7 @@ export default function ServiceTable() {
                           Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDeleteService(item.id)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                          onClick={() => handleDeleteService(item.service_id)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Xóa
@@ -180,7 +175,6 @@ export default function ServiceTable() {
             </TableBody>
           </Table>
         </div>
-
         {/* Pagination */}
         <div className="flex justify-end mt-4 gap-2">
           <Button
@@ -197,11 +191,10 @@ export default function ServiceTable() {
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}
-              className={`px-3 ${
-                currentPage === i + 1
+              className={`px-3 ${currentPage === i + 1
                   ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
                   : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-              }`}
+                }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}

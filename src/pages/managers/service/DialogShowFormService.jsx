@@ -1,44 +1,28 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useOutletContext } from "react-router-dom";
 import ServiceForm from "@/components/admin/services/service-form";
 import BookingForm from "@/components/admin/services/booking/booking-form";
 import CustomerForm from "@/components/admin/services/customers/customer-form";
-import ArticleDetailModal from "@/components/admin/services/articles/article_modal_detail"; // 🔹 Bổ sung import
+import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 
 export default function DialogShowForm_Service() {
-  const {
-    showForm,
-    typeForm,
-    editingService,
-    editingBooking,
-    editingCustomer,
-    handleClose,
-  } = useOutletContext();
+  const { showForm, typeForm, editingBooking, editingCustomer, handleClose } =
+    useOutletContext();
 
   return (
     <Dialog
       open={showForm}
       onOpenChange={(isOpen) => {
-        console.log("Dialog onOpenChange:", isOpen);
         if (!isOpen) handleClose();
       }}
     >
+      <DialogOverlay className="fixed inset-0 bg-black/50 z-50" />
       <DialogContent
-        className={`${!editingService && typeForm === "service" ? "min-w-[70vw]" : ""
-          } min-h-[60vh] bg-white p-6 text-black shadow-2xl`}
+        className={`${
+          typeForm === "service" ? "min-w-[70vw]" : ""
+        } min-h-[60vh] bg-white p-6 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
       >
         {typeForm === "service" ? (
-          editingService ? (
-            <ArticleDetailModal
-              dataArticle={editingService}
-              open={showForm}
-              onOpenChange={(isOpen) => {
-                if (!isOpen) handleClose();
-              }}
-            />
-          ) : (
-            <ServiceForm />
-          )
+          <ServiceForm />
         ) : typeForm === "booking" ? (
           <BookingForm editingBooking={editingBooking} />
         ) : typeForm === "customer" ? (
@@ -46,7 +30,15 @@ export default function DialogShowForm_Service() {
         ) : (
           <p>Not found form - typeForm: {typeForm}</p>
         )}
-
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Đóng
+          </button>
+        </div>
       </DialogContent>
     </Dialog>
   );
