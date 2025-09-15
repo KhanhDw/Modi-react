@@ -183,52 +183,60 @@ export default function ServicePage() {
             {/* Final CTA */}
             <div
                 className="
+    relative
     text-center px-6 py-8 md:py-10
-    bg-gradient-to-r from-blue-700 to-indigo-700
     text-white max-w-4xl mx-auto
     sm:rounded-3xl rounded-none
     shadow-2xl
     transition-all duration-700 ease-in-out
-    hover:from-blue-600 hover:to-indigo-600
+    hover:brightness-110
     lg:max-w-6xl
+    bg-cover bg-center
+    bg-[url('/moutain-banner.jpg')]
   "
             >
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    viewport={{ once: true }}
-                    className="text-xl md:text-3xl lg:text-4xl font-extrabold mb-4 leading-tight"
-                >
-                    {t("servicesPage.cta.title")}
-                </motion.h2>
+                {/* Lớp phủ mờ */}
+                <div className="absolute inset-0 bg-black/20 bg-opacity-40 sm:rounded-3xl rounded-none pointer-events-none"></div>
 
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-                    viewport={{ once: true }}
-                    className="text-sm md:text-[18px] opacity-90 max-w-2xl md:max-w-xl mx-auto mb-8"
-                >
-                    {t("servicesPage.cta.subtitle")}
-                </motion.p>
-
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4, duration: 0.4 }}
-                    viewport={{ once: true }}
-                >
-                    <Link
-                        to="/contact"
-                        className="
-        inline-block bg-white text-blue-700 font-semibold py-2 px-3 md:py-3 md:px-4 rounded-full shadow-md
-        hover:shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105
-      "
+                {/* Nội dung nằm trên lớp phủ */}
+                <div className="relative z-10">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                        className="text-xl md:text-3xl lg:text-4xl font-bold mb-4 leading-tight"
                     >
-                        {t("servicesPage.cta.button")}
-                    </Link>
-                </motion.div>
+                        {t("servicesPage.cta.title")}
+                    </motion.h2>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                        className="text-[14px] md:text-[19px] opacity-90 max-w-2xl md:max-w-xl mx-auto mb-4"
+                    >
+                        {t("servicesPage.cta.subtitle")}
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.4, duration: 0.4 }}
+                        viewport={{ once: true }}
+                    >
+                        <Link
+                            to="/contact"
+                            className="
+          inline-block bg-white/90 text-blue-700 text-[14px] md:text-[16px] font-semibold p-2 px-2 md:py-3 md:px-4 rounded-full shadow-md
+          hover:shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105
+        "
+                        >
+                            {t("servicesPage.cta.button")}
+                        </Link>
+                    </motion.div>
+                </div>
             </div>
 
         </div>
