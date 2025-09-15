@@ -8,7 +8,7 @@ export default function useLenisWithToggle() {
   useEffect(() => {
     // Khởi tạo Lenis
     lenis.current = new Lenis({
-      duration: 0.9,
+      duration: 0.6,
       easing: (t) => 1 - Math.pow(1 - t, 3),
       smooth: true,
       smoothTouch: true,
