@@ -468,7 +468,7 @@ function ThreeCardBusiness({ data, activeLang }) {
                                         <img
                                             src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
                                             alt={item.title?.[activeLang]}
-                                            className="w-full h-full object-cover  border-2 border-gray-600 rounded-xl"
+                                            className="w-full h-full object-cover  border-2 border-gray-300 dark:border-gray-600 rounded-xl"
                                             onError={(e) => (e.currentTarget.src = "/no-image.png")}
                                         />
                                     </div>
