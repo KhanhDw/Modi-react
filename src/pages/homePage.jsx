@@ -426,17 +426,17 @@ function ThreeCardBusiness({ data, activeLang }) {
                             return (
                                 <div
                                     key={item.id}
-                                    className="snap-center shrink-0
-                   w-[80%] sm:w-[70%] md:w-[60%]
-                   bg-white dark:bg-gray-800
-                   rounded-2xl shadow-lg overflow-hidden flex flex-col"
+                                    className="snap-center shrink-0 
+                   w-[80%] sm:w-[70%] md:w-[60%] 
+                   bg-white dark:bg-gray-800 
+                   rounded-2xl shadow-lg overflow-hidden flex flex-col "
                                 >
                                     {/* Hình ảnh */}
-                                    <div className="h-56 sm:h-60 md:h-70">
+                                    <div className="h-56 sm:h-60 md:h-70 rounded-xl p-4 overflow-hidden  ">
                                         <img
                                             src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
                                             alt={item.title?.[activeLang]}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover  border-2 border-gray-600 rounded-xl"
                                             onError={(e) => (e.currentTarget.src = "/no-image.png")}
                                         />
                                     </div>
@@ -485,11 +485,11 @@ function ThreeCardBusiness({ data, activeLang }) {
                                     className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col"
                                 >
                                     {/* Hình ảnh */}
-                                    <div className="h-65">
+                                    <div className="h-65  rounded-xl p-4 overflow-hidden ">
                                         <img
                                             src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
                                             alt={item.title?.[activeLang]}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover  border-2 border-gray-300 dark:border-gray-600 rounded-xl"
                                             onError={(e) => (e.currentTarget.src = "/no-image.png")}
                                         />
                                     </div>

@@ -20,11 +20,8 @@ export const mockService = {
         "https://plus.vtc.edu.vn/wp-content/uploads/2022/08/thiet-ke-web.jpg",
     translation: {
         lang: "vi",
-        ten_dich_vu: "RE:VISION thiết kế website chuyên nghiệp mọi ngành nghề",
+        ten_dich_vu: "1RE:VISION thiết kế website chuyên nghiệp mọi ngành nghề",
         mo_ta: "Nâng cấp website hiện có",
-        price: "0.00",
-        revenue: 15000000,
-        booking_count: 32
     },
     article: {
         headerTitle: "Chi tiết dịch vụ",
@@ -34,19 +31,13 @@ export const mockService = {
                 "Nâng cấp mã nguồn cũ lên chuẩn mới",
                 "Tích hợp công cụ và phương thức trả góp",
                 "Cải thiện điểm chất lượng SEO",
-                "Tăng trải nghiệm người dùng (UX/UI)",
-                "Hướng dẫn chuyển giao và đào tạo",
             ],
             details: [
                 "RE:VISION là giải pháp nâng cấp toàn diện website hiện có mà không cần xây dựng lại từ đầu, đảm bảo công nghệ cập nhật, thiết kế hiện đại và tính năng theo xu hướng.",
                 "Qua buổi tư vấn 1:1, chuyên gia sẽ phân tích website, đánh giá điểm mạnh/yếu, và đề xuất chiến lược nâng cấp hiệu quả nhất.",
                 "Nâng cấp bao gồm tối ưu mã nguồn giúp tải trang nhanh hơn, cải thiện điểm SEO, và tăng cường bảo mật. Chúng tôi tích hợp các công cụ hiện đại như thanh toán online, đặt lịch, chatbot tự động.",
-                "Trải nghiệm người dùng được cải thiện rõ rệt với thiết kế UI/UX thân thiện, tăng thời gian ở lại và tỷ lệ chuyển đổi khách hàng.",
-                "Cuối cùng, bạn sẽ nhận tài liệu chi tiết và đào tạo sử dụng hệ thống để tự tin vận hành và phát triển website."
             ]
         },
-        author: "Creative Team",
-        viewed: 120
     }
 };
 
@@ -57,6 +48,7 @@ export default function ServicePage() {
     const [services, setServices] = useState([]);
     const [servicesDetail, setServicesDetail] = useState([]);
     const [servicesItemDetail, setServicesItemDetail] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const queryParams = new URLSearchParams(location.search);
 
@@ -96,13 +88,50 @@ export default function ServicePage() {
         }
     };
 
+    const FetchDataServices = async (lang = "vi") => {
+
+
+        try {
+            const lang_api = lang === "vi" ? "" : "/en";
+            const res = await fetch(`${API_BASE_URL}${lang_api}/api/services`);
+            const data = await res.json();
+            if (data.success) {
+                setServices(data.data);
+                console.log(data.data);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
+
     useEffect(() => {
-        loadAllDataSection();
-        loadAllDataSectionItem()
+        FetchDataServices()
+        if (queryParams_q) {
+            loadAllDataSection();
+        }
+        if (queryParams_sub) {
+            loadAllDataSectionItem()
+        }
     }, [queryParams_q, queryParams_sub]);
 
     return (
         <div className="min-h-screen mb-10 text-gray-800 dark:text-white transition-all duration-500">
+            <div className="flex w-full  flex-col">
+                adasd: {queryParams_q} & {queryParams_sub}
+
+                <div>
+                    {servicesDetail.title?.vi}
+                </div>
+                <div>
+                    {servicesItemDetail.title?.vi}
+                </div>
+            </div>
             {/* Banner */}
             <div className="mb-16">
                 <motion.div
@@ -157,25 +186,28 @@ export default function ServicePage() {
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-[#111] -z-10 rounded-t-3xl"></div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                    {servicesLocales.map((service, i) => {
-                        {/* const isLast = i === servicesLocales.length - 1; */ }
+                    {services.map((srv, i) => {
                         const isFirst = i === 0;
-
-                        const isOdd = servicesLocales.length % 2 !== 0;
+                        const isOdd = services.length % 2 !== 0; // <-- dùng services.length
 
                         return (
                             <motion.div
-                                key={service.slug}
+                                key={srv.service_id || i} // key tốt hơn dùng id
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" }}
                                 viewport={{ once: true }}
                                 className={isFirst && isOdd ? "sm:col-span-2 flex justify-center" : ""}
                             >
-                                <ServiceCard service={mockService} />
+                                {/* Optional wrapper để kiểm soát width của card khi span-2 */}
+                                <div className={isFirst && isOdd ? "w-full sm:max-w-5xl" : "w-full"}>
+                                    {/* <ServiceCard service={mockService} /> */}
+                                    <ServiceCard service={srv} />
+                                </div>
                             </motion.div>
                         );
                     })}
+
                 </div>
             </div>
 
