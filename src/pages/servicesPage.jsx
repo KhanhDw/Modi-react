@@ -12,7 +12,6 @@ const bannerStyle = {
     backgroundPosition: "center",
 };
 
-
 export const mockService = {
     id: 1,
     status: "Active",
@@ -51,7 +50,6 @@ export const mockService = {
     }
 };
 
-
 export default function ServicePage() {
     const { t } = useLanguage();
     const location = useLocation();
@@ -82,6 +80,7 @@ export default function ServicePage() {
             console.error("Lỗi loadAllDataSection:", err);
         }
     };
+
     const loadAllDataSectionItem = async () => {
         try {
             // 1) fetch danh mục cha
@@ -97,22 +96,17 @@ export default function ServicePage() {
         }
     };
 
-
     useEffect(() => {
         loadAllDataSection();
         loadAllDataSectionItem()
     }, [queryParams_q, queryParams_sub]);
 
-
-
-
-
     return (
         <div className="min-h-screen mb-10 text-gray-800 dark:text-white transition-all duration-500">
             {/* Banner */}
-            <div className="px-4 mt-4 mb-16">
+            <div className="mb-16">
                 <motion.div
-                    className="h-[400px] flex items-center justify-center text-white rounded-2xl overflow-hidden shadow-2xl relative"
+                    className="h-[300px] flex items-center justify-center md:h-[400px] md:mx-4 md:mt-4 text-white md:rounded-2xl overflow-hidden shadow-2xl relative rounded-xl rounded-tl-none rounded-tr-none"
                     style={bannerStyle}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -122,7 +116,7 @@ export default function ServicePage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-black/60 to-indigo-900/70"></div>
 
                     <div className="relative text-center px-4 py-4 z-10">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-3 drop-shadow-lg">
+                        <h1 className="text-3xl md:text-5xl font-bold mb-3 drop-shadow-lg">
                             {t("servicesPage.banner.title")}
                         </h1>
                         <p className="text-sm md:text-base text-white/90 font-medium">
@@ -136,7 +130,7 @@ export default function ServicePage() {
             {/* Intro */}
             <div className="max-w-4xl mx-auto px-4 pb-16 text-center">
                 <motion.p
-                    className="text-2xl md:text-3xl font-bold mb-4 leading-snug"
+                    className="text-xl text-center md:text-2xl lg:text-4xl font-bold mb-4 leading-snug"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
@@ -144,14 +138,22 @@ export default function ServicePage() {
                 >
                     {t("servicesPage.intro.description")}
                 </motion.p>
-                <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+
+                <motion.p
+                    className="text-gray-600 font-semibold dark:text-gray-300 max-w-2xl mx-auto text-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                >
                     {t("servicesPage.intro.subtitle")}
-                </p>
-                <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mt-6 rounded-full"></div>
+                    <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mt-6 rounded-full"></div>
+                </motion.p>
+
             </div>
 
             {/* Service list */}
-            <div className=" mx-auto px-4 pb-20 relative">
+            <div className=" mx-auto px-4 pb-10 relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-[#111] -z-10 rounded-t-3xl"></div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
@@ -175,25 +177,60 @@ export default function ServicePage() {
                         );
                     })}
                 </div>
-
             </div>
 
 
             {/* Final CTA */}
-            <div className="text-center py-16 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-3xl max-w-5xl mx-auto shadow-xl">
-                <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
-                    {t("servicesPage.cta.title")}
-                </h2>
-                <p className="mb-6 text-lg opacity-90">
-                    {t("servicesPage.cta.subtitle")}
-                </p>
-                <Link
-                    to="/contact"
-                    className="inline-block bg-white text-blue-700 font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105"
+            <div
+                className="
+    text-center px-6 py-8 md:py-10
+    bg-gradient-to-r from-blue-700 to-indigo-700
+    text-white max-w-4xl mx-auto
+    sm:rounded-3xl rounded-none
+    shadow-2xl
+    transition-all duration-700 ease-in-out
+    hover:from-blue-600 hover:to-indigo-600
+    lg:max-w-6xl
+  "
+            >
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                    className="text-xl md:text-3xl lg:text-4xl font-extrabold mb-4 leading-tight"
                 >
-                    {t("servicesPage.cta.button")}
-                </Link>
+                    {t("servicesPage.cta.title")}
+                </motion.h2>
+
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                    className="text-sm md:text-[18px] opacity-90 max-w-2xl md:max-w-xl mx-auto mb-8"
+                >
+                    {t("servicesPage.cta.subtitle")}
+                </motion.p>
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, duration: 0.4 }}
+                    viewport={{ once: true }}
+                >
+                    <Link
+                        to="/contact"
+                        className="
+        inline-block bg-white text-blue-700 font-semibold py-2 px-3 md:py-3 md:px-4 rounded-full shadow-md
+        hover:shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105
+      "
+                    >
+                        {t("servicesPage.cta.button")}
+                    </Link>
+                </motion.div>
             </div>
+
         </div>
 
     );

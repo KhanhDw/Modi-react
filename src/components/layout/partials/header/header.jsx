@@ -170,9 +170,9 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
             <button
               type="button"
               onClick={toggleSidebar}
-              className="flex lg:hidden h-10 w-10 transition-all duration-200 text-white justify-center items-center border-2 border-gray-500 rounded-lg hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer"
+              className="flex lg:hidden h-9 w-9 transition-all duration-200 text-white justify-center items-center border-2 border-gray-500 rounded-lg hover:bg-[#bf263d] hover:border-[#bf263d] cursor-pointer"
             >
-              <TiThMenu className="text-base" size={30} />
+              <TiThMenu className="text-base" size={20} />
             </button>
           </div>
         </div>

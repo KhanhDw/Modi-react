@@ -62,11 +62,17 @@ export default function ThemeToggle() {
       {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
-        className={`p-3 rounded-full border transition-all duration-300 hover:scale-110 cursor-pointer ${isDark
-          ? 'bg-white/10 border-white/20 text-white hover:bg-white/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
-          : 'bg-black/10 border-black/20 text-black hover:bg-black/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
-          }`}
-
+        className={`
+      p-2 rounded-lg
+      bg-transparent
+      text-gray-300 dark:text-white
+      transition duration-300 ease-in-out
+      hover:text-green-600 dark:hover:text-green-400
+      hover:shadow-lg hover:scale-105
+      active:scale-105 active:shadow-md
+      cursor-pointer
+      lg:focus:outline-none lg:focus:border-none lg:focus:ring-2 lg:focus:ring-green-800
+    `}
         title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
@@ -77,11 +83,19 @@ export default function ThemeToggle() {
       <button
         disabled={isServiceOrder}
         onClick={toggleLanguage}
-        className={`${isServiceOrder ? "cursor-not-allowed opacity-50" : ""} p-3 w-20 rounded-full border transition-all duration-300 hover:scale-110 flex items-center justify-center space-x-2 cursor-pointer
-        ${isDark
-            ? 'bg-white/10 border-white/20 text-white hover:bg-white/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
-            : 'bg-black/10 border-black/20 text-black hover:bg-black/20 md:bg-white/10 md:border-white/20 md:text-white md:hover:bg-white/20'
-          }`}
+        className={`
+      ${isServiceOrder ? "cursor-not-allowed opacity-50" : ""}
+      p-2 rounded-lg
+      bg-transparent
+      text-gray-300 dark:text-white
+      flex items-center justify-center space-x-2
+      transition duration-300 ease-in-out
+      hover:text-green-600 dark:hover:text-green-400
+      hover:shadow-md hover:scale-105
+      active:scale-105 active:shadow-md
+      cursor-pointer
+      lg:focus:outline-none lg:focus:border-none lg:focus:ring-2 lg:focus:ring-green-800
+    `}
         title={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
         aria-label={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
       >
@@ -89,5 +103,6 @@ export default function ThemeToggle() {
         <span className="text-sm font-semibold">{language === "vi" ? "EN" : "VI"}</span>
       </button>
     </div>
+
   )
 }
