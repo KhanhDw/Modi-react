@@ -178,7 +178,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         </div>
 
         {/* Status & Published */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Trạng thái
@@ -254,7 +254,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             type="submit"
             className="px-4 py-2 w-full sm:w-auto bg-gray-700 text-white rounded-lg hover:bg-green-900 transition duration-200 cursor-pointer"
           >
-            <span className="font-semibold">
+            <span className="font-semibold lg:text-sm xl:text-xl">
               {blog ? "Cập nhật" : "Thêm"} {activeLang === "vi" ? "(Việt)" : "(Anh)"}
             </span>
           </button>
