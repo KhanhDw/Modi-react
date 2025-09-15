@@ -135,7 +135,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
           <motion.nav
             animate={{ y: scrolled ? 0 : 0, opacity: scrolled ? 0.9 : 1 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className=" hidden lg:flex items-center text-[15px] font-bold gap-6 lg:gap-8 xl:gap-8 2xl:gap-12 whitespace-nowrap "
+            className=" hidden lg:flex items-center text-[15px] font-bold gap-6 lg:gap-6 xl:gap-8 2xl:gap-10 whitespace-nowrap "
           >
             {navItems.map((item) =>
               item.type === "link" ? (

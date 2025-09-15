@@ -71,7 +71,7 @@ export default function ThemeToggle() {
       hover:shadow-lg hover:scale-105
       active:scale-105 active:shadow-md
       cursor-pointer
-      lg:focus:outline-none lg:focus:border-none lg:focus:ring-2 lg:focus:ring-green-800
+      lg:hover:outline-none lg:hover:border-none lg:hover:ring-2 lg:hover:ring-green-800
     `}
         title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
@@ -94,7 +94,7 @@ export default function ThemeToggle() {
       hover:shadow-md hover:scale-105
       active:scale-105 active:shadow-md
       cursor-pointer
-      lg:focus:outline-none lg:focus:border-none lg:focus:ring-2 lg:focus:ring-green-800
+      lg:hover:outline-none lg:hover:border-none lg:hover:ring-2 lg:hover:ring-green-800
     `}
         title={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
         aria-label={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
