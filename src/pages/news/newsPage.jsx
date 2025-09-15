@@ -132,7 +132,7 @@ export default function NewsInterface() {
 
                   <motion.div
                     variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                    className="preview-html prose prose-sm max-w-none line-clamp-3 break-words admin-dark:text-gray-500 text-[15px]"
+                    className="preview-html prose prose-sm max-w-none line-clamp-3 break-words dark:text-gray-500 text-[15px]"
                     style={{
                       display: "-webkit-box",
                       WebkitBoxOrient: "vertical",
@@ -143,7 +143,7 @@ export default function NewsInterface() {
 
                   <motion.div
                     variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                    className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400"
+                    className="flex mt-4 items-center gap-6 text-sm text-gray-500 dark:text-gray-400"
                   >
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4" />
