@@ -285,25 +285,46 @@ function BannerSilder({ data, activeLang }) {
                     animate={isInView ? { opacity: showNext ? 0 : 1, y: 0 } : {}}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent sm:px-12 md:px-20 md:pl-20 lg:pl-40 2xl:w-2/3"
+                    className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent px-4 sm:px-12 md:px-10 lg:pl-20 xl:pl-30 2xl:w-2/3"
                 >
-                    <h2 className="mb-4 text-2xl xs:ml-4 md:text-5xl 2xl:text-5xl font-bold bg-transparent text-start">
+                    {/* Title */}
+                    <h2
+                        className="font-bold text-start mb-4
+      text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl
+      xs:ml-2 sm:ml-4 md:ml-0"
+                    >
                         {data[currentIndex].title[activeLang]}
                     </h2>
-                    <p className="mb-8 w-full xs:text-justify xs:text-sm md:text-md md:text-start md:text-xl 2xl:text-3xl xs:ml-4">
+
+                    {/* Paragraph */}
+                    <p
+                        className="mb-8 text-justify
+      text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl 2xl:text-3xl
+      max-w-[95%] sm:max-w-[90%] md:max-w-[95%] lg:max-w-[80%]
+      xs:ml-2 sm:ml-4 md:ml-0"
+                    >
                         {data[currentIndex].description[activeLang]}
                     </p>
+
+                    {/* Button */}
                     {data[currentIndex].buttonText && (
                         <motion.button
                             initial={{ opacity: 0 }}
                             animate={isInView ? { opacity: 1 } : {}}
                             transition={{ duration: 0.5, delay: 0.3 }}
-                            className="px-6 py-3 text-xl font-semibold text-white bg-green-600 rounded-lg shadow-lg hover:bg-blue-700 md:text-xl 2xl:text-2xl xs:ml-4 cursor-pointer"
+                            className="
+        px-5 py-2
+        text-sm sm:text-base md:text-lg lg:text-xl 2xl:text-2xl
+        font-semibold text-white bg-green-600 rounded-lg shadow-lg
+        hover:bg-blue-700 transition-colors duration-300
+        xs:ml-2 sm:ml-4 md:ml-0
+      "
                         >
                             <Link to="/about">{t(data[currentIndex].buttonText)}</Link>
                         </motion.button>
                     )}
                 </motion.div>
+
             </AnimatePresence>
 
             {/* Ảnh kế tiếp */}
@@ -405,9 +426,9 @@ function ThreeCardBusiness({ data, activeLang }) {
                             return (
                                 <div
                                     key={item.id}
-                                    className="snap-center shrink-0 
-                   w-[80%] sm:w-[70%] md:w-[60%] 
-                   bg-white dark:bg-gray-800 
+                                    className="snap-center shrink-0
+                   w-[80%] sm:w-[70%] md:w-[60%]
+                   bg-white dark:bg-gray-800
                    rounded-2xl shadow-lg overflow-hidden flex flex-col"
                                 >
                                     {/* Hình ảnh */}
@@ -428,9 +449,9 @@ function ThreeCardBusiness({ data, activeLang }) {
                                         </h4>
 
                                         <p
-                                            className={`text-gray-700 dark:text-gray-200 
-                        text-sm sm:text-base md:text-lg 
-                        transition-all duration-300 
+                                            className={`text-gray-700 dark:text-gray-200
+                        text-sm sm:text-base md:text-lg
+                        transition-all duration-300
                         ${isExpanded ? "line-clamp-none" : "line-clamp-3"}`}
                                         >
                                             {description}
