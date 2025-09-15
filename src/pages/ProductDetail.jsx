@@ -229,7 +229,7 @@ export default function ProductDetail() {
           >
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-4">
-                <Badge variant="outline" className="font-sans text-foreground text-sm">
+                <Badge variant="outline" className="font-sans border-2 text-foreground text-sm">
                   {product.category}
                 </Badge>
                 <Badge variant={product.export_state ? "default" : "secondary"}>
@@ -292,7 +292,7 @@ export default function ProductDetail() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Button size="lg" className="flex-1">
+              <Button size="lg" className="flex-1 cursor-pointer p-2">
                 <ShoppingCart className="w-8 h-8 mr-2" />
                 <p className="font-semibold">Đặt ngay</p>
               </Button>

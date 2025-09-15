@@ -114,13 +114,13 @@ export default function Products() {
               <input
                 type="text"
                 placeholder="Tìm kiếm theo danh mục hoặc công nghệ..."
-                className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full dark:text-white pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
+              <Filter className="w-4 h-4 text-muted-foreground cursor-pointer" />
               <span className="text-sm text-muted-foreground">{filteredSamples.length} kết quả</span>
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function Products() {
                 variant={selectedCategory === category ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(category)}
-                className="transition-all duration-200"
+                className="transition-all duration-200 cursor-pointer"
               >
                 {category}
               </Button>
@@ -173,7 +173,7 @@ export default function Products() {
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <Badge className=" font-sans text-foreground mb-3" variant="outline">{sample.category}</Badge>
+                      <Badge className="font-sans border-2 outline-none text-foreground mb-3" variant="outline">{sample.category}</Badge>
                       <div className="flex items-center gap-1 text-yellow-500">
                         <Star className="w-4 h-4 fill-current" />
                         <span className="text-sm">4.8</span>
