@@ -81,7 +81,7 @@ function BlogViewPage() {
                 <article className="p-6 sm:p-10">
                     {/* Header */}
                     <header className="mb-8 mt-8 text-center">
-                        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 admin-dark:text-white leading-tight mb-4">
+                        <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl font-bold text-gray-900 admin-dark:text-white leading-tight mb-4">
                             {blog.title}
                         </h1>
                         <div className="flex flex-wrap justify-center items-center text-gray-600 admin-dark:text-gray-400 text-sm sm:text-base">

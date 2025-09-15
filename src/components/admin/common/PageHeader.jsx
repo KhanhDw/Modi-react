@@ -17,15 +17,15 @@ export default function PageHeader({
       {/* Hàng chứa tiêu đề + search + nút */}
       <div className="flex flex-wrap items-center justify-between gap-3 w-full">
         {/* Title */}
-        <h1 className="text-xl sm:text-xl font-bold text-gray-900 admin-dark:text-gray-200">
+        <h1 className="text-xl text-center sm:text-xl font-bold text-gray-900 admin-dark:text-gray-200">
           {title}
         </h1>
 
         {/* Search + Buttons */}
-        <div className="flex flex-wrap items-center gap-3 flex-1 sm:flex-none justify-end">
+        <div className="flex flex-wrap gap-3 flex-1 sm:flex-none justify-center">
           {/* Search */}
           {!isHiddenFilter && (
-            <div className="flex items-center gap-2 flex-1 min-w-[250px] md:min-w-[300px] lg:min-w-[350px]">
+            <div className="flex gap-2 flex-1 min-w-[250px] md:min-w-[300px] lg:min-w-[350px]">
               {searchTerm !== "" && (
                 <button
                   onClick={() => {
