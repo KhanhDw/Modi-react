@@ -101,10 +101,10 @@ export default function MarketingPage() {
                     {/* Text + Search */}
                     <div className="flex flex-col text-center md:text-left">
                         <h2 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white mb-2">
-                            Kết nối thương hiệu với khách hàng
+                            {lang === "vi" ? "Kết nối thương hiệu với khách hàng" : "Connecting the brand with customers"}
                         </h2>
                         <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-400 mb-3">
-                            Với một website chuẩn SEO doanh nghiệp bạn sẽ tiếp cận hàng ngàn khách hàng và vượt qua đối thủ.
+                            {lang == "vi" ? "Với một website chuẩn SEO doanh nghiệp bạn sẽ tiếp cận hàng ngàn khách hàng và vượt qua đối thủ" : "An SEO-friendly business website helps you reach thousands of customers and stay ahead of the competition"}
                         </p>
 
                         {/* Ô tìm kiếm ngay dưới title */}
@@ -114,7 +114,7 @@ export default function MarketingPage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onKeyDown={handleSearchSubmit}
-                                placeholder="Tìm kiếm..."
+                                placeholder={lang == "vi" ? "Tìm kiếm..." : "Search..."}
                                 className="w-full py-2 pl-4 pr-10 border border-border rounded-md
                    focus:outline-none focus:ring-2 focus:ring-ring focus:border-none
                    text-foreground dark:text-white

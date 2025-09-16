@@ -1,6 +1,6 @@
-import { useTheme } from "../../../contexts/ThemeContext"
-import { useLanguage } from "../../../contexts/LanguageContext"
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useLanguage } from "../../../contexts/LanguageContext";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 /**
  * Theme Toggle Component for About Page
@@ -65,7 +65,7 @@ export default function ThemeToggle() {
         className={`
       p-2 rounded-lg
       bg-transparent
-      text-gray-300 dark:text-white
+      text-gray-400 dark:text-white
       transition duration-300 ease-in-out
       hover:text-green-600 dark:hover:text-green-400
       hover:shadow-lg hover:scale-105
@@ -87,7 +87,7 @@ export default function ThemeToggle() {
       ${isServiceOrder ? "cursor-not-allowed opacity-50" : ""}
       p-2 rounded-lg
       bg-transparent
-      text-gray-300 dark:text-white
+      text-gray-400 dark:text-white
       flex items-center justify-center space-x-2
       transition duration-300 ease-in-out
       hover:text-green-600 dark:hover:text-green-400

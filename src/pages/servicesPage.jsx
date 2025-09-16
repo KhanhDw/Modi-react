@@ -157,7 +157,7 @@ export default function ServicePage() {
             </div>
 
             {/* Intro */}
-            <div className="max-w-4xl mx-auto px-4 pb-16 text-center">
+            <div className="max-w-8xl mx-auto px-4 pb-16 text-center">
                 <motion.p
                     className="text-xl text-center md:text-2xl lg:text-4xl font-bold mb-4 leading-snug"
                     initial={{ opacity: 0, y: 20 }}
@@ -228,7 +228,7 @@ export default function ServicePage() {
   "
             >
                 {/* Lớp phủ mờ */}
-                <div className="absolute inset-0 bg-black/20 bg-opacity-40 sm:rounded-3xl rounded-none pointer-events-none"></div>
+                <div className="absolute inset-0 bg-black/40 bg-opacity-40 sm:rounded-3xl rounded-none pointer-events-none"></div>
 
                 {/* Nội dung nằm trên lớp phủ */}
                 <div className="relative z-10">
