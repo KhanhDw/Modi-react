@@ -201,7 +201,7 @@ export default function ServicePage() {
                             >
                                 {/* Optional wrapper để kiểm soát width của card khi span-2 */}
                                 <div className={isFirst && isOdd ? "w-full sm:max-w-5xl" : "w-full"}>
-                                    {/* <ServiceCard service={mockService} /> */}
+                                    <ServiceCard service={mockService} />
                                     <ServiceCard service={srv} />
                                 </div>
                             </motion.div>

@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect, useRef, } from "react";
-import { ChevronUp, ChevronsDown } from 'lucide-react';
+import { ChevronUp, ChevronsDown, ChevronDown } from 'lucide-react';
 import useLenisLocal from '@/hook/useLenisLocal';
+import HoverButtonsServiceCard from "./buttonServiceCard";
 
 
 export default function ServiceCard({ service }) {
@@ -15,6 +16,14 @@ export default function ServiceCard({ service }) {
 
     const handleToggle = () => {
         setShowDetails(prev => !prev);
+    };
+
+    const handleToUp = () => {
+        setShowDetails(false);
+    };
+
+    const handleToDown = () => {
+        setShowDetails(true);
     };
 
     // Handler khi chuột rời khỏi card
@@ -76,48 +85,57 @@ export default function ServiceCard({ service }) {
                     <div className="min-h-full flex-1 sm:p-3 flex flex-col justify-between relative z-10">
 
                         {/* Features V2 */}
-                        <div className="relative overflow-hidden h-fit">
-                            {/* Features list */}
-                            <div className="relative">
-                                <div className={`transform transition-all duration-500 ${!showDetails ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
-                                    {/* Features list */}
-                                    {features.length > 0 && (
-                                        <ul className="mb-6 space-y-2 h-45">
-                                            {features.map((feature, idx) => (
-                                                <li
-                                                    key={idx}
-                                                    className="cursor-default flex items-center gap-2 p-2 pl-3 border-l-4 border-blue-500 rounded bg-gray-50 dark:bg-gray-800 transition duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                                >
-                                                    <span className="text-blue-500 dark:text-blue-400">✔</span>
-                                                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Nội dung chi tiết overlay - Có thể scroll với Lenis config */}
-                            <div data-lenis-prevent className={`absolute inset-0 transform transition-all duration-500 ${showDetails ? "translate-y-0 opacity-100 z-10" : "translate-y-full opacity-0"}`}>
-                                <div data-lenis-prevent className="h-full overflow-y-auto scrollbar-hide">
-                                    <div className="text-gray-700 dark:text-gray-300 mb-4 font-semibold p-2">
-                                        {details.length > 0 && (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                                                {details.map((item, idx) => (
-                                                    <div
+                        <div className="flex justify-between items-center w-full gap-2">
+                            <div className="relative overflow-hidden h-fit w-full">
+                                {/* Features list */}
+                                <div className="relative">
+                                    <div className={`transform transition-all duration-500 ${!showDetails ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
+                                        {/* Features list */}
+                                        {features.length > 0 && (
+                                            <ul className="mb-6 space-y-2 h-45">
+                                                {features.map((feature, idx) => (
+                                                    <li
                                                         key={idx}
-                                                        className="flex items-start gap-3 p-3 border rounded-lg shadow-sm 
-                                           bg-gray-50/80 dark:bg-gray-800/80 
-                                           transition duration-300 group-hover:bg-white/60 
-                                           dark:group-hover:bg-gray-700/60"
+                                                        className="cursor-default flex items-center gap-2 p-2 pl-3 border-l-4 border-blue-500 rounded bg-gray-50 dark:bg-gray-800 transition duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                                                     >
-                                                        <p className="text-gray-700 cursor-default dark:text-gray-300">{item}</p>
-                                                    </div>
+                                                        <span className="text-blue-500 dark:text-blue-400">✔</span>
+                                                        <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                                                    </li>
                                                 ))}
-                                            </div>
+                                            </ul>
                                         )}
                                     </div>
                                 </div>
+
+                                {/* Nội dung chi tiết overlay - Có thể scroll với Lenis config */}
+                                <div data-lenis-prevent className={`absolute inset-0 transform transition-all duration-500 ${showDetails ? "translate-y-0 opacity-100 z-10" : "translate-y-full opacity-0"}`}>
+                                    <div data-lenis-prevent className="h-full overflow-y-auto scrollbar-hide">
+                                        <div className="text-gray-700 dark:text-gray-300 mb-4 font-semibold p-2">
+                                            {details.length > 0 && (
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                                    {details.map((item, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className="flex items-start gap-3 p-3 border rounded-lg shadow-sm 
+                                               bg-gray-50/80 dark:bg-gray-800/80 
+                                               transition duration-300 group-hover:bg-white/60 
+                                               dark:group-hover:bg-gray-700/60"
+                                                        >
+                                                            <p className="text-gray-700 cursor-default dark:text-gray-300">{item}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-2 h-full items-center justify-center">
+
+                                <HoverButtonsServiceCard
+                                    onClickUp={() => handleToUp()}
+                                    onClickDown={() => handleToDown()}
+                                />
                             </div>
                         </div>
 
@@ -129,7 +147,6 @@ export default function ServiceCard({ service }) {
        font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
                             >
                                 Xem chi tiết
-                                {showDetails ? <ChevronsDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
                             </button>
 
                             <Link
