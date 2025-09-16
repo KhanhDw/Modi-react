@@ -66,7 +66,6 @@ const SidebarContent = ({
   const [todayVisits, setTodayVisits] = useState(0);
   const [user, setUser] = useState(null);
 
-  // Check active path
   const isActive = (path) =>
     pathname === path || pathname.startsWith(path + "/");
 
@@ -93,17 +92,11 @@ const SidebarContent = ({
 
   // Filter menu theo role
   const filteredMenuItems = menuItems.filter((item) => {
-    if (user?.role === "dev") {
-      return true; // dev thấy tất cả
-    }
-
+    if (user?.role === "dev") return true;
     if (user?.role === "admin") {
-      // admin không thấy component
       if (item.path === "/managers/components") return false;
       return true;
     }
-
-    // user thường: ẩn admin-zone + component
     if (
       item.path === "/managers/admin-zone" ||
       item.path === "/managers/components"
@@ -113,7 +106,7 @@ const SidebarContent = ({
     return true;
   });
 
-  // Redirect khi vào page-config
+  // Redirect page-config
   useEffect(() => {
     if (pathname === "/managers/page-config") {
       navigate("/managers/page-config/header", { replace: true });
@@ -141,7 +134,6 @@ const SidebarContent = ({
     socket.on("newVisit", () => {
       fetchData();
     });
-
     return () => {
       socket.off("newVisit");
     };
@@ -174,7 +166,6 @@ const SidebarContent = ({
             {isCollapsed && !isMobile ? "M" : "Modi"}
           </h1>
 
-          {/* Collapse Button */}
           {!isMobile && (
             <Button
               theme={isDark ? "admin" : "light"}
@@ -204,42 +195,47 @@ const SidebarContent = ({
           isCollapsed && !isMobile ? "px-2" : "px-3"
         )}
       >
-        {filteredMenuItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            onClick={onClose}
-            className={cn(
-              "flex items-center py-3 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out group",
-              isCollapsed && !isMobile ? "justify-center" : "px-3",
-              isActive(item.path)
-                ? "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
-                : isDark
-                ? "text-gray-300 hover:bg-gray-700 hover:scale-[0.99]"
-                : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
-            )}
-            title={isCollapsed && !isMobile ? item.name : undefined}
-            aria-label={item.name}
-          >
-            <item.icon
+        {filteredMenuItems.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={onClose}
               className={cn(
-                "h-5 w-5 transition-all duration-200 ease-in-out group-hover:scale-110",
-                isCollapsed && !isMobile ? "" : "mr-3"
+                "flex items-center py-3 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out group",
+                isCollapsed && !isMobile ? "justify-center" : "px-3",
+                active
+                  ? isDark
+                    ? "bg-slate-700 text-white shadow-sm scale-[0.98]"
+                    : "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
+                  : isDark
+                  ? "text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-[0.99]"
+                  : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
               )}
-            />
-            <span
-              className={cn(
-                "transition-opacity duration-300 ease-in-out",
-                isCollapsed && !isMobile
-                  ? "opacity-0 w-0 overflow-hidden"
-                  : "opacity-100",
-                !isMobile && "whitespace-nowrap"
-              )}
+              title={isCollapsed && !isMobile ? item.name : undefined}
+              aria-label={item.name}
             >
-              {item.name}
-            </span>
-          </Link>
-        ))}
+              <item.icon
+                className={cn(
+                  "h-5 w-5 transition-all duration-200 ease-in-out group-hover:scale-110",
+                  isCollapsed && !isMobile ? "" : "mr-3"
+                )}
+              />
+              <span
+                className={cn(
+                  "transition-opacity duration-300 ease-in-out",
+                  isCollapsed && !isMobile
+                    ? "opacity-0 w-0 overflow-hidden"
+                    : "opacity-100",
+                  !isMobile && "whitespace-nowrap"
+                )}
+              >
+                {item.name}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Today visits */}
@@ -297,11 +293,11 @@ const SidebarContent = ({
 };
 
 const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
-  const { isDark } = useAdminTheme(); // hook theme
+  const { isDark } = useAdminTheme();
 
   return (
     <>
-      {/* Desktop */}
+      {/* Desktop ≥ lg */}
       <div
         className={cn(
           "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-2 lg:top-2 lg:bottom-2",
@@ -319,12 +315,12 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
         />
       </div>
 
-      {/* Mobile */}
+      {/* Mobile < lg */}
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent
           side="left"
           className={cn(
-            "w-64 p-0 overflow-hidden shadow-lg border-r transition-transform duration-300 ease-in-out",
+            "w-[80vw] max-w-xs p-0 overflow-hidden shadow-lg border-r transition-transform duration-300 ease-in-out",
             isDark
               ? "bg-gray-800 border-gray-700 text-gray-50"
               : "bg-white border-gray-200 text-gray-900"
@@ -340,7 +336,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
           >
             <SheetTitle
               className={cn(
-                "text-xl font-bold",
+                "text-lg font-bold",
                 isDark ? "text-gray-50" : "text-gray-900"
               )}
             >

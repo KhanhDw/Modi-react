@@ -52,10 +52,8 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
         }
         align="end"
       >
-        <CustomDropdownLabel className="text-base font-semibold px-4 py-2">
-          Cài đặt
-        </CustomDropdownLabel>
-        <CustomDropdownSeparator />
+        
+        
 
         {/* Profile Link - chỉ hiển thị trên mobile */}
         <CustomDropdownItem asChild className="md:hidden">

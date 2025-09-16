@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
-
 @theme {
     --breakpoint-xs: 20rem;
     /* 320 px */
@@ -21,25 +20,52 @@
     /* 2560 px */
 }
 
-/*  dark toàn bộ */
-@custom-variant dark (&:where(.dark, .dark *));
-/*  dark cục bộ - có thể dùng cùng với toàn cục - nhưng admin-dark được ưu tiên cao hơn,  */
-@custom-variant admin-dark (.admin-dark &, .dark.admin-dark &);
+@layer utilities {
+    .scrollbar-thin {
+        scrollbar-width: thin;
+    }
+    .scrollbar-thumb-gray-300 {
+        scrollbar-color: #d1d5db transparent;
+    }
+    .admin-dark .scrollbar-thumb-gray-600 {
+        scrollbar-color: #4b5563 transparent;
+    }
+    .scrollbar-track-transparent {
+        scrollbar-color: inherit transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar {
+        height: 8px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background-color: #d1d5db;
+        border-radius: 4px;
+    }
+    .admin-dark .scrollbar-thin::-webkit-scrollbar-thumb {
+        background-color: #4b5563;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
 
+
+/*  dark toàn bộ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*  dark cục bộ - có thể dùng cùng với toàn cục - nhưng admin-dark được ưu tiên cao hơn,  */
+
+@custom-variant admin-dark (.admin-dark &, .dark.admin-dark &);
 :root {
     /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
     font-weight: 400;
-
     color-scheme: light dark;
     color: rgb(0, 0, 0);
     background-color: #ffffff;
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -76,13 +102,21 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
-    --tooltip-bg: oklch(0.1 0 0); /* nền tối */
-    --tooltip-text: oklch(0.95 0 0); /* chữ sáng */
+    --tooltip-bg: oklch(0.1 0 0);
+    /* nền tối */
+    --tooltip-text: oklch(0.95 0 0);
+    /* chữ sáng */
 }
 
+
 /* ===================== */
+
+
 /* Admin dark mode (cục bộ) */
+
+
 /* ===================== */
+
 .admin-dark {
     /* Kế thừa tone dark nhưng tối ưu hơn cho dashboard admin */
     --background: oklch(0.13 0 0);
@@ -92,37 +126,29 @@
     --card-foreground: oklch(0.96 0 0);
     --popover: oklch(0.18 0 0);
     --popover-foreground: oklch(0.96 0 0);
-
     /* Màu chủ đạo xanh dương thay vì vàng/xám */
     --primary: oklch(0.75 0.17 265);
     --primary-foreground: oklch(0.96 0 0);
-
     /* Secondary mềm hơn */
     --secondary: oklch(0.25 0 0);
     --secondary-foreground: oklch(0.96 0 0);
-
     /* Màu accent xanh đậm */
     --accent: oklch(0.6 0.14 250);
     --accent-foreground: oklch(0.98 0 0);
-
     /* Giữ destructive nổi bật */
     --destructive: oklch(0.65 0.18 25);
     --destructive-foreground: oklch(0.98 0 0);
-
     /* Input và border rõ hơn */
     --border: oklch(1 0 0 / 15%);
     --input: oklch(1 0 0 / 20%);
-
     /* Ring màu xanh admin */
     --ring: oklch(0.65 0.14 250);
-
     /* Chart màu chuyên nghiệp hơn */
     --chart-1: oklch(0.55 0.18 250);
     --chart-2: oklch(0.68 0.16 170);
     --chart-3: oklch(0.72 0.17 60);
     --chart-4: oklch(0.6 0.2 300);
     --chart-5: oklch(0.62 0.19 20);
-
     /* Sidebar tối ưu cho admin */
     --sidebar: oklch(0.17 0 0);
     --sidebar-foreground: oklch(0.96 0 0);
@@ -218,7 +244,6 @@ a {
     * {
         @apply border-border outline-ring/50;
     }
-
     body {
         @apply bg-background text-foreground;
     }
