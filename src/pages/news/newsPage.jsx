@@ -87,7 +87,7 @@ export default function NewsInterface() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300">
       <div className="container mx-auto px-4 py-8" >
         {/* Hero Article */}
         {
@@ -181,10 +181,10 @@ export default function NewsInterface() {
               key={article.id}
               className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md cursor-pointer group"
               onClick={() => handleArticleClick(article.slug, article.id)}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: idx * 0.12, type: "spring", stiffness: 80 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               whileHover={{ scale: 1.03 }}
             >
               {/* Image wrapper */}
