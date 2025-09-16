@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -177,7 +178,7 @@ export default function ViewPage() {
             <div className="mx-auto  bg-white admin-dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <article className="p-8">
                     {/* Header bài viết */}
-                    <header className="mb-8 text-center">
+                    <header className="mb-8 mt-8 text-center">
                         <h1 className="text-4xl font-extrabold text-gray-900 admin-dark:text-white leading-tight mb-4">
                             {post.title}
                         </h1>
@@ -250,7 +251,7 @@ export default function ViewPage() {
             <div className="absolute top-0 left-0 border-gray-200 admin-dark:border-gray-700  ">
                 <button
                     onClick={() => navigate(-1)}
-                    className="px-3 py-2 bg-gray-200/20 hover:bg-gray-200/70 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow  admin-dark:hover:bg-gray-600 transition-colors duration-300"
+                    className="px-3 py-2 bg-gray-200/20 hover:bg-gray-200/70 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 rounded-lg shadow  admin-dark:hover:bg-gray-600 transition-colors duration-300 cursor-pointer"
                 >
                     <ChevronLeft />
                 </button>
@@ -260,8 +261,8 @@ export default function ViewPage() {
                 <button
                     onClick={() => setLang("en")}
                     className={`px-4 py-2 rounded-md font-bold transition-colors ${lang === "en"
-                        ? "bg-purple-800 text-white border-2 admin-dark:border-white"
-                        : "bg-gray-600/80 text-white hover:bg-gray-700"
+                        ? "bg-purple-800 text-white border-2 admin-dark:border-white cursor-pointer"
+                        : "bg-gray-600/80 text-white hover:bg-gray-700 cursor-pointer"
                         }`}
                 >
                     <span className="font-semibold">Anh</span>
@@ -269,8 +270,8 @@ export default function ViewPage() {
                 <button
                     onClick={() => setLang("vi")}
                     className={`px-4 py-2 rounded-md font-bold transition-colors ${lang === "vi"
-                        ? "bg-purple-800 text-white border-2 admin-dark:border-white"
-                        : "bg-gray-600/80 text-white hover:bg-gray-700"
+                        ? "bg-purple-800 text-white border-2 admin-dark:border-white cursor-pointer"
+                        : "bg-gray-600/80 text-white hover:bg-gray-700 cursor-pointer"
                         }`}
                 >
                     <span className="font-semibold">Việt</span>

@@ -1,142 +1,109 @@
-import React, { useState, useMemo, useRef } from "react";
-import { ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from "react";
+import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
-function ModalServices() {
+const ModalServices = forwardRef((props, ref) => {
 
-  // Mock translation function
-  const t = (key) => {
-    const translations = {
-      "header.services.listServices.0": "Online Kickstart",
-      "header.services.listServices.1": "One Me",
-      "header.services.listServices.2": "Brand Building",
-      "header.services.listServices.3": "Online Store",
-      "header.services.listServices.4": "Service Booking",
-      "header.services.listServices.5": "Comprehensive Management",
-      "header.services.listServices.6": "Website & App",
-      "header.services.listServices.7": "Re-Vision",
-      "header.services.listServices.8": "Digital Marketing",
-      "header.services.listServices.9": "SEO Services",
-      "header.services.listServices.10": "Social Media",
-      "header.services.listServices.11": "Consulting",
-      "header.services.listServices.12": "Training",
-      "header.services.listServices.13": "Support"
-    };
-    return translations[key] || key;
-  };
-
-  // Data structure
-  const services = useMemo(() => [
-    {
-      id: 0,
-      title: t("header.services.listServices.0"),
-      href: "/services/online-kickstart",
-      subItems: [
-        { title: "Tư Vấn Cơ Bản", href: "/services/online-kickstart/advise" },
-        { title: "Thiết Kế Gói Dịch Vụ", href: "/services/online-kickstart/design-service-package" },
-        { title: "Hỗ Trợ Triển Khai", href: "/services/online-kickstart/support-implementation" },
-      ],
-    },
-    {
-      id: 1,
-      title: t("header.services.listServices.1"),
-      href: "/services/one-me",
-    },
-    {
-      id: 2,
-      title: t("header.services.listServices.2"),
-      href: "/services/brand-building",
-      subItems: [
-        { title: "Xây Dựng Thương Hiệu Cá Nhân", href: "/services/brand-building/personal-brand" },
-        { title: "Chiến Lược Thương Hiệu", href: "/services/brand-building/brand-strategy" },
-        { title: "Thiết Kế Nhận Diện", href: "/services/brand-building/identity-design" },
-        { title: "Quản Lý Thương Hiệu", href: "/services/brand-building/brand-management" },
-      ],
-    },
-    {
-      id: 3,
-      title: t("header.services.listServices.3"),
-      href: "/services/online-store"
-    },
-    {
-      id: 4,
-      title: t("header.services.listServices.4"),
-      href: "/services/service-booking"
-    },
-    {
-      id: 5,
-      title: t("header.services.listServices.5"),
-      href: "/services/comprehensive-management",
-      subItems: [
-        { title: "Quản Lý Toàn Diện", href: "/services/comprehensive-management/full-management" },
-        { title: "Phân Tích & Báo Cáo", href: "/services/comprehensive-management/analytics" },
-        { title: "Tối Ưu Hóa", href: "/services/comprehensive-management/optimization" },
-      ],
-    },
-    {
-      id: 6,
-      title: t("header.services.listServices.6"),
-      href: "/services/website-app"
-    },
-    {
-      id: 7,
-      title: t("header.services.listServices.7"),
-      href: "/services/re-vision"
-    },
-    {
-      id: 8,
-      title: t("header.services.listServices.8"),
-      href: "/services/digital-marketing"
-    },
-    {
-      id: 9,
-      title: t("header.services.listServices.9"),
-      href: "/services/seo"
-    },
-    {
-      id: 10,
-      title: t("header.services.listServices.10"),
-      href: "/services/social-media"
-    },
-    {
-      id: 11,
-      title: t("header.services.listServices.11"),
-      href: "/services/consulting",
-      subItems: [
-        { title: "Tư Vấn Chiến Lược", href: "/services/consulting/strategy" },
-        { title: "Tư Vấn Kỹ Thuật", href: "/services/consulting/technical" },
-        { title: "Tư Vấn Marketing", href: "/services/consulting/marketing" },
-      ],
-    },
-    {
-      id: 12,
-      title: t("header.services.listServices.12"),
-      href: "/services/training"
-    },
-    {
-      id: 13,
-      title: t("header.services.listServices.13"),
-      href: "/services/support"
-    },
-  ], []);
-
+  const [services, setServices] = useState([]);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [childrenMap, setChildrenMap] = useState({});
   const hoverTimeout = useRef(null);
 
-  const handleMouseEnterItem = (serviceId, hasSubItems) => {
-    // Nếu item có submenu thì delay 1s mới mở
-    if (hasSubItems) {
-      hoverTimeout.current = setTimeout(() => {
-        setHoveredItem(serviceId);
-      }, 250);
-    } else {
-      // Item không có submenu thì mở ngay
-      setHoveredItem(serviceId);
+  const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
+
+  // normalize child -> trả về object chuẩn dùng cho UI
+  const normalizeChild = (child) => ({
+    id: child.id,
+    title: (child.title && (child.title.vi || child.title.en)) || "",
+    href: "#",
+    section_id: child.section_id,
+    section_type: child.section_type,
+    description: child.description || { en: slugify(child.title?.en || ""), vi: "" }
+  });
+
+  const loadAllData = async () => {
+    try {
+      // 1) fetch danh mục cha
+      const res = await fetch(`${API_BASE_URL}/api/sections?slug=header`);
+      if (!res.ok) throw new Error("Không thể tải danh mục cha");
+      const sectionsRes = await res.json();
+
+      // sectionsRes có thể là { success, data: [...] } hoặc trả trực tiếp mảng tùy backend
+      const sectionsArray = Array.isArray(sectionsRes)
+        ? sectionsRes
+        : Array.isArray(sectionsRes.data)
+          ? sectionsRes.data
+          : [];
+
+      // lọc và chuẩn hóa danh sách cha
+      const merged = sectionsArray
+        .filter((section) => section.type !== "logo")
+        .map((section) => ({
+          id: section.id,
+          type: section.type,
+          title: section.title?.vi || section.title?.en || "No Title",
+          href: "#",
+        }));
+
+      setServices(merged);
+
+      // 2) fetch toàn bộ children song song (theo type), nhưng lưu theo service.id
+      const childrenResults = await Promise.all(
+        merged.map(async (service) => {
+          if (!service.type) return [service.id, []];
+
+          // gọi endpoint
+          const r = await fetch(
+            `${API_BASE_URL}/api/section-items/type/${encodeURIComponent(
+              service.type
+            )}?slug=header`
+          );
+
+          if (!r.ok) return [service.id, []];
+
+          const json = await r.json();
+          // có thể backend trả mảng trực tiếp hoặc { data: [...] }
+          const itemsArray = Array.isArray(json)
+            ? json
+            : Array.isArray(json.data)
+              ? json.data
+              : [];
+
+          // CHÚ Ý: item mẫu có field section_id = id của section cha
+          // defensive: lọc theo section_id === service.id (để đảm bảo đúng cha)
+          const linked = itemsArray
+            .filter(ch => ch.section_id === service.id || ch.section_type === service.type)
+            .map(ch => normalizeChild(ch));
+
+          return [service.id, linked];
+        })
+      );
+
+      setChildrenMap(Object.fromEntries(childrenResults));
+    } catch (err) {
+      console.error("Lỗi loadAllData:", err);
     }
   };
 
-  const handleMouseLeaveItem = () => {
-    // Clear timeout nếu chuột rời đi trước khi đủ 1s
+
+  // expose hàm fetch ra ngoài
+  useImperativeHandle(ref, () => ({
+    loadAllData
+  }));
+
+  // vẫn giữ useEffect cũ nếu muốn hover cũng fetch như bình thường
+  useEffect(() => {
+    if (!services.length) loadAllData();
+  }, []);
+
+  const memoizedServices = useMemo(() => services, [services]);
+
+  // Hover logic (không thay đổi UI)
+  const handleMouseEnterItem = (serviceId) => {
     clearTimeout(hoverTimeout.current);
+    hoverTimeout.current = setTimeout(() => {
+      setHoveredItem(serviceId);
+    }, 250);
   };
 
   const handleMouseLeaveContainer = () => {
@@ -144,70 +111,80 @@ function ModalServices() {
     setHoveredItem(null);
   };
 
-  // Kiểm tra xem có submenu nào đang được hiển thị không
-  const activeService = services.find(s => s.id === hoveredItem);
-  const hasActiveSubmenu = activeService && activeService.subItems && activeService.subItems.length > 0;
+  const activeService = memoizedServices.find((s) => s.id === hoveredItem);
+  const activeChildren = useMemo(() =>
+    activeService ? childrenMap[activeService.id] || [] : [],
+    [activeService, childrenMap]
+  );
+
+  const hasActiveSubmenu = activeChildren.length > 0;
+
 
   return (
     <div
-      className="w-fit animate-in slide-in-from-top-2 duration-200 relative"
+      className="w-fit backdrop-blur-xl animate-in slide-in-from-top-2 duration-200 relative rounded-sm"
       onMouseLeave={handleMouseLeaveContainer}
     >
-      <div className="rounded-xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl overflow-hidden">
-        <div className="flex">
+      <div
+        className="rounded-sm bg-gray-700/60 border border-gray-200/50 dark:border-gray-700/50 
+                dark:bg-gray-800/70 dark:from-gray-800 dark:to-gray-900 
+               shadow-2xl overflow-hidden transition-all duration-300"
+      >
+        <div className="flex bg-gray-700/60">
           {/* Cột 1: Menu cấp 1 */}
           <div
             className={`
-              flex-shrink-0 w-80 p-4 border-r border-gray-200/50 dark:border-gray-700/50
-              ${services.length > 9 ? "h-120 overflow-y-auto scrollbar-hide" : "h-auto"}
-            `}
+          flex-shrink-0 w-60 transition-all duration-300 bg-gray-700/60
+          ${memoizedServices.length > 9 ? "h-120 overflow-y-auto scrollbar-hide" : "h-fit"}
+        `}
             onWheel={(e) => e.stopPropagation()}
           >
-            <div className="space-y-1">
-              {services.map((service) => {
+            <div className="space-y-1 bg-gray-700/60">
+              {memoizedServices.map((service) => {
                 const isActive = hoveredItem === service.id;
-                const hasSubItems = service.subItems && service.subItems.length > 0;
+                const hasSubItems =
+                  Array.isArray(childrenMap[service.id]) && childrenMap[service.id].length > 0;
 
                 return (
                   <div
                     key={service.id}
                     className={`
-                      group cursor-pointer transition-all duration-300 ease-in-out transform
-                      px-4 py-3 rounded-lg border-l-4 relative
-                      ${isActive && hasSubItems
-                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-400 text-white translate-x-1'
-                        : 'bg-white/80 dark:bg-gray-800/80 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 border-transparent hover:border-emerald-400 text-gray-700 dark:text-gray-200 hover:text-white hover:translate-x-1'
-                      }
-                    `}
-                    onMouseEnter={() => handleMouseEnterItem(service.id, hasSubItems)}
-                    onMouseLeave={handleMouseLeaveItem}
+                  group cursor-pointer transition-all duration-100 transform
+                  px-4 py-3 rounded-lg relative
+                  ${isActive && hasSubItems
+                        ? "text-white"
+                        : "hover:bg-slate-900 text-gray-300 dark:text-gray-200 hover:text-white"}
+                `}
+                    onMouseEnter={() => handleMouseEnterItem(service.id)}
                   >
+                    {/* Background highlight */}
                     <div
                       className={`
-                        absolute inset-0 rounded-lg transition-opacity duration-300
-                        ${isActive && hasSubItems
-                          ? 'bg-gradient-to-r from-transparent to-emerald-200 dark:to-emerald-800/30 opacity-100'
-                          : 'bg-gradient-to-r from-transparent to-emerald-100 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100'
-                        }
-                      `}
+                    absolute inset-0 rounded-lg transition-opacity duration-100
+                    ${isActive && hasSubItems ? "bg-gray-900" : ""}
+                  `}
                     />
 
+                    {/* Nội dung item */}
                     <div className="flex items-center justify-between relative z-10">
-                      <a
-                        href={service.href}
+                      <Link
+                        to={{
+                          pathname: "/services",
+                          search: `?q=${service.type}`
+                        }}
                         className={`
-                          flex-1 text-sm transition-all duration-300
-                          ${isActive && hasSubItems ? 'font-bold' : 'font-medium group-hover:font-semibold'}
-                        `}
+                      flex-1 text-sm transition-all duration-100
+                      ${isActive && hasSubItems ? "font-semibold" : "font-medium group-hover:font-semibold"}
+                    `}
                       >
                         {service.title}
-                      </a>
+                      </Link>
                       {hasSubItems && (
                         <ChevronDown
                           className={`
-                            ml-2 w-4 h-4 transition-transform duration-300
-                            ${isActive ? 'rotate-90' : 'group-hover:rotate-90'}
-                          `}
+                        ml-2 w-4 h-4 transition-transform duration-100
+                        ${isActive ? "rotate-90" : "group-hover:rotate-90"}
+                      `}
                         />
                       )}
                     </div>
@@ -217,43 +194,67 @@ function ModalServices() {
             </div>
           </div>
 
-          {/* Cột 2: Menu cấp 2 - chỉ hiển thị khi có submenu */}
+          {/* Cột 2: Menu cấp 2 */}
           <div
             className={`
-    transition-all duration-300 ease-in-out overflow-hidden
-    ${hasActiveSubmenu ? (activeService.subItems.length > 10 ? "w-72 opacity-100 h-100 overflow-y-auto" : "w-72 opacity-100 h-auto") : "w-0 opacity-0"}
-  `}
+          transition-all duration-140 ease-in-out transform
+          ${hasActiveSubmenu
+                ? activeChildren.length > 10
+                  ? "w-72 opacity-100 h-100 overflow-y-auto scale-100"
+                  : "w-72 opacity-100 h-auto scale-100"
+                : "w-0 opacity-0 scale-95"}
+        `}
           >
-            {hasActiveSubmenu && (
-              <div className="p-4 min-h-full bg-gray-50/50 dark:bg-gray-800/50 h-72 overflow-y-auto " onWheel={(e) => e.stopPropagation()}>
+            <div
+              className="
+                p-4 min-h-full 
+              bg-emerald-50/10 
+                dark:from-gray-900/80 dark:to-emerald-900/30 
+                backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/50 
+                shadow-xl shadow-emerald-500/10 
+                h-auto  overflow-y-auto transition-opacity duration-300
+              "
+              onWheel={(e) => e.stopPropagation()}
+            >
+              {hasActiveSubmenu ? (
+                <>
+                  <div className="mb-4">
+                    <h3 className="text-sm font-bold text-gray-200 dark:text-gray-100 mb-2">
+                      {activeService?.title}
+                    </h3>
+                    <div className="h-0.5 w-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" />
+                  </div>
 
-                <div className="mb-4">
-                  <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">
-                    {activeService.title}
-                  </h3>
-                  <div className="h-0.5 w-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" />
-                </div>
-
-                <ul className="space-y-2">
-                  {activeService.subItems.map((sub, subIndex) => (
-                    <li key={subIndex} className="group">
-                      <a
-                        href={sub.href}
-                        className="flex items-center px-3 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all duration-300 cursor-pointer rounded-lg text-sm font-medium hover:font-semibold hover:translate-x-1"
-                      >
-                        <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-3 opacity-60 transition-all duration-300 group-hover:opacity-100 group-hover:scale-125" />
-                        {sub.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                  <ul className="space-y-2">
+                    {activeChildren.map((sub) => (
+                      <li key={sub.id} className="group">
+                        <Link
+                          to={{
+                            pathname: "/services",
+                            search: `?q=${sub.section_type}&i=${sub.id}&sub=${sub.description?.en}`
+                          }}
+                          className="
+                        flex items-center px-3 py-2.5 
+                        text-gray-200 dark:text-gray-300 
+                        hover:bg-slate-800 hover:text-white 
+                        transition-all duration-300 
+                        cursor-pointer rounded-lg text-sm font-medium 
+                        hover:font-semibold hover:translate-x-1
+                      "
+                        >
+                          {sub.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+})
 
 export default ModalServices;

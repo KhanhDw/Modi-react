@@ -12,6 +12,8 @@ const AdminLayoutInner = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
   const { theme } = useAdminTheme(); // "light" | "dark"
+  // Trạng thái dialog dịch vụ
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // --- Load state từ localStorage khi mount ---
   useEffect(() => {
@@ -32,13 +34,16 @@ const AdminLayoutInner = ({ children }) => {
   }, [isHeaderSticky]);
 
   const toggleSidebar_Collapse = () => {
-    setSidebarCollapsed(prev => {
+    setSidebarCollapsed((prev) => {
       const newValue = !prev;
       localStorage.setItem("sidebarCollapsed", newValue.toString());
       return newValue;
     });
   };
 
+  // Truyền hàm setIsDialogOpen cho children (page dịch vụ)
+  const childrenWithDialogControl =
+    typeof children === "function" ? children({ setIsDialogOpen }) : children;
 
   return (
     <div
@@ -48,12 +53,20 @@ const AdminLayoutInner = ({ children }) => {
       )}
     >
       {/* Sidebar */}
-      <AdminSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        isCollapsed={sidebarCollapsed}
-        toggleCollapse={toggleSidebar_Collapse}
-      />
+      <div
+        className={cn(
+          "sidebar-blur-wrapper",
+          isDialogOpen && "blur-sm pointer-events-none"
+        )}
+        style={{ transition: "filter 0.3s" }}
+      >
+        <AdminSidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          isCollapsed={sidebarCollapsed}
+          toggleCollapse={toggleSidebar_Collapse}
+        />
+      </div>
 
       {/* Main Content */}
       <div
@@ -79,7 +92,8 @@ const AdminLayoutInner = ({ children }) => {
           )}
         >
           <div className="bg-white admin-dark:bg-gray-900 p-4 h-full">
-            {children}
+            {/* Truyền setIsDialogOpen cho children để các form dịch vụ có thể điều khiển trạng thái dialog */}
+            {childrenWithDialogControl}
           </div>
         </main>
       </div>

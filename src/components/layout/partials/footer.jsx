@@ -85,7 +85,6 @@ export default function Footer() {
       setPrivacy(privacyMap);
       setBoCongThuong(bctMap);
 
-      console.log("✅ BCT Map:", bctMap);
     } catch (err) {
       console.error("❌ Lỗi tải footer:", err);
     } finally {

@@ -29,16 +29,18 @@ function Dialog({ children, open: controlledOpen, onOpenChange }) {
 }
 
 // Cập nhật DialogTrigger
-const DialogTrigger = forwardRef(({ children, asChild = false, ...props }, ref) => {
-  const { setOpen } = useDialogContext();
-  const Comp = asChild ? Slot : "button"; // Sử dụng Slot khi asChild={true}
+const DialogTrigger = forwardRef(
+  ({ children, asChild = false, ...props }, ref) => {
+    const { setOpen } = useDialogContext();
+    const Comp = asChild ? Slot : "button"; // Sử dụng Slot khi asChild={true}
 
-  return (
-    <Comp ref={ref} onClick={() => setOpen(true)} {...props}>
-      {children}
-    </Comp>
-  );
-});
+    return (
+      <Comp ref={ref} onClick={() => setOpen(true)} {...props}>
+        {children}
+      </Comp>
+    );
+  }
+);
 DialogTrigger.displayName = "DialogTrigger";
 
 function DialogClose({ children, ...props }) {
@@ -65,19 +67,22 @@ function DialogOverlay({ className, ...props }) {
   );
 }
 
-function DialogContent({ className, children, showCloseButton = true, ...props }) {
+function DialogContent({
+  className,
+  children,
+  showCloseButton = true,
+  ...props
+}) {
   const { open, setOpen } = useDialogContext();
   if (!open) return null;
 
   return (
     <>
-      <DialogOverlay />
       <div
         className={cn(
           "fixed top-1/2 left-1/2 z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 animate-in fade-in-0 zoom-in-95",
           className
         )}
-
         {...props}
       >
         {children}
@@ -107,7 +112,10 @@ function DialogHeader({ className, ...props }) {
 function DialogFooter({ className, ...props }) {
   return (
     <div
-      className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className
+      )}
       {...props}
     />
   );
@@ -115,7 +123,10 @@ function DialogFooter({ className, ...props }) {
 
 function DialogTitle({ className, ...props }) {
   return (
-    <h2 className={cn("text-sm font-semibold leading-none", className)} {...props} />
+    <h2
+      className={cn("text-sm font-semibold leading-none", className)}
+      {...props}
+    />
   );
 }
 

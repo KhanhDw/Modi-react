@@ -57,16 +57,18 @@ export default function OrderNeedToDone({ bookings }) {
     (b) => b.status !== "completed" && b.status !== "cancelled"
   );
 
-  // Sắp xếp
+  // Sắp xếp: Đơn hàng có ngày hoàn thành gần nhất với hiện tại lên đầu
   const sortedOrders = filteredBookings.sort((a, b) => {
-    const statusA = getOrderStatus(a.booking_date);
-    const statusB = getOrderStatus(b.booking_date);
+    // Nếu không có ngày hoàn thành thì để xuống cuối
+    if (!a.completed_date && b.completed_date) return 1;
+    if (a.completed_date && !b.completed_date) return -1;
+    if (!a.completed_date && !b.completed_date) return 0;
 
-    if (a.booking_date !== b.booking_date)
-      return new Date(a.booking_date) - new Date(b.booking_date);
-
-    // Nếu cùng ngày, sắp xếp theo trạng thái
-    return statusPriority[statusA] - statusPriority[statusB];
+    // Sắp xếp theo ngày hoàn thành gần nhất với hiện tại
+    const now = new Date();
+    const diffA = Math.abs(new Date(a.completed_date) - now);
+    const diffB = Math.abs(new Date(b.completed_date) - now);
+    return diffA - diffB;
   });
 
   return (

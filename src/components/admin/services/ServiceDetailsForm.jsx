@@ -11,11 +11,14 @@ export default function ServiceDetailsForm({
 }) {
   return (
     <div
-      className={`flex ${editingService ? `flex-col` : ""
-        } justify-between gap-6`}
+      className={`flex ${
+        editingService ? `flex-col` : ""
+      } justify-between gap-6`}
     >
       <div className="space-y-2 flex-1/3">
-        <Label className="text-black" htmlFor="serviceName">Tên dịch vụ *</Label>
+        <Label className="text-black" htmlFor="serviceName">
+          Tên dịch vụ *
+        </Label>
         <Input
           className="text-black border border-black/30"
           id="serviceName"
@@ -23,11 +26,15 @@ export default function ServiceDetailsForm({
           onChange={(e) => handleChange("serviceName", e.target.value)}
           placeholder="Nhập tên dịch vụ"
         />
-        {errors.serviceName && (<p className="text-red-500 text-sm">{errors.serviceName}</p>)}
+        {errors.serviceName && (
+          <p className="text-red-500 text-sm">{errors.serviceName}</p>
+        )}
       </div>
 
       <div className="space-y-2 flex-1/3">
-        <Label className="text-black" htmlFor="description">Mô tả *</Label>
+        <Label className="text-black" htmlFor="description">
+          Mô tả *
+        </Label>
         <Textarea
           className="text-black border border-black/30"
           id="description"
@@ -39,13 +46,30 @@ export default function ServiceDetailsForm({
       </div>
 
       <div className="space-y-2 flex-1/3">
-        <Label className="text-black" htmlFor="price">Giá</Label>
+        <Label className="text-black" htmlFor="price">
+          Giá
+        </Label>
         <Input
           className="text-black border border-black/30"
           id="price"
           type="text"
-          value={formatCurrency(formData.price)}
-          onChange={(e) => handleChange("price", parseCurrency(e.target.value))}
+          value={formData.price || ""}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/[^0-9]/g, "");
+            handleChange("price", raw);
+          }}
+          onBlur={(e) => {
+            if (e.target.value) {
+              const raw = e.target.value.replace(/[^0-9]/g, "");
+              const formatted = raw ? Number(raw).toLocaleString("vi-VN") : "";
+              handleChange("price", formatted);
+            }
+          }}
+          onFocus={(e) => {
+            // Khi focus lại, chuyển về số thô để nhập tiếp
+            const raw = e.target.value.replace(/[^0-9]/g, "");
+            handleChange("price", raw);
+          }}
           placeholder="Nhập giá của dịch vụ"
         />
         {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}

@@ -1,9 +1,28 @@
 import {
-  LayoutDashboard, Handshake, Newspaper, Users, ShieldMinus, Mail, Puzzle, Moon, SunMedium,
-  X, ChevronLeft, ChevronRight, Palette, Megaphone, Columns3Cog
+  LayoutDashboard,
+  Handshake,
+  Newspaper,
+  Users,
+  ShieldMinus,
+  Mail,
+  Puzzle,
+  Moon,
+  SunMedium,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Palette,
+  Megaphone,
+  Columns3Cog,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import React, { useEffect, useState } from "react";
@@ -20,13 +39,26 @@ const menuItems = [
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
   { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone },
-  { name: "Thiết kế Website", path: "/managers/website-templates", icon: Palette },
-  { name: "Cấu hình trang web", path: "/managers/page-config", icon: Columns3Cog },
+  {
+    name: "Thiết kế Website",
+    path: "/managers/website-templates",
+    icon: Palette,
+  },
+  {
+    name: "Cấu hình trang web",
+    path: "/managers/page-config",
+    icon: Columns3Cog,
+  },
   { name: "Khu vực quản trị", path: "/managers/admin-zone", icon: ShieldMinus },
   { name: "Component", path: "/managers/components", icon: Puzzle },
 ];
 
-const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false }) => {
+const SidebarContent = ({
+  isCollapsed,
+  toggleCollapse,
+  onClose,
+  isMobile = false,
+}) => {
   const { pathname } = useLocation();
   const { isDark, toggleTheme } = useAdminTheme();
   const navigate = useNavigate();
@@ -35,7 +67,8 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   const [user, setUser] = useState(null);
 
   // Check active path
-  const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
+  const isActive = (path) =>
+    pathname === path || pathname.startsWith(path + "/");
 
   // Fetch user
   const fetchUser = async () => {
@@ -71,7 +104,10 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
     }
 
     // user thường: ẩn admin-zone + component
-    if (item.path === "/managers/admin-zone" || item.path === "/managers/components") {
+    if (
+      item.path === "/managers/admin-zone" ||
+      item.path === "/managers/components"
+    ) {
       return false;
     }
     return true;
@@ -87,7 +123,9 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   // Fetch lượt truy cập
   const fetchData = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`);
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/today`
+      );
       const data = await res.json();
       setTodayVisits(data.total);
     } catch (err) {
@@ -110,38 +148,60 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-white admin-dark:bg-slate-900 border-r border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100">
+    <div
+      className={cn(
+        "flex flex-col h-full border-r",
+        isDark
+          ? "bg-slate-900 border-gray-700 text-gray-100"
+          : "bg-white border-gray-200 text-gray-900"
+      )}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 admin-dark:border-gray-700">
-        <h1
+      {!isMobile && (
+        <div
           className={cn(
-            "font-bold text-gray-900 admin-dark:text-gray-50 transition-all duration-300 ease-in-out",
-            isCollapsed && !isMobile ? "text-2xl" : "text-xl",
+            "flex items-center justify-between h-16 px-4 border-b",
+            isDark ? "border-gray-700" : "border-gray-200"
           )}
         >
-          {isCollapsed && !isMobile ? "M" : "Modi"}
-        </h1>
-
-        {/* Collapse Button */}
-        {!isMobile && (
-          <Button
-            theme={isDark ? "admin" : "light"}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100 cursor-pointer"
-            onClick={toggleCollapse}
-            aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+          <h1
+            className={cn(
+              "font-bold transition-all duration-300 ease-in-out",
+              isDark ? "text-gray-50" : "text-gray-900",
+              isCollapsed && !isMobile ? "text-2xl" : "text-xl"
+            )}
           >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
-        )}
-      </div>
+            {isCollapsed && !isMobile ? "M" : "Modi"}
+          </h1>
+
+          {/* Collapse Button */}
+          {!isMobile && (
+            <Button
+              theme={isDark ? "admin" : "light"}
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-8 w-8 transition-transform duration-200 hover:scale-110 cursor-pointer",
+                isDark ? "text-slate-100" : "text-slate-800"
+              )}
+              onClick={toggleCollapse}
+              aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Menu */}
       <nav
         className={cn(
           "flex-1 py-4 space-y-1 overflow-y-auto transition-all duration-300 ease-in-out",
-          isCollapsed && !isMobile ? "px-2" : "px-3",
+          isCollapsed && !isMobile ? "px-2" : "px-3"
         )}
       >
         {filteredMenuItems.map((item) => (
@@ -154,7 +214,9 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
               isCollapsed && !isMobile ? "justify-center" : "px-3",
               isActive(item.path)
                 ? "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
-                : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99] admin-dark:text-gray-300 admin-dark:hover:bg-gray-700",
+                : isDark
+                ? "text-gray-300 hover:bg-gray-700 hover:scale-[0.99]"
+                : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
             )}
             title={isCollapsed && !isMobile ? item.name : undefined}
             aria-label={item.name}
@@ -162,14 +224,16 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
             <item.icon
               className={cn(
                 "h-5 w-5 transition-all duration-200 ease-in-out group-hover:scale-110",
-                isCollapsed && !isMobile ? "" : "mr-3",
+                isCollapsed && !isMobile ? "" : "mr-3"
               )}
             />
             <span
               className={cn(
                 "transition-opacity duration-300 ease-in-out",
-                isCollapsed && !isMobile ? "opacity-0 w-0 overflow-hidden" : "opacity-100",
-                !isMobile && "whitespace-nowrap",
+                isCollapsed && !isMobile
+                  ? "opacity-0 w-0 overflow-hidden"
+                  : "opacity-100",
+                !isMobile && "whitespace-nowrap"
               )}
             >
               {item.name}
@@ -180,25 +244,47 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 
       {/* Today visits */}
       <div className="px-2 flex items-center justify-between transition-all duration-300 ">
-        {isCollapsed && !isMobile ? "" :
-          (<span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300 mb-2">
+        {isCollapsed && !isMobile ? (
+          ""
+        ) : (
+          <span
+            className={cn(
+              "font-medium text-xs transition-all duration-300 mb-2",
+              isDark ? "text-gray-50" : "text-gray-900"
+            )}
+          >
             Lượt truy cập hôm nay:
-          </span>)
-        }
+          </span>
+        )}
 
-        <span className={`${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50 mb-2`}>
+        <span
+          className={cn(
+            `${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center mb-2`,
+            isDark ? "text-gray-50" : "text-gray-900"
+          )}
+        >
           {todayVisits.toLocaleString("vi-VN")}
         </span>
       </div>
 
       {/* Theme Toggle */}
-      <div className="p-3 border-t border-gray-200 admin-dark:border-gray-600 overflow-hidden">
+      <div
+        className={cn(
+          "p-3 border-t overflow-hidden",
+          isDark ? "border-gray-600" : "border-gray-200"
+        )}
+      >
         <Button
           theme={isDark ? "admin" : "light"}
           onClick={toggleTheme}
           variant="outline"
           size="sm"
-          className="w-full text-xs cursor-pointer border-gray-700  bg-gray-200 text-slate-800 admin-dark:text-slate-100"
+          className={cn(
+            "w-full text-xs cursor-pointer",
+            isDark
+              ? "bg-slate-800 text-slate-100 border-gray-600"
+              : "bg-gray-200 text-slate-800 border-gray-700"
+          )}
         >
           <>
             {!(isCollapsed && isMobile) && (isDark ? <SunMedium /> : <Moon />)}
@@ -211,26 +297,55 @@ const SidebarContent = ({ isCollapsed, toggleCollapse, onClose, isMobile = false
 };
 
 const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
+  const { isDark } = useAdminTheme(); // hook theme
+
   return (
     <>
       {/* Desktop */}
       <div
         className={cn(
           "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-2 lg:top-2 lg:bottom-2",
-          "lg:rounded-2xl lg:border lg:border-gray-200 admin-dark:lg:border-gray-700",
-          "overflow-hidden bg-white admin-dark:bg-slate-900 text-gray-900 admin-dark:text-gray-100 shadow-lg z-50",
+          "lg:rounded-2xl lg:border overflow-hidden shadow-lg z-10",
           "transition-all duration-300 ease-in-out transform",
           isCollapsed ? "lg:w-16" : "lg:w-64",
+          isDark
+            ? "bg-gray-800 border-gray-700 text-gray-50"
+            : "bg-white border-gray-200 text-gray-900"
         )}
       >
-        <SidebarContent isCollapsed={isCollapsed} toggleCollapse={toggleCollapse} />
+        <SidebarContent
+          isCollapsed={isCollapsed}
+          toggleCollapse={toggleCollapse}
+        />
       </div>
 
       {/* Mobile */}
       <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent side="left" className="w-64 p-0 transition-transform duration-300 ease-in-out bg-white admin-dark:bg-slate-900 text-gray-900 admin-dark:text-gray-100">
-          <SheetHeader className="h-16 flex items-center justify-between flex-row px-4 border-b border-gray-200 admin-dark:border-gray-800">
-            <SheetTitle className="text-xl font-bold text-gray-900 admin-dark:text-gray-50">Modi</SheetTitle>
+        <SheetContent
+          side="left"
+          className={cn(
+            "w-64 p-0 overflow-hidden shadow-lg border-r transition-transform duration-300 ease-in-out",
+            isDark
+              ? "bg-gray-800 border-gray-700 text-gray-50"
+              : "bg-white border-gray-200 text-gray-900"
+          )}
+        >
+          <SheetHeader
+            className={cn(
+              "h-16 flex items-center justify-between flex-row px-4 border-b",
+              isDark
+                ? "bg-gray-800 border-gray-700 text-gray-50"
+                : "bg-white border-gray-200 text-gray-900"
+            )}
+          >
+            <SheetTitle
+              className={cn(
+                "text-xl font-bold",
+                isDark ? "text-gray-50" : "text-gray-900"
+              )}
+            >
+              Modi
+            </SheetTitle>
             <SheetDescription className="sr-only">
               Menu điều hướng admin
             </SheetDescription>
@@ -244,7 +359,13 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
               <X className="h-4 w-4" />
             </Button>
           </SheetHeader>
-          <SidebarContent isCollapsed={false} toggleCollapse={toggleCollapse} onClose={onClose} isMobile />
+
+          <SidebarContent
+            isCollapsed={false}
+            toggleCollapse={toggleCollapse}
+            onClose={onClose}
+            isMobile
+          />
         </SheetContent>
       </Sheet>
     </>

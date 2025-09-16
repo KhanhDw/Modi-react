@@ -1,0 +1,45 @@
+import { useOutletContext } from "react-router-dom";
+import ServiceForm from "@/components/admin/services/service-form";
+import BookingForm from "@/components/admin/services/booking/booking-form";
+import CustomerForm from "@/components/admin/services/customers/customer-form";
+import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
+
+export default function DialogShowForm_Service() {
+  const { showForm, typeForm, editingBooking, editingCustomer, handleClose } =
+    useOutletContext();
+
+  return (
+    <Dialog
+      open={showForm}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) handleClose();
+      }}
+    >
+      <DialogOverlay className="fixed inset-0 bg-black/50 z-50" />
+      <DialogContent
+        className={`${
+          typeForm === "service" ? "min-w-[70vw]" : ""
+        } min-h-[60vh] bg-white p-6 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
+      >
+        {typeForm === "service" ? (
+          <ServiceForm />
+        ) : typeForm === "booking" ? (
+          <BookingForm editingBooking={editingBooking} />
+        ) : typeForm === "customer" ? (
+          <CustomerForm editingCustomer={editingCustomer} />
+        ) : (
+          <p>Not found form - typeForm: {typeForm}</p>
+        )}
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          >
+            Đóng
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
