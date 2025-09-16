@@ -122,7 +122,7 @@ export default function ServicePage() {
 
     return (
         <div className="min-h-screen mb-10 text-gray-800 dark:text-white transition-all duration-500">
-            <div className="flex w-full  flex-col">
+            {/* <div className="flex w-full  flex-col">
                 adasd: {queryParams_q} & {queryParams_sub}
 
                 <div>
@@ -131,7 +131,7 @@ export default function ServicePage() {
                 <div>
                     {servicesItemDetail.title?.vi}
                 </div>
-            </div>
+            </div> */}
             {/* Banner */}
             <div className="mb-16">
                 <motion.div
