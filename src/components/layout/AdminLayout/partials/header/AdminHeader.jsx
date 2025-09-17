@@ -174,16 +174,18 @@ const AdminHeader = ({
             </NavLink>
 
             {/* Notifications */}
-            <NotificationBell />
+            <div className="hidden md:block">
+              <NotificationBell />
+            </div>
 
             {/* Avatar - chỉ hiển thị trên desktop */}
             <NavLink to="/managers/profile">
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 
+                className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hidden md:flex 
                           hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer"
               >
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 ">
                   <AvatarImage
                     src={
                       avatar_url ||

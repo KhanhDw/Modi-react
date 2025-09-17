@@ -10,9 +10,6 @@ import { io } from "socket.io-client";
 
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
-
-
-
 export function NotificationBell() {
   useLenisLocal(".lenis-local");
   const { isDark } = useAdminTheme();
@@ -20,22 +17,24 @@ export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
-  const [userId, setUserId] = useState(null)
+  const [userId, setUserId] = useState(null);
 
   const fetchNotifications = async (id) => {
     try {
-      const data = await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${id}`);
+      const data = await fetchWithAuth(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${id}`
+      );
       setNotifications(data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Lấy thông tin user hiện tại từ backend
   const getCurrentUser = async () => {
     try {
-      const data = await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`);
-      // { id, username, fullname, email, role, ... }
+      const data = await fetchWithAuth(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`
+      );
       fetchNotifications(data.user.id);
       setUserId(data.user.id);
     } catch (error) {
@@ -44,36 +43,31 @@ export function NotificationBell() {
     }
   };
 
-
-  // Fetch API lấy thông báo từ backend
   useEffect(() => {
-    getCurrentUser()
+    getCurrentUser();
   }, []);
 
   useEffect(() => {
-    socket.on("newLienHe", (data) => {
-      getCurrentUser()
+    socket.on("newLienHe", () => {
+      getCurrentUser();
     });
-
     return () => {
       socket.off("newLienHe");
     };
   }, []);
 
-
-
-
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const markAsRead = async (id) => {
     try {
-      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}/read`, {
-        method: "PATCH",
-      });
+      await fetchWithAuth(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}/read`,
+        { method: "PATCH" }
+      );
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
       );
-      getCurrentUser()
+      getCurrentUser();
     } catch (err) {
       console.error(err);
     }
@@ -81,11 +75,12 @@ export function NotificationBell() {
 
   const markAllAsRead = async (userId) => {
     try {
-      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${userId}/read-all`, {
-        method: "PATCH",
-      });
+      await fetchWithAuth(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${userId}/read-all`,
+        { method: "PATCH" }
+      );
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-      getCurrentUser()
+      getCurrentUser();
     } catch (err) {
       console.error(err);
     }
@@ -93,16 +88,16 @@ export function NotificationBell() {
 
   const removeNotification = async (id) => {
     try {
-      await fetchWithAuth(`${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}`, {
-        method: "DELETE",
-      });
+      await fetchWithAuth(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/${id}`,
+        { method: "DELETE" }
+      );
       setNotifications((prev) => prev.filter((n) => n.id !== id));
-      getCurrentUser()
+      getCurrentUser();
     } catch (err) {
       console.error(err);
     }
   };
-
 
   const getTypeColor = (type) => {
     switch (type) {
@@ -117,8 +112,6 @@ export function NotificationBell() {
     }
   };
 
-
-  // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -130,30 +123,16 @@ export function NotificationBell() {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-
-
-
-  // Hàm xử lý chuỗi message
   const renderMessage = (message) => {
-    // Tách chuỗi bằng dấu phân cách "khách hàng "
     const parts = message.split("Khách hàng ");
-
-    // parts sẽ là ["", "xxx vừa liên hệ"]
-
-
     if (parts.length > 1) {
-      // Tách tiếp phần tử thứ hai bằng dấu phân cách " vừa liên hệ"
       const nameParts = parts[1].split(" vừa gửi liên hệ.");
-
-      // nameParts sẽ là ["xxx", ""]
-
       if (nameParts.length > 0) {
         const customerName = nameParts[0];
         return (
@@ -163,8 +142,7 @@ export function NotificationBell() {
         );
       }
     }
-
-    return message; // Trả về nguyên văn nếu không khớp
+    return message;
   };
 
   return (
@@ -187,8 +165,14 @@ export function NotificationBell() {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className={`absolute right-0 mt-2 w-80 z-50 border rounded-md shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-            }`}
+          className={`
+              absolute mt-2 z-50 border rounded-md shadow-lg
+              ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
+              w-[280px] max-w-[90vw] sm:w-80
+              left-1/2 -translate-x-1/2
+            `}
+
+
         >
           <div className="flex items-center justify-between p-4 border-b border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800">
             <h3 className="font-semibold text-gray-900 admin-dark:text-white">
@@ -217,10 +201,11 @@ export function NotificationBell() {
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`p-4 hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors ${!notification.isRead
-                      ? "bg-blue-50 admin-dark:bg-blue-900/20"
-                      : "bg-white admin-dark:bg-gray-800"
-                      }`}
+                    className={`p-4 hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors ${
+                      !notification.isRead
+                        ? "bg-blue-50 admin-dark:bg-blue-900/20"
+                        : "bg-white admin-dark:bg-gray-800"
+                    }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -240,19 +225,15 @@ export function NotificationBell() {
                           {renderMessage(notification.message)}
                         </p>
                         <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-                          {/* {notification.createdAt} */}
-                          {
-                            new Date(notification.createdAt).toLocaleString("vi-VN", {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })
-                          }
+                          {new Date(notification.createdAt).toLocaleString("vi-VN", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </div>
-
                       <div className="flex gap-1">
                         {!notification.isRead && (
                           <Button

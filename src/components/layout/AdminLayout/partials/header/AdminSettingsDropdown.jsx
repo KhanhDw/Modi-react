@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
 
 const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url }) => {
   const { isDark, toggleTheme } = useAdminTheme();
@@ -68,6 +69,20 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
             {username || "Hồ sơ"}
           </NavLink>
         </CustomDropdownItem>
+        {/* Notification Link - chỉ hiển thị trên mobile */}
+          <CustomDropdownItem asChild className="md:hidden">
+            <div 
+               className="flex items-center justify-start w-full font-medium gap-2 hover:underline underline-offset-4 px-4 py-2 pl-1.5"
+              onClick={(e) => {
+                // tìm button trong NotificationBell và trigger click
+                const btn = e.currentTarget.querySelector("button");
+                if (btn) btn.click();
+              }}
+            >
+              <NotificationBell className="h-4 w-4 text-gray-500 dark:text-gray-400 "/>
+              <span className="font-medium -ml-3">Thông báo</span>
+            </div>
+          </CustomDropdownItem>
 
         {/* Website Link - chỉ hiển thị trên mobile */}
         <CustomDropdownItem asChild className="md:hidden">
