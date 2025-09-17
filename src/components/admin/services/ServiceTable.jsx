@@ -123,7 +123,7 @@ export default function ServiceTable() {
             <TableBody>
               {currentData.map((item) => (
                 <TableRow
-                  key={item.id}
+                  key={item.service_id}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
