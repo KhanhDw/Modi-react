@@ -1,10 +1,13 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogOverlay, Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
+
+
+// form xác nhận xóa
 export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDelete }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-md bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
+            <DialogContent className=" sm:max-w-md bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
                 <DialogHeader>
                     <DialogTitle className="text-gray-900 admin-dark:text-gray-100">
                         Xác nhận xóa

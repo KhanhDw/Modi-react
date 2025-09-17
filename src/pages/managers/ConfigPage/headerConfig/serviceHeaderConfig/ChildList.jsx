@@ -6,7 +6,6 @@ import useLenisLocal from "@/hook/useLenisLocal";
 
 export default function ChildList({ selectedCategory, lang, onAdd, onDelete, onEdit }) {
     useLenisLocal(".lenis-local");
-    console.log("d:", selectedCategory);
     return (
         <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700">
             <CardHeader className="pb-4 flex justify-between items-center">
