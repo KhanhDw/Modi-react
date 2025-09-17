@@ -21,14 +21,14 @@ import { useOutletContext } from "react-router-dom";
 export default function BookingForm() {
   const {
     initDataService,
-    initDataCustomer, // 👈 dữ liệu customer hiện có trong hệ thống
+    initDataCustomer,
     handleClose,
     editingBooking,
     handleCreateBooking,
     handleEditingBooking,
   } = useOutletContext();
   const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({}); // 👈 state chứa lỗi
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (editingBooking) {
@@ -66,7 +66,7 @@ export default function BookingForm() {
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: "" })); // reset lỗi khi người dùng nhập
+    setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
   const handleCheckCustomer = () => {
@@ -75,16 +75,13 @@ export default function BookingForm() {
 
     const existCustomer = initDataCustomer?.find((c) => c.phone === phone);
     if (existCustomer) {
-      // Nếu có thì fill dữ liệu khách cũ
       setFormData({
         ...formData,
         cusName: existCustomer.name,
         cusEmail: existCustomer.email,
         cusAddress: existCustomer.address,
-        // có thể thêm các field khác nếu có
       });
     } else {
-      // Nếu không có thì clear name/email/address để nhập mới
       setFormData({
         ...formData,
         cusName: "",
@@ -93,7 +90,7 @@ export default function BookingForm() {
       });
     }
   };
-  // Validation logic
+
   const validateForm = () => {
     let newErrors = {};
 
@@ -142,8 +139,7 @@ export default function BookingForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isValid = validateForm(); // chỉ gọi 1 lần
-    console.log("validate result:", isValid);
+    const isValid = validateForm();
 
     if (!isValid) return;
     if (!editingBooking) {
@@ -154,225 +150,204 @@ export default function BookingForm() {
   };
 
   return (
-    <Card className="bg-white w-full mx-auto">
-      <CardHeader className="relative">
-        <CardTitle className="flex gap-2 items-center">
+    <Card className="w-full mx-auto bg-white border border-gray-300 rounded-lg">
+      <CardHeader className="px-2 sm:px-4">
+        <CardTitle className="flex flex-col sm:flex-row gap-2 items-start sm:items-center text-base sm:text-lg md:text-xl font-bold text-gray-900">
           {editingBooking ? "Chỉnh sửa đơn đặt" : "Tạo đơn mới"}
         </CardTitle>
-        <CardDescription className="text-black/50">
+        <CardDescription className="text-xs sm:text-sm mt-1 text-gray-600">
           {editingBooking
             ? "Cập nhật thông tin đơn đặt"
             : "Điền thông tin để tạo đơn mới"}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <div className="gap-4">
-            <div className="space-y-4">
-              {/* Số điện thoại */}
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusPhone">
-                  Số điện thoại *
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusPhone"
-                  value={formData.cusPhone || ""}
-                  onChange={(e) => handleChange("cusPhone", e.target.value)}
-                  onBlur={handleCheckCustomer}
-                  placeholder="Nhập số điện thoại của khách hàng... "
-                  // required={!editingBooking}
-                  readOnly={editingBooking}
-                />
-                {errors.cusPhone && (
-                  <p className="text-red-500 text-sm">{errors.cusPhone}</p>
-                )}
-              </div>
-              {/* Tên khách hàng */}
-
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusName">
-                  Tên khách hàng *
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusName"
-                  value={formData.cusName || ""}
-                  onChange={(e) => handleChange("cusName", e.target.value)}
-                  placeholder="Nhập Họ và Tên khách hàng... "
-                  // required={!editingBooking}
-                  readOnly={
-                    (!!formData.cusPhone &&
-                      initDataCustomer.some(
-                        (c) => c.phone === formData.cusPhone
-                      )) ||
-                    editingBooking
-                  }
-                />
-                {errors.cusName && (
-                  <p className="text-red-500 text-sm">{errors.cusName}</p>
-                )}
-              </div>
-              {/* Email + Address (chỉ khi tạo mới) */}
-              {!editingBooking && (
-                <>
-                  <div className="space-y-2">
-                    <Label className="text-black" htmlFor="cusEmail">
-                      Email
-                    </Label>
-                    <Input
-                      className="text-black border border-black/30"
-                      id="cusEmail"
-                      value={formData.cusEmail || ""}
-                      onChange={(e) => handleChange("cusEmail", e.target.value)}
-                      placeholder="Nhập email của khách hàng... "
-                      readOnly={
-                        (!!formData.cusPhone &&
-                          initDataCustomer.some(
-                            (c) => c.phone === formData.cusPhone
-                          )) ||
-                        editingBooking
-                      }
-                    />
-                    {errors.cusEmail && (
-                      <p className="text-red-500 text-sm">{errors.cusEmail}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-black" htmlFor="cusAddress">
-                      Địa chỉ *
-                    </Label>
-                    <Input
-                      className="text-black border border-black/30"
-                      id="cusAddress"
-                      value={formData.cusAddress || ""}
-                      onChange={(e) =>
-                        handleChange("cusAddress", e.target.value)
-                      }
-                      placeholder="Nhập địa chỉ của khách hàng... "
-                      readOnly={
-                        (!!formData.cusPhone &&
-                          initDataCustomer.some(
-                            (c) => c.phone === formData.cusPhone
-                          )) ||
-                        editingBooking
-                      }
-                    />
-                    {errors.cusAddress && (
-                      <p className="text-red-500 text-sm">
-                        {errors.cusAddress}
-                      </p>
-                    )}
-                  </div>
-                </>
+      <CardContent className="px-2 sm:px-4">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="flex flex-col space-y-2">
+              <Label className="text-xs sm:text-sm text-gray-900" htmlFor="cusPhone">
+                Số điện thoại *
+              </Label>
+              <Input
+                className="text-xs sm:text-sm w-full border border-gray-300 rounded-md text-gray-900 placeholder-gray-500"
+                id="cusPhone"
+                value={formData.cusPhone || ""}
+                onChange={(e) => handleChange("cusPhone", e.target.value)}
+                onBlur={handleCheckCustomer}
+                placeholder="Nhập số điện thoại của khách hàng..."
+                readOnly={editingBooking}
+              />
+              {errors.cusPhone && (
+                <p className="text-red-500 text-xs sm:text-sm">{errors.cusPhone}</p>
               )}
+            </div>
 
-              {/* Trạng thái (chỉ khi chỉnh sửa) */}
-              {editingBooking && (
-                <div className="space-y-2">
-                  <Label className="text-black" htmlFor="status">
-                    Trạng thái
+            <div className="flex flex-col space-y-2">
+              <Label className="text-xs sm:text-sm text-gray-900" htmlFor="cusName">
+                Tên khách hàng *
+              </Label>
+              <Input
+                className="text-xs sm:text-sm w-full border border-gray-300 rounded-md text-gray-900 placeholder-gray-500"
+                id="cusName"
+                value={formData.cusName || ""}
+                onChange={(e) => handleChange("cusName", e.target.value)}
+                placeholder="Nhập Họ và Tên khách hàng..."
+                readOnly={
+                  (!!formData.cusPhone &&
+                    initDataCustomer.some((c) => c.phone === formData.cusPhone)) ||
+                  editingBooking
+                }
+              />
+              {errors.cusName && (
+                <p className="text-red-500 text-xs sm:text-sm">{errors.cusName}</p>
+              )}
+            </div>
+
+            {!editingBooking && (
+              <>
+                <div className="flex flex-col space-y-2">
+                  <Label className="text-xs sm:text-sm text-gray-900" htmlFor="cusEmail">
+                    Email
                   </Label>
-                  <Select
-                    value={formData.status || ""}
-                    onValueChange={(value) => handleChange("status", value)}
-                    key={formData.status}
-                  >
-                    <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
-                      <SelectValue placeholder="Chọn trạng thái">
-                        {formData.status === "pending"
-                          ? "Chưa hoàn thành"
-                          : formData.status === "completed"
-                          ? "Hoàn thành"
-                          : formData.status === "cancelled"
-                          ? "Hủy"
-                          : "Chọn trạng thái"}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                      <SelectItem value="pending">Chưa hoàn thành</SelectItem>
-                      <SelectItem value="completed">Hoàn thành</SelectItem>
-                      <SelectItem value="cancelled">Hủy</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              {initDataService && (
-                <div className="space-y-2">
-                  <Label className="text-black">Chọn dịch vụ*</Label>
-                  <Select
-                    value={formData.service || ""}
-                    onValueChange={(value) => handleChange("service", value)}
-                    key={formData.service}
-                  >
-                    <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
-                      <SelectValue placeholder="Chọn dịch vụ" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                      {initDataService.map((service) => (
-                        <SelectItem
-                          key={service.service_id}
-                          value={service.service_id.toString()}
-                          className="cursor-pointer px-3 py-2 hover:bg-blue-50"
-                        >
-                          {service.ten_dich_vu}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.service && (
-                    <p className="text-red-500 text-sm">{errors.service}</p>
-                  )}
-                </div>
-              )}
-              {/* Dịch vụ + ngày đặt */}
-              <div className="flex gap-4">
-                <div className="space-y-2 relative">
-                  <Label className="text-black">Ngày đặt đơn</Label>
-                  <input
-                    type="date"
-                    value={formData.bookingDate || ""}
-                    onChange={(e) =>
-                      handleChange("bookingDate", e.target.value)
+                  <Input
+                    className="text-xs sm:text-sm w-full border border-gray-300 rounded-md text-gray-900 placeholder-gray-500"
+                    id="cusEmail"
+                    value={formData.cusEmail || ""}
+                    onChange={(e) => handleChange("cusEmail", e.target.value)}
+                    placeholder="Nhập email của khách hàng..."
+                    readOnly={
+                      (!!formData.cusPhone &&
+                        initDataCustomer.some((c) => c.phone === formData.cusPhone)) ||
+                      editingBooking
                     }
-                    className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
-                    // required
                   />
-                  {errors.bookingDate && (
-                    <p className="text-red-500 text-sm">{errors.bookingDate}</p>
+                  {errors.cusEmail && (
+                    <p className="text-red-500 text-xs sm:text-sm">{errors.cusEmail}</p>
                   )}
                 </div>
-                <div className="space-y-2 relative">
-                  <Label className="text-black">Ngày Hoàn thành</Label>
-                  <input
-                    type="date"
-                    value={formData.completedDate || ""}
-                    onChange={(e) =>
-                      handleChange("completedDate", e.target.value)
+
+                <div className="flex flex-col space-y-2">
+                  <Label className="text-xs sm:text-sm text-gray-900" htmlFor="cusAddress">
+                    Địa chỉ *
+                  </Label>
+                  <Input
+                    className="text-xs sm:text-sm w-full border border-gray-300 rounded-md text-gray-900 placeholder-gray-500"
+                    id="cusAddress"
+                    value={formData.cusAddress || ""}
+                    onChange={(e) => handleChange("cusAddress", e.target.value)}
+                    placeholder="Nhập địa chỉ của khách hàng..."
+                    readOnly={
+                      (!!formData.cusPhone &&
+                        initDataCustomer.some((c) => c.phone === formData.cusPhone)) ||
+                      editingBooking
                     }
-                    className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
-                    // required
                   />
-                  {errors.completedDate && (
-                    <p className="text-red-500 text-sm">
-                      {errors.completedDate}
-                    </p>
+                  {errors.cusAddress && (
+                    <p className="text-red-500 text-xs sm:text-sm">{errors.cusAddress}</p>
                   )}
                 </div>
+              </>
+            )}
+
+            {editingBooking && (
+              <div className="flex flex-col space-y-2">
+                <Label className="text-xs sm:text-sm text-gray-900" htmlFor="status">
+                  Trạng thái
+                </Label>
+                <Select
+                  value={formData.status || ""}
+                  onValueChange={(value) => handleChange("status", value)}
+                  key={formData.status}
+                >
+                  <SelectTrigger className="w-full text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md text-gray-900">
+                    <SelectValue placeholder="Chọn trạng thái">
+                      {formData.status === "pending"
+                        ? "Chưa hoàn thành"
+                        : formData.status === "completed"
+                        ? "Hoàn thành"
+                        : formData.status === "cancelled"
+                        ? "Hủy"
+                        : "Chọn trạng thái"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="text-xs sm:text-sm border border-gray-300 rounded-md bg-white">
+                    <SelectItem value="pending">Chưa hoàn thành</SelectItem>
+                    <SelectItem value="completed">Hoàn thành</SelectItem>
+                    <SelectItem value="cancelled">Hủy</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {initDataService && (
+              <div className="flex flex-col space-y-2">
+                <Label className="text-xs sm:text-sm text-gray-900">Chọn dịch vụ *</Label>
+                <Select
+                  value={formData.service || ""}
+                  onValueChange={(value) => handleChange("service", value)}
+                  key={formData.service}
+                >
+                  <SelectTrigger className="w-full text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md text-gray-900">
+                    <SelectValue placeholder="Chọn dịch vụ" />
+                  </SelectTrigger>
+                  <SelectContent className="text-xs sm:text-sm border border-gray-300 rounded-md bg-white">
+                    {initDataService.map((service) => (
+                      <SelectItem
+                        key={service.service_id}
+                        value={service.service_id.toString()}
+                        className="px-2 sm:px-3 py-1 sm:py-2"
+                      >
+                        {service.ten_dich_vu}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.service && (
+                  <p className="text-red-500 text-xs sm:text-sm">{errors.service}</p>
+                )}
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="flex flex-col space-y-2 flex-1">
+                <Label className="text-xs sm:text-sm text-gray-900">Ngày đặt đơn</Label>
+                <input
+                  type="date"
+                  value={formData.bookingDate || ""}
+                  onChange={(e) => handleChange("bookingDate", e.target.value)}
+                  className="w-full text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md text-gray-900"
+                />
+                {errors.bookingDate && (
+                  <p className="text-red-500 text-xs sm:text-sm">{errors.bookingDate}</p>
+                )}
+              </div>
+              <div className="flex flex-col space-y-2 flex-1">
+                <Label className="text-xs sm:text-sm text-gray-900">Ngày Hoàn thành</Label>
+                <input
+                  type="date"
+                  value={formData.completedDate || ""}
+                  onChange={(e) => handleChange("completedDate", e.target.value)}
+                  className="w-full text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md text-gray-900"
+                />
+                {errors.completedDate && (
+                  <p className="text-red-500 text-xs sm:text-sm">{errors.completedDate}</p>
+                )}
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 mt-6">
-            <Button type="submit" className="flex-1 hover:bg-gray-500/25">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 sm:mt-6">
+            <Button
+              type="submit"
+              className="flex-1 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-blue-600 text-white hover:bg-blue-700"
+            >
               {editingBooking ? "Cập nhật đơn đặt" : "Tạo đơn"}
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 text-xs text-white sm:text-sm px-2 sm:px-3 py-1 sm:py-2 border border-gray-300  hover:bg-gray-100"
             >
               Thoát
             </Button>

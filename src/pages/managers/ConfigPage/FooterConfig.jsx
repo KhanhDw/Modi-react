@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
 import useLenisLocal from '@/hook/useLenisLocal'
 
-
 export default function FooterConfigMultiLang() {
     useLenisLocal(".lenis-local")
     const [activeLang, setActiveLang] = useState("vi");
@@ -27,7 +26,6 @@ export default function FooterConfigMultiLang() {
     const fetchFooter = async () => {
         try {
             setLoading(true);
-            // Logo
             const logoRes = await fetch(
                 `${API_BASE_URL}/api/section-items/type/logo?slug=header`
             );
@@ -41,25 +39,21 @@ export default function FooterConfigMultiLang() {
                 );
             }
 
-            // Company Info
             const infoRes = await fetch(
                 `${API_BASE_URL}/api/section-items/type/company_info?slug=footer`
             );
             setCompanyInfo(await infoRes.json());
 
-            // Services
             const serviceRes = await fetch(
                 `${API_BASE_URL}/api/section-items/type/services?slug=footer`
             );
             setServices(await serviceRes.json());
 
-            // Socials
             const socialRes = await fetch(
                 `${API_BASE_URL}/api/section-items/type/social?slug=footer`
             );
             setSocials(await socialRes.json());
 
-            // Bộ Công Thương
             const bctRes = await fetch(
                 `${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`
             );
@@ -83,7 +77,6 @@ export default function FooterConfigMultiLang() {
         fetchFooter();
     }, [activeLang]);
 
-    // --- Helpers update ---
     const updateSocial = (id, field, value, bothLang = false) => {
         setSocials((prev) =>
             prev.map((s) =>
@@ -181,7 +174,6 @@ export default function FooterConfigMultiLang() {
         try {
             setLoading(true);
 
-            // Save logo
             if (logoItem) {
                 let updatedLogo = { ...logoItem };
                 if (file) {
@@ -195,7 +187,6 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            // Save company info
             for (const info of companyInfo) {
                 await fetch(`${API_BASE_URL}/api/section-items/${info.id}`, {
                     method: "PUT",
@@ -204,7 +195,6 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            // Save services
             for (const srv of services) {
                 await fetch(`${API_BASE_URL}/api/section-items/${srv.id}`, {
                     method: "PUT",
@@ -213,7 +203,6 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            // Save socials
             for (const soc of socials) {
                 await fetch(`${API_BASE_URL}/api/section-items/${soc.id}`, {
                     method: "PUT",
@@ -222,7 +211,6 @@ export default function FooterConfigMultiLang() {
                 });
             }
 
-            // Save Bộ Công Thương
             for (const bct of thongBaoBoCongThuong) {
                 const updatedBct = {
                     ...bct,
@@ -256,11 +244,10 @@ export default function FooterConfigMultiLang() {
         }
     };
 
-    if (loading) return <p className="text-center">⏳ Đang tải...</p>;
+    if (loading) return <p className="text-center text-xs sm:text-sm text-gray-700 admin-dark:text-gray-300 py-6">⏳ Đang tải...</p>;
 
     return (
-        <div className="p-6 mx-auto space-y-12">
-            {/* Preview */}
+        <div className="p-2 sm:p-4 md:p-6 mx-auto space-y-6 sm:space-y-8">
             <FooterView
                 data={{
                     [activeLang]: {
@@ -292,18 +279,16 @@ export default function FooterConfigMultiLang() {
                 }}
                 lang={activeLang}
             />
-
-            {/* Config */}
-            <div className="space-y-8 max-w-6xl w-full mx-auto px-4 mt-6">
-                {/* Lang Tabs */}
-                <div className="flex justify-between items-center mb-4">
-                    <div className="flex flex-wrap justify-center sm:justify-start gap-3">
+                <div className="border-t border-gray-300 admin-dark:border-gray-600"></div>
+            <div className="space-y-6 sm:space-y-8 max-w-6xl w-full mx-auto px-2 sm:px-4">
+                <div className="flex flex-col items-center gap-3 sm:gap-4">
+                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 w-full">
                         {["vi", "en"].map((lang) => (
                             <button
                                 key={lang}
                                 onClick={() => setActiveLang(lang)}
-                                className={`px-5 py-2 rounded-full font-semibold shadow transition text-sm sm:text-base
-                ${activeLang === lang
+                                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow transition w-full sm:w-auto
+                                    ${activeLang === lang
                                         ? "bg-indigo-600 text-white"
                                         : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
                                     }`}
@@ -313,9 +298,7 @@ export default function FooterConfigMultiLang() {
                         ))}
                     </div>
 
-                    {/* 3 tên tab sẽ đạt ở đây */}
-                    {/* Tabs */}
-                    <div className="flex gap-3 border px-2 py-1 rounded-xl bg-gray-400 admin-dark:bg-amber-600"  >
+                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 border px-2 py-1 rounded-lg sm:rounded-xl bg-gray-400 admin-dark:bg-amber-600 w-full">
                         {[
                             { key: "company", label: "Thông tin công ty" },
                             { key: "services", label: "Dịch vụ" },
@@ -325,8 +308,8 @@ export default function FooterConfigMultiLang() {
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className={`px-4 py-2 rounded-lg font-medium transition text-sm sm:text-base
-          ${activeTab === tab.key
+                                className={`px-2 sm:px-3 py-1 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition flex-1 sm:flex-none text-center
+                                    ${activeTab === tab.key
                                         ? "bg-indigo-500 text-white"
                                         : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
                                     }`}
@@ -336,23 +319,25 @@ export default function FooterConfigMultiLang() {
                         ))}
                     </div>
 
-                    <Button type="button" className=""
-                        onClick={handleSave}>
-                        <p className="font-semibold text-sm sm:text-base">Lưu Nội Dung</p>
+                    <Button
+                        type="button"
+                        onClick={handleSave}
+                        className="w-full sm:w-auto px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+                    >
+                        Lưu Nội Dung
                     </Button>
                 </div>
 
-                {/* Company Info */}
                 {activeTab === "company" && (
-                    <div className="p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
-                        <h4 className="font-bold text-lg">Thông tin công ty</h4>
+                    <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-3 sm:space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                        <h4 className="font-bold text-base sm:text-lg">Thông tin công ty</h4>
                         {companyInfo.map((info) => {
                             if (info.position === 1) return null;
                             const value = info.description?.[activeLang] || "";
-                            const isLongText = value.length > 80; // 👈 nếu dài quá thì dùng textarea
+                            const isLongText = value.length > 80;
                             return (
-                                <div key={info.id}>
-                                    <label className="block text-sm mb-1 text-gray-600 admin-dark:text-gray-300">
+                                <div key={info.id} className="space-y-1 sm:space-y-2">
+                                    <label className="block text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
                                         {info.title?.[activeLang] || "Field"}
                                     </label>
                                     {isLongText ? (
@@ -360,15 +345,15 @@ export default function FooterConfigMultiLang() {
                                             data-lenis-prevent
                                             value={value}
                                             onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
-                                            rows={15}
-                                            className="lenis-local w-full px-4 py-8 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                            rows={8}
+                                            className="lenis-local w-full px-3 sm:px-4 py-4 sm:py-6 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y text-xs sm:text-sm"
                                         />
                                     ) : (
                                         <input
                                             type="text"
                                             value={value}
                                             onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
-                                            className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                            className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                         />
                                     )}
                                 </div>
@@ -376,39 +361,39 @@ export default function FooterConfigMultiLang() {
                         })}
                     </div>
                 )}
-                {/* Services */}
+
                 {activeTab === "services" && (
-                    <div className="p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
-                        <div className="flex items-center justify-between gap-2"><h4 className="font-bold text-lg">Dịch vụ</h4>
-                            <p className="text-gray-500 admin-dark:text-gray-400">Không có tiêu đề dịch vụ đó sẽ không hiển thị</p>
+                    <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-3 sm:space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                            <h4 className="font-bold text-base sm:text-lg">Dịch vụ</h4>
+                            <p className="text-xs sm:text-sm text-gray-500 admin-dark:text-gray-400">Không có tiêu đề dịch vụ đó sẽ không hiển thị</p>
                         </div>
                         {services.map((s) => (
-                            <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="flex items-center gap-3">
-                                    <p className="flex flex-nowrap text-gray-500 whitespace-nowrap">Tiêu đề</p>
+                            <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <div className="flex flex-col gap-1 sm:gap-2">
+                                    <p className="text-xs sm:text-sm text-gray-500 admin-dark:text-gray-400 whitespace-nowrap">Tiêu đề</p>
                                     <input
                                         type="text"
-                                        className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                        className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                         placeholder="Tên dịch vụ"
                                         value={s.title?.[activeLang] || ""}
                                         onChange={(e) => updateService(s.id, "title", e.target.value)}
                                     />
                                 </div>
-                                {/* nếu URL dài quá thì textarea */}
-                                <div className="flex items-center gap-3">
-                                    <p className="flex flex-nowrap text-gray-500 whitespace-nowrap">URL</p>
+                                <div className="flex flex-col gap-1 sm:gap-2">
+                                    <p className="text-xs sm:text-sm text-gray-500 admin-dark:text-gray-400 whitespace-nowrap">URL</p>
                                     {s.description?.[activeLang]?.length > 70 ? (
                                         <textarea
-                                            className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                            className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y text-xs sm:text-sm"
                                             placeholder="URL"
                                             value={s.description?.[activeLang] || ""}
                                             onChange={(e) => updateService(s.id, "description", e.target.value, true)}
-                                            rows={5}
+                                            rows={4}
                                         />
                                     ) : (
                                         <input
                                             type="text"
-                                            className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                            className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                             placeholder="URL"
                                             value={s.description?.[activeLang] || ""}
                                             onChange={(e) => updateService(s.id, "description", e.target.value, true)}
@@ -419,38 +404,35 @@ export default function FooterConfigMultiLang() {
                         ))}
                     </div>
                 )}
-                {/* ✅ Social */}
+
                 {activeTab === "social" && (
-                    <div className="p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                            <h4 className="font-bold text-lg">Mạng xã hội</h4>
-                            <p className="text-sm text-gray-500 admin-dark:text-gray-400">
-                                Không có URL mạng xã hội đó sẽ không được hiển thị
-                            </p>
+                    <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-3 sm:space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                            <h4 className="font-bold text-base sm:text-lg">Mạng xã hội</h4>
+                            <p className="text-xs sm:text-sm text-gray-500 admin-dark:text-gray-400">Không có URL mạng xã hội đó sẽ không được hiển thị</p>
                         </div>
                         {socials.map((s) => (
-                            <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <input
                                     type="text"
                                     readOnly={true}
-                                    className="w-full p-2 rounded border focus:outline-none focus:ring-none focus:ring-blue-300 border-gray-300 admin-dark:border-gray-600  transition"
+                                    className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-none transition text-xs sm:text-sm"
                                     placeholder="Tên MXH"
                                     value={s.title?.[activeLang] || ""}
                                     onChange={(e) => updateSocial(s.id, "title", e.target.value)}
                                 />
-                                {/* textarea nếu URL quá dài */}
                                 {s.description?.[activeLang]?.length > 70 ? (
                                     <textarea
-                                        className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y"
+                                        className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y text-xs sm:text-sm"
                                         placeholder="URL"
                                         value={s.description?.[activeLang] || ""}
                                         onChange={(e) => updateSocial(s.id, "description", e.target.value, true)}
-                                        rows={5}
+                                        rows={4}
                                     />
                                 ) : (
                                     <input
                                         type="text"
-                                        className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                                        className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                         placeholder="URL"
                                         value={s.description?.[activeLang] || ""}
                                         onChange={(e) => updateSocial(s.id, "description", e.target.value, true)}
@@ -460,66 +442,70 @@ export default function FooterConfigMultiLang() {
                         ))}
                     </div>
                 )}
+
                 {activeTab === "thongBaoBoCongThuong" && (
-                    <>
-                        <div className="border border-gray-300 admin-dark:border-gray-600 p-4 rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-4 transition">
-                            <div className="flex items-center justify-between gap-2">
-                                <h4 className="font-bold text-lg">Thông báo bộ công thương</h4>
-                                <button type="button"
-                                    onClick={toggleThongBaoBoCongThuong}
-                                    className={`flex ${!enableBoCongThuong ? "bg-red-700" : "bg-green-700"} border-2 border-gray-600 px-3 py-2 rounded-xl text-gray-300`}
-                                >
-                                    <p className="font-semibold">{enableBoCongThuong ? "Đã" : "Chưa"}</p> <span className="ml-1 font-semibold">thông báo cho bộ công thương</span>
-                                </button>
-                            </div>
-
-                            <div className="flex items-center justify-center">
-                                {thongBaoBoCongThuong.map((bct) => {
-                                    return (<>
-                                        <div className="">
-                                            <div>
-                                                <div className="mb-2 flex items-center justify-between">
-                                                    <h1 className="">
-                                                        Đường dẫn xác thực web của bộ công thương
-                                                    </h1>
-                                                    <h1 className="text-gray-500 admin-dark:text-gray-400">
-                                                        Không để đường dẫn ảnh sẽ không hiển thị
-                                                    </h1>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    disabled={!enableBoCongThuong}
-                                                    className={`${!enableBoCongThuong ? "text-gray-400 admin-dark:text-gray-600" : "text-gray-800 admin-dark:text-gray-200"} w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition`}
-                                                    placeholder="URL"
-                                                    value={bct.description?.[activeLang] || ""}
-                                                    onChange={(e) => updateThongBao(bct.id, "description", e.target.value, true)}
-                                                />
-                                            </div>
-                                            <div
-                                                className={`
-                                                    ${!enableBoCongThuong ? "pointer-events-none cursor-not-allowed" : "cursor-pointer"
-                                                    } select-none`}
-                                            >
-                                                <a
-                                                    href={API_BASE_URL}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    <img src={boCongThuongBanner} alt="bộ công thương xác nhận" />
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                    </>)
-                                }
-                                )}
-                            </div>
+                    <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-3 sm:space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                            <h4 className="font-bold text-base sm:text-lg">Thông báo bộ công thương</h4>
+                            <button
+                                type="button"
+                                onClick={toggleThongBaoBoCongThuong}
+                                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold ${
+                                    !enableBoCongThuong ? "bg-red-700" : "bg-green-600"
+                                } border border-gray-600 text-white`}
+                            >
+                                <p>{enableBoCongThuong ? "Đã" : "Chưa"}</p>
+                                <span>thông báo cho bộ công thương</span>
+                            </button>
                         </div>
-                    </>
+
+                        <div className="space-y-3 sm:space-y-4">
+                            {thongBaoBoCongThuong.map((bct) => (
+                                <div key={bct.id} className="space-y-3 sm:space-y-4">
+                                    <div className="flex flex-col gap-1 sm:gap-2">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                                            <h1 className="text-xs sm:text-sm font-semibold text-gray-600 admin-dark:text-gray-300">
+                                                Đường dẫn xác thực web của bộ công thương
+                                            </h1>
+                                            <p className="text-xs sm:text-sm text-gray-500 admin-dark:text-gray-400">
+                                                Không để đường dẫn ảnh sẽ không hiển thị
+                                            </p>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            disabled={!enableBoCongThuong}
+                                            className={`w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm ${
+                                                !enableBoCongThuong ? "text-gray-400 admin-dark:text-gray-600" : "text-gray-800 admin-dark:text-gray-200"
+                                            }`}
+                                            placeholder="URL"
+                                            value={bct.description?.[activeLang] || ""}
+                                            onChange={(e) => updateThongBao(bct.id, "description", e.target.value, true)}
+                                        />
+                                    </div>
+                                    <div
+                                        className={`flex justify-center ${
+                                            !enableBoCongThuong ? "pointer-events-none cursor-not-allowed opacity-50" : "cursor-pointer"
+                                        } select-none`}
+                                    >
+                                        <a
+                                            href={API_BASE_URL}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <img
+                                                src={boCongThuongBanner}
+                                                alt="bộ công thương xác nhận"
+                                                className="w-full max-w-[150px] sm:max-w-[200px]"
+                                            />
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 )}
-
-
             </div>
+
             {toast && (
                 <NotificationToast
                     message={toast.message}
