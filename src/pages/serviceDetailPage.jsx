@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const bannerStyle = (image) => ({
     backgroundImage: `url(${image || "/images/banner2.jpg"})`,
@@ -18,14 +18,45 @@ const fadeInUp = {
 export default function ServiceDetailPage() {
     const { slug } = useParams();
     const { t } = useLanguage();
+    const [servicesItemBySlug, setServicesItemBySlug] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+
+    const FetchDataServicesBySlug = async (slug = "", lang = "vi") => {
+        if (!slug) {
+            console.warn("Không có slug → clear service chi tiết");
+            setServicesItemBySlug(null);
+            return;
+        }
+
+        try {
+            const lang_api = lang === "vi" ? "" : "/en";
+            const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}${lang_api}/api/services/${slug}`);
+            const data = await res.json();
+
+            if (data.success) {
+                setServicesItemBySlug(data.data);
+                console.log("Chi tiết service:", data.data);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        FetchDataServicesBySlug(slug);
+    }, [slug]);
+
 
     // Dùng useMemo để cache kết quả tìm service, tránh lặp gọi t() và tìm kiếm nhiều lần
-    const service = useMemo(() => {
-        const services = t("servicesPage.services") || [];
-        return services.find((item) => item.slug === slug);
-    }, [slug, t]);
+    // const service = useMemo(() => {
+    //     const services = t("servicesPage.services") || [];
+    //     return services.find((item) => item.slug === slug);
+    // }, [slug, t]);
 
-    if (!service)
+    if (!slug)
         return (
             <div className="p-16 text-center text-2xl text-red-600 font-bold">
                 Dịch vụ không tồn tại!
@@ -34,8 +65,58 @@ export default function ServiceDetailPage() {
 
     return (
         <div className="min-h-screen text-gray-800 dark:text-white transition-all duration-500 my-6">
+            <div className="space-y-4">
+                {/* Hình ảnh */}
+                <img
+                    src={servicesItemBySlug?.image_url}
+                    alt={servicesItemBySlug?.translation.ten_dich_vu}
+                    className="w-full max-w-md rounded-lg shadow"
+                />
+
+                {/* Tên dịch vụ */}
+                <h2 className="text-xl font-semibold">
+                    {servicesItemBySlug?.translation.ten_dich_vu}
+                </h2>
+
+                {/* Mô tả */}
+                <p className="text-gray-700 admin-dark:text-gray-300">
+                    {servicesItemBySlug?.translation.mo_ta}
+                </p>
+
+                {/* Giá & trạng thái */}
+                <div className="flex gap-4 text-sm text-gray-600 admin-dark:text-gray-400">
+                    <span>💰 Giá: {servicesItemBySlug?.floor_price} VND</span>
+                    <span>📦 Booking: {servicesItemBySlug?.booking_count}</span>
+                    <span>⚡ Trạng thái: {servicesItemBySlug?.status}</span>
+                </div>
+
+                {/* Features */}
+                <div>
+                    <h3 className="font-medium">Tính năng:</h3>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700 admin-dark:text-gray-300">
+                        {servicesItemBySlug?.translation.features
+                            ?.split("#")
+                            .map((f, idx) => (
+                                <li key={idx}>{f.trim()}</li>
+                            ))}
+                    </ul>
+                </div>
+
+                {/* Chi tiết */}
+                <div>
+                    <h3 className="font-medium">Chi tiết:</h3>
+                    <div className="space-y-2 text-gray-700 admin-dark:text-gray-300">
+                        {servicesItemBySlug?.translation.details
+                            ?.split("#")
+                            .map((d, idx) => (
+                                <p key={idx}>{d.trim()}</p>
+                            ))}
+                    </div>
+                </div>
+            </div>
+
             {/* Banner */}
-            <div className="px-4 mt-4 mb-6">
+            {/* <div className="px-4 mt-4 mb-6">
                 <motion.div
                     className="h-[400px] flex items-center justify-center text-white rounded-2xl overflow-hidden shadow-2xl relative"
                     style={bannerStyle(service.bannerImage)}
@@ -61,22 +142,22 @@ export default function ServiceDetailPage() {
                         </p>
                     </div>
                 </motion.div>
-            </div>
+            </div> */}
 
             {/* Nội dung chính */}
-            <div className="max-w-6xl mx-auto px-6 py-6 my-12 bg-gradient-to-tr from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 rounded-3xl shadow-xl">
-                {/* Tiêu đề phụ */}
-                <motion.h2
+            {/* <div className="max-w-6xl mx-auto px-6 py-6 my-12 bg-gradient-to-tr from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 rounded-3xl shadow-xl"> */}
+            {/* Tiêu đề phụ */}
+            {/* <motion.h2
                     initial="hidden"
                     animate="visible"
                     variants={fadeInUp}
                     className="text-center text-3xl font-extrabold italic text-gray-800 dark:text-gray-200 mb-12 tracking-wide"
                 >
                     {service.subtitle}
-                </motion.h2>
+                </motion.h2> */}
 
-                {/* Tính năng nổi bật */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
+            {/* Tính năng nổi bật */}
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
                     {service.features.map((feat, idx) => (
                         <motion.div
                             key={idx}
@@ -93,10 +174,10 @@ export default function ServiceDetailPage() {
                             <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">{feat}</p>
                         </motion.div>
                     ))}
-                </div>
+                </div> */}
 
-                {/* Giá dịch vụ */}
-                <motion.section
+            {/* Giá dịch vụ */}
+            {/* <motion.section
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
@@ -109,10 +190,10 @@ export default function ServiceDetailPage() {
                     <div className="bg-orange-100 dark:bg-orange-900 border-4 border-orange-300 dark:border-orange-600 rounded-3xl p-6 shadow-inner text-center">
                         <p className="text-gray-900 dark:text-orange-100 text-3xl font-extrabold">{service.price}</p>
                     </div>
-                </motion.section>
+                </motion.section> */}
 
-                {/* Chi tiết dịch vụ */}
-                <motion.section
+            {/* Chi tiết dịch vụ */}
+            {/* <motion.section
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
@@ -130,8 +211,8 @@ export default function ServiceDetailPage() {
                             {paragraph}
                         </p>
                     ))}
-                </motion.section>
-            </div>
+                </motion.section> 
+            </div>*/}
         </div>
     );
 }

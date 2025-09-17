@@ -2,6 +2,14 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
+html,
+body {
+    overflow: hidden;
+}
+body {
+    overflow-y: hidden; /* không cho scrollbar body */
+}
+
 @theme {
     --breakpoint-xs: 20rem;
     /* 320 px */

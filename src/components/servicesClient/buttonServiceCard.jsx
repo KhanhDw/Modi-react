@@ -2,7 +2,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
-export default function HoverButtonsServiceCard({ onClickUp, onClickDown }) {
+export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valuePosition }) {
     const [hoverUp, setHoverUp] = useState(false);
     const [hoverDown, setHoverDown] = useState(false);
     const { isDark } = useTheme();
@@ -11,7 +11,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown }) {
         <div className="flex flex-col gap-2 h-full items-center justify-center">
             {/* Up Button */}
             <div
-                className="relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-md cursor-pointer"
+                className={`${valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-md cursor-pointer`}
                 onMouseEnter={() => setHoverUp(true)}
                 onMouseLeave={() => setHoverUp(false)}
                 onClick={onClickUp} // Gọi hàm từ props
@@ -45,7 +45,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown }) {
 
             {/* Down Button */}
             <div
-                className="relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-md cursor-pointer"
+                className={`${!valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-md cursor-pointer`}
                 onMouseEnter={() => setHoverDown(true)}
                 onMouseLeave={() => setHoverDown(false)}
                 onClick={onClickDown} // Gọi hàm từ props

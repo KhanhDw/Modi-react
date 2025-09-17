@@ -3,20 +3,18 @@ import React, { useState, useEffect, useRef, } from "react";
 import { ChevronUp, ChevronsDown, ChevronDown } from 'lucide-react';
 import useLenisLocal from '@/hook/useLenisLocal';
 import HoverButtonsServiceCard from "./buttonServiceCard";
+import { useNavigate } from "react-router-dom";
 
 
-export default function ServiceCard({ service }) {
+export default function ServiceCard({ service, onFetchService }) {
     if (!service) return null;
     useLenisLocal(".lenis-local");
+    const navigate = useNavigate();
 
     const translation = service?.translation || {};
     const article = service?.article || {};
 
     const [showDetails, setShowDetails] = useState(false);
-
-    const handleToggle = () => {
-        setShowDetails(prev => !prev);
-    };
 
     const handleToUp = () => {
         setShowDetails(false);
@@ -135,6 +133,7 @@ export default function ServiceCard({ service }) {
                                 <HoverButtonsServiceCard
                                     onClickUp={() => handleToUp()}
                                     onClickDown={() => handleToDown()}
+                                    valuePosition={showDetails}
                                 />
                             </div>
                         </div>
@@ -142,12 +141,21 @@ export default function ServiceCard({ service }) {
                         {/* CTA */}
                         <div className="flex gap-4 mt-6">
                             <button
-                                onClick={handleToggle}
+                                onClick={() => {
+                                    if (translation.slug) {
+                                        // Gọi hàm fetch để load dữ liệu ngay
+                                        onFetchService(translation.slug);
+
+                                        // Điều hướng sang URL mới
+                                        navigate(`/services/${translation.slug}`);
+                                    }
+                                }}
                                 className="flex items-center justify-center gap-2 flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white 
-       font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+    font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
                             >
                                 Xem chi tiết
                             </button>
+
 
                             <Link
                                 to="/contact"
@@ -163,6 +171,6 @@ export default function ServiceCard({ service }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
