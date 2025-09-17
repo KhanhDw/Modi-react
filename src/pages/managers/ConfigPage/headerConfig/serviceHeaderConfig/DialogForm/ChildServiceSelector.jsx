@@ -8,6 +8,15 @@ import {
 } from "@/components/ui/select";
 
 export default function ChildServiceSelector({ services, valueSlug, setValueSlug }) {
+
+    console.log("111111:", services);
+    console.log("222222:", valueSlug);
+
+    useEffect(() => {
+        console.log(">>> valueSlug hiện tại:", valueSlug);
+    }, [valueSlug]);
+
+
     return (
         <Select
             value={valueSlug || ""}

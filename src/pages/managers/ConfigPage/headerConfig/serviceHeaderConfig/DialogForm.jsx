@@ -38,6 +38,9 @@ export default function DialogForm({
     setListIdServices,
     onSubmit,
 }) {
+
+    console.log("childd:::", dialog);
+
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
     const [services, setServices] = useState([]);
 
@@ -55,8 +58,11 @@ export default function DialogForm({
                 JSON.stringify(prev) === JSON.stringify(newList) ? prev : newList
             );
         } else if (isChild && isEditing) {
-            const newSlug = dialog.target?.title?.slug || "";
-            setValueSlug(prev => (prev === newSlug ? prev : newSlug));
+            const newSlug = dialog.target?.description?.en || "";
+            if (valueSlug !== newSlug) {
+                setValueSlug(newSlug);
+            }
+            console.log("ndsndnsn:", valueSlug);
         } else if (isAdding) {
             // reset khi thêm mới
             setListIdServices([]);
@@ -96,6 +102,9 @@ export default function DialogForm({
         setListIdServices([]);
         setOpen(false);
     };
+
+
+
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
