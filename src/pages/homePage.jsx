@@ -285,11 +285,11 @@ function BannerSilder({ data, activeLang }) {
                     animate={isInView ? { opacity: showNext ? 0 : 1, y: 0 } : {}}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent px-4 sm:px-12 md:px-10 lg:pl-20 xl:pl-30 2xl:w-2/3"
+                    className="absolute inset-0 z-30 flex flex-col items-start justify-center text-white bg-transparent px-4 mt-10 sm:px-12 md:px-10 lg:pl-20 xl:pl-30 2xl:w-2/3"
                 >
                     {/* Title */}
                     <h2
-                        className="font-bold text-start mb-4
+                        className="font-bold text-start mb-2 md:mb-4 lg:mb-6
       text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl
       xs:ml-2 sm:ml-4 md:ml-0"
                     >
@@ -298,7 +298,7 @@ function BannerSilder({ data, activeLang }) {
 
                     {/* Paragraph */}
                     <p
-                        className="mb-8 text-justify
+                        className="mb-3 md:mb-5 lg:mb-6 text-justify
       text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl 2xl:text-3xl
       max-w-[95%] sm:max-w-[90%] md:max-w-[95%] lg:max-w-[80%]
       xs:ml-2 sm:ml-4 md:ml-0"
@@ -313,14 +313,13 @@ function BannerSilder({ data, activeLang }) {
                             animate={isInView ? { opacity: 1 } : {}}
                             transition={{ duration: 0.5, delay: 0.3 }}
                             className="
-        px-5 py-2
-        text-sm sm:text-base md:text-lg lg:text-xl 2xl:text-2xl
-        font-semibold text-white bg-green-600 rounded-lg shadow-lg
+        px-2 py-1 sm:py-2 text-white bg-green-600 rounded-lg shadow-lg
         hover:bg-blue-700 transition-colors duration-300
         xs:ml-2 sm:ml-4 md:ml-0
       "
                         >
-                            <Link to="/about">{t(data[currentIndex].buttonText)}</Link>
+                            <Link className='text-sm sm:text-sm md:text-lg lg:text-xl 2xl:text-2xl
+        font-semibold' to="/about">{t(data[currentIndex].buttonText)}</Link>
                         </motion.button>
                     )}
                 </motion.div>
@@ -426,9 +425,9 @@ function ThreeCardBusiness({ data, activeLang }) {
                             return (
                                 <div
                                     key={item.id}
-                                    className="snap-center shrink-0 
-                   w-[80%] sm:w-[70%] md:w-[60%] 
-                   bg-white dark:bg-gray-800 
+                                    className="snap-center shrink-0
+                   w-[80%] sm:w-[70%] md:w-[60%]
+                   bg-white dark:bg-gray-800
                    rounded-2xl shadow-lg overflow-hidden flex flex-col "
                                 >
                                     {/* Hình ảnh */}

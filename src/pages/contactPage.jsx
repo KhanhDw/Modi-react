@@ -22,7 +22,6 @@ export default function ContactPage() {
   const [formData, setFormData] = useState(initialFormState)
   const [formSubmitted, setFormSubmitted] = useState(false)
 
-
   useEffect(() => {
     if (!socket) return;
     socket.on("dataChanged", (data) => {
@@ -30,8 +29,6 @@ export default function ContactPage() {
     });
     return () => socket.off("dataChanged");
   }, [socket]);
-
-
 
   const generateCaptcha = (length = 5) => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz0123456789';
@@ -69,12 +66,9 @@ export default function ContactPage() {
         body: JSON.stringify(formData) // gửi dữ liệu trước khi reset
       });
 
-      const data = await response.json();
-
-
-
-      console.log('Kết quả từ server:', data);
-      alert(data.message);
+      // const data = await response.json();
+      // console.log('Kết quả từ server:', data);
+      // alert(data.message);
 
       // Sau khi gửi thành công mới reset form
       setFormSubmitted(true);
@@ -85,7 +79,6 @@ export default function ContactPage() {
     }
   };
 
-
   // Tự động đóng modal sau 3 giây
   useEffect(() => {
     if (formSubmitted) {
@@ -94,20 +87,18 @@ export default function ContactPage() {
     }
   }, [formSubmitted])
 
-
-
   return (
     <div className=" dark:bg-slate-900 text-gray-900 dark:text-slate-200 py-10 px-4 sm:px-6 lg:px-8 2xl:py-5 transition-colors duration-300">
 
       {/* Modal thông báo thành công */}
       {formSubmitted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className=" dark:bg-slate-800 px-6 py-8 rounded-xl shadow-xl text-center w-full max-w-sm border border-transparent dark:border-slate-700">
+          <div className=" dark:bg-slate-800 bg-gray-50 px-6 py-8 rounded-xl shadow-xl text-center w-full max-w-sm border border-transparent dark:border-slate-700">
             <h2 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-2">Thành công!</h2>
-            <p className="text-gray-700 dark:text-slate-300">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.</p>
+            <p className="text-black font-medium dark:text-slate-300">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.</p>
             <button
               onClick={() => setFormSubmitted(false)}
-              className="mt-6 px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition"
+              className="mt-4 px-5 py-2 font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition cursor-pointer"
             >
               {t("contactPage.contextBtnModalInformation")}
             </button>
@@ -149,7 +140,7 @@ export default function ContactPage() {
                   value={formData.ho_ten}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
                 <input
                   type="tel"
@@ -158,7 +149,7 @@ export default function ContactPage() {
                   value={formData.so_dien_thoai}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
               </div>
 
@@ -170,7 +161,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
               </div>
 
@@ -182,7 +173,7 @@ export default function ContactPage() {
                   value={formData.securityCode}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
                 <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-2 rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
                   <div className="w-full h-12 rounded-lg">
@@ -198,7 +189,7 @@ export default function ContactPage() {
                 onChange={handleInputChange}
                 required
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg resize-none focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                className="w-full placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg resize-none focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
               />
 
               <button
@@ -222,8 +213,8 @@ export default function ContactPage() {
               title="Bản đồ Công ty Ty Modi"
               style={{ filter: 'grayscale(0) invert(0) contrast(1)' }} // Default style for light mode
             ></iframe>
-            {/* Để kích hoạt style dark mode cho iframe, bạn cần dùng Javascript để thêm class, 
-                vì Tailwind không thể trực tiếp style iframe từ CSS. 
+            {/* Để kích hoạt style dark mode cho iframe, bạn cần dùng Javascript để thêm class,
+                vì Tailwind không thể trực tiếp style iframe từ CSS.
                 Hoặc bạn có thể dùng một bộ lọc CSS đơn giản như ví dụ dưới đây trong file CSS toàn cục:
                 .dark iframe {
                    filter: grayscale(1) invert(0.9) contrast(0.8);
@@ -234,4 +225,6 @@ export default function ContactPage() {
       </div>
     </div>
   )
+
+
 }
