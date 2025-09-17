@@ -170,7 +170,10 @@ export function NotificationBell() {
               ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
               w-[280px] max-w-[90vw] sm:w-80
               left-1/2 -translate-x-1/2
+              xs:translate-x-[-70px]
+              sm:translate-x-[-150px]
             `}
+
 
 
         >
