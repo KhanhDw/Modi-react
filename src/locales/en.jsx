@@ -462,7 +462,9 @@ export default {
         inputPin: "Security Code",
         inputContext: "Content",
         btnSendContact: "Send contact",
-
+        contextModalSuccess: "Success",
+        contextModalNoti: "Thank you for contacting us. We will respond as soon as possible.",
+        contextBtnModalInformation: "Close",
     },
     careers: {
         title: "Career Opportunities",

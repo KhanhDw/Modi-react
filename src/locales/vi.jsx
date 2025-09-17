@@ -572,6 +572,8 @@ export default {
         inputPhoneNumber: "Điện thoại",
         inputPin: "Mã bảo mật",
         inputContext: "Nội dung",
+        contextModalSuccess: "Thành công!",
+        contextModalNoti: "Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.",
         contextBtnModalInformation: "Đóng",
         btnSendContact: "Gửi Liên Hệ",
     },

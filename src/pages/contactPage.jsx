@@ -94,8 +94,8 @@ export default function ContactPage() {
       {formSubmitted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className=" dark:bg-slate-800 bg-gray-50 px-6 py-8 rounded-xl shadow-xl text-center w-full max-w-sm border border-transparent dark:border-slate-700">
-            <h2 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-2">Thành công!</h2>
-            <p className="text-black font-medium dark:text-slate-300">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.</p>
+            <h2 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-2">{t("contactPage.contextModalSuccess")}</h2>
+            <p className="text-black font-medium dark:text-slate-300">{t("contactPage.contextModalNoti")}</p>
             <button
               onClick={() => setFormSubmitted(false)}
               className="mt-4 px-5 py-2 font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition cursor-pointer"
@@ -165,7 +165,7 @@ export default function ContactPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <input
                   type="text"
                   name="securityCode"
@@ -175,7 +175,7 @@ export default function ContactPage() {
                   required
                   className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
-                <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-2 rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
+                <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
                   <div className="w-full h-12 rounded-lg">
                     <CaptchaImage captchaText={captchaText} />
                   </div>
@@ -194,9 +194,9 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-semibold text-lg rounded-lg transition-transform transform hover:scale-105 cursor-pointer"
+                className="w-full h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white text-lg rounded-lg transition-transform transform hover:scale-105 cursor-pointer"
               >
-                {t("contactPage.btnSendContact")}
+                <span className="font-semibold">{t("contactPage.btnSendContact")}</span>
               </button>
             </form>
           </div>
