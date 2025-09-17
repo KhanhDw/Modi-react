@@ -5,9 +5,6 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import { FaCheckCircle } from "react-icons/fa";
-import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
 
 const bannerStyle = (image) => ({
   backgroundImage: `url(${image || "/images/banner2.jpg"})`,
