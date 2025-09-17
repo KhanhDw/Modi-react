@@ -89,8 +89,6 @@ export default function ServicePage() {
     };
 
     const FetchDataServices = async (lang = "vi") => {
-
-
         try {
             const lang_api = lang === "vi" ? "" : "/en";
             const res = await fetch(`${API_BASE_URL}${lang_api}/api/services`);
@@ -105,10 +103,6 @@ export default function ServicePage() {
             setLoading(false);
         }
     };
-
-
-
-
 
     useEffect(() => {
         FetchDataServices()
@@ -149,7 +143,7 @@ export default function ServicePage() {
                             {t("servicesPage.banner.title")}
                         </h1>
                         <p className="text-sm md:text-base text-white/90 font-medium">
-                            <Link to="/" className="hover:underline font-semibold">Trang chủ</Link> &gt;{" "}
+                            <Link to="/" className="hover:underline font-semibold">{t("servicesPage.banner.breadcrumbHome")}</Link> &gt;{" "}
                             <span className="font-semibold">{t("servicesPage.banner.title")}</span>
                         </p>
                     </div>
