@@ -152,14 +152,14 @@ export default function ServiceForm() {
                       )}
                       {(!!dataArticle ||
                         (editingService && editingService.content)) && (
-                        <Button
-                          type="button"
-                          className="ml-2"
-                          onClick={() => setOpenDetailModal(true)}
-                        >
-                          Xem chi tiết
-                        </Button>
-                      )}
+                          <Button
+                            type="button"
+                            className="ml-2"
+                            onClick={() => setOpenDetailModal(true)}
+                          >
+                            Xem chi tiết
+                          </Button>
+                        )}
                     </div>
                     {/* Hiển thị lỗi nếu chưa có nội dung */}
                     {errors.dataArticle && (

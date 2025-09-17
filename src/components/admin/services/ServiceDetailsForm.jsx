@@ -11,9 +11,8 @@ export default function ServiceDetailsForm({
 }) {
   return (
     <div
-      className={`flex ${
-        editingService ? `flex-col` : ""
-      } justify-between gap-6`}
+      className={`flex ${editingService ? `flex-col` : ""
+        } justify-between gap-6`}
     >
       <div className="space-y-2 flex-1/3">
         <Label className="text-black" htmlFor="serviceName">
@@ -53,21 +52,13 @@ export default function ServiceDetailsForm({
           className="text-black border border-black/30"
           id="price"
           type="text"
-          value={formData.price || ""}
+          value={
+            formData.price
+              ? Number(formData.price).toLocaleString("vi-VN")
+              : "0"
+          }
           onChange={(e) => {
-            const raw = e.target.value.replace(/[^0-9]/g, "");
-            handleChange("price", raw);
-          }}
-          onBlur={(e) => {
-            if (e.target.value) {
-              const raw = e.target.value.replace(/[^0-9]/g, "");
-              const formatted = raw ? Number(raw).toLocaleString("vi-VN") : "";
-              handleChange("price", formatted);
-            }
-          }}
-          onFocus={(e) => {
-            // Khi focus lại, chuyển về số thô để nhập tiếp
-            const raw = e.target.value.replace(/[^0-9]/g, "");
+            const raw = e.target.value.replace(/\D/g, ""); // chỉ lấy số
             handleChange("price", raw);
           }}
           placeholder="Nhập giá của dịch vụ"

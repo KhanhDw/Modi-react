@@ -59,11 +59,11 @@ function ModalDesignWeb() {
 
   return (
     <div
-      className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md"
+      className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md bg-gray-700 dark:bg-gray-700/70"
       onMouseLeave={handleMouseLeaveContainer}
     >
-      <div className="rounded-md bg-transparent dark:bg-gray-800/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
-        <div className="min-w-[300px] lg:min-w-[400px] xl:min-w-[200px] relative">
+      <div className="rounded-md overflow-hidden bg-gray-700/60 dark:bg-gray-700/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
+        <div className="w-50 lg:min-w-[400px] xl:min-w-[200px] relative bg-gray-700/60 dark:bg-gray-700/70">
           <div className="space-y-1">
             {categories.map((item, index) => {
               const isActive = hoveredItem === index;
@@ -71,26 +71,26 @@ function ModalDesignWeb() {
               return (
                 <div
                   key={item.id + index}
-                  className={`
+                  className={` bg-gray-700/60 dark:bg-gray-700/70
                 group cursor-pointer transition-all duration-200 ease-in-out transform
-                px-3 py-2 rounded-lg relative
+                px-3 py-2 rounded-lg relative 
                 ${isActive
                       ? "text-white"
-                      : "hover:bg-slate-900 text-gray-300 dark:text-gray-200 hover:text-white"}
+                      : "hover:bg-slate-900 bg-gray-700/60 dark:bg-gray-700/70  text-gray-300 dark:text-gray-200 hover:text-white"}
               `}
                   onMouseEnter={() => handleMouseEnterItem(index)}
                 >
                   {/* Overlay effect */}
                   <div
                     className={`
-                  absolute inset-0 rounded-lg transition-opacity duration-100
+                  absolute inset-0 rounded-lg bg-gray-700/60 dark:bg-gray-700/70 transition-opacity duration-100
                   ${isActive
-                        ? "bg-gray-900"
-                        : ""}
+                        ? "bg-gray-900 dark:bg-gray-900"
+                        : "bg-gray-700/60 dark:bg-gray-600/70"}
                 `}
                   ></div>
 
-                  <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center justify-between relative z-10 ">
                     <Link
                       to={`/Products?category=${encodeURIComponent(item.title)}`}
                       className={`

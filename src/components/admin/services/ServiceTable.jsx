@@ -121,9 +121,9 @@ export default function ServiceTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((item) => (
+              {currentData.map((item, index) => (
                 <TableRow
-                  key={item.service_id}
+                  key={`service-table-admin${index}`}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">

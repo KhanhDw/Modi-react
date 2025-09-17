@@ -76,13 +76,13 @@ export default function MarketingPage() {
         fetchArticles()
     }, [prefix])
 
-    if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center text-xl text-foreground dark:text-white">
-                Đang tải dữ liệu...
-            </div>
-        )
-    }
+    // if (isLoading) {
+    //     return (
+    //         <div className="min-h-screen flex items-center justify-center text-xl text-foreground dark:text-white">
+    //             Đang tải dữ liệu...
+    //         </div>
+    //     )
+    // }
 
     if (error) {
         return (
@@ -101,10 +101,10 @@ export default function MarketingPage() {
                     {/* Text + Search */}
                     <div className="flex flex-col text-center md:text-left">
                         <h2 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white mb-2">
-                            Kết nối thương hiệu với khách hàng
+                            {lang === "vi" ? "Kết nối thương hiệu với khách hàng" : "Connecting the brand with customers"}
                         </h2>
                         <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-400 mb-3">
-                            Với một website chuẩn SEO doanh nghiệp bạn sẽ tiếp cận hàng ngàn khách hàng và vượt qua đối thủ.
+                            {lang == "vi" ? "Với một website chuẩn SEO doanh nghiệp bạn sẽ tiếp cận hàng ngàn khách hàng và vượt qua đối thủ" : "An SEO-friendly business website helps you reach thousands of customers and stay ahead of the competition"}
                         </p>
 
                         {/* Ô tìm kiếm ngay dưới title */}
@@ -114,11 +114,11 @@ export default function MarketingPage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onKeyDown={handleSearchSubmit}
-                                placeholder="Tìm kiếm..."
-                                className="w-full py-2 pl-4 pr-10 border border-border rounded-md 
-                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-none 
-                   text-foreground dark:text-white 
-                   bg-input dark:bg-gray-800 
+                                placeholder={lang == "vi" ? "Tìm kiếm..." : "Search..."}
+                                className="w-full py-2 pl-4 pr-10 border border-border rounded-md
+                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-none
+                   text-foreground dark:text-white
+                   bg-input dark:bg-gray-800
                    transition-colors duration-200"
                             />
                             <div
@@ -128,10 +128,28 @@ export default function MarketingPage() {
                                 <Search className="text-gray-600 dark:text-gray-200 h-5 w-5" />
                             </div>
                         </div>
+
+                        {!articles.length && (
+                            <div className="mt-40 flex items-center justify-center">
+                                <div className="text-center flex items-center justify-center flex-col">
+                                    <div className="text-6xl mb-4">🔍</div>
+                                    <h3 className="text-xl font-semibold text-foreground mb-2">
+                                        {lang === "vi"
+                                            ? isSearching
+                                                ? "Không tìm thấy kết quả!"
+                                                : "Hiện tại chưa có bài viết nào."
+                                            : isSearching
+                                                ? "No results found!"
+                                                : "There are no articles yet."}
+                                    </h3>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                 </div>
 
-                {articles.length > 0 ? (
+                {articles.length > 0 && (
                     <>
                         <ArticlesList articles={visibleArticles} />
 
@@ -140,7 +158,7 @@ export default function MarketingPage() {
                             <div className="flex justify-center mt-6 ">
                                 <button
                                     onClick={() => setVisibleCount((prev) => prev + pageSize)}
-                                    className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg 
+                                    className="px-6 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg
                                                hover:bg-blue-700 dark:hover:bg-blue-600 transition cursor-pointer"
                                 >
                                     Xem thêm
@@ -148,13 +166,8 @@ export default function MarketingPage() {
                             </div>
                         )}
                     </>
-                ) : (
-                    isSearching && (
-                        <div className="text-center text-lg text-muted-foreground dark:text-gray-400">
-                            Không tìm thấy bài viết nào.
-                        </div>
-                    )
                 )}
+
             </main>
         </div>
     )

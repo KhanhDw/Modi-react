@@ -3,10 +3,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, Share2 } from "lucide-react"
 import { useParams } from 'react-router-dom';
+import useCurrentLanguage from "@/hook/currentLang";
 
 export default function ArticleDetail() {
     const { slug } = useParams();
-
+    const { prefix } = useCurrentLanguage();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,7 +16,7 @@ export default function ArticleDetail() {
         const fetchArticle = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/slug/${slug}`
+                    `${import.meta.env.VITE_MAIN_BE_URL}${prefix}/api/marketing/slug/${slug}`
                 );
                 if (!res.ok) throw new Error("Không thể tải dữ liệu");
                 const data = await res.json();
@@ -27,11 +28,12 @@ export default function ArticleDetail() {
             }
         };
         if (slug) fetchArticle();
-    }, [slug]);
+    }, [slug, prefix]); // nhớ thêm prefix vào dependency
 
-    if (loading) return <p className="text-foreground dark:text-gray-300">Đang tải dữ liệu...</p>;
-    if (error) return <p className="text-red-500 dark:text-red-400">{error}</p>;
-    if (!post) return <p className="text-muted-foreground dark:text-gray-400">Không có dữ liệu.</p>;
+
+    if (loading) return <p className="min-h-screen flex justify-center items-center text-foreground dark:text-gray-300 font-semibold">Đang tải dữ liệu...</p>;
+    if (error) return <p className="min-h-screen flex justify-center items-center text-red-500 dark:text-red-400 font-semibold">{error}</p>;
+    if (!post) return <p className="min-h-screen flex justify-center items-center text-muted-foreground dark:text-gray-400 font-semibold">Không có dữ liệu.</p>;
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-10">
@@ -92,7 +94,7 @@ export default function ArticleDetail() {
             <Card className="mb-8 bg-white dark:bg-gray-900 border border-border dark:border-gray-700">
                 <CardContent className="px-3">
                     <div
-                        className="prose prose-lg max-w-none leading-relaxed text-foreground dark:text-gray-300 prose-headings:text-foreground prose-headings:dark:text-white prose-a:text-blue-600 prose-a:dark:text-blue-400"
+                        className="prose max-w-none text-gray-800 leading-relaxed dark:text-gray-200"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                     />
                 </CardContent>

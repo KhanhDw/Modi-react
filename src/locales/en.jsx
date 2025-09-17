@@ -21,9 +21,9 @@ export default {
                 "Logo Design"
             ],
         },
-        designweb: { 
+        designweb: {
             title: "Website Design",
-            listDesign :[
+            listDesign: [
                 "Introductory website",
                 "E-commerce website ",
                 "Service website ",
@@ -34,7 +34,7 @@ export default {
                 "Personal website "
             ]
         },
-        marketing:{title: "Media & Marketing"},
+        marketing: { title: "Media & Marketing" },
         news: { title: "News", },
         contact: { title: "Contact", },
         recruitment: { title: "Careers", },
@@ -114,7 +114,7 @@ export default {
             services: [
                 {
                     "title": "Website Design"
-                    
+
                 },
                 {
                     "title": "App Design"
@@ -144,7 +144,7 @@ export default {
                     "Enhancing corporate value",
                     "Increasing the business's reputation with consumers",
                     "Supported with trade promotion, product sales output",
-                   "Supported across all traditional, online, etc., sales channels"
+                    "Supported across all traditional, online, etc., sales channels"
                 ]
             },
             forConsumer: {
@@ -476,116 +476,116 @@ export default {
         }
     },
     aboutV2: {
-    button: "Contact us now",
-    StartupJourney: {
-      title: "Our Startup Journey",
-      description: "Mộc Điền was born from the aspiration to create unique websites that help small businesses reach further.",
-      milestones: [
-        {
-          title: "Initial Idea",
-          description: "We wanted to break the limits of traditional web design by creating beautiful and efficient interfaces.",
+        button: "Contact us now",
+        StartupJourney: {
+            title: "Our Startup Journey",
+            description: "Mộc Điền was born from the aspiration to create unique websites that help small businesses reach further.",
+            milestones: [
+                {
+                    title: "Initial Idea",
+                    description: "We wanted to break the limits of traditional web design by creating beautiful and efficient interfaces.",
+                },
+                {
+                    title: "Founding Team",
+                    description: "Gathering young talents passionate about technology and design to build a shared vision.",
+                },
+                {
+                    title: "Future Vision",
+                    description: "Becoming a trusted partner for businesses on their digital transformation journey.",
+                },
+            ],
         },
-        {
-          title: "Founding Team",
-          description: "Gathering young talents passionate about technology and design to build a shared vision.",
+        TechnologiesSection: "Technologies we use",
+        ServicesHighlight: {
+            title: "Our Web Design Solutions",
+            description: "We provide modern web design solutions, from creative interfaces to optimized user experiences.",
+            services: [
+                {
+                    title: "Interface Design",
+                    description: "Crafting beautiful, responsive interfaces across all devices with optimal user experience.",
+                },
+                {
+                    title: "SEO Optimization",
+                    description: "Helping your website rank higher in search results, attracting potential customers.",
+                },
+                {
+                    title: "E-commerce",
+                    description: "Building professional online stores to boost sales effectively.",
+                },
+                {
+                    title: "Maintenance & Support",
+                    description: "24/7 maintenance services to ensure your website runs smoothly and securely.",
+                },
+                {
+                    title: "Strategic Consulting",
+                    description: "Providing expert advice on digitalization and online growth strategies.",
+                },
+                {
+                    title: "Mobile Design",
+                    description: "Optimizing user experience on mobile devices, aligning with current trends.",
+                },
+            ],
         },
-        {
-          title: "Future Vision",
-          description: "Becoming a trusted partner for businesses on their digital transformation journey.",
+        CTASection: {
+            title: "Start your project today",
+            description: "Let Mộc Điền help you build your dream website. Contact us now for a free consultation!",
+            contactButton: "Contact us",
         },
-      ],
-    },
-    TechnologiesSection: "Technologies we use",
-    ServicesHighlight: {
-      title: "Our Web Design Solutions",
-      description: "We provide modern web design solutions, from creative interfaces to optimized user experiences.",
-      services: [
-        {
-          title: "Interface Design",
-          description: "Crafting beautiful, responsive interfaces across all devices with optimal user experience.",
+        TeamSection: {
+            title: "Our Team",
+            teamMembers: [
+                {
+                    name: "Development Team",
+                    role: "Development Team",
+                    description: "A team of experienced software engineers ensuring every product is stable, secure, and efficient.",
+                    image: "/CodeTeam.jpg",
+                },
+                {
+                    name: "Design & Creative Team",
+                    role: "Design & Creative Team",
+                    description: "A team of UX/UI designers and creatives turning ideas into unique, engaging, and professional visual experiences.",
+                    image: "/CreativeTeam.jpg",
+                },
+                {
+                    name: "Marketing Team",
+                    role: "Marketing Team",
+                    description: "Marketing and communication experts helping brands reach the right audience and build sustainable growth strategies.",
+                    image: "/MarketingTeam.jpg",
+                },
+            ],
         },
-        {
-          title: "SEO Optimization",
-          description: "Helping your website rank higher in search results, attracting potential customers.",
+        CommitmentSection: {
+            title: "Our Commitments",
+            commitments: [
+                {
+                    title: "100% Satisfaction",
+                    description: "We ensure your website is beautiful and user-friendly, with a money-back guarantee if not satisfied.",
+                },
+                {
+                    title: "Performance Optimization",
+                    description: "Fast-loading websites with strong SEO to help you reach customers more effectively.",
+                },
+                {
+                    title: "24/7 Support",
+                    description: "Our technical team is always ready to assist you anytime, anywhere.",
+                },
+                {
+                    title: "Absolute Security",
+                    description: "Applying the highest security standards to protect your data.",
+                },
+                {
+                    title: "Affordable Pricing",
+                    description: "High-quality services at prices suitable for businesses of all sizes.",
+                },
+                {
+                    title: "On-Time Delivery",
+                    description: "Committed to completing projects on the agreed timeline.",
+                },
+            ],
         },
-        {
-          title: "E-commerce",
-          description: "Building professional online stores to boost sales effectively.",
-        },
-        {
-          title: "Maintenance & Support",
-          description: "24/7 maintenance services to ensure your website runs smoothly and securely.",
-        },
-        {
-          title: "Strategic Consulting",
-          description: "Providing expert advice on digitalization and online growth strategies.",
-        },
-        {
-          title: "Mobile Design",
-          description: "Optimizing user experience on mobile devices, aligning with current trends.",
-        },
-      ],
-    },
-    CTASection: {
-        title: "Start your project today",
-        description: "Let Mộc Điền help you build your dream website. Contact us now for a free consultation!",
-        contactButton: "Contact us",
-        },
-    TeamSection: {
-      title: "Our Team",
-      teamMembers: [
-        {
-          name: "Development Team",
-          role: "Development Team",
-          description: "A team of experienced software engineers ensuring every product is stable, secure, and efficient.",
-          image: "/CodeTeam.jpg",
-        },
-        {
-          name: "Design & Creative Team",
-          role: "Design & Creative Team",
-          description: "A team of UX/UI designers and creatives turning ideas into unique, engaging, and professional visual experiences.",
-          image: "/CreativeTeam.jpg",
-        },
-        {
-          name: "Marketing Team",
-          role: "Marketing Team",
-          description: "Marketing and communication experts helping brands reach the right audience and build sustainable growth strategies.",
-          image: "/MarketingTeam.jpg",
-        },
-      ],
-    },
-    CommitmentSection: {
-      title: "Our Commitments",
-      commitments: [
-        {
-          title: "100% Satisfaction",
-          description: "We ensure your website is beautiful and user-friendly, with a money-back guarantee if not satisfied.",
-        },
-        {
-          title: "Performance Optimization",
-          description: "Fast-loading websites with strong SEO to help you reach customers more effectively.",
-        },
-        {
-          title: "24/7 Support",
-          description: "Our technical team is always ready to assist you anytime, anywhere.",
-        },
-        {
-          title: "Absolute Security",
-          description: "Applying the highest security standards to protect your data.",
-        },
-        {
-          title: "Affordable Pricing",
-          description: "High-quality services at prices suitable for businesses of all sizes.",
-        },
-        {
-          title: "On-Time Delivery",
-          description: "Committed to completing projects on the agreed timeline.",
-        },
-      ],
+
     },
 
-  },
-  
     servicesPage: {
         banner: {
             title: "Services",
@@ -594,7 +594,13 @@ export default {
         intro: {
             heading: "Services",
             description:
-                "We offer a variety of service packages, from website upgrades and new website development to management solutions and online business growth."
+                "We offer a variety of service packages, from website upgrades and new website development to management solutions and online business growth.",
+            subtitle: "Supporting your business every step of the way"
+        },
+        cta: {
+            title: "Elevate Your Website – Elevate Your Business",
+            subtitle: "We help you redefine the digital experience with modern design and a clear strategy.",
+            button: "Get a Free Consultation"
         },
         servicePrice: "Service Price",
         detailTitle: "Service Details",
@@ -774,7 +780,7 @@ export default {
             }
         ]
     }
-    
+
 
 
 };

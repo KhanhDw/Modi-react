@@ -117,7 +117,7 @@ export default {
             title: "Dịch vụ Modi",
             description: "Nền tảng kết nối, cung cấp dịch vụ toàn diện, đồng hành cùng doanh nghiệp Việt từ khởi nghiệp đến xuất khẩu quốc tế.",
             services: [
-                { 
+                {
                     title: "Thiết kế website",
                     description: "Website chuyên nghiệp, chuẩn SEO, tối ưu trải nghiệm người dùng trên mọi thiết bị."
                 },
@@ -374,118 +374,118 @@ export default {
         fanpagePlaceholder: "Modi team",
     },
     aboutV2: {
-    title: "Mộc Điền Kiến tạo tương lai số của bạn",
-    description: "Chúng tôi là đội ngũ trẻ, đam mê mang đến những website sáng tạo, hiện đại, và thân thiện với người dùng.",
-    button: "Liên hệ ngay",
-    StartupJourney: {
-      title: "Hành trình khởi đầu của chúng tôi",
-      description: "Mộc Điền ra đời từ khát vọng mang đến những website độc đáo, giúp doanh nghiệp nhỏ vươn xa.",
-      milestones: [
-        {
-          title: "Ý tưởng ban đầu",
-          description: "Chúng tôi muốn phá vỡ giới hạn của thiết kế web truyền thống, mang đến giao diện đẹp và hiệu quả.",
+        title: "Mộc Điền Kiến tạo tương lai số của bạn",
+        description: "Chúng tôi là đội ngũ trẻ, đam mê mang đến những website sáng tạo, hiện đại, và thân thiện với người dùng.",
+        button: "Liên hệ ngay",
+        StartupJourney: {
+            title: "Hành trình khởi đầu của chúng tôi",
+            description: "Mộc Điền ra đời từ khát vọng mang đến những website độc đáo, giúp doanh nghiệp nhỏ vươn xa.",
+            milestones: [
+                {
+                    title: "Ý tưởng ban đầu",
+                    description: "Chúng tôi muốn phá vỡ giới hạn của thiết kế web truyền thống, mang đến giao diện đẹp và hiệu quả.",
+                },
+                {
+                    title: "Đội ngũ sáng lập",
+                    description: "Tập hợp những tài năng trẻ, đam mê công nghệ và thiết kế để xây dựng tầm nhìn chung.",
+                },
+                {
+                    title: "Tầm nhìn tương lai",
+                    description: "Trở thành đối tác tin cậy của các doanh nghiệp trong hành trình chuyển đổi số.",
+                },
+            ],
         },
-        {
-          title: "Đội ngũ sáng lập",
-          description: "Tập hợp những tài năng trẻ, đam mê công nghệ và thiết kế để xây dựng tầm nhìn chung.",
-        },
-        {
-          title: "Tầm nhìn tương lai",
-          description: "Trở thành đối tác tin cậy của các doanh nghiệp trong hành trình chuyển đổi số.",
-        },
-      ],
-    },
-    TechnologiesSection: "Công nghệ chúng tôi sử dụng",
+        TechnologiesSection: "Công nghệ chúng tôi sử dụng",
 
-    ServicesHighlight: {
-      title: "Giải pháp thiết kế web của chúng tôi",
-      description: "Chúng tôi cung cấp các giải pháp thiết kế website hiện đại, từ giao diện sáng tạo đến trải nghiệm người dùng tối ưu.",
-      services: [
-        {
-          title: "Thiết kế giao diện",
-          description: "Tạo giao diện đẹp, responsive trên mọi thiết bị với trải nghiệm người dùng tối ưu.",
+        ServicesHighlight: {
+            title: "Giải pháp thiết kế web của chúng tôi",
+            description: "Chúng tôi cung cấp các giải pháp thiết kế website hiện đại, từ giao diện sáng tạo đến trải nghiệm người dùng tối ưu.",
+            services: [
+                {
+                    title: "Thiết kế giao diện",
+                    description: "Tạo giao diện đẹp, responsive trên mọi thiết bị với trải nghiệm người dùng tối ưu.",
+                },
+                {
+                    title: "Tối ưu SEO",
+                    description: "Giúp website của bạn xuất hiện cao trên kết quả tìm kiếm, thu hút khách hàng tiềm năng.",
+                },
+                {
+                    title: "E-commerce",
+                    description: "Xây dựng cửa hàng trực tuyến chuyên nghiệp, tăng doanh số bán hàng hiệu quả.",
+                },
+                {
+                    title: "Bảo trì & Hỗ trợ",
+                    description: "Dịch vụ bảo trì 24/7, đảm bảo website luôn hoạt động ổn định và an toàn.",
+                },
+                {
+                    title: "Tư vấn chiến lược",
+                    description: "Đưa ra lời khuyên chuyên môn về chiến lược số hóa và phát triển trực tuyến.",
+                },
+                {
+                    title: "Thiết kế di động",
+                    description: "Tối ưu hóa trải nghiệm trên thiết bị di động, đáp ứng xu hướng sử dụng hiện tại.",
+                },
+            ],
         },
-        {
-          title: "Tối ưu SEO",
-          description: "Giúp website của bạn xuất hiện cao trên kết quả tìm kiếm, thu hút khách hàng tiềm năng.",
+        CTASection: {
+            title: "Bắt đầu dự án của bạn ngay hôm nay",
+            description: "Hãy để Mộc Điền giúp bạn xây dựng website mơ ước. Liên hệ ngay để nhận tư vấn miễn phí!",
+            contactButton: "Liên hệ tư vấn",
         },
-        {
-          title: "E-commerce",
-          description: "Xây dựng cửa hàng trực tuyến chuyên nghiệp, tăng doanh số bán hàng hiệu quả.",
+        TeamSection: {
+            title: "Đội ngũ của chúng tôi",
+            teamMembers: [
+                {
+                    name: "Đội Lập trình",
+                    role: "Development Team",
+                    description: "Đội ngũ kỹ sư phần mềm giàu kinh nghiệm, đảm bảo mọi sản phẩm đều hoạt động ổn định, bảo mật và hiệu quả.",
+                    image: "/CodeTeam.jpg",
+                },
+                {
+                    name: "Đội Thiết kế & Sáng tạo",
+                    role: "Design & Creative Team",
+                    description: "Đội ngũ thiết kế UX/UI và sáng tạo biến ý tưởng thành trải nghiệm hình ảnh độc đáo, thu hút và chuyên nghiệp.",
+                    image: "/CreativeTeam.jpg",
+                },
+                {
+                    name: "Đội Marketing",
+                    role: "Marketing Team",
+                    description: "Chuyên gia marketing và truyền thông giúp thương hiệu tiếp cận đúng khách hàng, xây dựng chiến lược tăng trưởng bền vững.",
+                    image: "/MarketingTeam.jpg",
+                },
+            ],
         },
-        {
-          title: "Bảo trì & Hỗ trợ",
-          description: "Dịch vụ bảo trì 24/7, đảm bảo website luôn hoạt động ổn định và an toàn.",
+        CommitmentSection: {
+            title: "Cam kết của chúng tôi",
+            commitments: [
+                {
+                    title: "100% hài lòng",
+                    description: "Chúng tôi đảm bảo website của bạn đẹp và dễ sử dụng, hoàn tiền nếu không hài lòng.",
+                },
+                {
+                    title: "Tối ưu hiệu suất",
+                    description: "Website tải nhanh, SEO tốt, giúp bạn tiếp cận khách hàng hiệu quả hơn.",
+                },
+                {
+                    title: "Hỗ trợ 24/7",
+                    description: "Đội ngũ kỹ thuật luôn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi.",
+                },
+                {
+                    title: "Bảo mật tuyệt đối",
+                    description: "Áp dụng các tiêu chuẩn bảo mật cao nhất để bảo vệ dữ liệu của bạn.",
+                },
+                {
+                    title: "Giá cả hợp lý",
+                    description: "Dịch vụ chất lượng cao với mức giá phù hợp với mọi quy mô doanh nghiệp.",
+                },
+                {
+                    title: "Giao hàng đúng hạn",
+                    description: "Cam kết hoàn thành dự án đúng thời gian đã thỏa thuận.",
+                },
+            ],
         },
-        {
-          title: "Tư vấn chiến lược",
-          description: "Đưa ra lời khuyên chuyên môn về chiến lược số hóa và phát triển trực tuyến.",
-        },
-        {
-          title: "Thiết kế di động",
-          description: "Tối ưu hóa trải nghiệm trên thiết bị di động, đáp ứng xu hướng sử dụng hiện tại.",
-        },
-      ],
-    },
-    CTASection: {
-        title: "Bắt đầu dự án của bạn ngay hôm nay",
-        description: "Hãy để Mộc Điền giúp bạn xây dựng website mơ ước. Liên hệ ngay để nhận tư vấn miễn phí!",
-        contactButton: "Liên hệ tư vấn",
-    },
-    TeamSection: {
-      title: "Đội ngũ của chúng tôi",
-      teamMembers: [
-        {
-          name: "Đội Lập trình",
-          role: "Development Team",
-          description: "Đội ngũ kỹ sư phần mềm giàu kinh nghiệm, đảm bảo mọi sản phẩm đều hoạt động ổn định, bảo mật và hiệu quả.",
-          image: "/CodeTeam.jpg",
-        },
-        {
-          name: "Đội Thiết kế & Sáng tạo",
-          role: "Design & Creative Team",
-          description: "Đội ngũ thiết kế UX/UI và sáng tạo biến ý tưởng thành trải nghiệm hình ảnh độc đáo, thu hút và chuyên nghiệp.",
-          image: "/CreativeTeam.jpg",
-        },
-        {
-          name: "Đội Marketing",
-          role: "Marketing Team",
-          description: "Chuyên gia marketing và truyền thông giúp thương hiệu tiếp cận đúng khách hàng, xây dựng chiến lược tăng trưởng bền vững.",
-          image: "/MarketingTeam.jpg",
-        },
-      ],
-    },
-    CommitmentSection: {
-      title: "Cam kết của chúng tôi",
-      commitments: [
-        {
-          title: "100% hài lòng",
-          description: "Chúng tôi đảm bảo website của bạn đẹp và dễ sử dụng, hoàn tiền nếu không hài lòng.",
-        },
-        {
-          title: "Tối ưu hiệu suất",
-          description: "Website tải nhanh, SEO tốt, giúp bạn tiếp cận khách hàng hiệu quả hơn.",
-        },
-        {
-          title: "Hỗ trợ 24/7",
-          description: "Đội ngũ kỹ thuật luôn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi.",
-        },
-        {
-          title: "Bảo mật tuyệt đối",
-          description: "Áp dụng các tiêu chuẩn bảo mật cao nhất để bảo vệ dữ liệu của bạn.",
-        },
-        {
-          title: "Giá cả hợp lý",
-          description: "Dịch vụ chất lượng cao với mức giá phù hợp với mọi quy mô doanh nghiệp.",
-        },
-        {
-          title: "Giao hàng đúng hạn",
-          description: "Cam kết hoàn thành dự án đúng thời gian đã thỏa thuận.",
-        },
-      ],
-    },
 
-  },
+    },
     TermsOfServicePage: {
         header: {
             title: "Điều khoản sử dụng",
@@ -594,7 +594,13 @@ export default {
         intro: {
             heading: "Dịch vụ",
             description:
-                "Chúng tôi cung cấp nhiều gói dịch vụ đa dạng, từ nâng cấp website, phát triển website mới, đến giải pháp quản lý và phát triển kinh doanh trực tuyến."
+                "Chúng tôi cung cấp nhiều gói dịch vụ đa dạng, từ nâng cấp website, phát triển website mới, đến giải pháp quản lý và phát triển kinh doanh trực tuyến.",
+            subtitle: "Đồng hành cùng doanh nghiệp của bạn"
+        },
+        cta: {
+            title: "Nâng tầm website – Nâng tầm doanh nghiệp",
+            subtitle: "Chúng tôi giúp bạn tái định hình trải nghiệm số với thiết kế hiện đại và chiến lược rõ ràng.",
+            button: "Tư vấn miễn phí"
         },
         servicePrice: "Giá dịch vụ",
         detailTitle: "Chi tiết dịch vụ",

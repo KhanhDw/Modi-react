@@ -10,7 +10,7 @@ export default function NewsInterface() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const { prefix } = useCurrentLanguage();
+  const { prefix, lang } = useCurrentLanguage();
   const pageSize = 6;
 
   useEffect(() => {
@@ -39,6 +39,8 @@ export default function NewsInterface() {
             ngay_dang: item.published_at,
           }));
           setNewsArticles(mappedData);
+        } else {
+          setNewsArticles([]);
         }
         setIsLoading(false);
       })
@@ -53,12 +55,21 @@ export default function NewsInterface() {
 
   if (isLoading)
     return (
-      <div className="text-center py-20 text-gray-500 animate-pulse">
-        Đang tải tin tức...
+      <div className="text-center min-h-screen flex items-center justify-center flex-col">
+        <div className="text-6xl mb-4">🔍</div>
+        <h3 className="text-xl font-semibold text-foreground mb-2">
+          {lang === "vi" ? "Hiện chưa tìm thấy tin tức!" : "No news articles found!"}
+        </h3>
       </div>
     );
+
   if (!newsArticles.length)
-    return <div className="text-center py-20 text-gray-500">Chưa có tin tức.</div>;
+    return <div className="text-center min-h-screen flex items-center justify-center flex-col">
+      <div className="text-6xl mb-4">🔍</div>
+      <h3 className="text-xl font-semibold text-foreground mb-2">
+        {lang === "vi" ? "Hiện chưa tìm thấy tin tức!" : "No news articles found!"}
+      </h3>
+    </div>;
 
   let heroArticle = null;
   let articlesToShow = [];
@@ -76,89 +87,91 @@ export default function NewsInterface() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen transition-colors duration-300">
+      <div className="container mx-auto px-4 py-8" >
         {/* Hero Article */}
-        {currentPage === 1 && heroArticle && (
-          <motion.div
-            className="mb-12"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-          >
-            <div
-              className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl transition-shadow duration-500"
-              onClick={() => handleArticleClick(heroArticle.slug, heroArticle.id)}
+        {
+          currentPage === 1 && heroArticle && (
+            <motion.div
+              className="mb-12"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              <div className="md:flex">
-                {/* Image */}
-                <div className="md:w-1/2 relative overflow-hidden">
-                  <motion.img
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ duration: 0.6 }}
-                    src={`${import.meta.env.VITE_MAIN_BE_URL}${heroArticle.hinh_anh}`}
-                    alt={heroArticle.tieu_de}
-                    className="w-full h-64 md:h-full object-cover transform-gpu"
-                  />
-                  {/* Overlay effect */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
-                </div>
+              <div
+                className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl transition-shadow duration-500"
+                onClick={() => handleArticleClick(heroArticle.slug, heroArticle.id)}
+              >
+                <div className="md:flex">
+                  {/* Image */}
+                  <div className="md:w-1/2 relative overflow-hidden">
+                    <motion.img
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.6 }}
+                      src={`${import.meta.env.VITE_MAIN_BE_URL}${heroArticle.hinh_anh}`}
+                      alt={heroArticle.tieu_de}
+                      className="w-full h-64 md:h-full object-cover transform-gpu"
+                    />
+                    {/* Overlay effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
+                  </div>
 
-                {/* Content */}
-                <motion.div
-                  className="md:w-1/2 p-8 flex flex-col justify-center"
-                  initial="hidden"
-                  animate="visible"
-                  variants={{
-                    hidden: { opacity: 0, x: 30 },
-                    visible: {
-                      opacity: 1,
-                      x: 0,
-                      transition: { staggerChildren: 0.15 },
-                    },
-                  }}
-                >
-                  <motion.h1
-                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                    className="
+                  {/* Content */}
+                  <motion.div
+                    className="md:w-1/2 p-8 flex flex-col justify-center"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      hidden: { opacity: 0, x: 30 },
+                      visible: {
+                        opacity: 1,
+                        x: 0,
+                        transition: { staggerChildren: 0.15 },
+                      },
+                    }}
+                  >
+                    <motion.h1
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      className="
               text-3xl font-bold mb-4 text-gray-900 dark:text-white
               line-clamp-2 md:line-clamp-none
               group-hover:text-blue-600 dark:group-hover:text-blue-400
               transition-colors duration-300
             "
-                  >
-                    {heroArticle.tieu_de}
-                  </motion.h1>
+                    >
+                      {heroArticle.tieu_de}
+                    </motion.h1>
 
-                  <motion.div
-                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                    className="preview-html prose prose-sm max-w-none line-clamp-3 break-words admin-dark:text-gray-500 text-[15px]"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitBoxOrient: "vertical",
-                      WebkitLineClamp: 3
-                    }}
-                    dangerouslySetInnerHTML={{ __html: heroArticle.noi_dung }}
-                  />
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      className="preview-html prose prose-sm max-w-none line-clamp-3 break-words dark:text-gray-400 text-[15px]"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 3
+                      }}
+                      dangerouslySetInnerHTML={{ __html: heroArticle.noi_dung }}
+                    />
 
-                  <motion.div
-                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                    className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400"
-                  >
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      <span>{heroArticle.tac_gia}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>{formatDate(heroArticle.ngay_dang)}</span>
-                    </div>
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      className="flex mt-4 items-center gap-6 text-sm text-gray-500 dark:text-gray-400"
+                    >
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        <span>{heroArticle.tac_gia}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>{formatDate(heroArticle.ngay_dang)}</span>
+                      </div>
+                    </motion.div>
                   </motion.div>
-                </motion.div>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )
+        }
 
 
         {/* News Grid */}
@@ -168,10 +181,10 @@ export default function NewsInterface() {
               key={article.id}
               className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md cursor-pointer group"
               onClick={() => handleArticleClick(article.slug, article.id)}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: idx * 0.12, type: "spring", stiffness: 80 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               whileHover={{ scale: 1.03 }}
             >
               {/* Image wrapper */}
@@ -190,7 +203,7 @@ export default function NewsInterface() {
                 <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                   {article.tieu_de}
                 </h3>
-                <div className="preview-html prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-gray-500 text-[15px]"
+                <div className="preview-html prose prose-sm max-w-none line-clamp-2 break-words dark:text-gray-400 text-[15px] mb-2"
                   style={{
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
@@ -248,7 +261,7 @@ export default function NewsInterface() {
           </button>
         </div>
 
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }

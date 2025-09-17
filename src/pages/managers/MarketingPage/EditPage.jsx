@@ -155,15 +155,15 @@ export default function EditPage() {
     };
 
     return (
-        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-6">
+        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-2 md:p-2">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-                <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-gray-900 admin-dark:text-white">
+                <h2 className="text-2xl text-center lg:text-2xl xl:text-3xl font-bold text-gray-900 admin-dark:text-white sm:text-xl">
                     Chỉnh sửa bài viết
                 </h2>
 
                 {/* Ngôn ngữ */}
-                <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2 sm:gap-4">
+                <div className="flex flex-wrap sm:flex-nowrap justify-center gap-2 sm:gap-4">
                     <button
                         type="button"
                         name="vi"
@@ -189,17 +189,17 @@ export default function EditPage() {
                 </div>
 
                 {/* Nút hành động */}
-                <div className="flex justify-end gap-3 sm:gap-4 mt-2 sm:mt-0">
+                <div className="flex justify-center gap-3 sm:gap-4 mt-2 sm:mt-0">
                     <Button
                         variant="outline"
                         onClick={() => navigate(-1)}
-                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md cursor-pointer"
+                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 sm:px-4 py-2 rounded-md cursor-pointer"
                     >
                         Hủy
                     </Button>
                     <Button
                         onClick={onSubmit}
-                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md cursor-pointer"
+                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-sm sm:text-base px-4 sm:px-4 py-2 rounded-md cursor-pointer"
                     >
                         Cập nhật
                     </Button>
@@ -207,7 +207,7 @@ export default function EditPage() {
             </div>
 
             {/* Form Responsive */}
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-4">
                 {/* Cột trái */}
                 <div className="lg:w-1/3">
                     {!isOpenEditNetwork ? (
@@ -233,7 +233,7 @@ export default function EditPage() {
                             </div>
 
                             {/* Mạng xã hội + Trạng thái */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                                 <div className="space-y-3">
                                     <Label>Mạng xã hội</Label>
                                     <Select
@@ -297,7 +297,7 @@ export default function EditPage() {
                             {/* Hình ảnh */}
                             <div className="space-y-3">
                                 <Label>URL Hình ảnh</Label>
-                                <div className="flex flex-col sm:flex-row gap-2">
+                                <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-2">
                                     <Input
                                         value={formData.image || ""}
                                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}

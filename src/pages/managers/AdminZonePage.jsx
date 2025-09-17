@@ -30,7 +30,9 @@ export default function AdminZonePage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_MAIN_BE_URL}/api/users`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/users`
+      );
       setUsers(res.data.data || []);
       setColumns(res.data.column || []);
     } catch (err) {
@@ -39,8 +41,6 @@ export default function AdminZonePage() {
       setLoading(false);
     }
   };
-
-
 
   // Gọi API lấy user hiện tại
   const fetchCurrentUser = async () => {
@@ -68,17 +68,17 @@ export default function AdminZonePage() {
 
   useEffect(() => {
     fetchCurrentUser(); // load user hiện tại
-    fetchUsers();       // load danh sách user
+    fetchUsers(); // load danh sách user
   }, []);
-
 
   const filteredData = useMemo(() => {
     if (!search.trim()) return users;
     const normalizedSearch = removeVietnameseTones(search.trim());
-    return users.filter((item) =>
-      removeVietnameseTones(item.full_name).includes(normalizedSearch) ||
-      removeVietnameseTones(item.email).includes(normalizedSearch) ||
-      removeVietnameseTones(item.username).includes(normalizedSearch)
+    return users.filter(
+      (item) =>
+        removeVietnameseTones(item.full_name).includes(normalizedSearch) ||
+        removeVietnameseTones(item.email).includes(normalizedSearch) ||
+        removeVietnameseTones(item.username).includes(normalizedSearch)
     );
   }, [search, users]);
 
@@ -111,8 +111,8 @@ export default function AdminZonePage() {
     // Kiểm tra xem giá trị có phải là ngày tháng hợp lệ hay không
     const date = new Date(value);
     if (!isNaN(date.getTime())) {
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
     }
@@ -129,19 +129,28 @@ export default function AdminZonePage() {
           </h2>
 
           <div className="relative w-full max-w-xs flex-grow">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
+            <FiSearch
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={20}
+            />
             <input
               type="search"
               placeholder="Tìm kiếm..."
               value={search}
               spellCheck={false}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-sm sm:text-base bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-200"
             />
           </div>
 
           <button
-            onClick={() => { setEditingUser(null); setShowForm(true); }}
+            onClick={() => {
+              setEditingUser(null);
+              setShowForm(true);
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white border border-transparent
             admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 
             admin-dark:text-gray-200 admin-dark:border-gray-600
@@ -153,7 +162,11 @@ export default function AdminZonePage() {
         </div>
 
         {/* Table */}
-        <div className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${fade ? "opacity-100 shadow-md" : "opacity-0"}`}>
+        <div
+          className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${
+            fade ? "opacity-100 shadow-md" : "opacity-0"
+          }`}
+        >
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
             <thead className="sticky top-0 z-1">
               <tr className="bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 uppercase tracking-wider text-xs sm:text-sm border-b border-gray-200 admin-dark:border-gray-700">
@@ -240,9 +253,11 @@ export default function AdminZonePage() {
                           }}
                           disabled={currentUser && item.id === currentUser.id} // disable nếu là user hiện tại
                           className={`flex items-center gap-1 transition cursor-pointer
-    ${currentUser && item.id === currentUser.id
-                              ? "text-gray-400 cursor-not-allowed"
-                              : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"}
+    ${
+      currentUser && item.id === currentUser.id
+        ? "text-gray-400 cursor-not-allowed"
+        : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"
+    }
   `}
                         >
                           <FiEdit2 size={18} />
@@ -254,15 +269,16 @@ export default function AdminZonePage() {
                           onClick={() => handleDelete(item.id)}
                           disabled={currentUser && item.id === currentUser.id}
                           className={`flex items-center gap-1 transition cursor-pointer
-    ${currentUser && item.id === currentUser.id
-                              ? "text-gray-400 cursor-not-allowed"
-                              : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"}
+    ${
+      currentUser && item.id === currentUser.id
+        ? "text-gray-400 cursor-not-allowed"
+        : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"
+    }
   `}
                         >
                           <FiTrash2 size={18} />
                           <span className="text-sm font-medium">Xóa</span>
                         </button>
-
                       </div>
                     </td>
                   </tr>
@@ -278,17 +294,22 @@ export default function AdminZonePage() {
                 </tr>
               )}
             </tbody>
-
           </table>
         </div>
 
         {/* Pagination */}
         <div className="flex flex-col sm:flex-row items-center justify-between text-gray-500 admin-dark:text-gray-400 text-sm mt-6 gap-4 sm:gap-0">
           <div>
-            Hiển thị {(page - 1) * PAGE_SIZE + 1} - {Math.min(page * PAGE_SIZE, filteredData.length)} trong tổng số {filteredData.length}
+            Hiển thị {(page - 1) * PAGE_SIZE + 1} -{" "}
+            {Math.min(page * PAGE_SIZE, filteredData.length)} trong tổng số{" "}
+            {filteredData.length}
           </div>
           <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
+            >
               &lt;
             </button>
             {[...Array(totalPages).keys()].map((num) => {
@@ -297,15 +318,21 @@ export default function AdminZonePage() {
                 <button
                   key={num + 1}
                   onClick={() => setPage(num + 1)}
-                  className={`w-7 h-7 rounded-full flex items-center justify-center border ${isActive
-                    ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
-                    : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"} transition cursor-pointer`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center border ${
+                    isActive
+                      ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
+                      : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"
+                  } transition cursor-pointer`}
                 >
                   {num + 1}
                 </button>
               );
             })}
-            <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer">
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
+            >
               &gt;
             </button>
           </div>
@@ -317,7 +344,10 @@ export default function AdminZonePage() {
         <UserForm
           user={editingUser}
           onClose={() => setShowForm(false)}
-          onSuccess={() => { setShowForm(false); fetchUsers(); }}
+          onSuccess={() => {
+            setShowForm(false);
+            fetchUsers();
+          }}
         />
       )}
     </div>

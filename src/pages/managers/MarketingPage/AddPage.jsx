@@ -112,28 +112,32 @@ export default function AddPage() {
     };
 
     return (
-        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-6">
+        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-4 lg:p-4">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-6 gap-4">
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 admin-dark:text-white">
                     Tạo bài viết mới
                 </h2>
-                <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2 sm:gap-4">
-                    <Button
-                        variant="outline"
-                        onClick={() => navigate(-1)}
-                        className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700 cursor-pointer"
-                    >
-                        Hủy
-                    </Button>
-                    <Button
-                        onClick={onSubmit}
-                        className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white cursor-pointer"
-                    >
-                        Tạo mới
-                    </Button>
+
+                <div className="w-full sm:w-auto flex justify-center sm:justify-center">
+                    <div className="flex flex-wrap sm:flex-nowrap items-end gap-2 sm:gap-4">
+                        <Button
+                            variant="outline"
+                            onClick={() => navigate(-1)}
+                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700 cursor-pointer"
+                        >
+                            Hủy
+                        </Button>
+                        <Button
+                            onClick={onSubmit}
+                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white cursor-pointer"
+                        >
+                            Tạo mới
+                        </Button>
+                    </div>
                 </div>
             </div>
+
 
             {/* Content */}
             <div className="flex flex-col lg:flex-row gap-4">
@@ -153,7 +157,7 @@ export default function AddPage() {
                                     className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
                                 />
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-3">
                                 {/* Mạng xã hội */}
                                 <div className="space-y-2">
                                     <Label>Mạng xã hội</Label>
@@ -216,7 +220,7 @@ export default function AddPage() {
 
                             {/* Ảnh */}
                             <Label>URL Hình ảnh</Label>
-                            <div className="flex gap-2">
+                            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-2">
                                 <Input
                                     value={formData.image || ""}
                                     onChange={(e) => {
