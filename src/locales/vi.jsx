@@ -575,7 +575,10 @@ export default {
         contextModalSuccess: "Thành công!",
         contextModalNoti: "Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.",
         contextBtnModalInformation: "Đóng",
+        emailInvalid: "Email không đúng. Vui lòng nhập lại",
+        contextModalCaptchaError: "Mã bảo mật không đúng. Vui lòng thử lại.",
         btnSendContact: "Gửi Liên Hệ",
+        phoneInvalid: "Sdt không đúng. Vui lòng nhập lại",
     },
     careers: {
         title: "Cơ hội việc làm",
