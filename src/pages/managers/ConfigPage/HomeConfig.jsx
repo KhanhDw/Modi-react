@@ -32,6 +32,22 @@ const sectionParsers = {
     khachHang: (data) => Array.isArray(data) ? data : [],
 };
 
+
+// sectionsConfig.js
+export const sectionsConfig = [
+    { key: "vitri", label: "Vị trí" },
+    { key: "banner", label: "Banner" },
+    { key: "nenTang", label: "Nền tảng" },
+    { key: "cards", label: "3 Cards" },
+    { key: "dichVu", label: "Dịch vụ" },
+    { key: "loiIch", label: "Lợi ích" },
+    { key: "khauHieu", label: "Khẩu hiệu" },
+    { key: "khachHang", label: "Khách hàng" },
+];
+
+
+
+
 export default function HomeConfigMultiLang() {
     const [activeLang, setActiveLang] = useState("vi");
     const [activeSection, setActiveSection] = useState("banner");
@@ -244,15 +260,7 @@ export default function HomeConfigMultiLang() {
 
             {/* SECTION TABS */}
             <div className="flex flex-wrap gap-3 mb-6">
-                {[
-                    { key: "banner", label: "Banner" },
-                    { key: "nenTang", label: "Nền tảng" },
-                    { key: "cards", label: "3 Cards" },
-                    { key: "dichVu", label: "Dịch vụ" },
-                    { key: "loiIch", label: "Lợi ích" },
-                    { key: "khauHieu", label: "Khẩu hiệu" },
-                    { key: "khachHang", label: "Khách hàng" },
-                ].map((sec) => (
+                {sectionsConfig.map((sec) => (
                     <motion.button
                         key={sec.key}
                         onClick={() => setActiveSection(sec.key)}

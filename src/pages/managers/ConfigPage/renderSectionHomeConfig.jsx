@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { InputField, TextareaField, SafeImage } from "./componentHomeConfig";
+import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
 
 export default function RenderHomeConfig({
     activeSection,
@@ -11,8 +14,128 @@ export default function RenderHomeConfig({
     handleSave,
     previewBanner,
 }) {
+
+    const [vitri, setVitri] = useState([]);
+    const [defaultVitri, setDefaultVitri] = useState([]); // giữ mặc định
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+
+    const FetchPositionComponentHome = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/sections?slug=home`
+            );
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+            const data = await res.json();
+            // Kiểm tra dữ liệu hợp lệ
+            if (!data.data || !Array.isArray(data.data)) {
+                throw new Error('Dữ liệu không đúng định dạng hoặc rỗng');
+            }
+            const clonedData = JSON.parse(JSON.stringify(data.data));
+            setVitri(clonedData);
+            setDefaultVitri(clonedData);
+        } catch (err) {
+            console.error('Fetch vitri error:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
+    useEffect(() => {
+        FetchPositionComponentHome();
+    }, []);
+
+
+    const handleResetDefault = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/service-header-config/positions/reset`,
+                {
+                    method: "POST",
+                }
+            );
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+            await FetchPositionComponentHome();
+        } catch (err) {
+            console.error('Fetch vitri error:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // FIX: Callback để nhận dữ liệu từ VitriTable
+    const handleVitriChange = (newVitri) => {
+        setVitri(newVitri);
+    };
+
     const renderSection = () => {
         switch (activeSection) {
+            // ========================= vị trí =========================
+            case "vitri":
+                return (
+                    <div className="space-y-4">
+                        <div>
+                            <h1 className="font-bold text-2xl mb-4 text-center uppercase">
+                                Cấu hình vị trí cho các mục tại trang chủ
+                            </h1>
+                        </div>
+
+                        <div>
+                            {loading ? (
+                                <div className="text-center py-6 text-gray-500">
+                                    Đang tải dữ liệu...
+                                </div>
+                            ) : vitri.length > 0 ? (
+                                <VitriTable
+                                    initialVitri={vitri}
+                                    onChangeVitri={handleVitriChange}
+                                />
+                            ) : (
+                                <div className="text-center py-6 text-red-500">
+                                    Không có dữ liệu
+                                </div>
+                            )}
+                        </div>
+
+                        {!loading && (
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between gap-2 text-gray-500">
+                                    <IoMdInformationCircleOutline />
+                                    <span>Kéo thả để thay đổi vị trí!</span>
+                                </div>
+                                <div className="flex space-x-4 mt-5">
+                                    <button
+                                        onClick={handleResetDefault}
+                                        disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                                            ? 'bg-gray-400 cursor-not-allowed'
+                                            : 'bg-blue-500 hover:bg-blue-700 text-white'
+                                            }`}
+                                    >
+                                        Khôi phục lại mặc định
+                                    </button>
+                                    <button
+                                        onClick={() => handleSave(vitri)}
+                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+                                    >
+                                        Lưu vị trí
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+
             // ========================= BANNER =========================
             case "banner":
                 return (
