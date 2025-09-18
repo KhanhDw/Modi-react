@@ -12,24 +12,26 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
     const [dialog, setDialog] = useState({
         open: false,
-        type: "category",
+        type: "category",       // "category" | "child"
+        target: null,           // object when editing, null when adding
         valueEn: "",
         valueVi: "",
+        valueSlug: "",
+        listIdServices: [],     // array of slugs
     });
 
     const [confirmDialog, setConfirmDialog] = useState({
         open: false,
         type: null, // "category" | "child"
-        target: null, // object cần xóa
+        target: null,
     });
-
 
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState(null);
 
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
-    // ----- API: fetch dữ liệu -----
+    // ----- fetch menus -----
     const fetchAllServicesMenu = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/api/sections?slug=header`);
@@ -57,26 +59,21 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                         }))
                 );
 
-
             const merged = await Promise.all(requests);
             setMenuData(merged);
-            console.log('ds:', merged);
         } catch (err) {
             console.error(err);
             setToast({ message: "Lỗi tải dữ liệu: " + err.message, type: "error" });
         }
     };
 
-
     const fetchChildren = async (category) => {
         try {
+
             const res = await fetch(`${API_BASE_URL}/api/section-items/type/${category.type}?slug=header`);
             if (!res.ok) throw new Error("Không thể tải mục con");
 
             const data = await res.json();
-            console.log("fetchChildren response:", data);
-
-            // data là mảng trực tiếp
             const childrenArray = Array.isArray(data) ? data : [];
 
             const updatedChildren = childrenArray.map(child => ({
@@ -92,31 +89,40 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             setSelectedCategory(prev =>
                 prev && prev.id === category.id ? { ...prev, children: updatedChildren } : prev
             );
-
         } catch (err) {
             console.error(err);
             setToast({ message: "Lỗi tải mục con: " + err.message, type: "error" });
         }
+        console.log(">> selectSubItemSection selectedCategory after fetch:", category);
+
     };
 
     useEffect(() => {
         fetchAllServicesMenu();
     }, []);
 
-    // ----- CRUD helper -----
-    const addCategory = async (nameEn, nameVi) => {
+    const addCategory = async (nameEn, nameVi, listIdServices) => {
         try {
             setLoading(true);
+            const servicesArray = Array.isArray(listIdServices)
+                ? listIdServices
+                : typeof listIdServices === "string"
+                    ? listIdServices.split(",").map(s => s.trim()).filter(Boolean)
+                    : [];
 
             const type = `services_${nameEn.toLowerCase().replace(/\s+/g, "_")}`;
 
             const body = {
                 slug: "header",
                 type,
-                title: { en: nameEn, vi: nameVi },
+                title: {
+                    en: nameEn,
+                    vi: nameVi,
+                    groupServices: servicesArray.join(","),
+                },
             };
 
-            const res = await fetch(`${API_BASE_URL}/api/sections`, {
+            const res = await fetch(`${API_BASE_URL}/api/service-header-config`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
@@ -132,9 +138,12 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 children: [],
             };
 
-            setMenuData([...menuData, newCat]);
+            setMenuData(prev => [...prev, newCat]);
             setSelectedCategory(newCat);
             setToast({ message: "Thêm danh mục thành công!", type: "success" });
+
+            // close & reset dialog
+            resetDialog();
         } catch (err) {
             console.error(err);
             setToast({ message: err.message, type: "error" });
@@ -143,16 +152,15 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         }
     };
 
-    const addChild = async (nameEn, nameVi) => {
+    const addChild = async (nameEn, nameVi, slug) => {
         if (!selectedCategory) return;
         try {
             setLoading(true);
-            console.log(selectedCategory.type);
             const body = {
                 type: selectedCategory.type,
-                slug: "header", // vì bạn đang thao tác với menu header
+                slug: "header",
                 title: { en: nameEn, vi: nameVi },
-                description: { en: slugify(nameEn), vi: "" }, // nếu không có thì để trống
+                description: { en: slug, vi: slug },
                 image_url: ""
             };
 
@@ -165,7 +173,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             const data = await res.json();
             if (!res.ok || !data.success) throw new Error(data.error || "Không thể thêm mục con");
 
-            // cập nhật state
             const newChild = {
                 id: data.data.id,
                 title: data.data.title,
@@ -177,12 +184,11 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 children: [...(selectedCategory.children || []), newChild],
             };
 
-            setMenuData(menuData.map((cat) =>
-                cat.id === selectedCategory.id ? updatedCat : cat
-            ));
+            setMenuData(prev => prev.map(cat => cat.id === selectedCategory.id ? updatedCat : cat));
             setSelectedCategory(updatedCat);
 
             setToast({ message: "Thêm mục con thành công!", type: "success" });
+            resetDialog();
         } catch (err) {
             console.error(err);
             setToast({ message: err.message, type: "error" });
@@ -191,12 +197,22 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         }
     };
 
-    const updateCategory = async (catId, nameEn, nameVi) => {
+    const updateCategory = async (catId, nameEn, nameVi, listIdServices) => {
         try {
             setLoading(true);
 
+            const servicesArray = Array.isArray(listIdServices)
+                ? listIdServices
+                : typeof listIdServices === "string"
+                    ? listIdServices.split(",").map(s => s.trim()).filter(Boolean)
+                    : [];
+
             const body = {
-                title: { en: nameEn, vi: nameVi },
+                title: {
+                    en: nameEn,
+                    vi: nameVi,
+                    groupServices: servicesArray.join(","),
+                },
                 description: { en: slugify(nameEn), vi: "" },
             };
 
@@ -216,10 +232,11 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 children: menuData.find((c) => c.id === catId)?.children || [],
             };
 
-            setMenuData(menuData.map((c) => (c.id === catId ? updatedCat : c)));
+            setMenuData(prev => prev.map((c) => (c.id === catId ? updatedCat : c)));
             if (selectedCategory?.id === catId) setSelectedCategory(updatedCat);
 
             setToast({ message: "Cập nhật danh mục thành công!", type: "success" });
+            resetDialog();
         } catch (err) {
             console.error(err);
             setToast({ message: err.message, type: "error" });
@@ -228,16 +245,13 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         }
     };
 
-
-    const updateChild = async (childId, nameEn, nameVi) => {
+    const updateChild = async (childId, nameEn, nameVi, slug) => {
         if (!selectedCategory) return;
-
         try {
             setLoading(true);
-
             const body = {
                 title: { en: nameEn, vi: nameVi },
-                description: { en: slugify(nameEn), vi: "" },
+                description: { en: slug, vi: slug },
             };
 
             const res = await fetch(`${API_BASE_URL}/api/section-items/${childId}`, {
@@ -262,10 +276,11 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 ),
             };
 
-            setMenuData(menuData.map((cat) => (cat.id === updatedCat.id ? updatedCat : cat)));
+            setMenuData(prev => prev.map((cat) => (cat.id === updatedCat.id ? updatedCat : cat)));
             setSelectedCategory(updatedCat);
 
             setToast({ message: "Cập nhật mục con thành công!", type: "success" });
+            resetDialog();
         } catch (err) {
             console.error(err);
             setToast({ message: err.message, type: "error" });
@@ -273,8 +288,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             setLoading(false);
         }
     };
-
-
 
     const deleteCategory = async (cat) => {
         try {
@@ -285,7 +298,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             const data = await res.json();
             if (!res.ok || !data.success) throw new Error(data.error || "Không thể xóa danh mục");
 
-            setMenuData(menuData.filter((c) => c.id !== cat.id));
+            setMenuData(prev => prev.filter((c) => c.id !== cat.id));
             if (selectedCategory?.id === cat.id) setSelectedCategory(null);
 
             setToast({ message: "Xóa danh mục thành công!", type: "success" });
@@ -310,7 +323,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 ...selectedCategory,
                 children: selectedCategory.children.filter((c) => c.id !== child.id),
             };
-            setMenuData(menuData.map((cat) => (cat.id === updatedCat.id ? updatedCat : cat)));
+            setMenuData(prev => prev.map((cat) => (cat.id === updatedCat.id ? updatedCat : cat)));
             setSelectedCategory(updatedCat);
 
             setToast({ message: "Xóa mục con thành công!", type: "success" });
@@ -325,7 +338,160 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     const selectSubItemSection = (cat) => {
         setSelectedCategory(cat);
         fetchChildren(cat);
-    }
+    };
+
+    const resetDialog = () => {
+
+        setDialog({
+            open: false,
+            type: "category",
+            target: null,
+            valueEn: "",
+            valueVi: "",
+            valueSlug: "",
+            listIdServices: [],
+        });
+
+    };
+
+    const openAddCategory = () => {
+        setDialog({
+            open: true,
+            type: "category",
+            target: null,
+            valueEn: "",
+            valueVi: "",
+            valueSlug: "",
+            listIdServices: [],
+        });
+    };
+
+    const openAddChild = (parentCategory) => {
+        setSelectedCategory(parentCategory || selectedCategory);
+        setDialog({
+            open: true,
+            type: "child",
+            target: null,
+            valueEn: "",
+            valueVi: "",
+            valueSlug: "",
+            listIdServices: [],
+        });
+    };
+
+    const openEditCategory = (cat) => {
+
+        const groupServices = String(cat.name?.groupServices || cat.name?.groupServices || "")
+            .split(",")
+            .map(s => s.trim())
+            .filter(Boolean);
+
+
+        setDialog({
+            open: true,
+            type: "category",
+            target: cat,
+            valueEn: cat.name?.en || "",
+            valueVi: cat.name?.vi || "",
+            valueSlug: cat.description?.vi || "",
+            listIdServices: groupServices,
+        });
+
+    };
+
+    const openEditChild = (child, parentCategory) => {
+        setSelectedCategory(parentCategory || selectedCategory);
+
+        // Lấy dữ liệu listIdServices từ child.description
+        const childServices = child.description
+            ? [child.description.en].filter(Boolean) // hoặc map nếu nhiều
+            : [];
+
+        setDialog({
+            open: true,
+            type: "child",
+            target: child,
+            valueEn: child.title?.en || "",
+            valueVi: child.title?.vi || "",
+            valueSlug: child.description?.vi || "",
+            listIdServices: childServices, // quan trọng: giữ dữ liệu ban đầu
+        });
+    };
+
+    const setDialogListIdServices = (valOrUpdater) => {
+
+        setDialog(prev => {
+            const current = Array.isArray(prev.listIdServices)
+                ? prev.listIdServices
+                : typeof prev.listIdServices === "string"
+                    ? (prev.listIdServices ? prev.listIdServices.split(",") : [])
+                    : [];
+            const newList = typeof valOrUpdater === "function" ? valOrUpdater(current) : valOrUpdater;
+            const normalized = Array.isArray(newList) ? newList : (typeof newList === "string" ? newList.split(",").map(s => s.trim()).filter(Boolean) : []);
+
+            if (prev.target && normalized.length === 0) return prev;
+
+            if (JSON.stringify(normalized) === JSON.stringify(current)) return prev;
+            return { ...prev, listIdServices: normalized };
+        });
+
+
+    };
+
+    const setDialogValueEn = (val) => {
+        setDialog(prev => prev.valueEn === val ? prev : { ...prev, valueEn: val })
+        console.log(">> setDialogValueEn:", val);
+    };
+
+    const setDialogValueVi = (val) => {
+        setDialog(prev => prev.valueVi === val ? prev : { ...prev, valueVi: val })
+        console.log(">> setDialogValueVi:", val);
+
+    };
+
+    const setDialogValueSlug = (val) => {
+        setDialog(prev => prev.valueSlug === val ? prev : { ...prev, valueSlug: val })
+        console.log(">> setDialogValueSlug:", val);
+
+    };
+
+    const setDialogOpen = (isOpen) => {
+        setDialog(prev => ({ ...prev, open: isOpen }))
+        console.log(">> setDialogOpen:", isOpen);
+
+    };
+
+    useEffect(() => {
+        if (dialog.open) {
+            console.log("dialog.listIdServices mới:", dialog.listIdServices);
+        }
+    }, [dialog.listIdServices]);
+
+    useEffect(() => {
+        console.log(">> dialog state changed:", dialog);
+    }, [dialog]);
+
+    const handleSubmitDialog = async () => {
+
+        // decide action based on dialog.type + dialog.target
+        if (dialog.type === "category") {
+            if (dialog.target) {
+                await updateCategory(dialog.target.id, dialog.valueEn, dialog.valueVi, dialog.listIdServices);
+            } else {
+                await addCategory(dialog.valueEn, dialog.valueVi, dialog.listIdServices);
+            }
+        } else {
+            if (dialog.target) {
+                await updateChild(dialog.target.id, dialog.valueEn, dialog.valueVi, dialog.valueSlug);
+            } else {
+                await addChild(dialog.valueEn, dialog.valueVi, dialog.valueSlug);
+            }
+        }
+        // chỉ reset dialog ở đây, sau khi submit xong
+        resetDialog();
+    };
+
+
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
@@ -335,88 +501,69 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 selectedCategory={selectedCategory}
                 lang={lang}
                 onSelect={(cat) => selectSubItemSection(cat)}
-                onAdd={() => setDialog({ open: true, type: "category", valueEn: "", valueVi: "", target: null })}
+                onAdd={() => openAddCategory()}
                 onDelete={(cat) => setConfirmDialog({ open: true, type: "category", target: cat })}
-                onEdit={(cat) =>
-                    setDialog({
-                        open: true,
-                        type: "category",
-                        valueEn: cat.name?.en || "",
-                        valueVi: cat.name?.vi || "",
-                        target: cat,
-                    })
-                }
-
+                onEdit={(cat) => openEditCategory(cat)}
             />
-
 
             {/* Child Items */}
             <ChildList
                 selectedCategory={selectedCategory}
                 lang={lang}
-                onAdd={() => setDialog({ open: true, type: "child", valueEn: "", valueVi: "", target: null })}
+                onAdd={() => openAddChild(selectedCategory)}
                 onDelete={(child) => setConfirmDialog({ open: true, type: "child", target: child })}
-                onEdit={(child) =>
-                    setDialog({
-                        open: true,
-                        type: "child",
-                        valueEn: child.title?.en || "",
-                        valueVi: child.title?.vi || "",
-                        target: child,
-                    })
-                }
+                onEdit={(child) => openEditChild(child, selectedCategory)}
             />
 
-            {/* Dialog thêm hoặc điều chỉnh*/}
+            {/* Dialog */}
             {dialog.open && (
-                <DialogForm
-                    open={dialog.open}
-                    setOpen={(val) => setDialog((s) => ({ ...s, open: val }))}
-                    title={
-                        dialog.target
-                            ? dialog.type === "category"
-                                ? "Sửa danh mục"
-                                : "Sửa mục con"
-                            : dialog.type === "category"
-                                ? "Thêm danh mục"
-                                : "Thêm mục con"
-                    }
-                    valueEn={dialog.valueEn}
-                    setValueEn={(val) => setDialog((s) => ({ ...s, valueEn: val }))}
-                    valueVi={dialog.valueVi}
-                    setValueVi={(val) => setDialog((s) => ({ ...s, valueVi: val }))}
-                    onSubmit={() => {
-                        if (dialog.type === "category") {
-                            if (dialog.target) {
-                                updateCategory(dialog.target.id, dialog.valueEn, dialog.valueVi);
-                            } else {
-                                addCategory(dialog.valueEn, dialog.valueVi);
-                            }
-                        } else {
-                            if (dialog.target) {
-                                updateChild(dialog.target.id, dialog.valueEn, dialog.valueVi);
-                            } else {
-                                addChild(dialog.valueEn, dialog.valueVi);
-                            }
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 ">
+                    <DialogForm
+                        open={dialog.open}
+                        dialog={dialog}
+                        setOpen={setDialogOpen}
+                        isAdd={dialog.target === null}
+                        title={
+                            dialog.target
+                                ? dialog.type === "category"
+                                    ? "Sửa danh mục"
+                                    : "Sửa mục con"
+                                : dialog.type === "category"
+                                    ? "Thêm danh mục"
+                                    : "Thêm mục con"
                         }
-                    }}
-                />
+                        isTitleGroupService={
+                            dialog.target
+                                ? dialog.type === "category"
+                                    ? "Sửa nhóm dịch vụ"
+                                    : "Sửa dịch vụ"
+                                : dialog.type === "category"
+                                    ? "Thêm nhóm dịch vụ"
+                                    : "Thêm dịch vụ"
+                        }
+
+                        valueSlug={dialog.valueSlug}
+                        setValueSlug={setDialogValueSlug}
+                        valueEn={dialog.valueEn}
+                        setValueEn={setDialogValueEn}
+                        valueVi={dialog.valueVi}
+                        setValueVi={setDialogValueVi}
+                        listIdServices={dialog.listIdServices}
+                        setListIdServices={setDialogListIdServices}
+                        onSubmit={handleSubmitDialog}
+                    />
+                </div>
             )}
 
-
-
-            {/* confirmdialog xóa*/}
+            {/* confirmdialog xóa */}
             <ConfirmDialog
                 open={confirmDialog.open}
                 setOpen={(val) => setConfirmDialog((s) => ({ ...s, open: val }))}
                 type={confirmDialog.type}
                 target={confirmDialog.target}
                 onConfirmDelete={(type, target) => {
-                    if (type === "category") {
-                        deleteCategory(target);
-                    } else {
-                        deleteChild(target);
-                    }
+                    if (type === "category") deleteCategory(target);
+                    else deleteChild(target);
                     setConfirmDialog({ open: false, type: null, target: null });
                 }}
             />
@@ -432,7 +579,3 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         </div>
     );
 }
-
-
-
-
