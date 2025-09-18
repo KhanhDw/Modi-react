@@ -7,14 +7,19 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-export default function ChildServiceSelector({ services, valueSlug, setValueSlug }) {
+export default function ChildServiceSelector({ services, valueSlug, setValueSlug, listServiceOfParent }) {
 
-    console.log("111111:", services);
-    console.log("222222:", valueSlug);
+
+    const [filteredServices, setFilteredServices] = useState([]);
 
     useEffect(() => {
-        console.log(">>> valueSlug hiện tại:", valueSlug);
-    }, [valueSlug]);
+        if (services?.length) {
+            const result = services.filter(
+                (s) => listServiceOfParent.includes(s.translation.slug)
+            );
+            setFilteredServices(result);
+        }
+    }, [services, listServiceOfParent, valueSlug]);
 
 
     return (
@@ -26,7 +31,7 @@ export default function ChildServiceSelector({ services, valueSlug, setValueSlug
                 <SelectValue placeholder="Chọn một service..." />
             </SelectTrigger>
             <SelectContent>
-                {services.map((s) => (
+                {filteredServices.map((s) => (
                     <SelectItem key={s.id} value={s.translation.slug}>
                         {s.translation.ten_dich_vu}
                     </SelectItem>

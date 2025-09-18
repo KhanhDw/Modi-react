@@ -36,10 +36,9 @@ export default function DialogForm({
     setValueVi,
     listIdServices,
     setListIdServices,
+    listServiceOfParent,
     onSubmit,
 }) {
-
-    console.log("childd:::", dialog);
 
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
     const [services, setServices] = useState([]);
@@ -62,7 +61,6 @@ export default function DialogForm({
             if (valueSlug !== newSlug) {
                 setValueSlug(newSlug);
             }
-            console.log("ndsndnsn:", valueSlug);
         } else if (isAdding) {
             // reset khi thêm mới
             setListIdServices([]);
@@ -169,6 +167,7 @@ export default function DialogForm({
                             />
                         ) : (
                             <ChildServiceSelector
+                                listServiceOfParent={listServiceOfParent}
                                 services={services}
                                 valueSlug={valueSlug}
                                 setValueSlug={setValueSlug}
