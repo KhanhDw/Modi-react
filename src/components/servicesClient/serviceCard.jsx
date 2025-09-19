@@ -41,85 +41,87 @@ export default function ServiceCard({ service, onFetchService }) {
 
     return (
         <div
-            className="h-102 relative w-full mx-auto rounded-2xl shadow-lg hover:shadow-black/40 
-                 dark:hover:shadow-green-400/40 border border-gray-200 
-                 dark:border-gray-700 overflow-hidden transform 
-                 transition duration-500 hover:-translate-y-2 group"
+            className="h-auto relative w-full mx-auto rounded-md md:rounded-xl shadow-lg hover:shadow-black/40
+            dark:hover:shadow-green-400/40 border border-gray-200
+            dark:border-gray-700 overflow-hidden transform
+            transition duration-500 hover:-translate-y-2 group"
             onMouseLeave={handleMouseLeave}
         >
             {/* Hover background overlay */}
             <div
                 className="absolute inset-0 bg-[url('https://i.pinimg.com/originals/63/45/08/6345088e1d1a622a2c0996122a187ee0.jpg')]
-                   bg-cover bg-center opacity-0 group-hover:opacity-60 blur-4xl 
-                   transition duration-500"
+               bg-cover bg-center opacity-0 group-hover:opacity-60 blur-4xl
+               transition duration-500"
             ></div>
 
             {/* Content */}
-            <div className="relative h-full flex flex-col bg-gray-200/60 dark:bg-gray-900/60 backdrop-blur-lg">
-                <div className="flex flex-col w-full justify-center items-start pt-4">
-                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 px-4 cursor-default">
+            <div className="relative h-full bg-gray-200/60 dark:bg-gray-900/60 backdrop-blur-lg grid grid-rows-[auto_1fr]">
+                {/* Title & Description */}
+                <div className="grid gap-1 p-2 md:p-3 lg:mb-2 lg:px-4 xl:px-4">
+                    <h2 className="text-base sm:text-[18px] md:text-xl lg:text-[22px] xl:text-[24px] font-bold text-gray-900 dark:text-white cursor-default line-clamp-2">
                         {translation.ten_dich_vu || "Chưa có tên dịch vụ"}
                     </h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-center px-4 cursor-default">
+                    <p className="text-gray-500 dark:text-gray-400 cursor-default text-[13px] sm:text-[15px] md:text-[17px] lg:text-[18px] xl:text-[21px] line-clamp-2">
                         {translation.mo_ta || ""}
                     </p>
                 </div>
 
-                <div className="flex ">
+                {/* Responsive Grid Layout */}
+                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-1 gap-4 items-start px-2 pb-4 md:pr-4 lg:px-4 xl:px-4">
                     {/* Left: Image */}
-                    <div className="border-2 border-gray-400 dark:border-gray-200 dark:group-hover:shadow-gray-600 
-                          transition-all duration-200 shadow-lg w-full lg:w-1/3 h-72 
-                          flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-800 
-                          overflow-hidden m-2 rounded-xl"
-                    >
-                        <img
-                            src={service.image_url}
-                            alt={translation.ten_dich_vu || "Ảnh dịch vụ"}
-                            className="w-full h-full object-cover"
-                        />
+                    <div className="md:col-span-2 lg:col-span-3">
+                        <div className="border-2 border-gray-400 dark:border-gray-200 dark:group-hover:shadow-gray-600
+                transition-all duration-200 shadow-lg w-full h-72
+                bg-gray-50 dark:bg-gray-800 rounded-md md:rounded-xl overflow-hidden grid place-items-center"
+                        >
+                            <img
+                                src={service.image_url}
+                                alt={translation.ten_dich_vu || "Ảnh dịch vụ"}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
                     </div>
 
-                    {/* Right: Content */}
-                    <div className="min-h-full flex-1 sm:p-3 flex flex-col justify-between relative z-10">
-
-                        {/* Features V2 */}
-                        <div className="flex justify-between items-center w-full gap-2">
-                            <div className="relative overflow-hidden h-fit w-full">
+                    {/* Right: Features + Detail + Buttons */}
+                    <div className="md:col-span-3">
+                        {/* Features & Toggle */}
+                        <div className="grid grid-cols-1 sm:grid-cols-5">
+                            {/* Features */}
+                            <div className="sm:col-span-4 relative overflow-hidden w-full sm:mb-2">
                                 {/* Features list */}
-                                <div className="relative">
-                                    <div className={`transform transition-all duration-500 ${!showDetails ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
-                                        {/* Features list */}
-                                        {features.length > 0 && (
-                                            <ul className="mb-6 space-y-2 h-45">
-                                                {features.map((feature, idx) => (
-                                                    <li
-                                                        key={idx}
-                                                        className="cursor-default flex items-center gap-2 p-2 pl-3 border-l-4 border-blue-500 rounded bg-gray-50 dark:bg-gray-800 transition duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                                    >
-                                                        <span className="text-blue-500 dark:text-blue-400">✔</span>
-                                                        <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
+                                <div className={`transition-all duration-500 ${!showDetails ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
+                                    {features.length > 0 && (
+                                        <ul className="mb-6 space-y-2 h-45">
+                                            {features.map((feature, idx) => (
+                                                <li
+                                                    key={idx}
+                                                    className="cursor-default flex items-center gap-2 p-2 border-l-4 border-blue-500 rounded
+                                        bg-gray-50 dark:bg-gray-800 transition duration-200
+                                        hover:bg-gray-100 dark:hover:bg-gray-700 text-xs sm:text-sm md:text-base lg:text-[17px] xl:text-[18px] font-normal"
+                                                >
+                                                    <span className="text-blue-500 dark:text-blue-400">✔</span>
+                                                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </div>
 
-                                {/* Nội dung chi tiết overlay - Có thể scroll với Lenis config */}
-                                <div data-lenis-prevent className={`absolute inset-0 transform transition-all duration-500 ${showDetails ? "translate-y-0 opacity-100 z-10" : "translate-y-full opacity-0"}`}>
+                                {/* Nội dung chi tiết overlay */}
+                                <div data-lenis-prevent className={`absolute inset-0 transition-all duration-500 ${showDetails ? "translate-y-0 opacity-100 z-10" : "translate-y-full opacity-0"}`}>
                                     <div data-lenis-prevent className="h-full overflow-y-auto scrollbar-hide">
-                                        <div className="text-gray-700 dark:text-gray-300 mb-4 font-semibold p-2">
+                                        <div className="text-gray-700 dark:text-gray-300 font-semibold">
                                             {details.length > 0 && (
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                                <div className="grid grid-cols-1 sm:grid-cols-1 gap-2 mb-4">
                                                     {details.map((item, idx) => (
                                                         <div
                                                             key={idx}
-                                                            className="flex items-start gap-3 p-3 border rounded-lg shadow-sm 
-                                               bg-gray-50/80 dark:bg-gray-800/80 
-                                               transition duration-300 group-hover:bg-white/60 
-                                               dark:group-hover:bg-gray-700/60"
+                                                            className="flex items-start p-2 border rounded-md shadow-sm
+                                                    bg-gray-50/80 dark:bg-gray-800/80
+                                                    transition duration-300 group-hover:bg-white/60
+                                                    dark:group-hover:bg-gray-700/60"
                                                         >
-                                                            <p className="text-gray-700 cursor-default dark:text-gray-300">{item}</p>
+                                                            <p className="text-gray-700 font-normal cursor-default dark:text-gray-300 text-xs sm:text-sm md:text-base lg:text-[17px] xl:text-[18px]">{item}</p>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -128,49 +130,49 @@ export default function ServiceCard({ service, onFetchService }) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-2 h-full items-center justify-center">
 
+                            {/* Toggle Buttons */}
+                            {/* sm:col-span-1 */}
+                            <div className="grid place-items-center mt-2 sm:ml-2 xl:ml-6">
                                 <HoverButtonsServiceCard
-                                    onClickUp={() => handleToUp()}
-                                    onClickDown={() => handleToDown()}
+                                    onClickUp={handleToUp}
+                                    onClickDown={handleToDown}
                                     valuePosition={showDetails}
                                 />
                             </div>
                         </div>
 
-                        {/* CTA */}
-                        <div className="flex gap-4 mt-6">
+                        {/* CTA Buttons */}
+                        <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 mt-3 sm:mt-2 md:mt-10 lg:mt-6">
                             <button
                                 onClick={() => {
                                     if (translation.slug) {
-                                        // Gọi hàm fetch để load dữ liệu ngay
                                         onFetchService(translation.slug);
-
-                                        // Điều hướng sang URL mới
                                         navigate(`/services/${translation.slug}`);
                                     }
                                 }}
-                                className="flex items-center justify-center gap-2 flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white 
-    font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+                                className="text-center bg-blue-600 hover:bg-blue-700 text-white
+                        font-semibold rounded-sm lg:rounded-xl transition-colors duration-300 cursor-pointer p-1 lg:p-2"
                             >
-                                Xem chi tiết
+                                <span className="text-xs sm:text-sm md:text-base lg:text-[17px] xl:text-[18px] font-semibold">Xem chi tiết</span>
                             </button>
-
 
                             <Link
                                 to="/contact"
-                                className="flex-1 text-center border border-blue-600 text-blue-600 
-       dark:border-yellow-300 dark:text-yellow-300 
-       dark:hover:bg-amber-200 dark:hover:text-gray-700 
-       hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg 
-       transition-colors duration-300"
+                                className="text-center border-2 border-blue-600 text-blue-600
+                        dark:border-yellow-300 dark:text-yellow-300
+                        dark:hover:bg-amber-200 dark:hover:text-gray-700
+                        hover:bg-blue-50 font-semibold rounded-sm lg:rounded-xl
+                        transition-colors duration-300 p-1 lg:p-2"
                             >
-                                Liên hệ ngay
+                                <span className="text-xs sm:text-sm md:text-base lg:text-[17px] xl:text-[18px] font-semibold">Liên hệ ngay</span>
                             </Link>
                         </div>
                     </div>
                 </div>
             </div>
-        </div >
+
+        </div>
     );
+
 }
