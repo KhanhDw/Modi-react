@@ -401,9 +401,10 @@ export default function ServicePage() {
             <div className=" mx-auto px-4 pb-10 relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-[#111] -z-10 rounded-t-3xl"></div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                    {
-                        services.map((srv, i) => {
+                {!queryParams_q && !queryParams_sub && services.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+
+                        {services.map((srv, i) => {
                             const isFirst = i === 0;
                             const isOdd = services.length % 2 !== 0; // <-- dùng services.length
 
@@ -423,10 +424,33 @@ export default function ServicePage() {
                                     </div>
                                 </motion.div>
                             );
-                        })
+                        })}
+                    </div>
+                )}
+                {queryParams_q && !queryParams_sub && servicesFromGroup.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                        {servicesFromGroup.map((srv, i) => {
+                            const isFirst = i === 0;
+                            const isOdd = servicesFromGroup.length % 2 !== 0;
 
-                    }
-                </div>
+                            return (
+                                <motion.div
+                                    key={srv.service_id || srv.slug || i}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" }}
+                                    viewport={{ once: true }}
+                                    className={isFirst && isOdd ? "sm:col-span-2 flex justify-center" : ""}
+                                >
+                                    <div className={isFirst && isOdd ? "w-full sm:max-w-5xl" : "w-full"}>
+                                        <ServiceCard service={srv} onFetchService={FetchDataServicesBySlug} />
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                )}
+
             </div>
 
 
