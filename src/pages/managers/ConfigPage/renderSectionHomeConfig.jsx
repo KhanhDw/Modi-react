@@ -16,6 +16,8 @@ export default function RenderHomeConfig({
     previewBanner,
 }) {
 
+
+    // ========== vị trí ====================
     const [vitri, setVitri] = useState([]);
     const [defaultVitri, setDefaultVitri] = useState([]); // giữ mặc định
     const [loading, setLoading] = useState(true);
@@ -33,22 +35,16 @@ export default function RenderHomeConfig({
             if (!res.ok) {
                 throw new Error(`Lỗi HTTP: ${res.status}`);
             }
-
             const data = await res.json();
-
 
             if (!data.success) {
                 throw new Error(data.error || "Reset positions thất bại");
             }
-            console.log(data);
             setPositionsDefault(data.data);
-            console.log("✅ Reset thành công:", data.message);
         } catch (err) {
             console.error("❌ Fetch reset positions error:", err);
         }
     };
-
-
 
     const FetchPositionComponentHome = async () => {
         try {
@@ -83,18 +79,10 @@ export default function RenderHomeConfig({
         });
     };
 
-
-
-
-
-
-
     useEffect(() => {
         FetchResetPositions();
         FetchPositionComponentHome();
     }, []);
-
-
 
 
     const handleResetDefault = async () => {
@@ -153,8 +141,20 @@ export default function RenderHomeConfig({
             setToast({ message: "Lưu vị trí thất bại", type: "error" });
         }
     };
+    // ========== kết thúc vị trí ====================
+
+    ///////////////////////////////////////////////
+
+    // ========== chi tiết dịch vụ ===================
+
+    const [uiActive, setUiActive] = useState("V2") // V1 or V2
+
+    useEffect(() => {
+        setUiActive(currentData.chitietdichvu[0]?.title?.en);
+    }, [currentData.chitietdichvu])
 
 
+    // ========== kết thúc chi tiết dịch vụ ===================
 
 
     const renderSection = () => {
@@ -451,6 +451,67 @@ export default function RenderHomeConfig({
                             >
                                 Lưu Dịch vụ
                             </button>
+                        </div>
+                    </div>
+                );
+
+            // ========================= CHI TIẾT DỊCH VỤ =========================
+            case "chitietdichvu":
+                return (
+                    <div className="space-y-6">
+                        {/* header */}
+                        <div className="flex items-center justify-between">
+                            <h1 className="font-bold text-2xl mb-4 text-left uppercase">CẤU HÌNH GIAO DIỆN VÀ NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
+                            <div className="flex items-center gap-2">
+                                <span>Giao diện:</span>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setUiActive("V1")}
+                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all 
+                                                 ${uiActive === "V1"
+                                                ? "bg-green-700 text-white"
+                                                : "border-gray-500 hover:bg-gray-100/20"}`}
+                                    >
+                                        <p className="font-bold">1</p>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setUiActive("V2")}
+                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all 
+                                                 ${uiActive === "V2"
+                                                ? "border-blue-500 bg-blue-500 text-white"
+                                                : "border-gray-500 hover:bg-gray-100/20"}`}
+                                    >
+                                        <p className="font-bold">2</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {/* body */}
+                        <div>
+                            dfd
+                        </div>
+                        {/* footer */}
+                        <div class="flex items-center justify-center space-x-4 p-8 ">
+                            <button
+                                class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
+                            >
+                                <span
+                                    class="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-purple-800"
+                                >
+                                    Lưu lựa chọn giao diện
+                                </span>
+                            </button>
+                            <button
+                                class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
+                            >
+                                <span
+                                    class="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-pink-700"
+                                >
+                                    Lưu thông tin vừa cập nhật
+                                </span>
+                            </button>
+
                         </div>
                     </div>
                 );

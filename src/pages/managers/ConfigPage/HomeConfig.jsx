@@ -56,8 +56,8 @@ export default function HomeConfigMultiLang() {
     const [toast, setToast] = useState(null);
 
     const [homeData, setHomeData] = useState({
-        vi: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
-        en: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        vi: { banner: [], nenTang: [], cards: [], dichVu: [], chitietdichvu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        en: { banner: [], nenTang: [], cards: [], dichVu: [], chitietdichvu: [], loiIch: [], khauHieu: [], khachHang: [] },
     });
 
     const currentData = homeData[activeLang];
@@ -84,7 +84,7 @@ export default function HomeConfigMultiLang() {
     };
 
     useEffect(() => {
-        const sections = ["banner", "nenTang", "cards", "dichVu", "loiIch", "khauHieu", "khachHang"];
+        const sections = ["banner", "nenTang", "cards", "dichVu", "chitietdichvu", "loiIch", "khauHieu", "khachHang"];
         Promise.all(sections.map((type) => fetchSection(type)));
     }, [activeLang]);
 
