@@ -141,13 +141,13 @@ export default function ServiceBookingTable() {
                 <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold">
                   Trạng thái
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold hidden sm:table-cell">
+                <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold ">
                   Giá
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold hidden md:table-cell">
+                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
                   Ngày đặt
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold hidden lg:table-cell">
+                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
                   Ngày hoàn thành
                 </TableHead>
                 <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
@@ -212,13 +212,13 @@ export default function ServiceBookingTable() {
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden sm:table-cell">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                       {`₫${item.price.toLocaleString()}`}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden md:table-cell">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                       {new Date(item.booking_date).toLocaleDateString("vi-VN")}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden lg:table-cell">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                       {item.completed_date
                         ? new Date(item.completed_date).toLocaleDateString("vi-VN")
                         : "Không có"}
