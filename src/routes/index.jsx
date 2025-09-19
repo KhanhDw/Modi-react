@@ -122,7 +122,8 @@ const publicRoutes = [
   { path: "/", component: Home, layout: DefaultLayout },
   { path: "/about", component: About, layout: DefaultLayout },
   { path: "/services", component: Services, layout: DefaultLayout },
-  { path: "/services/:slug", component: ServiceDetailPage, layout: DefaultLayout },
+  { path: "/services/:parentSlug", component: Services, layout: DefaultLayout },
+  { path: "/services/:parentSlug/:slug", component: ServiceDetailPage, layout: DefaultLayout },
   {
     path: "/marketing", component: MarketingOutlet, layout: DefaultLayout,
     children: [

@@ -2,9 +2,10 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from "react";
 import ServiceCard from "@/components/servicesClient/serviceCard"
+import useCurrentLanguage from "@/hook/currentLang"
 
 const bannerStyle = {
     backgroundImage: "url('/images/banner2.jpg')",
@@ -44,21 +45,23 @@ export const mockService = {
 export default function ServicePage() {
     const { t } = useLanguage();
     const location = useLocation();
+    const { lang, prefix } = useCurrentLanguage();
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
     const [services, setServices] = useState([]);
     const [servicesItemBySlug, setServicesItemBySlug] = useState(null);
     const [servicesMenu2, setServicesMenu2] = useState([]);
     const [servicesFromGroup, setServicesFromGroup] = useState([]);
-
     const [loading, setLoading] = useState(true);
 
+    const { parentSlug } = useParams();
 
     const [groupServices, setGroupServices] = useState([]);
 
 
     const queryParams = new URLSearchParams(location.search);
 
-    const queryParams_q = queryParams.get("q");
+    // const queryParams_q = queryParams.get("q");
+    const queryParams_q = parentSlug
     const queryParams_sub = queryParams.get("sub");
 
 
@@ -69,7 +72,6 @@ export default function ServicePage() {
             const data = await res.json();
             if (data.success) {
                 setServices(data.data);
-                console.log(data.data);
             }
         } catch (err) {
             console.error(err);
@@ -78,13 +80,13 @@ export default function ServicePage() {
         }
     };
 
-    const FetchAllServiceMenu2 = async () => {
+    const FetchAllServiceMenu2 = async (lang = "vi") => {
         try {
-            const res = await fetch(`${API_BASE_URL}/api/section-items/type/${queryParams_q}?slug=header`);
+            const lang_api = lang === "vi" ? "" : "/en";
+            const res = await fetch(`${API_BASE_URL}${lang_api}/api/section-items/type/${queryParams_q}?slug=header`);
             if (!res.ok) throw new Error("Không thể tải mục con");
 
             const data = await res.json();
-            console.log("fetchChildren response:", data);
 
             const servicesArray = Array.isArray(data) ? data : [];
 
@@ -114,7 +116,6 @@ export default function ServicePage() {
 
             if (data.success) {
                 setServicesItemBySlug(data.data);
-                console.log("Chi tiết service:", data.data);
             }
         } catch (err) {
             console.error(err);
@@ -124,13 +125,15 @@ export default function ServicePage() {
     };
 
 
-    const FetchDataFollowSlugMenu2 = async () => {
+    const FetchDataFollowSlugMenu2 = async (lang = "vi") => {
         const allSlugs = groupServices;
         const results = [];
 
         for (const slug of allSlugs) {
             try {
-                const res = await fetch(`${API_BASE_URL}/api/services/${slug}`);
+                const lang_api = lang === "vi" ? "" : "/en";
+                const tailLang = lang === "vi" ? "" : `-en`;
+                const res = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}${tailLang}`);
                 const data = await res.json();
                 if (data.success) {
                     results.push(data.data);
@@ -146,153 +149,30 @@ export default function ServicePage() {
 
 
     useEffect(() => {
-        FetchDataServicesALL();
+        FetchDataServicesALL(lang);
 
         if (queryParams_q) {
-            FetchAllServiceMenu2();
+            FetchAllServiceMenu2(lang);
         }
 
         // khi có slug=sub cụ thể trên url mới thực hiện cái này.
         if (queryParams_sub) {
-            FetchDataServicesBySlug(queryParams_sub);
+            FetchDataServicesBySlug(queryParams_sub, lang);
         }
-    }, [location.search]);
+    }, [location.search, lang]);
 
 
     useEffect(() => {
         if (groupServices.length > 0 && queryParams_q && !queryParams_sub) {
-            FetchDataFollowSlugMenu2();
+            FetchDataFollowSlugMenu2(lang);
         }
-    }, [groupServices, queryParams_q, queryParams_sub]);
+    }, [groupServices, queryParams_q, queryParams_sub, parentSlug, lang]);
 
 
 
     return (
         <div className="min-h-screen mb-10 text-gray-800 dark:text-white transition-all duration-500">
             <div className="flex w-full  flex-col">
-                adasd: {queryParams_q} & {queryParams_sub}
-
-                {queryParams_q && queryParams_sub &&
-                    (
-                        <div className="space-y-4">
-                            {/* Hình ảnh */}
-                            <img
-                                src={servicesItemBySlug?.image_url}
-                                alt={servicesItemBySlug?.translation?.ten_dich_vu}
-                                className="w-full max-w-md rounded-lg shadow"
-                            />
-
-                            {/* Tên dịch vụ */}
-                            <h2 className="text-xl font-semibold">
-                                {servicesItemBySlug?.translation?.ten_dich_vu}
-                            </h2>
-
-                            {/* Mô tả */}
-                            <p className="text-gray-700 admin-dark:text-gray-300">
-                                {servicesItemBySlug?.translation?.mo_ta}
-                            </p>
-
-                            {/* Giá & trạng thái */}
-                            <div className="flex gap-4 text-sm text-gray-600 admin-dark:text-gray-400">
-                                <span>💰 Giá: {servicesItemBySlug?.floor_price} VND</span>
-                                <span>📦 Booking: {servicesItemBySlug?.booking_count}</span>
-                                <span>⚡ Trạng thái: {servicesItemBySlug?.status}</span>
-                            </div>
-
-                            {/* Features */}
-                            <div>
-                                <h3 className="font-medium">Tính năng:</h3>
-                                <ul className="list-disc list-inside space-y-1 text-gray-700 admin-dark:text-gray-300">
-                                    {servicesItemBySlug?.translation?.features
-                                        ?.split("#")
-                                        .map((f, idx) => (
-                                            <li key={idx}>{f.trim()}</li>
-                                        ))}
-                                </ul>
-                            </div>
-
-                            {/* Chi tiết */}
-                            <div>
-                                <h3 className="font-medium">Chi tiết:</h3>
-                                <div className="space-y-2 text-gray-700 admin-dark:text-gray-300">
-                                    {servicesItemBySlug?.translation?.details
-                                        ?.split("#")
-                                        .map((d, idx) => (
-                                            <p key={idx}>{d.trim()}</p>
-                                        ))}
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-                {(queryParams_q && !queryParams_sub) && (
-                    <div className="space-y-8">
-                        {servicesMenu2.map((item, idx) => {
-                            // Lấy slug từ description.vi
-                            const slug = item.description?.vi;
-                            // Join với danh sách services
-                            const matchedService = services.find(s => s.slug === slug);
-
-                            return (
-                                <div className="space-y-4 p-4 border rounded-lg shadow-md" key={idx}>
-                                    {/* Hình ảnh */}
-                                    {matchedService?.image_url && (
-                                        <img
-                                            src={matchedService.image_url}
-                                            alt={matchedService.translation?.ten_dich_vu}
-                                            className="w-full max-w-md rounded-lg shadow"
-                                        />
-                                    )}
-
-                                    {/* Tên dịch vụ */}
-                                    <h2 className="text-xl font-semibold">
-                                        {matchedService?.translation?.ten_dich_vu || item.title.vi}
-                                    </h2>
-
-                                    {/* Mô tả */}
-                                    <p className="text-gray-700 dark:text-gray-300">
-                                        {matchedService?.translation?.mo_ta || item.description.vi}
-                                    </p>
-
-                                    {/* Giá & trạng thái */}
-                                    {matchedService && (
-                                        <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
-                                            <span>💰 Giá: {matchedService.floor_price} VND</span>
-                                            <span>📦 Booking: {matchedService.booking_count}</span>
-                                            <span>⚡ Trạng thái: {matchedService.status}</span>
-                                        </div>
-                                    )}
-
-                                    {/* Features */}
-                                    {matchedService?.translation?.features && (
-                                        <div>
-                                            <h3 className="font-medium">Tính năng:</h3>
-                                            <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
-                                                {matchedService.translation.features
-                                                    .split("#")
-                                                    .map((f, i) => <li key={i}>{f.trim()}</li>)}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Chi tiết */}
-                                    {matchedService?.translation?.details && (
-                                        <div>
-                                            <h3 className="font-medium">Chi tiết:</h3>
-                                            <div className="space-y-2 text-gray-700 dark:text-gray-300">
-                                                {matchedService.translation.details
-                                                    .split("#")
-                                                    .map((d, i) => <p key={i}>{d.trim()}</p>)}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-                <div>dsdasdadadadada///////////////////////////////////////</div>
-
                 {queryParams_sub && servicesItemBySlug && (
                     <div className="space-y-6 p-4 border rounded-lg shadow">
                         <img
@@ -323,29 +203,6 @@ export default function ServicePage() {
                         )}
                     </div>
                 )}
-
-                {queryParams_q && !queryParams_sub && servicesFromGroup.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {servicesFromGroup.map((srv) => (
-                            <div key={srv.slug} className="p-4 border rounded-lg shadow">
-                                <h3 className="font-semibold">{srv.translation?.ten_dich_vu}</h3>
-                                <p>{srv.translation?.mo_ta}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {!queryParams_q && !queryParams_sub && services.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {services.map((srv) => (
-                            <div key={srv.slug} className="p-4 border rounded-lg shadow">
-                                <h3 className="font-semibold">{srv.translation?.ten_dich_vu}</h3>
-                                <p>{srv.translation?.mo_ta}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
 
             </div>
             {/* Banner */}

@@ -85,9 +85,6 @@ const ModalServices = forwardRef((props, ref) => {
     }
   };
 
-
-
-
   // expose hàm fetch ra ngoài
   useImperativeHandle(ref, () => ({
     loadAllData
@@ -171,8 +168,9 @@ const ModalServices = forwardRef((props, ref) => {
                     <div className="flex items-center justify-between relative z-10">
                       <Link
                         to={{
-                          pathname: "/services",
-                          search: `?q=${service.type}`
+                          // pathname: "/services",
+                          pathname: `/services/${service.type}`,
+                          // search: `?q=${service.type}`
                         }}
                         className={`
                       flex-1 text-sm transition-all duration-100
@@ -232,8 +230,9 @@ const ModalServices = forwardRef((props, ref) => {
                       <li key={sub.id} className="group">
                         <Link
                           to={{
-                            pathname: "/services",
-                            search: `?q=${sub.section_type}&i=${sub.id}&sub=${sub.description?.en}`
+                            pathname: `/services/${sub.section_type}/${sub.description?.en}`,
+                            // search: `?q=${sub.section_type}&i=${sub.id}&sub=${sub.description?.en}`
+                            // search: `?q=${sub.section_type}&sub=${sub.description?.en}`
                           }}
                           className="
                         flex items-center px-3 py-2.5 
