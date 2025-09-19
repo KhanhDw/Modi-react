@@ -21,33 +21,24 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
 
   return (
     <div className="bg-white admin-dark:bg-gray-800 w-full">
-      <div className="lenis-local scroll-container overflow-hidden">
-        <table className="w-full table-fixed">
+      <div className="overflow-x-auto touch-pan-x" data-lenis-prevent>
+        <table className="min-w-max w-full table-auto">
           <thead className="bg-gray-50/80 admin-dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200 admin-dark:border-gray-700">
             <tr>
-              <th className="w-[5%] px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-left text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
+              <th className="px-1 sm:px-2 md:px-4 py-2 text-left text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
                 STT
               </th>
               {columns
                 .filter((column) => column.key !== 'id')
-                .map((column, colIndex) => {
-                  const colWidths = {
-                    0: 'w-[25%] sm:w-[20%] md:w-[15%] lg:w-[18%]', // Họ tên
-                    1: 'hidden sm:w-[25%] md:w-[20%] lg:w-[18%]', // Email
-                    2: 'w-[20%] sm:w-[15%] md:w-[12%] lg:w-[12%]', // Điện thoại
-                    3: 'w-[25%] sm:w-[20%] md:w-[15%] lg:w-[14%]', // Trạng thái
-                    4: 'hidden md:w-[15%] lg:w-[12%]' // Ngày gửi
-                  };
-                  return (
-                    <th
-                      key={column.key}
-                      className={`${colWidths[colIndex] || 'w-[20%]'} px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-left text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider whitespace-nowrap ${column.className || ''}`}
-                    >
-                      {column.label}
-                    </th>
-                  );
-                })}
-              <th className="w-[10%] sm:w-[8%] md:w-[6%] px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-center text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
+                .map((column) => (
+                  <th
+                    key={column.key}
+                    className={`px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-left text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider whitespace-nowrap ${column.className || ''}`}
+                  >
+                    {column.label}
+                  </th>
+                ))}
+              <th className="px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-center text-xs font-semibold text-gray-600 admin-dark:text-gray-300 uppercase tracking-wider whitespace-nowrap">
                 Thao tác
               </th>
             </tr>
@@ -88,24 +79,17 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
                   key={item.id || index}
                   className="hover:bg-gray-50/50 admin-dark:hover:bg-gray-700/50 transition-colors duration-150 group"
                 >
-                  <td className="w-[5%] px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-sm font-medium text-gray-400 admin-dark:text-gray-500 group-hover:text-gray-600 admin-dark:group-hover:text-gray-300 whitespace-nowrap text-center">
+                  <td className="px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-sm font-medium text-gray-400 admin-dark:text-gray-500 group-hover:text-gray-600 admin-dark:group-hover:text-gray-300 whitespace-nowrap text-center">
                     {index + 1}
                   </td>
                   {columns
                     .filter((column) => column.key !== 'id')
-                    .map((column, colIndex) => {
-                      const colWidths = {
-                        0: 'w-[25%] sm:w-[20%] md:w-[15%] lg:w-[18%]', // Họ tên
-                        1: 'hidden sm:w-[25%] md:w-[20%] lg:w-[18%]', // Email
-                        2: 'w-[20%] sm:w-[15%] md:w-[12%] lg:w-[12%]', // Điện thoại
-                        3: 'w-[25%] sm:w-[20%] md:w-[15%] lg:w-[14%]', // Trạng thái
-                        4: 'hidden md:w-[15%] lg:w-[12%]' // Ngày gửi
-                      };
+                    .map((column) => {
                       const value = item[column.key];
                       return (
                         <td
                           key={column.key}
-                          className={`${colWidths[colIndex] || 'w-[20%]'} px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-sm ${column.className || "text-gray-700 admin-dark:text-gray-200"} overflow-hidden truncate`}
+                          className={`px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-sm ${column.className || "text-gray-700 admin-dark:text-gray-200"} overflow-hidden truncate`}
                         >
                           {column.render
                             ? column.render(value, item)
@@ -115,7 +99,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
                         </td>
                       );
                     })}
-                  <td className="w-[10%] sm:w-[8%] md:w-[6%] px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-center">
+                  <td className="px-1 sm:px-2 md:px-4 py-2 sm:py-3 md:py-4 text-center">
                     <div className="flex items-center justify-center space-x-1 sm:space-x-2 md:space-x-3 flex-wrap">
                       {onView && (
                         <button
