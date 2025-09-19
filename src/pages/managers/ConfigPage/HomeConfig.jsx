@@ -40,6 +40,7 @@ export const sectionsConfig = [
     { key: "nenTang", label: "Nền tảng" },
     { key: "cards", label: "3 Cards" },
     { key: "dichVu", label: "Dịch vụ" },
+    { key: "chitietdichvu", label: "Chi tiết dịch vụ" },
     { key: "loiIch", label: "Lợi ích" },
     { key: "khauHieu", label: "Khẩu hiệu" },
     { key: "khachHang", label: "Khách hàng" },

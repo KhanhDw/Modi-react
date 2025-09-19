@@ -48,10 +48,35 @@ function HomePage({ activeSidebarHeader }) {
     const { t } = useLanguage();
     const { lang, prefix } = useCurrentLanguage();
     const [activeLang, setActiveLang] = useState("vi"); // vi en
+    const [vitri, setVitri] = useState([]);
+
+    // ============ FETCH POSITION COMPONENT ================
+    const FetchPositionComponentHome = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/sections?slug=home`
+            );
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+            const data = await res.json();
+            // Kiểm tra dữ liệu hợp lệ
+            if (!data.data || !Array.isArray(data.data)) {
+                throw new Error('Dữ liệu không đúng định dạng hoặc rỗng');
+            }
+            const clonedData = JSON.parse(JSON.stringify(data.data));
+            setVitri(clonedData);
+            console.log(clonedData); // type and position
+        } catch (err) {
+            console.error('Fetch vitri error:', err);
+            setError(err.message);
+        }
+    };
+
 
     useEffect(() => {
         setActiveLang(lang);
-
+        FetchPositionComponentHome()
     }, [lang]);
 
     useEffect(() => {
@@ -192,33 +217,98 @@ function HomePage({ activeSidebarHeader }) {
         Promise.all(sections.map((type) => fetchSection(type)));
     }, [activeLang]);
 
+    // ánh xạ type (DB) => key (currentData)
+    const typeKeyMap = {
+        banner: "banner",
+        nenTang: "nenTang",
+        cards: "cards",
+        dichvu: "dichVu",    // DB: dichvu -> State: dichVu
+        chitietdichvu: "chitietdichvu",
+        loiich: "loiIch",    // DB: loiich -> State: loiIch
+        khauhieu: "khauHieu",// DB: khauhieu -> State: khauHieu
+        khachhang: "khachHang", // DB: khachhang -> State: khachHang
+    };
+
+    const componentMap = {
+        banner: (data, activeLang) => (
+            data.banner?.length > 0 && <BannerSilder data={data.banner} activeLang={activeLang} />
+        ),
+        nenTang: (data, activeLang) => (
+            data.nenTang && <BaseModi data={data.nenTang} activeLang={activeLang} />
+        ),
+        cards: (data, activeLang) => (
+            data.cards?.length > 0 && <ThreeCardBusiness data={data.cards} activeLang={activeLang} />
+        ),
+        dichvu: (data, activeLang) => (
+            data.dichVu?.length > 0 && <ServiceModi data={data.dichVu} activeLang={activeLang} />
+        ),
+        chitietdichvu: (data, activeLang) => (
+            <div className="w-full">
+                <PricingPage />
+            </div>
+        ),
+        loiich: (data, activeLang) => (
+            data.loiIch?.length > 0 && <BenefitBusiness data={data.loiIch} activeLang={activeLang} />
+        ),
+        khauhieu: (data, activeLang) => (
+            data.khauHieu && <BannerText data={data.khauHieu} activeLang={activeLang} />
+        ),
+        khachhang: (data, activeLang) => (
+            data.khachHang?.length > 0 && <Customer data={data.khachHang} activeLang={activeLang} />
+        ),
+    };
+
     return (
-        <div className={`${activeSidebarHeader ? 'overflow-hidden' : ''} w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900`}>
-            {currentData.banner.length > 0 && (
-                <BannerSilder data={currentData.banner} activeLang={activeLang} />
-            )}
-            {currentData.nenTang && (
-                <BaseModi data={currentData.nenTang} activeLang={activeLang} />
-            )}
-            {currentData.cards.length > 0 && (
-                <ThreeCardBusiness data={currentData.cards} activeLang={activeLang} />
-            )}
-            {currentData.dichVu.length > 0 && (
-                <ServiceModi data={currentData.dichVu} activeLang={activeLang} />
-            )}
-            {currentData.loiIch.length > 0 && (
-                <BenefitBusiness data={currentData.loiIch} activeLang={activeLang} />
-            )}
-            <PricingPage />
-            {currentData.khauHieu && (
-                <BannerText data={currentData.khauHieu} activeLang={activeLang} />
-            )}
-            {currentData.khachHang.length > 0 && (
-                <Customer data={currentData.khachHang} activeLang={activeLang} />
-            )}
+        <div
+            className={`${activeSidebarHeader ? "overflow-hidden" : ""} 
+                w-full h-full md:p-4 mx-auto flex flex-col 
+                items-center justify-center bg-slate-50 dark:bg-slate-900`}
+        >
+            {vitri
+                .sort((a, b) => a.position - b.position)
+                .map((section) => {
+                    const key = typeKeyMap[section.type]; // map DB type -> currentData key
+                    return (
+                        <React.Fragment key={section.type}>
+                            {componentMap[section.type]?.(currentData, activeLang)}
+                        </React.Fragment>
+                    );
+                })}
+
             <ScrollToTopButton />
         </div>
     );
+
+
+
+
+    // return (
+    //     <div className={`${activeSidebarHeader ? 'overflow-hidden' : ''} w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900`}>
+    //         {currentData.banner.length > 0 && (
+    //             <BannerSilder data={currentData.banner} activeLang={activeLang} />
+    //         )}
+    //         {currentData.nenTang && (
+    //             <BaseModi data={currentData.nenTang} activeLang={activeLang} />
+    //         )}
+    //         {currentData.cards.length > 0 && (
+    //             <ThreeCardBusiness data={currentData.cards} activeLang={activeLang} />
+    //         )}
+    //         {currentData.dichVu.length > 0 && (
+    //             <ServiceModi data={currentData.dichVu} activeLang={activeLang} />
+    //         )}
+    //         {currentData.loiIch.length > 0 && (
+    //             <BenefitBusiness data={currentData.loiIch} activeLang={activeLang} />
+    //         )}
+    //         <PricingPage />
+    //         {currentData.khauHieu && (
+    //             <BannerText data={currentData.khauHieu} activeLang={activeLang} />
+    //         )}
+    //         {currentData.khachHang.length > 0 && (
+    //             <Customer data={currentData.khachHang} activeLang={activeLang} />
+    //         )}
+    //         <ScrollToTopButton />
+    //     </div>
+    // );
 
 }
 function BannerSilder({ data, activeLang }) {
