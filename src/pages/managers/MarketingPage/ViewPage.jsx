@@ -21,7 +21,7 @@ export const renderSlateToHTML = (nodes) => {
             if (node.italic) text = `<em>${text}</em>`;
             if (node.underline) text = `<u>${text}</u>`;
             if (node.code) {
-                text = `<code class="bg-slate-100 text-slate-800 px-1 rounded font-mono text-sm 
+                text = `<code class="bg-slate-100 text-slate-800 px-1 rounded font-mono text-sm
                         admin-dark:bg-slate-800 admin-dark:text-slate-100">${text}</code>`;
             }
 
@@ -38,14 +38,14 @@ export const renderSlateToHTML = (nodes) => {
                 return `<p class="my-2 leading-relaxed ${alignClass}">${children}</p>`;
 
             case "heading-one":
-                return `<h1 class="text-2xl font-bold my-4 border-b border-slate-200 pb-2 
+                return `<h1 class="text-2xl font-bold my-4 border-b border-slate-200 pb-2
                         admin-dark:border-slate-700 admin-dark:text-slate-200 ${alignClass}">${children}</h1>`;
 
             case "heading-two":
                 return `<h2 class="text-xl font-semibold admin-dark:text-slate-200 my-3 ${alignClass}">${children}</h2>`;
 
             case "block-quote":
-                return `<blockquote class="my-4 px-4 py-3 border-l-4 border-slate-400 bg-slate-50 italic text-slate-700 rounded-r 
+                return `<blockquote class="my-4 px-4 py-3 border-l-4 border-slate-400 bg-slate-50 italic text-slate-700 rounded-r
                         admin-dark:border-slate-500 admin-dark:bg-slate-800 admin-dark:text-slate-200 ${alignClass}">
                             ${children}
                         </blockquote>`;
@@ -178,8 +178,8 @@ export default function ViewPage() {
             <div className="mx-auto  bg-white admin-dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <article className="p-8">
                     {/* Header bài viết */}
-                    <header className="mb-8 mt-8 text-center">
-                        <h1 className="text-4xl font-extrabold text-gray-900 admin-dark:text-white leading-tight mb-4">
+                    <header className="mb-4 mt-8 text-center">
+                        <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl font-bold text-gray-900 admin-dark:text-white leading-tight mb-4">
                             {post.title}
                         </h1>
                         <div className="flex flex-wrap justify-center items-center text-gray-600 admin-dark:text-gray-400 text-sm">

@@ -6,7 +6,7 @@ import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 
 export function HeroBanner() {
-  const {t} = useLanguage();
+  const { t } = useLanguage();
   const { lang, prefix } = useCurrentLanguage();
   const [isVisible, setIsVisible] = useState(false)
   const [banner, setBanner] = useState({
@@ -35,10 +35,10 @@ export function HeroBanner() {
   }, [])
 
   return (
-    <section className="relative min-h-[600px] md:min-h-[700px] flex items-center justify-center overflow-hidden rounded-4xl">
+    <section className="relative min-h-[600px] md:min-h-[700px] flex items-center justify-center overflow-hidden rounded-xl rounded-tl-none rounded-tr-none md:rounded-4xl shadow-lg">
       {/* Video Background */}
       <video
-        className="absolute inset-0 w-full h-full object-cover "
+        className="absolute inset-0 w-full h-full object-cover"
         src="/videos/hero-bg.mp4"
         autoPlay
         loop
@@ -67,10 +67,10 @@ export function HeroBanner() {
 
         <Button
           size="lg"
-          className={`bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`bg-primary hover:bg-primary/90 cursor-pointer text-primary-foreground px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
-          
+
           {t("aboutV2.button")}
         </Button>
       </div>

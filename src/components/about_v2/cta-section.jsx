@@ -32,7 +32,7 @@ export function CTASection() {
     >
       {/* Video Background */}
       <video
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover shadow-lg"
         src="/videos/khoidauduan.mp4" // đổi path video của bạn
         autoPlay
         muted
@@ -66,7 +66,7 @@ export function CTASection() {
         <Button
           size="lg"
           variant="secondary"
-          className={`text-primary dark:hover:text-gray-800 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-110 ${isVisible
+          className={`text-primary cursor-pointer dark:hover:text-gray-800 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-110 ${isVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-8"
             }`}

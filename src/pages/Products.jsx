@@ -1,12 +1,12 @@
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Eye, Filter, Github, Search, Star } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { Search, Filter, Github, Eye, Star } from "lucide-react"
 // import languageAPI from "@/hook/currentLang";
-import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
+import useCurrentLanguage from "@/hook/currentLang"
 
 const baseUrl = import.meta.env.VITE_MAIN_BE_URL
 
@@ -100,10 +100,10 @@ export default function Products() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold font-sans text-foreground mb-6">
-            Mẫu Website Chuyên Nghiệp
+            {lang === "vi" ? "Mẫu Website Chuyên Nghiệp" : "Modern & Professional Website Design"}
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Khám phá bộ sưu tập các mẫu website đẹp, hiện đại và tối ưu cho mọi ngành nghề
+            {lang === "vi" ? "Khám phá bộ sưu tập các mẫu website đẹp, hiện đại và tối ưu cho mọi ngành nghề" : "Discover a collection of beautiful, modern, and fully-optimized website templates for every industry"}
           </p>
         </div>
 
@@ -113,15 +113,15 @@ export default function Products() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <input
                 type="text"
-                placeholder="Tìm kiếm theo danh mục hoặc công nghệ..."
-                className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+                placeholder={lang == "vi" ? "Tìm kiếm theo danh mục hoặc công nghệ..." : "Search by category or technology..."}
+                className="w-full dark:text-white pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">{filteredSamples.length} kết quả</span>
+              <Filter className="w-4 h-4 text-muted-foreground cursor-pointer" />
+              <span className="text-sm text-muted-foreground">{filteredSamples.length} {lang == "vi" ? "Kết quả" : "Results"}</span>
             </div>
           </div>
 
@@ -132,7 +132,7 @@ export default function Products() {
                 variant={selectedCategory === category ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(category)}
-                className="transition-all duration-200"
+                className="transition-all duration-200 cursor-pointer"
               >
                 {category}
               </Button>
@@ -165,7 +165,7 @@ export default function Products() {
                         <Button size="sm" variant="secondary" asChild>
                           <Link to={`/products/${sample.id}`}>
                             <Eye className="w-4 h-4 mr-1" />
-                            Xem chi tiết
+                            {lang == "vi" ? "Xem chi tiết" : "View Details"}
                           </Link>
                         </Button>
                       </div>
@@ -173,7 +173,7 @@ export default function Products() {
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <Badge className=" font-sans text-foreground mb-3" variant="outline">{sample.category}</Badge>
+                      <Badge className="font-sans border-2 outline-none text-foreground mb-3" variant="outline">{sample.category}</Badge>
                       <div className="flex items-center gap-1 text-yellow-500">
                         <Star className="w-4 h-4 fill-current" />
                         <span className="text-sm">4.8</span>
@@ -199,7 +199,7 @@ export default function Products() {
                           </Button>
                         )}
                         <Button size="sm" asChild>
-                          <Link to={`/products/${sample.id}`}>Chi tiết</Link>
+                          <Link to={`/products/${sample.id}`}>{lang == "vi" ? "Chi tiết" : "Details"}</Link>
                         </Button>
                       </div>
                     </div>
@@ -213,8 +213,8 @@ export default function Products() {
         {filteredSamples.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Không tìm thấy kết quả</h3>
-            <p className="text-muted-foreground">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc danh mục</p>
+            <h3 className="text-xl font-semibold text-foreground mb-2">{lang == "vi" ? "Không tìm thấy kết quả!" : "No results found!"}</h3>
+            <p className="text-muted-foreground">{lang == "vi" ? "Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc danh mục" : "Try changing your search keywords or category filters."}</p>
           </div>
         )}
       </div>

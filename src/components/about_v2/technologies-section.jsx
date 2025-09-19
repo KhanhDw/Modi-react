@@ -59,11 +59,11 @@ export function TechnologiesSection() {
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-12">{t("aboutV2.TechnologiesSection")}</h2>
 
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="sm:flex sm:flex-wrap sm:justify-center sm:gap-6 grid grid-cols-2 gap-4">
           {technologies.map((tech, index) => (
-            <Card key={index} className="w-40">   {/* ép width để đồng đều */}
+            <Card key={index} className="w-full sm:w-40">
               <CardContent className="flex flex-col items-center justify-center p-4 text-center">
-                <tech.icon className="text-7xl mb-3" />
+                <tech.icon className="text-5xl sm:text-6xl md:text-7xl mb-3" />
                 <p className="text-sm font-semibold text-muted-foreground">{tech.name}</p>
               </CardContent>
             </Card>

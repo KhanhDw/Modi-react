@@ -70,6 +70,8 @@ const TextEditor = forwardRef(
     ({ label, fields, data, onChange, lang, haveImage = false }, ref) => {
         const [preview, setPreview] = useState("");
         const [isImageError, setIsImageError] = useState(false);
+        useLenisLocal(".lenis-local");
+
 
         useEffect(() => {
             return () => {
@@ -188,9 +190,10 @@ const TextEditor = forwardRef(
                             />
                         </div>
                     ) : (
-                        <input
+                        <textarea
                             key={field.name}
                             type="text"
+                            rows={5}
                             placeholder={field.placeholder}
                             value={
                                 typeof data?.[field.name] === "object"
