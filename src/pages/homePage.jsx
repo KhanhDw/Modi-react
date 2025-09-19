@@ -278,38 +278,6 @@ function HomePage({ activeSidebarHeader }) {
             <ScrollToTopButton />
         </div>
     );
-
-
-
-
-    // return (
-    //     <div className={`${activeSidebarHeader ? 'overflow-hidden' : ''} w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900`}>
-    //         {currentData.banner.length > 0 && (
-    //             <BannerSilder data={currentData.banner} activeLang={activeLang} />
-    //         )}
-    //         {currentData.nenTang && (
-    //             <BaseModi data={currentData.nenTang} activeLang={activeLang} />
-    //         )}
-    //         {currentData.cards.length > 0 && (
-    //             <ThreeCardBusiness data={currentData.cards} activeLang={activeLang} />
-    //         )}
-    //         {currentData.dichVu.length > 0 && (
-    //             <ServiceModi data={currentData.dichVu} activeLang={activeLang} />
-    //         )}
-    //         {currentData.loiIch.length > 0 && (
-    //             <BenefitBusiness data={currentData.loiIch} activeLang={activeLang} />
-    //         )}
-    //         <PricingPage />
-    //         {currentData.khauHieu && (
-    //             <BannerText data={currentData.khauHieu} activeLang={activeLang} />
-    //         )}
-    //         {currentData.khachHang.length > 0 && (
-    //             <Customer data={currentData.khachHang} activeLang={activeLang} />
-    //         )}
-    //         <ScrollToTopButton />
-    //     </div>
-    // );
-
 }
 function BannerSilder({ data, activeLang }) {
     const { t } = useLanguage();
