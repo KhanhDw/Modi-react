@@ -56,7 +56,7 @@ export default function ServiceTable() {
       <CardHeader className="px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
+            <CardTitle className="text-lg sm:text-lg md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
               Danh sách dịch vụ
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
@@ -98,13 +98,13 @@ export default function ServiceTable() {
                 <TableHead className="w-[25%] sm:w-[20%] md:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
                   Tên dịch vụ
                 </TableHead>
-                <TableHead className="w-[30%] sm:w-[25%] md:w-[20%] text-black admin-dark:text-gray-200 font-semibold hidden sm:table-cell">
+                <TableHead className="w-[30%] sm:w-[25%] md:w-[20%] text-black admin-dark:text-gray-200 font-semibold ">
                   Mô tả
                 </TableHead>
                 <TableHead className="w-[20%] sm:w-[15%] md:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
                   Giá
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[15%] md:w-[10%] text-black admin-dark:text-gray-200 font-semibold hidden md:table-cell">
+                <TableHead className="w-[15%] sm:w-[15%] md:w-[10%] text-black admin-dark:text-gray-200 font-semibold ">
                   Số lần đặt
                 </TableHead>
                 <TableHead className="w-[15%] sm:w-[15%] md:w-[10%] text-black admin-dark:text-gray-200 font-semibold">
@@ -154,13 +154,13 @@ export default function ServiceTable() {
                     <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate">
                       {item.ten_dich_vu}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate hidden sm:table-cell">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate">
                       {item.mo_ta}
                     </TableCell>
                     <TableCell className="text-gray-900 admin-dark:text-gray-200">
                       {`₫${item.price.toLocaleString()}`}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden md:table-cell">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                       {item.booking_count}
                     </TableCell>
                     <TableCell>

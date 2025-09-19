@@ -69,17 +69,17 @@ export default function ServiceBookingTable() {
       className="bg-gray-100 rounded-xl border border-gray-300 shadow-sm 
         admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
     >
-      <CardHeader className="px-4 sm:px-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-          <div>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
+      <CardHeader className="px-4 sm:px-6 ">
+        <div className="flex flex-col  items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="text-center w-full">
+            <CardTitle className="text-lg sm:text-lg md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
               Danh sách đơn đặt dịch vụ
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
               Quản lý tất cả đơn đặt dịch vụ
             </CardDescription>
           </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-col items-start sm:items-center gap-2 w-full sm:w-auto">
             <div className="relative w-full sm:w-48 md:w-64">
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 

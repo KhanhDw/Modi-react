@@ -358,7 +358,7 @@ export default function ServicesPage() {
     <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
       <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
-          <nav className="flex flex-col sm:flex-row w-full sm:w-auto gap-2 sm:gap-3">
+          <nav className="flex flex-col sm:flex-row sm:flex-wrap w-full sm:w-auto gap-2 sm:gap-3">
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
