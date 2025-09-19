@@ -9,6 +9,7 @@ import slugify from "@/utils/slug";
 export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     const [menuData, setMenuData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [listServiceOfParent, setListServiceOfParent] = useState([]); // is item of menu2
 
     const [dialog, setDialog] = useState({
         open: false,
@@ -93,7 +94,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             console.error(err);
             setToast({ message: "Lỗi tải mục con: " + err.message, type: "error" });
         }
-        console.log(">> selectSubItemSection selectedCategory after fetch:", category);
 
     };
 
@@ -337,6 +337,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
     const selectSubItemSection = (cat) => {
         setSelectedCategory(cat);
+        setListServiceOfParent(cat.name.groupServices.split(",").map(s => s.trim()).filter(Boolean))
         fetchChildren(cat);
     };
 
@@ -440,36 +441,23 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
     const setDialogValueEn = (val) => {
         setDialog(prev => prev.valueEn === val ? prev : { ...prev, valueEn: val })
-        console.log(">> setDialogValueEn:", val);
     };
 
     const setDialogValueVi = (val) => {
         setDialog(prev => prev.valueVi === val ? prev : { ...prev, valueVi: val })
-        console.log(">> setDialogValueVi:", val);
 
     };
 
     const setDialogValueSlug = (val) => {
         setDialog(prev => prev.valueSlug === val ? prev : { ...prev, valueSlug: val })
-        console.log(">> setDialogValueSlug:", val);
 
     };
 
     const setDialogOpen = (isOpen) => {
         setDialog(prev => ({ ...prev, open: isOpen }))
-        console.log(">> setDialogOpen:", isOpen);
 
     };
 
-    useEffect(() => {
-        if (dialog.open) {
-            console.log("dialog.listIdServices mới:", dialog.listIdServices);
-        }
-    }, [dialog.listIdServices]);
-
-    useEffect(() => {
-        console.log(">> dialog state changed:", dialog);
-    }, [dialog]);
 
     const handleSubmitDialog = async () => {
 
@@ -490,7 +478,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
         // chỉ reset dialog ở đây, sau khi submit xong
         resetDialog();
     };
-
 
 
     return (
@@ -550,6 +537,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                         setValueVi={setDialogValueVi}
                         listIdServices={dialog.listIdServices}
                         setListIdServices={setDialogListIdServices}
+                        listServiceOfParent={listServiceOfParent}
                         onSubmit={handleSubmitDialog}
                     />
                 </div>

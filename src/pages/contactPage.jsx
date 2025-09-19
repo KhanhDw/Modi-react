@@ -48,7 +48,9 @@ export default function ContactPage() {
     return () => socket.off("dataChanged");
   }, [socket]);
 
-  const generateCaptcha = (length = 5) => {
+
+
+  const generateCaptcha = (length = 4) => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz0123456789';
     let result = '';
     for (let i = 0; i < length; i++) {

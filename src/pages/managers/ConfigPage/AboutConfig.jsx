@@ -8,7 +8,7 @@ import useLenisLocal from '@/hook/useLenisLocal';
 function BannerPreview({ banner, lang }) {
     return (
         <motion.div
-            className="relative h-64 flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl shadow-xl"
+            className="overflow-hidden relative h-64 flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl shadow-xl"
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -23,7 +23,7 @@ function BannerPreview({ banner, lang }) {
 function AboutPreview({ about, lang }) {
     return (
         <motion.div
-            className="p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg space-y-4"
+            className="overflow-hidden p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg space-y-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -38,7 +38,7 @@ function AboutPreview({ about, lang }) {
 function VisionMissionPreview({ visionMission, lang }) {
     return (
         <motion.div
-            className="p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg space-y-6"
+            className="overflow-hidden p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg space-y-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -76,6 +76,8 @@ const TextEditor = forwardRef(
     ({ label, fields, data, onChange, lang, haveImage = false }, ref) => {
         const [preview, setPreview] = useState("");
         const [isImageError, setIsImageError] = useState(false);
+        useLenisLocal(".lenis-local");
+
 
         useEffect(() => {
             return () => {
@@ -207,9 +209,10 @@ const TextEditor = forwardRef(
                             />
                         </div>
                     ) : (
-                        <input
+                        <textarea
                             key={field.name}
                             type="text"
+                            rows={5}
                             placeholder={field.placeholder}
                             value={
                                 typeof data?.[field.name] === "object"
@@ -217,7 +220,8 @@ const TextEditor = forwardRef(
                                     : data?.[field.name] || ""
                             }
                             onChange={(e) => handleChange(field.name, e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-300 admin-dark:border-slate-700 
+                            data-lenis-prevent
+                            className="lenis-local w-full px-3 py-2 border border-slate-300 admin-dark:border-slate-700 
                          rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                         />
                     )
