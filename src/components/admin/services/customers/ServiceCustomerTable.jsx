@@ -88,17 +88,17 @@ export default function ServiceCustomerTable() {
           admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
       >
         <CardHeader className="px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col md:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <div>
-              <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 admin-dark:text-white">
+              <CardTitle className="text-lg sm:text-lg  md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
                 Danh sách khách hàng
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
+              <CardDescription className="text-xs sm:text-center md:text-left sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
                 Quản lý tất cả khách hàng đã sử dụng dịch vụ
               </CardDescription>
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
-              <div className="relative w-full sm:w-48 md:w-64">
+            <div className="flex flex-col md:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <div className="relative w-full sm:w-48 md:w-64">
                 <Search
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 
                     admin-dark:text-gray-400"
@@ -140,8 +140,8 @@ export default function ServiceCustomerTable() {
         <CardContent className="px-4 sm:px-6 text-black admin-dark:text-gray-200">
           <div
             className="rounded-md border border-gray-300 bg-white shadow-sm 
-    admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50
-    w-full overflow-x-auto"
+          admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50
+          w-full overflow-x-auto"
           >
             <Table className="min-w-[800px]">
               <TableHeader>
@@ -155,16 +155,16 @@ export default function ServiceCustomerTable() {
                   <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold">
                     Đã đặt
                   </TableHead>
-                  <TableHead className="w-[20%] sm:w-[20%] text-black admin-dark:text-gray-200 font-semibold hidden sm:table-cell">
+                  <TableHead className="w-[20%] sm:w-[20%] text-black admin-dark:text-gray-200 font-semibold ">
                     Email
                   </TableHead>
-                  <TableHead className="w-[20%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold hidden md:table-cell">
+                  <TableHead className="w-[20%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
                     SĐT
                   </TableHead>
-                  <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold hidden lg:table-cell">
+                  <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold ">
                     Hoàn thành
                   </TableHead>
-                  <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold hidden xl:table-cell">
+                  <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
                     Chi
                   </TableHead>
                   <TableHead className="w-[10%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
@@ -214,13 +214,13 @@ export default function ServiceCustomerTable() {
                       <TableCell className="text-gray-900 admin-dark:text-gray-200">
                         {customer.booking_count || 0}
                       </TableCell>
-                      <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden sm:table-cell truncate">
+                      <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate">
                         {customer.email || "Chưa cập nhật"}
                       </TableCell>
-                      <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden md:table-cell">
+                      <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                         {customer.phone || "Chưa cập nhật"}
                       </TableCell>
-                      <TableCell className="text-gray-900 admin-dark:text-gray-200 hidden lg:table-cell">
+                      <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                         {
                           initDataBooking.filter(
                             (c) =>
