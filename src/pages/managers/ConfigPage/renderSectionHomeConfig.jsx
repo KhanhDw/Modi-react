@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { InputField, TextareaField, SafeImage } from "./componentHomeConfig";
 import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import NotificationToast from "@/components/feature/notification-toast.jsx";
 
 
 export default function RenderHomeConfig({
@@ -19,6 +20,34 @@ export default function RenderHomeConfig({
     const [defaultVitri, setDefaultVitri] = useState([]); // giữ mặc định
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [positionsDefault, setPositionsDefault] = useState([]);
+    const [toast, setToast] = useState(null);
+
+
+    const FetchResetPositions = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/service-header-config/positions/default`,
+            );
+
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+
+            if (!data.success) {
+                throw new Error(data.error || "Reset positions thất bại");
+            }
+            console.log(data);
+            setPositionsDefault(data.data);
+            console.log("✅ Reset thành công:", data.message);
+        } catch (err) {
+            console.error("❌ Fetch reset positions error:", err);
+        }
+    };
+
 
 
     const FetchPositionComponentHome = async () => {
@@ -45,12 +74,27 @@ export default function RenderHomeConfig({
         }
     };
 
+    const isVitriSameAsDefault = (vitri) => {
+        if (!vitri || vitri.length !== positionsDefault.length) return false;
+
+        return positionsDefault.every((item) => {
+            const dbItem = vitri.find((v) => v.type === item.key);
+            return dbItem && dbItem.position === item.position;
+        });
+    };
+
+
+
+
 
 
 
     useEffect(() => {
+        FetchResetPositions();
         FetchPositionComponentHome();
     }, []);
+
+
 
 
     const handleResetDefault = async () => {
@@ -65,9 +109,11 @@ export default function RenderHomeConfig({
                 throw new Error(`Lỗi HTTP: ${res.status}`);
             }
             await FetchPositionComponentHome();
+            setToast({ message: "Khôi phục vị trí thành công", type: "success" });
         } catch (err) {
             console.error('Fetch vitri error:', err);
             setError(err.message);
+            setToast({ message: "Khôi phục vị trí thất bại", type: "error" });
         } finally {
             setLoading(false);
         }
@@ -77,6 +123,39 @@ export default function RenderHomeConfig({
     const handleVitriChange = (newVitri) => {
         setVitri(newVitri);
     };
+
+
+    const savePositions = async (vitriUpdate) => {
+        try {
+            // chỉ gửi key cần thiết
+            const positions = vitriUpdate.map((s) => ({
+                key: s.type,
+                position: s.position,
+            }));
+
+            const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/service-header-config/positions/update`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ positions }),
+            });
+
+            if (!res.ok) throw new Error("Lỗi khi gọi API");
+
+            const data = await res.json();
+            console.log(data.message);
+            setToast({ message: "Lưu vị trí thành công", type: "success" });
+            await FetchPositionComponentHome();
+            isVitriSameAsDefault(defaultVitri);
+        } catch (error) {
+            console.error("❌ Lỗi khi lưu vị trí:", error);
+            setToast({ message: "Lưu vị trí thất bại", type: "error" });
+        }
+    };
+
+
+
 
     const renderSection = () => {
         switch (activeSection) {
@@ -111,22 +190,53 @@ export default function RenderHomeConfig({
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center justify-between gap-2 text-gray-500">
                                     <IoMdInformationCircleOutline />
-                                    <span>Kéo thả để thay đổi vị trí!</span>
+                                    <span>Kéo thả để thay đổi vị trí</span>
                                 </div>
+                                {
+                                    toast && (
+                                        <NotificationToast
+                                            message={toast.message}
+                                            type={toast.type}
+                                            onClose={() => setToast(null)}
+                                        />
+                                    )
+                                }
                                 <div className="flex space-x-4 mt-5">
+                                    {/* Nút khôi phục (chỉ restore lại vitri chưa lưu) */}
+                                    <button
+                                        onClick={() => setVitri(defaultVitri)} // khôi phục lại vitri gốc từ DB
+                                        disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-blue-500 hover:bg-blue-700 text-white"
+                                            }`}
+                                    >
+                                        Khôi phục
+                                    </button>
+
+                                    {/* Nút khôi phục mặc định (reset DB về positionsDefault) */}
                                     <button
                                         onClick={handleResetDefault}
-                                        disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
-                                            ? 'bg-gray-400 cursor-not-allowed'
-                                            : 'bg-blue-500 hover:bg-blue-700 text-white'
+                                        disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        ${isVitriSameAsDefault(defaultVitri)
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-blue-500 hover:bg-blue-700 text-white"
                                             }`}
                                     >
                                         Khôi phục lại mặc định
                                     </button>
+
                                     <button
-                                        onClick={() => handleSave(vitri)}
-                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+                                        onClick={() => savePositions(vitri)}
+                                        disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-green-500 hover:bg-green-700 text-white"
+                                            }`}
+
                                     >
                                         Lưu vị trí
                                     </button>
@@ -470,6 +580,7 @@ export default function RenderHomeConfig({
             default:
                 return null;
         }
+
     };
 
     return renderSection();

@@ -50,7 +50,7 @@ export const sectionsConfig = [
 
 export default function HomeConfigMultiLang() {
     const [activeLang, setActiveLang] = useState("vi");
-    const [activeSection, setActiveSection] = useState("banner");
+    const [activeSection, setActiveSection] = useState(sectionsConfig[0].key);
     const [previewBanner, setPreviewBanner] = useState({});
     const [toast, setToast] = useState(null);
 

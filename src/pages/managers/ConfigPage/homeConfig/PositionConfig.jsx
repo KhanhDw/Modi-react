@@ -38,19 +38,19 @@ function SortableRow({ v, i }) {
             style={style}
             {...attributes}
             {...listeners}
-            className={`cursor-move transition-colors duration-200 
-    hover:bg-indigo-50 admin-dark:hover:bg-indigo-900`}
+            className="cursor-move transition-colors duration-300 hover:bg-indigo-50 admin-dark:hover:bg-indigo-900"
         >
-            <td className="px-4 py-2 border-b">{i + 1}</td>
-            <td className="px-4 py-2 border-b">{displayType}</td>
-            <td className="px-4 py-2 border-b">{v.type}</td>
-            <td className="px-4 py-2 border-b">{v.position}</td>
+            <td className="px-4 py-2">{i + 1}</td>
+            <td className="px-4 py-2">{displayType}</td>
+            <td className="px-4 py-2">{v.type}</td>
+            <td className="px-4 py-2">{v.position}</td>
         </tr>
+
 
     );
 }
 
-export default function VitriTable({ initialVitri = [], onChangeVitri, setDefaultVitri }) {
+export default function VitriTable({ initialVitri = [], onChangeVitri }) {
 
     const [vitri, setVitri] = useState([]);
 
@@ -96,13 +96,13 @@ export default function VitriTable({ initialVitri = [], onChangeVitri, setDefaul
     };
 
     if (!Array.isArray(vitri) || vitri.length === 0) {
-        return <div className="p-4  text-gray-500 w-full flex items-center justify-center">
-            <p>   Không có dữ liệu vị trí</p>
+        return <div className="p-4 text-gray-500 w-full flex items-center justify-center">
+            <p>Không có dữ liệu vị trí</p>
         </div>;
     }
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-hidden rounded-xl border border-gray-200 shadow-md admin-dark:border-gray-700">
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -112,9 +112,9 @@ export default function VitriTable({ initialVitri = [], onChangeVitri, setDefaul
                     items={vitri.map((v, i) => v.id ?? `vitri-${i}`)}
                     strategy={verticalListSortingStrategy}
                 >
-                    <table className="min-w-full border border-gray-200 rounded-xl shadow-md overflow-hidden admin-dark:border-gray-700">
+                    <table className="min-w-full  border-collapse  shadow-md ">
                         <thead className="bg-gray-200 admin-dark:bg-gray-700">
-                            <tr>
+                            <tr className="">
                                 <th className="px-4 py-3 text-left font-semibold text-gray-700 border-b admin-dark:text-gray-200 admin-dark:border-gray-600">
                                     STT
                                 </th>
@@ -129,7 +129,7 @@ export default function VitriTable({ initialVitri = [], onChangeVitri, setDefaul
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 admin-dark:divide-gray-700">
+                        <tbody className=" divide-y divide-gray-100 admin-dark:divide-gray-700 ">
                             {vitri.map((v, i) => (
                                 <SortableRow key={v.id ?? `vitri-${i}`} v={v} i={i} />
                             ))}
