@@ -31,7 +31,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
                     }}
                 >
                     <ChevronUp
-                        className={`relative w-6 h-6 lg:w-6 lg:h-6 xl:w-7 xl:h-7 sm:w-5 sm:h-5 md:w-6 md:h-6 xs:w-4 xs:h-4 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
+                        className={`relative w-6 h-6 lg:w-6 lg:h-6 xl:w-6 xl:h-6 sm:w-5 sm:h-5 md:w-6 md:h-6 xs:w-4 xs:h-4 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
                             }`}
                         style={{
                             transform: hoverUp ? "translateY(-3px)" : "translateY(0px)",
@@ -65,7 +65,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
                     }}
                 >
                     <ChevronDown
-                        className={`relative w-6 h-6 xl:w-7 xl:h-7 lg:w-6 lg:h-6 sm:w-5 sm:h-5 xs:w-4 xs:h-4 md:w-6 md:h-6 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
+                        className={`relative w-6 h-6 xl:w-6 xl:h-6 lg:w-6 lg:h-6 sm:w-5 sm:h-5 xs:w-4 xs:h-4 md:w-6 md:h-6 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
                             }`}
                         style={{
                             transform: hoverDown ? "translateY(3px)" : "translateY(0px)",

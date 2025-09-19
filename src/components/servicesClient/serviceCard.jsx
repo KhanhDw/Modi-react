@@ -67,9 +67,9 @@ export default function ServiceCard({ service, onFetchService }) {
                 </div>
 
                 {/* Responsive Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-1 gap-4 items-start px-2 pb-4 md:pr-4 lg:px-4 xl:px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-1 xl:grid-cols-3 gap-4 items-start px-2 pb-4 md:pr-4 lg:px-4 xl:px-4">
                     {/* Left: Image */}
-                    <div className="md:col-span-2 lg:col-span-3">
+                    <div className="md:col-span-2 lg:col-span-3 xl:col-span-1">
                         <div className="border-2 border-gray-400 dark:border-gray-200 dark:group-hover:shadow-gray-600
                 transition-all duration-200 shadow-lg w-full h-72
                 bg-gray-50 dark:bg-gray-800 rounded-md md:rounded-xl overflow-hidden grid place-items-center"
@@ -83,7 +83,7 @@ export default function ServiceCard({ service, onFetchService }) {
                     </div>
 
                     {/* Right: Features + Detail + Buttons */}
-                    <div className="md:col-span-3">
+                    <div className="md:col-span-3 xl:col-span-2">
                         {/* Features & Toggle */}
                         <div className="grid grid-cols-1 sm:grid-cols-5">
                             {/* Features */}
@@ -133,7 +133,7 @@ export default function ServiceCard({ service, onFetchService }) {
 
                             {/* Toggle Buttons */}
                             {/* sm:col-span-1 */}
-                            <div className="grid place-items-center mt-2 sm:ml-2 xl:ml-6">
+                            <div className="grid place-items-center mt-2 sm:ml-2 lg:ml-3 xl:ml-1">
                                 <HoverButtonsServiceCard
                                     onClickUp={handleToUp}
                                     onClickDown={handleToDown}
@@ -143,7 +143,7 @@ export default function ServiceCard({ service, onFetchService }) {
                         </div>
 
                         {/* CTA Buttons */}
-                        <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 mt-3 sm:mt-2 md:mt-10 lg:mt-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 mt-3 sm:mt-2 md:mt-10 lg:mt-6 xl:mt-7">
                             <button
                                 onClick={() => {
                                     if (translation.slug) {
