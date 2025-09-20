@@ -213,12 +213,12 @@ const AdminHeader = ({
 
       {/* Search Fullscreen cho mobile */}
 {isSearchOpen && (
-  <div className="fixed inset-0 z-50 bg-white admin-dark:bg-slate-900 flex flex-col p-4">
+  <div className="fixed inset-0 z-50 bg-white admin-dark:bg-slate-900 flex flex-col p-4 ">
     <div className="flex h-full flex-col">
       {/* Desktop giữ nguyên thứ tự */}
       <div className="hidden md:flex md:flex-col h-full">
         {/* Thanh nhập tìm kiếm */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 ">
           <h2 className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
             Tìm kiếm
           </h2>

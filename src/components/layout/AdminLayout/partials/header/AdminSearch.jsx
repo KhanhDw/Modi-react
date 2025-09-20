@@ -139,35 +139,35 @@ export default function AdminSearch({ isFullScreen = false }) {
   return (
     <div className={cn("relative", isFullScreen && "flex-1")}>
       <div className={cn("rounded-lg", isFullScreen && "w-full")}>
-        <div className={cn("relative", isFullScreen && "w-full")}>
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Tìm kiếm..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-            className={cn(
-              "w-full pl-10 pr-10 py-5 text-gray-800 border-2 border-slate-300 admin-dark:border-slate-500 rounded-lg shadow-sm",
-              "bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500",
-              "transition-colors duration-200 ease-in-out",
-              "admin-dark:bg-gray-700 admin-dark:text-white admin-dark:placeholder:text-gray-400",
-              "admin-dark:hover:bg-gray-600 admin-dark:focus:ring-gray-400",
-              isFullScreen && "text-lg py-6"
-            )}
-            ref={searchInputRef}
-          />
-          {searchQuery && (
-            <button
-              onClick={clearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 admin-dark:text-gray-400 admin-dark:hover:text-gray-200"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-      </div>
+  <div className={cn("relative", isFullScreen && "w-full")}>
+    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+    <Input
+      type="text"
+      placeholder="Tìm kiếm..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+      className={cn(
+        "w-full pl-10 pr-10 py-5 text-gray-800 border-[3px] border-gray-400 admin-dark:border-gray-600 rounded-xl shadow-md",
+        "bg-white placeholder:text-gray-400 focus:outline-none  focus:border-black",
+        "hover:shadow-lg transition-all duration-200 ease-in-out",
+        "admin-dark:bg-gray-800 admin-dark:text-white admin-dark:placeholder:text-gray-400",
+        "admin-dark:hover:shadow-lg admin-dark:hover:shadow-gray-700/50 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400",
+        isFullScreen && "text-lg py-6"
+      )}
+      ref={searchInputRef}
+    />
+    {searchQuery && (
+      <button
+        onClick={clearSearch}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 admin-dark:text-gray-400 admin-dark:hover:text-gray-200"
+      >
+        <X className="h-4 w-4" />
+      </button>
+    )}
+  </div>
+</div>
 
       {showResults && (
         <div
@@ -178,10 +178,24 @@ export default function AdminSearch({ isFullScreen = false }) {
           )}
         >
           <div className="z-100 px-4 py-3 border-b border-gray-700 sticky top-0 admin-dark:bg-gray-800 bg-slate-50 text-gray-800">
-            <h3 className="text-gray-800 admin-dark:text-white font-medium flex gap-2">
-              <Search /> Kết quả cho "{searchQuery}" ({totalResults})
+            <h3
+              className={cn(
+                "text-gray-800 admin-dark:text-white font-medium flex gap-2 items-center"
+              )}
+            >
+              <Search />
+              Kết quả cho "
+              <span
+                className={cn(
+                  "break-words max-w-[calc(100%-4rem)]", // Trừ margin và icon
+                  "xs:max-w-[14rem] sm:max-w-[22rem] md:max-w-[38rem] lg:max-w-[54rem]" // Tùy chỉnh theo breakpoint
+                )}
+              >
+                {searchQuery}
+              </span>
+              " ({totalResults})
             </h3>
-          </div>
+</div>
           <div>
             {Object.entries(groupedResults).map(([category, categoryResults], index) => {
               const config = categoryConfig[category];

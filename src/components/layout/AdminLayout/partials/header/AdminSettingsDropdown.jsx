@@ -15,7 +15,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
 
-const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url }) => {
+const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url}) => {
   const { isDark, toggleTheme } = useAdminTheme();
   const navigate = useNavigate();
 
@@ -131,7 +131,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
               id="change-theme-admin"
               checked={isDark}
               onCheckedChange={toggleTheme}
-              className="data-[state=checked]:bg-blue-600 cursor-pointer"
+              className="data-[state=checked]:bg-blue-600 cursor-pointer xs:relative xs:z-0"
             />
           </div>
         </CustomDropdownItem>

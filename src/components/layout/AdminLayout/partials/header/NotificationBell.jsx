@@ -166,7 +166,7 @@ export function NotificationBell() {
         <div
           ref={dropdownRef}
           className={`
-              absolute mt-2 z-50 border rounded-md shadow-lg
+              absolute  mt-2 z-50 border rounded-md shadow-lg
               ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
               w-[280px] max-w-[90vw] sm:w-80
               left-1/2 -translate-x-1/2
