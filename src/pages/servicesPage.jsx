@@ -259,7 +259,7 @@ export default function ServicePage() {
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-[#111] -z-10 rounded-t-3xl"></div>
 
                 {!queryParams_q && !queryParams_sub && services.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7 lg:gap-7 xl:gap-8">
 
                         {services.map((srv, i) => {
                             const isFirst = i === 0;
@@ -285,7 +285,7 @@ export default function ServicePage() {
                     </div>
                 )}
                 {queryParams_q && !queryParams_sub && servicesFromGroup.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7 lg:gap-7 xl:gap-8">
                         {servicesFromGroup.map((srv, i) => {
                             const isFirst = i === 0;
                             const isOdd = servicesFromGroup.length % 2 !== 0;

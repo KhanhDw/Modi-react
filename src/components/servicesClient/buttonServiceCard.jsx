@@ -8,16 +8,16 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
     const { isDark } = useTheme();
 
     return (
-        <div className="flex flex-col gap-2 h-full items-center justify-center">
+        <div className="flex flex-row gap-2 h-full items-center justify-center">
             {/* Up Button */}
             <div
-                className={`${valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-md cursor-pointer`}
+                className={`${valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-sm cursor-pointer`}
                 onMouseEnter={() => setHoverUp(true)}
                 onMouseLeave={() => setHoverUp(false)}
                 onClick={onClickUp} // Gọi hàm từ props
             >
                 <span
-                    className="w-full h-full absolute rounded-md transition-all duration-500"
+                    className="w-full h-full absolute transition-all duration-500"
                     style={{
                         background: hoverUp
                             ? "linear-gradient(135deg, #ff00c6, #ff5478, #ff8a05)"
@@ -25,13 +25,13 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
                     }}
                 />
                 <span
-                    className="relative px-1 py-6 transition-all ease-out rounded-md duration-500"
+                    className="relative px-1 py-5 sm:py-4 xs:py-3 transition-all ease-out rounded-sm duration-500"
                     style={{
                         backgroundColor: hoverUp ? "transparent" : isDark ? "#111827" : "#ffffff",
                     }}
                 >
                     <ChevronUp
-                        className={`relative w-6 h-6 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
+                        className={`relative w-6 h-6 lg:w-6 lg:h-6 xl:w-6 xl:h-6 sm:w-5 sm:h-5 md:w-6 md:h-6 xs:w-4 xs:h-4 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
                             }`}
                         style={{
                             transform: hoverUp ? "translateY(-3px)" : "translateY(0px)",
@@ -45,13 +45,13 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
 
             {/* Down Button */}
             <div
-                className={`${!valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-md cursor-pointer`}
+                className={`${!valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-sm cursor-pointer`}
                 onMouseEnter={() => setHoverDown(true)}
                 onMouseLeave={() => setHoverDown(false)}
                 onClick={onClickDown} // Gọi hàm từ props
             >
                 <span
-                    className="w-full h-full absolute rounded-md transition-all duration-500"
+                    className="w-full h-full absolute transition-all duration-500"
                     style={{
                         background: hoverDown
                             ? "linear-gradient(135deg, #ff00c6, #ff5478, #ff8a05)"
@@ -59,13 +59,13 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
                     }}
                 />
                 <span
-                    className="relative px-1 py-6 transition-all ease-out rounded-md duration-500"
+                    className="relative px-1 py-5 sm:py-4 xs:py-3 transition-all ease-out rounded-sm duration-500"
                     style={{
                         backgroundColor: hoverDown ? "transparent" : isDark ? "#111827" : "#ffffff",
                     }}
                 >
                     <ChevronDown
-                        className={`relative w-6 h-6 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
+                        className={`relative w-6 h-6 xl:w-6 xl:h-6 lg:w-6 lg:h-6 sm:w-5 sm:h-5 xs:w-4 xs:h-4 md:w-6 md:h-6 transition-all duration-300 ${isDark ? "text-white" : "text-gray-800"
                             }`}
                         style={{
                             transform: hoverDown ? "translateY(3px)" : "translateY(0px)",
