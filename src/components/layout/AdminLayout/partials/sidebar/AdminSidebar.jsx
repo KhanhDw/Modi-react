@@ -144,7 +144,7 @@ const SidebarContent = ({
       className={cn(
         "flex flex-col h-full border-r",
         isDark
-          ? "bg-slate-900 border-gray-700 text-gray-100"
+          ? "bg-gray-800 border-gray-700 text-gray-50"
           : "bg-white border-gray-200 text-gray-900"
       )}
     >
@@ -301,7 +301,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
       <div
         className={cn(
           "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-2 lg:top-2 lg:bottom-2",
-          "lg:rounded-2xl lg:border overflow-hidden shadow-lg z-10",
+          "lg:rounded-2xl lg:border overflow-hidden z-10",
           "transition-all duration-300 ease-in-out transform",
           isCollapsed ? "lg:w-16" : "lg:w-64",
           isDark
@@ -320,7 +320,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
         <SheetContent
           side="left"
           className={cn(
-            "w-[80vw] max-w-xs p-0 overflow-hidden shadow-lg border-r transition-transform duration-300 ease-in-out",
+            "w-[80vw] max-w-xs p-0 overflow-hidden border-r transition-transform duration-300 ease-in-out",
             isDark
               ? "bg-gray-800 border-gray-700 text-gray-50"
               : "bg-white border-gray-200 text-gray-900"
@@ -329,9 +329,7 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
           <SheetHeader
             className={cn(
               "h-16 flex items-center justify-between flex-row px-4 border-b",
-              isDark
-                ? "bg-gray-800 border-gray-700 text-gray-50"
-                : "bg-white border-gray-200 text-gray-900"
+              isDark ? "border-gray-700" : "border-gray-200"
             )}
           >
             <SheetTitle
@@ -348,7 +346,10 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 transition-transform duration-200 hover:scale-110"
+              className={cn(
+                "h-8 w-8 transition-transform duration-200 hover:scale-110",
+                isDark ? "text-slate-100" : "text-slate-800"
+              )}
               onClick={onClose}
               aria-label="Đóng menu"
             >

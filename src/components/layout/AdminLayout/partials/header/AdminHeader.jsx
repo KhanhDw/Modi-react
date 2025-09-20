@@ -100,7 +100,7 @@ const AdminHeader = ({
         className={cn(
           "w-full bg-white admin-dark:bg-slate-900 shadow-sm rounded-3xl transition-shadow duration-300 ease-in-out",
           isHeaderSticky && "fixed left-0 right-0 z-50",
-          "flex-shrink-0 md:mx-2",
+          "flex-shrink-0 ",
           isSearchOpen && "hidden"
         )}
         style={headerStyle}
