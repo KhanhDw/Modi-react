@@ -51,7 +51,7 @@ import AboutConfig from "@/pages/managers/ConfigPage/AboutConfig"
 import HomeConfig from "@/pages/managers/ConfigPage/HomeConfig"
 import HeaderConfig from "@/pages/managers/ConfigPage/HeaderConfig"
 import FooterConfig from "@/pages/managers/ConfigPage/FooterConfig"
-
+import ContactConfig from "@/pages/managers/ConfigPage/ContactConfig"
 
 //manager service
 import ServicesPage from "../pages/managers/ServicesPage";
@@ -155,6 +155,7 @@ const privateRoutes = [
       { path: "footer", component: FooterConfig, layout: AdminLayout },
       { path: "home", component: HomeConfig, layout: AdminLayout },
       { path: "about", component: AboutConfig, layout: AdminLayout },
+      { path: "contact", component: ContactConfig, layout: AdminLayout },
     ]
   },
   {

@@ -1,6 +1,9 @@
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import slugify from '../../utils/slug';
+import PricingFooterPage from './pricingFooterPage';
+import React, { useState, useEffect } from 'react';
+
 
 const PricingTable = ({ stage, packages }) => {
     const { t } = useLanguage();
@@ -30,7 +33,6 @@ const PricingTable = ({ stage, packages }) => {
                                         }`}
                                 >
                                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{pkg.title}</h3>
-                                    <p className="text-xl font-semibold mt-2 text-purple-700 dark:text-purple-300">{pkg.price}</p>
                                     {pkg.isPopular && (
                                         <span className="inline-block mt-3 px-4 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-700 to-blue-600 rounded-full">
                                             {t('home.PricingPage.tagMostPopular')}
@@ -77,6 +79,20 @@ const PricingTable = ({ stage, packages }) => {
 
 export default function PricingPageV2() {
     const { t } = useLanguage();
+
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        // Lấy đường dẫn hiện tại
+        const currentPathname = window.location.pathname;
+
+        // Kiểm tra xem đường dẫn có chứa "managers" không
+        if (currentPathname.includes('managers')) {
+            setIsAdmin(true);
+        } else {
+            setIsAdmin(false);
+        }
+    }, []);
 
     const pricingData = {
         stage1: [
@@ -184,21 +200,9 @@ export default function PricingPageV2() {
                     <PricingTable stage="i_stage2" packages={pricingData.stage2} />
                     <PricingTable stage="i_stage3" packages={pricingData.stage3} />
                 </main>
-                <footer className="text-center mt-20 p-10 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                        {t('home.PricingPage.footer.title') || 'Need a Custom Solution?'}
-                    </h3>
-                    <p className="mt-3 mb-6 text-lg text-slate-600 dark:text-slate-400">
-                        {t('home.PricingPage.footer.description') || 'Contact us for tailored pricing plans.'}
-                    </p>
-                    <button
-                        onClick={() => navigate('/contact')}
-                        className="font-semibold py-3 px-10 text-lg rounded-lg text-white bg-gradient-to-r from-teal-500 to-blue-600 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/30 transition-all duration-300"
-                        aria-label="Contact us for custom pricing"
-                    >
-                        {t('home.PricingPage.footer.button') || 'Get in Touch'}
-                    </button>
-                </footer>
+                {!isAdmin &&
+                    <PricingFooterPage />
+                }
             </div>
         </div>
     );

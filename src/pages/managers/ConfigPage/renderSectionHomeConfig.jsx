@@ -4,6 +4,8 @@ import { InputField, TextareaField, SafeImage } from "./componentHomeConfig";
 import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import PricingPageV1 from "@/components/home/pricingPageV1.jsx";
+import PricingPageV2 from "@/components/home/pricingPageV2.jsx";
 
 
 export default function RenderHomeConfig({
@@ -148,14 +150,63 @@ export default function RenderHomeConfig({
     // ========== chi tiết dịch vụ ===================
 
     const [uiActive, setUiActive] = useState("V2") // V1 or V2
+    const [showUI, setShowUI] = useState(false)
+    const [dataServiceV2, setDataServiceV2] = useState([])
+
 
     useEffect(() => {
         setUiActive(currentData.chitietdichvu[0]?.title?.en);
     }, [currentData.chitietdichvu])
 
 
+    async function transformPricingData(data, lang = "en") {
+
+        if (!data) return;
+
+        console.log(data);
+
+        const titles = data.title?.[lang].title;
+        const serviceGroup = data.title?.[lang].serviceGroup;
+        const descriptions = data.description?.en; // luôn mặc định là en vì chỉ cần một nơi lưu dữ liệu true false là đủ
+
+        console.log(titles);
+        console.log(serviceGroup);
+        console.log("", descriptions);
+
+        // 1. Tạo features list
+        const features = Object.entries(serviceGroup).map(([key, label]) => ({
+            key,
+            label
+        }));
+
+        // 2. Tạo packages list
+        const packages = titles.map(title => ({
+            title,
+            availability: descriptions[title]
+        }));
+
+
+        console.log("features:", features);
+        console.log("packages:", packages);
+
+        return { features, packages };
+    }
+
+    useEffect(() => {
+        async function loadData() {
+            if (!currentData?.chitietdichvu?.[1]) return;
+            const { features, packages } = await transformPricingData(currentData.chitietdichvu[1], activeLang);
+            console.log("features:", features);
+            console.log("packages:", packages);
+        }
+        loadData();
+    }, [currentData.chitietdichvu])
+
+
+
     // ========== kết thúc chi tiết dịch vụ ===================
 
+    ///////////////////////////////////////////////
 
     const renderSection = () => {
         switch (activeSection) {
@@ -462,6 +513,15 @@ export default function RenderHomeConfig({
                         {/* header */}
                         <div className="flex items-center justify-between">
                             <h1 className="font-bold text-2xl mb-4 text-left uppercase">CẤU HÌNH GIAO DIỆN VÀ NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
+                            <div>
+                                <button
+                                    onClick={() => setShowUI((pre) => !pre)}
+                                    className="hover:bg-indigo-800 admin-dark:hover:bg-indigo-600 hover:text-gray-50 admin-dark:text-gray-200 text-gray-900 duration-400 transition-all border border-gray-600 px-2 py-1 rounded-md  ">
+                                    <span className="font-semibold ">
+                                        {showUI ? "Ẩn giao diện" : "Xem giao diện"}
+                                    </span>
+                                </button>
+                            </div>
                             <div className="flex items-center gap-2">
                                 <span>Giao diện:</span>
                                 <div className="flex items-center gap-2">
@@ -488,25 +548,42 @@ export default function RenderHomeConfig({
                             </div>
                         </div>
                         {/* body */}
-                        <div>
-                            dfd
+                        <div className="">
+                            {/* hiện tại do có 2 tiền tố nên dùng chung sẽ bị lỗi theme phía admin */}
+                            {/* sau khi hoàn thành cần thêm props để chọn theme phía admin hay client */}
+                            {showUI &&
+                                (
+                                    <div className="rounded-2xl overflow-hidden">
+                                        {uiActive === "V1" && <PricingPageV1 />}
+                                        {uiActive === "V2" && <PricingPageV2 />}
+                                    </div>
+                                )
+                            }
+
+                            {!showUI && (
+                                <div>
+
+                                </div>
+                            )}
+
+
                         </div>
                         {/* footer */}
-                        <div class="flex items-center justify-center space-x-4 p-8 ">
+                        <div className="flex items-center justify-center space-x-4 p-8 ">
                             <button
-                                class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
+                                className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
                             >
                                 <span
-                                    class="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-purple-800"
+                                    className="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-purple-800"
                                 >
                                     Lưu lựa chọn giao diện
                                 </span>
                             </button>
                             <button
-                                class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
+                                className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
                             >
                                 <span
-                                    class="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-pink-700"
+                                    className="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-pink-700"
                                 >
                                     Lưu thông tin vừa cập nhật
                                 </span>

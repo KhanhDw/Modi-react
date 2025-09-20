@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { BarChart3, PanelTop, PanelBottom, Home, Info } from "lucide-react";
-
+import { Contact, BarChart3, PanelTop, PanelBottom, Home, Info } from "lucide-react";
 function ConfigPage() {
     const location = useLocation();
 
@@ -16,6 +15,7 @@ function ConfigPage() {
         { to: "footer", icon: PanelBottom, label: "Cuối trang" },// footer
         { to: "home", icon: Home, label: "Trang chủ" },                // home page
         { to: "about", icon: Info, label: "Trang giới thiệu" },        // thông tin
+        { to: "contact", icon: Contact, label: "Liên hệ" },        // thông tin
     ];
 
     const getClassName = (isActive, to) => {
@@ -29,7 +29,7 @@ function ConfigPage() {
     return (
         <div className="container mx-auto">
             <div className="mb-6 flex items-center justify-center">
-                <nav className="grid grid-cols-4 gap-2">
+                <nav className="grid grid-cols-5 gap-2">
                     {menus.map(({ to, icon: Icon, label }) => (
                         <NavLink
                             key={to}
