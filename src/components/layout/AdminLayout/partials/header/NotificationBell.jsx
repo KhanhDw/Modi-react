@@ -279,6 +279,11 @@ export function NotificationBell() {
               </div>
             )}
           </ScrollArea>
+          <div className="overflow-hidden w-full bg-gray-700 admin-dark:bg-gray-900 border-t border-gray-200 admin-dark:border-gray-700 rounded-b-md">
+            <button className="w-full text-center text-xs text-white hover:bg-gray-600 admin-dark:hover:bg-gray-700  admin-dark:text-gray-400 admin-dark:hover:text-gray-100 duration-300 transition-all focus:outline-none cursor-pointer">
+              <span>Xem tất cả thông báo</span>
+            </button>
+          </div>
         </div>
       )}
     </div>
