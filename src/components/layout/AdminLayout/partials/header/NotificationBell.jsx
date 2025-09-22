@@ -146,12 +146,12 @@ export function NotificationBell() {
   };
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block ">
       <Button
         ref={triggerRef}
         variant="ghost"
         size="icon"
-        className="relative hover:bg-gray-100 admin-dark:hover:bg-gray-700 cursor-pointer"
+        className="relative hover:bg-gray-100  admin-dark:hover:bg-gray-700 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <Bell className="h-5 w-5" color={isDark ? "#ffffff" : "#1f2937"} />
@@ -168,8 +168,8 @@ export function NotificationBell() {
           className={`
               absolute  mt-2 z-50 border rounded-md shadow-lg
               ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
-              w-[280px] max-w-[90vw] sm:w-80
-              left-1/2 -translate-x-1/2
+              w-[280px] max-w-[90vw] sm:w-160 md:w-[580px]  xl:w-[680px] 
+                  md:-right-40 sm:-right-86 xs:-right-66
               xs:translate-x-[-70px]
               sm:translate-x-[-150px]
             `}

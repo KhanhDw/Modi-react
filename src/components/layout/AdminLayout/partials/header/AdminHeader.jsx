@@ -137,12 +137,12 @@ const AdminHeader = ({
           </div>
 
           {/* Right */}
-          <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
+          <div className="flex items-center space-x-2  flex-shrink-0">
             {/* Search Icon cho mobile + tablet */}
             <Button
               variant="ghost"
               size="icon"
-              className="xl:hidden"
+              className="md:hidden"
               onClick={() => setIsSearchOpen(true)}
               aria-label="Mở tìm kiếm"
             >
@@ -150,8 +150,8 @@ const AdminHeader = ({
             </Button>
 
             {/* Search Component cho desktop */}
-            <div className="hidden xl:block">
-              <AdminSearch />
+            <div className="hidden md:block">
+              <AdminSearch  />
             </div>
 
             {/* Website link - chỉ hiển thị trên desktop */}
@@ -167,23 +167,23 @@ const AdminHeader = ({
                 aria-label="Quay lại trang web"
               >
                 <CgWebsite className="h-5 w-5" />
-                <span className="text-sm text-black group-hover:text-white admin-dark:text-gray-100">
+                <span className="text-sm text-black group-hover:text-white admin-dark:text-gray-100 md:hidden xl:inline">
                   Xem Website
                 </span>
               </Button>
             </NavLink>
 
             {/* Notifications */}
-            <div className="hidden md:block">
+            <div className="hidden md:block ">
               <NotificationBell />
             </div>
 
             {/* Avatar - chỉ hiển thị trên desktop */}
-            <NavLink to="/managers/profile">
+            <NavLink to="/managers/profile" >
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 text-gray-600 admin-dark:text-gray-300 hidden md:flex 
-                          hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer"
+                className="flex items-center  text-gray-600 admin-dark:text-gray-300 hidden md:flex 
+                          hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer "
               >
                 <Avatar className="h-8 w-8 ">
                   <AvatarImage
@@ -195,7 +195,7 @@ const AdminHeader = ({
                   <AvatarFallback>😢</AvatarFallback>
                 </Avatar>
                 {/* Chỉ hiện tên khi từ md trở lên */}
-                <span className="hidden md:inline text-sm font-bold">
+                <span className="hidden xl:inline  text-sm font-bold">
                   {username || "Khách"}
                 </span>
               </Button>

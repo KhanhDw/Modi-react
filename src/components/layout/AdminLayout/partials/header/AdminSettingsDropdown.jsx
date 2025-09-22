@@ -98,7 +98,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
         </CustomDropdownItem>
 
         {/* Sticky Header Toggle - ẩn trên mobile */}
-        <CustomDropdownItem asChild className="hidden md:flex">
+        <CustomDropdownItem asChild className="hidden lg:flex">
           <div className="flex items-center justify-between w-full px-4 py-2">
             <Label
               htmlFor="sticky-header"
