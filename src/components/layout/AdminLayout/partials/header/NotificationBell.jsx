@@ -166,41 +166,52 @@ export function NotificationBell() {
         <div
           ref={dropdownRef}
           className={`
-              absolute  mt-2 z-50 border rounded-md shadow-lg
-              ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
-              w-[280px] max-w-[90vw] sm:w-160 md:w-[580px]  xl:w-[680px] 
-                  md:-right-40 sm:-right-86 xs:-right-66
-              xs:translate-x-[-70px]
-              sm:translate-x-[-150px]
-            `}
-
-
-
+            z-50 border rounded-md shadow-lg
+            ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
+            transition-all
+            /* mobile full screen */
+            fixed inset-0 w-full h-full sm:inset-0 sm:w-full sm:h-full
+            /* từ md trở lên giữ nguyên kiểu dropdown */
+            md:absolute md:inset-auto md:mt-2 md:w-[580px] xl:w-[680px] md:-right-20 sm:-right-86 xs:-right-66
+          `}
         >
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-400 admin-dark:border-gray-700 bg-gray-200 admin-dark:bg-gray-800">
             <h3 className="font-semibold text-gray-900 admin-dark:text-white">
               Thông báo
             </h3>
-            {unreadCount > 0 && (
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <Button
+                  theme={isDark ? "admin" : "light"}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => markAllAsRead(userId)}
+                  className="text-xs admin-dark:hover:bg-gray-600 text-blue-600 hover:text-blue-800 admin-dark:text-blue-400 admin-dark:hover:text-blue-300 cursor-pointer"
+                >
+                  Đánh dấu tất cả đã đọc
+                </Button>
+              )}
+              {/* chỉ hiện nút X khi xs & sm */}
               <Button
-                theme={isDark ? "admin" : "light"}
                 variant="ghost"
-                size="sm"
-                onClick={() => markAllAsRead(userId)}
-                className="text-xs admin-dark:hover:bg-gray-600 text-blue-600 hover:text-blue-800 admin-dark:text-blue-400 admin-dark:hover:text-blue-300 cursor-pointer"
+                size="icon"
+                className="md:hidden h-6 w-6 text-gray-500 hover:text-red-600 admin-dark:text-gray-400 admin-dark:hover:text-red-400 cursor-pointer"
+                onClick={() => setIsOpen(false)}
               >
-                Đánh dấu tất cả đã đọc
+                <X className="h-4 w-4" />
               </Button>
-            )}
+            </div>
           </div>
 
-          <ScrollArea className="h-96 lenis-local" data-lenis-prevent>
+          {/* Nội dung */}
+          <ScrollArea className="h-[calc(100vh-64px)] md:h-96 lenis-local  bg-gray-200 border-gray-400 admin-dark:bg-gray-800 admin-dark:border-gray-700 rounded-b-md" data-lenis-prevent>
             {notifications.length === 0 ? (
-              <div className="p-4 text-center text-gray-500 admin-dark:text-gray-400">
+              <div className="p-4 text-center text-gray-900 admin-dark:text-gray-400  ">
                 Không có thông báo nào
               </div>
             ) : (
-              <div className="divide-y divide-gray-200 admin-dark:divide-gray-700">
+              <div className="divide-y divide-gray-200 admin-dark:divide-gray-700 ">
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}

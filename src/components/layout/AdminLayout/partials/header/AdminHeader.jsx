@@ -119,7 +119,7 @@ const AdminHeader = ({
             </Button>
 
             <div className="flex flex-col min-w-0">
-              <div className="flex text-sm text-gray-500 admin-dark:text-gray-400 truncate">
+              <div className="flex text-sm text-gray-500 admin-dark:text-gray-400 truncate xs:text-xs md:text-sm">
                 <span>Admin</span>
                 {pathnames[1] && (
                   <>
@@ -130,7 +130,7 @@ const AdminHeader = ({
                   </>
                 )}
               </div>
-              <h1 className="text-lg md:text-xl flex items-center font-bold text-gray-800 admin-dark:text-gray-100 truncate">
+              <h1 className="text-lg xs:text-sm sm:text-lg md:text-xl flex items-center font-bold text-gray-800 admin-dark:text-gray-100 truncate">
                 {pageTitle}
               </h1>
             </div>
@@ -179,27 +179,27 @@ const AdminHeader = ({
             </div>
 
             {/* Avatar - chỉ hiển thị trên desktop */}
-            <NavLink to="/managers/profile" >
-              <Button
-                variant="ghost"
-                className="flex items-center  text-gray-600 admin-dark:text-gray-300 hidden md:flex 
-                          hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer "
-              >
-                <Avatar className="h-8 w-8 ">
-                  <AvatarImage
-                    src={
-                      avatar_url ||
-                      "https://randomuser.me/api/portraits/lego/1.jpg"
-                    }
-                  />
-                  <AvatarFallback>😢</AvatarFallback>
-                </Avatar>
-                {/* Chỉ hiện tên khi từ md trở lên */}
-                <span className="hidden xl:inline  text-sm font-bold">
-                  {username || "Khách"}
-                </span>
-              </Button>
-            </NavLink>
+          <NavLink to="/managers/profile">
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-600 admin-dark:text-gray-300 hidden md:flex 
+                        hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer px-2 py-1"
+            >
+              <Avatar className="h-8 w-8 flex-shrink-0">
+                <AvatarImage
+                  src={
+                    avatar_url ||
+                    "https://randomuser.me/api/portraits/lego/1.jpg"
+                  }
+                />
+                <AvatarFallback>😢</AvatarFallback>
+              </Avatar>
+              {/* Chỉ hiện tên khi từ xl trở lên */}
+              <span className="hidden xl:inline text-sm font-bold truncate">
+                {username || "Khách"}
+              </span>
+            </Button>
+          </NavLink>
             {/* Settings */}
             <AdminSettingsDropdown
               isHeaderSticky={isHeaderSticky}
