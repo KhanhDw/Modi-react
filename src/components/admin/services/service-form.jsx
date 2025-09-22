@@ -26,9 +26,9 @@ export default function ServiceForm() {
     handleCreateService,
   } = useOutletContext();
   const [openDetailModal, setOpenDetailModal] = useState(false);
-  // Gọi custom hook để lấy tất cả state và logic
+  // Di chuyển state formData lên component cha
+  const [formData, setFormData] = useState({});
   const {
-    formData,
     dataArticle,
     partOfArticle,
     selectedType,
@@ -47,7 +47,13 @@ export default function ServiceForm() {
     handleDeleteParagraph,
     setSelectedType,
     setLang,
-  } = useServiceForm(editingService, handleCreateService, handleEditService);
+  } = useServiceForm(
+    editingService,
+    handleCreateService,
+    handleEditService,
+    formData,
+    setFormData
+  );
 
   const handleChangeLang = () => {
     setLang(lang === "vi" ? "en" : "vi");
@@ -152,14 +158,14 @@ export default function ServiceForm() {
                       )}
                       {(!!dataArticle ||
                         (editingService && editingService.content)) && (
-                          <Button
-                            type="button"
-                            className="ml-2"
-                            onClick={() => setOpenDetailModal(true)}
-                          >
-                            Xem chi tiết
-                          </Button>
-                        )}
+                        <Button
+                          type="button"
+                          className="ml-2"
+                          onClick={() => setOpenDetailModal(true)}
+                        >
+                          Xem chi tiết
+                        </Button>
+                      )}
                     </div>
                     {/* Hiển thị lỗi nếu chưa có nội dung */}
                     {errors.dataArticle && (

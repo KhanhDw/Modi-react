@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { UploadAPI } from "@/api/serviceAPI";
 import { processExcelFile } from "../utils/fileProcessor";
 
@@ -6,10 +6,10 @@ import { processExcelFile } from "../utils/fileProcessor";
 export const useServiceForm = (
   editingService,
   handleCreateService,
-  handleEditService
+  handleEditService,
+  formData,
+  setFormData
 ) => {
-  // Tất cả các state được chuyển vào đây
-  const [formData, setFormData] = useState({});
   const [dataArticle, setDataArticle] = useState(null);
   const [partOfArticle, setPartOfArticle] = useState({});
   const [selectedType, setSelectedType] = useState("content");
@@ -26,20 +26,23 @@ export const useServiceForm = (
     link: 1,
   });
 
+  // Chỉ set lại formData khi chuyển sang edit, không reset khi tạo mới
   useEffect(() => {
-    if (editingService) {
-      setFormData({
+    if (editingService?.service_id) {
+      setFormData((prev) => ({
+        ...prev,
         serviceName: editingService.ten_dich_vu || "",
         desc: editingService.mo_ta || "",
         price: editingService.price || "",
         header: editingService.headerTitle || "",
         content: editingService.content || "",
-      });
-    } else {
-      setFormData({});
-      setDataArticle(null);
+        slug: editingService.slug || "",
+        image_url: editingService.image_url || "",
+        features: editingService.features || "",
+        details: editingService.details || "",
+      }));
     }
-  }, [editingService]);
+  }, [editingService?.service_id, setFormData]);
 
   // Lỗi 2: Xóa dấu `/` thừa và sửa lại comment
   const validateForm = () => {
@@ -50,6 +53,11 @@ export const useServiceForm = (
       !formData.serviceName.trim()
     ) {
       newErrors.serviceName = "Tên dịch vụ không được bỏ trống";
+    }
+
+    // 🔹 Slug
+    if (typeof formData.slug !== "string" || !formData.slug.trim()) {
+      newErrors.slug = "Slug không được bỏ trống";
     }
 
     // 🔹 Mô tả
@@ -63,6 +71,26 @@ export const useServiceForm = (
       : "";
     if (priceRaw === "" || isNaN(Number(priceRaw)) || Number(priceRaw) < 0) {
       newErrors.price = "Giá phải là số và không âm";
+    }
+
+    // 🔹 Ảnh dịch vụ
+    if (typeof formData.image_url !== "string" || !formData.image_url.trim()) {
+      newErrors.image_url = "Ảnh dịch vụ không được bỏ trống";
+    }
+
+    // 🔹 Trạng thái
+    if (typeof formData.status !== "string" || !formData.status.trim()) {
+      newErrors.status = "Trạng thái không được bỏ trống";
+    }
+
+    // 🔹 Features
+    if (typeof formData.features !== "string" || !formData.features.trim()) {
+      newErrors.features = "Tính năng nổi bật không được bỏ trống";
+    }
+
+    // 🔹 Details
+    if (typeof formData.details !== "string" || !formData.details.trim()) {
+      newErrors.details = "Chi tiết dịch vụ không được bỏ trống";
     }
 
     // 🔹 Trường chỉ check khi thêm mới (không phải edit)
@@ -139,6 +167,7 @@ export const useServiceForm = (
   // Handlers
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    console.log(formData);
   };
 
   const handleChangeForArticle = (field, value) => {
@@ -242,7 +271,6 @@ export const useServiceForm = (
 
   // Lỗi 1: Câu lệnh `return` phải nằm ở cấp cao nhất của hook
   return {
-    formData,
     dataArticle,
     partOfArticle,
     selectedType,
