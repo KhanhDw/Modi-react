@@ -31,17 +31,19 @@ import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormServi
 export default function ServiceTable() {
   const { initDataService, openEditServiceForm, handleDeleteService } =
     useOutletContext();
-
+  console.log("initDataService:", initDataService); // kiểm tra dữ liệu
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; // số dịch vụ trên 1 trang
 
   // Lọc theo search
-  const filteredService = initDataService.filter((service) =>
-    service.ten_dich_vu.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // Tính toán phân trang
+  const filteredService = Array.isArray(initDataService)
+    ? initDataService.filter((service) =>
+        (service.translation?.ten_dich_vu || "")
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+    : [];
   const totalPages = Math.ceil(filteredService.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredService.slice(
@@ -101,6 +103,9 @@ export default function ServiceTable() {
                   hover:bg-gray-100 admin-dark:hover:bg-gray-800"
               >
                 <TableHead className="text-black admin-dark:text-gray-200">
+                  Hình ảnh
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
                   Tên dịch vụ
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
@@ -113,6 +118,9 @@ export default function ServiceTable() {
                   Số lần đặt
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
+                  Đặc trưng
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
                   Trạng thái
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
@@ -121,26 +129,57 @@ export default function ServiceTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((item, index) => (
+              {currentData.map((item) => (
                 <TableRow
-                  key={`service-table-admin${index}`}
+                  key={item.id}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.ten_dich_vu}
+                  <TableCell>
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt="Ảnh dịch vụ"
+                        style={{
+                          width: 60,
+                          height: 40,
+                          objectFit: "cover",
+                          borderRadius: 6,
+                        }}
+                      />
+                    ) : null}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.mo_ta}
+                    {item.translation?.ten_dich_vu || ""}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {`₫${item.price.toLocaleString()}`}
+                    {item.translation?.mo_ta || ""}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.booking_count}
+                    {item.floor_price
+                      ? `₫${Number(item.floor_price).toLocaleString()}`
+                      : ""}
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {typeof item.booking_count === "number"
+                      ? item.booking_count
+                      : ""}
+                  </TableCell>
+                  <TableCell
+                    className="text-gray-900 admin-dark:text-gray-200"
+                    style={{
+                      maxWidth: 180,
+                      whiteSpace: "pre-line",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {item.translation?.features || ""}
                   </TableCell>
                   <TableCell>
                     <Badge className="bg-green-600 text-white admin-dark:bg-green-500">
-                      Hoạt động
+                      {item.status === "Active"
+                        ? "Hoạt động"
+                        : "Không hoạt động"}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -149,16 +188,14 @@ export default function ServiceTable() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-gray-600 hover:bg-gray-200 
-                            admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                          className="text-gray-600 hover:bg-gray-200 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
                         >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="bg-white text-black border-gray-300 
-                          admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                        className="bg-white text-black border-gray-300 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
                       >
                         <DropdownMenuItem
                           onClick={() => openEditServiceForm(item)}
@@ -198,10 +235,11 @@ export default function ServiceTable() {
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}
-              className={`px-3 ${currentPage === i + 1
-                ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
-                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-                }`}
+              className={`px-3 ${
+                currentPage === i + 1
+                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
+              }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}
