@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { InputField, TextareaField, SafeImage } from "./componentHomeConfig";
+import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import NotificationToast from "@/components/feature/notification-toast.jsx";
+import PricingPageV1 from "@/components/home/pricingPageV1.jsx";
+import PricingPageV2 from "@/components/home/pricingPageV2.jsx";
+
 
 export default function RenderHomeConfig({
     activeSection,
@@ -11,8 +17,286 @@ export default function RenderHomeConfig({
     handleSave,
     previewBanner,
 }) {
+
+
+    // ========== vị trí ====================
+    const [vitri, setVitri] = useState([]);
+    const [defaultVitri, setDefaultVitri] = useState([]); // giữ mặc định
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [positionsDefault, setPositionsDefault] = useState([]);
+    const [toast, setToast] = useState(null);
+
+
+    const FetchResetPositions = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/service-header-config/positions/default`,
+            );
+
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+            const data = await res.json();
+
+            if (!data.success) {
+                throw new Error(data.error || "Reset positions thất bại");
+            }
+            setPositionsDefault(data.data);
+        } catch (err) {
+            console.error("❌ Fetch reset positions error:", err);
+        }
+    };
+
+    const FetchPositionComponentHome = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/sections?slug=home`
+            );
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+            const data = await res.json();
+            // Kiểm tra dữ liệu hợp lệ
+            if (!data.data || !Array.isArray(data.data)) {
+                throw new Error('Dữ liệu không đúng định dạng hoặc rỗng');
+            }
+            const clonedData = JSON.parse(JSON.stringify(data.data));
+            setVitri(clonedData);
+            setDefaultVitri(clonedData);
+        } catch (err) {
+            console.error('Fetch vitri error:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const isVitriSameAsDefault = (vitri) => {
+        if (!vitri || vitri.length !== positionsDefault.length) return false;
+
+        return positionsDefault.every((item) => {
+            const dbItem = vitri.find((v) => v.type === item.key);
+            return dbItem && dbItem.position === item.position;
+        });
+    };
+
+    useEffect(() => {
+        FetchResetPositions();
+        FetchPositionComponentHome();
+    }, []);
+
+
+    const handleResetDefault = async () => {
+        try {
+            const res = await fetch(
+                `${import.meta.env.VITE_MAIN_BE_URL}/api/service-header-config/positions/reset`,
+                {
+                    method: "POST",
+                }
+            );
+            if (!res.ok) {
+                throw new Error(`Lỗi HTTP: ${res.status}`);
+            }
+            await FetchPositionComponentHome();
+            setToast({ message: "Khôi phục vị trí thành công", type: "success" });
+        } catch (err) {
+            console.error('Fetch vitri error:', err);
+            setError(err.message);
+            setToast({ message: "Khôi phục vị trí thất bại", type: "error" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // FIX: Callback để nhận dữ liệu từ VitriTable
+    const handleVitriChange = (newVitri) => {
+        setVitri(newVitri);
+    };
+
+
+    const savePositions = async (vitriUpdate) => {
+        try {
+            // chỉ gửi key cần thiết
+            const positions = vitriUpdate.map((s) => ({
+                key: s.type,
+                position: s.position,
+            }));
+
+            const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/service-header-config/positions/update`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ positions }),
+            });
+
+            if (!res.ok) throw new Error("Lỗi khi gọi API");
+
+            const data = await res.json();
+            console.log(data.message);
+            setToast({ message: "Lưu vị trí thành công", type: "success" });
+            await FetchPositionComponentHome();
+            isVitriSameAsDefault(defaultVitri);
+        } catch (error) {
+            console.error("❌ Lỗi khi lưu vị trí:", error);
+            setToast({ message: "Lưu vị trí thất bại", type: "error" });
+        }
+    };
+    // ========== kết thúc vị trí ====================
+
+    ///////////////////////////////////////////////
+
+    // ========== chi tiết dịch vụ ===================
+
+    const [uiActive, setUiActive] = useState("V2") // V1 or V2
+    const [showUI, setShowUI] = useState(false)
+    const [dataServiceV2, setDataServiceV2] = useState([])
+
+
+    useEffect(() => {
+        setUiActive(currentData.chitietdichvu[0]?.title?.en);
+    }, [currentData.chitietdichvu])
+
+
+    async function transformPricingData(data, lang = "en") {
+
+        if (!data) return;
+
+        console.log(data);
+
+        const titles = data.title?.[lang].title;
+        const serviceGroup = data.title?.[lang].serviceGroup;
+        const descriptions = data.description?.en; // luôn mặc định là en vì chỉ cần một nơi lưu dữ liệu true false là đủ
+
+        console.log(titles);
+        console.log(serviceGroup);
+        console.log("", descriptions);
+
+        // 1. Tạo features list
+        const features = Object.entries(serviceGroup).map(([key, label]) => ({
+            key,
+            label
+        }));
+
+        // 2. Tạo packages list
+        const packages = titles.map(title => ({
+            title,
+            availability: descriptions[title]
+        }));
+
+
+        console.log("features:", features);
+        console.log("packages:", packages);
+
+        return { features, packages };
+    }
+
+    useEffect(() => {
+        async function loadData() {
+            if (!currentData?.chitietdichvu?.[1]) return;
+            const { features, packages } = await transformPricingData(currentData.chitietdichvu[1], activeLang);
+            console.log("features:", features);
+            console.log("packages:", packages);
+        }
+        loadData();
+    }, [currentData.chitietdichvu])
+
+
+
+    // ========== kết thúc chi tiết dịch vụ ===================
+
+    ///////////////////////////////////////////////
+
     const renderSection = () => {
         switch (activeSection) {
+            // ========================= vị trí =========================
+            case "vitri":
+                return (
+                    <div className="space-y-4">
+                        <div>
+                            <h1 className="font-bold text-2xl mb-4 text-center uppercase">
+                                Cấu hình vị trí cho các mục tại trang chủ
+                            </h1>
+                        </div>
+
+                        <div>
+                            {loading ? (
+                                <div className="text-center py-6 text-gray-500">
+                                    Đang tải dữ liệu...
+                                </div>
+                            ) : vitri.length > 0 ? (
+                                <VitriTable
+                                    initialVitri={vitri}
+                                    onChangeVitri={handleVitriChange}
+                                />
+                            ) : (
+                                <div className="text-center py-6 text-red-500">
+                                    Không có dữ liệu
+                                </div>
+                            )}
+                        </div>
+
+                        {!loading && (
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-between gap-2 text-gray-500">
+                                    <IoMdInformationCircleOutline />
+                                    <span>Kéo thả để thay đổi vị trí</span>
+                                </div>
+                                {
+                                    toast && (
+                                        <NotificationToast
+                                            message={toast.message}
+                                            type={toast.type}
+                                            onClose={() => setToast(null)}
+                                        />
+                                    )
+                                }
+                                <div className="flex space-x-4 mt-5">
+                                    {/* Nút khôi phục (chỉ restore lại vitri chưa lưu) */}
+                                    <button
+                                        onClick={() => setVitri(defaultVitri)} // khôi phục lại vitri gốc từ DB
+                                        disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-blue-500 hover:bg-blue-700 text-white"
+                                            }`}
+                                    >
+                                        Khôi phục
+                                    </button>
+
+                                    {/* Nút khôi phục mặc định (reset DB về positionsDefault) */}
+                                    <button
+                                        onClick={handleResetDefault}
+                                        disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        ${isVitriSameAsDefault(defaultVitri)
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-blue-500 hover:bg-blue-700 text-white"
+                                            }`}
+                                    >
+                                        Khôi phục lại mặc định
+                                    </button>
+
+                                    <button
+                                        onClick={() => savePositions(vitri)}
+                                        disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
+                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-green-500 hover:bg-green-700 text-white"
+                                            }`}
+
+                                    >
+                                        Lưu vị trí
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+
             // ========================= BANNER =========================
             case "banner":
                 return (
@@ -222,6 +506,93 @@ export default function RenderHomeConfig({
                     </div>
                 );
 
+            // ========================= CHI TIẾT DỊCH VỤ =========================
+            case "chitietdichvu":
+                return (
+                    <div className="space-y-6">
+                        {/* header */}
+                        <div className="flex items-center justify-between">
+                            <h1 className="font-bold text-2xl mb-4 text-left uppercase">CẤU HÌNH GIAO DIỆN VÀ NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
+                            <div>
+                                <button
+                                    onClick={() => setShowUI((pre) => !pre)}
+                                    className="hover:bg-indigo-800 admin-dark:hover:bg-indigo-600 hover:text-gray-50 admin-dark:text-gray-200 text-gray-900 duration-400 transition-all border border-gray-600 px-2 py-1 rounded-md  ">
+                                    <span className="font-semibold ">
+                                        {showUI ? "Ẩn giao diện" : "Xem giao diện"}
+                                    </span>
+                                </button>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span>Giao diện:</span>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setUiActive("V1")}
+                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all 
+                                                 ${uiActive === "V1"
+                                                ? "bg-green-700 text-white"
+                                                : "border-gray-500 hover:bg-gray-100/20"}`}
+                                    >
+                                        <p className="font-bold">1</p>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setUiActive("V2")}
+                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all 
+                                                 ${uiActive === "V2"
+                                                ? "border-blue-500 bg-blue-500 text-white"
+                                                : "border-gray-500 hover:bg-gray-100/20"}`}
+                                    >
+                                        <p className="font-bold">2</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {/* body */}
+                        <div className="">
+                            {/* hiện tại do có 2 tiền tố nên dùng chung sẽ bị lỗi theme phía admin */}
+                            {/* sau khi hoàn thành cần thêm props để chọn theme phía admin hay client */}
+                            {showUI &&
+                                (
+                                    <div className="rounded-2xl overflow-hidden">
+                                        {uiActive === "V1" && <PricingPageV1 />}
+                                        {uiActive === "V2" && <PricingPageV2 />}
+                                    </div>
+                                )
+                            }
+
+                            {!showUI && (
+                                <div>
+
+                                </div>
+                            )}
+
+
+                        </div>
+                        {/* footer */}
+                        <div className="flex items-center justify-center space-x-4 p-8 ">
+                            <button
+                                className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
+                            >
+                                <span
+                                    className="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-purple-800"
+                                >
+                                    Lưu lựa chọn giao diện
+                                </span>
+                            </button>
+                            <button
+                                className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50"
+                            >
+                                <span
+                                    className="hover:font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-pink-700"
+                                >
+                                    Lưu thông tin vừa cập nhật
+                                </span>
+                            </button>
+
+                        </div>
+                    </div>
+                );
+
             // ========================= LỢI ÍCH =========================
             case "loiIch":
                 return (
@@ -347,6 +718,7 @@ export default function RenderHomeConfig({
             default:
                 return null;
         }
+
     };
 
     return renderSection();

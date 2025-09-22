@@ -32,15 +32,32 @@ const sectionParsers = {
     khachHang: (data) => Array.isArray(data) ? data : [],
 };
 
+
+// sectionsConfig.js
+export const sectionsConfig = [
+    { key: "vitri", label: "Vị trí" },
+    { key: "banner", label: "Banner" },
+    { key: "nenTang", label: "Nền tảng" },
+    { key: "cards", label: "3 Cards" },
+    { key: "dichVu", label: "Dịch vụ" },
+    { key: "chitietdichvu", label: "Chi tiết dịch vụ" },
+    { key: "loiIch", label: "Lợi ích" },
+    { key: "khauHieu", label: "Khẩu hiệu" },
+    { key: "khachHang", label: "Khách hàng" },
+];
+
+
+
+
 export default function HomeConfigMultiLang() {
     const [activeLang, setActiveLang] = useState("vi");
-    const [activeSection, setActiveSection] = useState("banner");
+    const [activeSection, setActiveSection] = useState(sectionsConfig[0].key);
     const [previewBanner, setPreviewBanner] = useState({});
     const [toast, setToast] = useState(null);
 
     const [homeData, setHomeData] = useState({
-        vi: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
-        en: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        vi: { banner: [], nenTang: [], cards: [], dichVu: [], chitietdichvu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        en: { banner: [], nenTang: [], cards: [], dichVu: [], chitietdichvu: [], loiIch: [], khauHieu: [], khachHang: [] },
     });
 
     const currentData = homeData[activeLang];
@@ -67,7 +84,7 @@ export default function HomeConfigMultiLang() {
     };
 
     useEffect(() => {
-        const sections = ["banner", "nenTang", "cards", "dichVu", "loiIch", "khauHieu", "khachHang"];
+        const sections = ["banner", "nenTang", "cards", "dichVu", "chitietdichvu", "loiIch", "khauHieu", "khachHang"];
         Promise.all(sections.map((type) => fetchSection(type)));
     }, [activeLang]);
 
@@ -244,15 +261,7 @@ export default function HomeConfigMultiLang() {
 
             {/* SECTION TABS */}
             <div className="flex flex-wrap gap-3 mb-6">
-                {[
-                    { key: "banner", label: "Banner" },
-                    { key: "nenTang", label: "Nền tảng" },
-                    { key: "cards", label: "3 Cards" },
-                    { key: "dichVu", label: "Dịch vụ" },
-                    { key: "loiIch", label: "Lợi ích" },
-                    { key: "khauHieu", label: "Khẩu hiệu" },
-                    { key: "khachHang", label: "Khách hàng" },
-                ].map((sec) => (
+                {sectionsConfig.map((sec) => (
                     <motion.button
                         key={sec.key}
                         onClick={() => setActiveSection(sec.key)}

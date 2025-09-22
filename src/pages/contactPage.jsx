@@ -22,6 +22,23 @@ export default function ContactPage() {
   const [formData, setFormData] = useState(initialFormState)
   const [formSubmitted, setFormSubmitted] = useState(false)
 
+  const [captchaError, setCaptchaError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+
+  //chuẩn hóa nhập email
+  const validateEmail = (email) => {
+    const trimmedEmail = email.trim();
+    const regex = /^[a-zA-Z0-9]+([._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,6}$/;
+    return regex.test(trimmedEmail);
+  }
+
+  //chuẩn hóa nhập sdt viet nam
+  const validatePhone = (phone) => {
+    const trimmedPhone = phone.trim();
+    const regex = /^0(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-9])[0-9]{7}$/;
+    return regex.test(trimmedPhone);
+  }
 
   useEffect(() => {
     if (!socket) return;
@@ -33,7 +50,7 @@ export default function ContactPage() {
 
 
 
-  const generateCaptcha = (length = 5) => {
+  const generateCaptcha = (length = 4) => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz0123456789';
     let result = '';
     for (let i = 0; i < length; i++) {
@@ -47,6 +64,18 @@ export default function ContactPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+
+    if (name === 'securityCode' && captchaError) setCaptchaError(""); // Ẩn lỗi khi nhập lại
+
+    // Ẩn lỗi khi nhập lại email và số điện thoại
+    if (name === 'email' && emailError) {
+      setEmailError("");
+    }
+
+    if (name === 'so_dien_thoai' && phoneError) {
+      setPhoneError("");
+    }
+
   }
 
   const handleSubmit = async (e) => {
@@ -54,7 +83,14 @@ export default function ContactPage() {
 
     // kiểm tra captcha trước
     if (formData.securityCode.trim().toLowerCase() !== captchaText.toLowerCase()) {
-      alert("Mã bảo mật không đúng. Vui lòng thử lại.");
+
+      //Check lỗi captcha vi - en
+      setCaptchaError(t("contactPage.contextModalCaptchaError"));
+
+      // Kiểm tra lỗi email và số điện thoại trước khi submit
+      if (!validateEmail(formData.email)) setEmailError(t("contactPage.emailInvalid"));
+      if (!validatePhone(formData.so_dien_thoai)) setPhoneError(t("contactPage.phoneInvalid"));
+
       setFormData(prev => ({ ...prev, securityCode: "" }));
       setCaptchaText(generateCaptcha());
       return; // dừng lại, không gửi API
@@ -69,12 +105,9 @@ export default function ContactPage() {
         body: JSON.stringify(formData) // gửi dữ liệu trước khi reset
       });
 
-      const data = await response.json();
-
-
-
-      console.log('Kết quả từ server:', data);
-      alert(data.message);
+      // const data = await response.json();
+      // console.log('Kết quả từ server:', data);
+      // alert(data.message);
 
       // Sau khi gửi thành công mới reset form
       setFormSubmitted(true);
@@ -85,7 +118,6 @@ export default function ContactPage() {
     }
   };
 
-
   // Tự động đóng modal sau 3 giây
   useEffect(() => {
     if (formSubmitted) {
@@ -94,20 +126,18 @@ export default function ContactPage() {
     }
   }, [formSubmitted])
 
-
-
   return (
-    <div className=" dark:bg-slate-900 text-gray-900 dark:text-slate-200 py-10 px-4 sm:px-6 lg:px-8 2xl:py-5 transition-colors duration-300">
+    <div className="text-gray-900 dark:text-slate-200 py-10 px-4 sm:px-6 lg:px-8 2xl:py-5 transition-colors duration-300">
 
       {/* Modal thông báo thành công */}
       {formSubmitted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className=" dark:bg-slate-800 px-6 py-8 rounded-xl shadow-xl text-center w-full max-w-sm border border-transparent dark:border-slate-700">
-            <h2 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-2">Thành công!</h2>
-            <p className="text-gray-700 dark:text-slate-300">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.</p>
+          <div className=" dark:bg-slate-800 bg-gray-50 px-6 py-8 rounded-xl shadow-xl text-center w-full max-w-sm border border-transparent dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-2">{t("contactPage.contextModalSuccess")}</h2>
+            <p className="text-black font-medium dark:text-slate-300">{t("contactPage.contextModalNoti")}</p>
             <button
               onClick={() => setFormSubmitted(false)}
-              className="mt-6 px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition"
+              className="mt-4 px-5 py-2 font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition cursor-pointer"
             >
               {t("contactPage.contextBtnModalInformation")}
             </button>
@@ -149,7 +179,7 @@ export default function ContactPage() {
                   value={formData.ho_ten}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
                 <input
                   type="tel"
@@ -157,9 +187,15 @@ export default function ContactPage() {
                   placeholder={t("contactPage.inputPhoneNumber") + `(*)`}
                   value={formData.so_dien_thoai}
                   onChange={handleInputChange}
+                  maxLength={10}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
+
+                {phoneError && (
+                  <span className="col-span-1 sm:col-span-2 xs:text-sm dark:text-red-400 text-red-500 font-medium">{phoneError}</span>
+                )}
+
               </div>
 
               <div>
@@ -170,11 +206,16 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
+
+                {emailError && (
+                  <span className="col-span-1 sm:col-span-2 xs:text-sm dark:text-red-400 text-red-500 font-medium">{emailError}</span>
+                )}
+
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 items-center">
                 <input
                   type="text"
                   name="securityCode"
@@ -182,13 +223,19 @@ export default function ContactPage() {
                   value={formData.securityCode}
                   onChange={handleInputChange}
                   required
-                  className="w-full h-12 px-4 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                  className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
-                <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-2 rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
+                <div className="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white rounded-lg font-mono text-2xl flex items-center justify-center tracking-widest">
                   <div className="w-full h-12 rounded-lg">
                     <CaptchaImage captchaText={captchaText} />
                   </div>
                 </div>
+                {/* Thông báo lỗi hiện khi có lỗi */}
+                {captchaError && (
+                  <span className="col-span-1 sm:col-span-2 xs:text-sm dark:text-red-400 text-red-500 font-medium">
+                    {captchaError}
+                  </span>
+                )}
               </div>
 
               <textarea
@@ -198,14 +245,14 @@ export default function ContactPage() {
                 onChange={handleInputChange}
                 required
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg resize-none focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
+                className="w-full placeholder-gray-400 dark:placeholder-gray-500 px-4 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg resize-none focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
               />
 
               <button
                 type="submit"
-                className="w-full h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-semibold text-lg rounded-lg transition-transform transform hover:scale-105 cursor-pointer"
+                className="w-full h-14 xs:h-10 sm:h-12 md:h-14 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white text-lg rounded-lg transition-transform transform hover:scale-105 cursor-pointer"
               >
-                {t("contactPage.btnSendContact")}
+                <span className="font-semibold xs:text-sm md:text-base">{t("contactPage.btnSendContact")}</span>
               </button>
             </form>
           </div>
@@ -222,8 +269,8 @@ export default function ContactPage() {
               title="Bản đồ Công ty Ty Modi"
               style={{ filter: 'grayscale(0) invert(0) contrast(1)' }} // Default style for light mode
             ></iframe>
-            {/* Để kích hoạt style dark mode cho iframe, bạn cần dùng Javascript để thêm class, 
-                vì Tailwind không thể trực tiếp style iframe từ CSS. 
+            {/* Để kích hoạt style dark mode cho iframe, bạn cần dùng Javascript để thêm class,
+                vì Tailwind không thể trực tiếp style iframe từ CSS.
                 Hoặc bạn có thể dùng một bộ lọc CSS đơn giản như ví dụ dưới đây trong file CSS toàn cục:
                 .dark iframe {
                    filter: grayscale(1) invert(0.9) contrast(0.8);
@@ -234,4 +281,6 @@ export default function ContactPage() {
       </div>
     </div>
   )
+
+
 }

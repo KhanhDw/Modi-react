@@ -462,7 +462,12 @@ export default {
         inputPin: "Security Code",
         inputContext: "Content",
         btnSendContact: "Send contact",
-
+        contextModalSuccess: "Success",
+        contextModalCaptchaError: "The security code is incorrect. Please try again.",
+        contextModalNoti: "Thank you for contacting us. We will respond as soon as possible.",
+        contextBtnModalInformation: "Close",
+        emailInvalid: "Invalid email. Please enter again.",
+        phoneInvalid: "Invalid phone number. Please enter again.",
     },
     careers: {
         title: "Career Opportunities",

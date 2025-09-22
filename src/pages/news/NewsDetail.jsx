@@ -83,7 +83,7 @@ function BlogViewPage() {
   return (
     <div className="relative">
       <div>
-        <div className="mx-auto px-4 py-8">
+        <div className="mx-auto px-2 md:px-4 py-8">
           {/* Blog Image */}
           <div className="mb-8">
             {/* <img
@@ -98,19 +98,19 @@ function BlogViewPage() {
                   : "/no-image.png"
               }
               alt={blog.title}
-              className="w-full h-100 object-cover rounded-lg shadow-md"
+              className="w-full h-[450px] xs:object-fill rounded-lg shadow-md"
             />
           </div>
 
           {/* Blog Content */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-5">
             {/* Title */}
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200 mb-4">
+            <h1 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-gray-200 mb-4">
               {blog.title}
             </h1>
 
             {/* Meta Information */}
-            <div className="flex items-center justify-between mb-6 text-gray-600">
+            <div className="flex items-center justify-between mb-6 text-gray-600 text-sm sm:text-[15px] md:text-[17px] lg:text-[19px] xl:text-[21px]">
               <div className="flex items-center space-x-2">
                 <span className="font-medium dark:text-gray-200">
                   By {blog.author_name || "Unknown"}
@@ -121,7 +121,7 @@ function BlogViewPage() {
 
             {/* Content */}
             <div
-              className="prose max-w-none text-gray-800 leading-relaxed dark:text-gray-200"
+              className="prose max-w-none text-gray-800 leading-relaxed dark:text-gray-200 text-sm sm:text-[15px] md:text-[17px] lg:text-[19px] xl:text-[21px]"
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
           </div>

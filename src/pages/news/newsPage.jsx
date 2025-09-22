@@ -118,7 +118,7 @@ export default function NewsInterface() {
 
                   {/* Content */}
                   <motion.div
-                    className="md:w-1/2 p-8 flex flex-col justify-center"
+                    className="md:w-1/2 p-3 md:p-5 flex flex-col justify-center"
                     initial="hidden"
                     animate="visible"
                     variants={{
@@ -133,7 +133,7 @@ export default function NewsInterface() {
                     <motion.h1
                       variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                       className="
-              text-3xl font-bold mb-4 text-gray-900 dark:text-white
+              text-xl sm:text-2xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 text-gray-900 dark:text-white
               line-clamp-2 md:line-clamp-none
               group-hover:text-blue-600 dark:group-hover:text-blue-400
               transition-colors duration-300
@@ -144,7 +144,7 @@ export default function NewsInterface() {
 
                     <motion.div
                       variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                      className="preview-html prose prose-sm max-w-none line-clamp-3 break-words dark:text-gray-400 text-[15px]"
+                      className="preview-html prose prose-sm max-w-none line-clamp-3 break-words dark:text-gray-400 text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[20px]"
                       style={{
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
@@ -155,7 +155,7 @@ export default function NewsInterface() {
 
                     <motion.div
                       variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                      className="flex mt-4 items-center gap-6 text-sm text-gray-500 dark:text-gray-400"
+                      className="flex mt-4 items-center gap-6 text-sm sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[20px] text-gray-500 dark:text-gray-400"
                     >
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4" />
@@ -179,7 +179,7 @@ export default function NewsInterface() {
           {articlesToShow.map((article, idx) => (
             <motion.div
               key={article.id}
-              className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md cursor-pointer group"
+              className="relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md cursor-pointer group"
               onClick={() => handleArticleClick(article.slug, article.id)}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -199,11 +199,11 @@ export default function NewsInterface() {
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+              <div className="p-3 md:p-5">
+                <h3 className="text-base sm:text-xl md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-2 text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                   {article.tieu_de}
                 </h3>
-                <div className="preview-html prose prose-sm max-w-none line-clamp-2 break-words dark:text-gray-400 text-[15px] mb-2"
+                <div className="preview-html prose prose-sm max-w-none line-clamp-2 break-words dark:text-gray-400 text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[19px] mb-2"
                   style={{
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
@@ -211,7 +211,7 @@ export default function NewsInterface() {
                   }}
                   dangerouslySetInnerHTML={{ __html: article.noi_dung }}
                 />
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[19px] flex items-center gap-4 text-gray-500 dark:text-gray-400">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
                     <span>{article.tac_gia}</span>
