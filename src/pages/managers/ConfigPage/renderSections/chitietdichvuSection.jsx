@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { Plus, Edit2, Trash2, Save, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -260,36 +259,62 @@ export default function ChitietdichvuSection({ DataFeaturesOfGroupService }) {
             const sectionId = DataFeaturesOfGroupService?.id;
             if (!sectionId) return;
 
-            const stageKey = `stage${stage}`;
+            const newStageKey = `stage${stage}`;
 
-            for (const service of updatedServices) {
-                const slug = service.translation.slug;
+            for (const service of servicesFetch) {
+                const serviceSlug = service.translation.slug;
 
-                const bodyData = {
-                    stageKey,
-                    slug,
-                };
+                const wasInStage = [serviceOfStage1, serviceOfStage2, serviceOfStage3]
+                    .some((stageServices, idx) =>
+                        stageServices.some(s => s.translation.slug === serviceSlug && idx + 1 === stage)
+                    );
 
-                const res = await fetch(
-                    `${API_BASE_URL}/api/section-items-chi-tiet-dich-vu/${sectionId}/stage`,
-                    {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(bodyData),
-                    }
+                const isNowSelected = updatedServices.some(
+                    s => s.translation.slug === serviceSlug
                 );
 
-                const data = await res.json();
-                if (res.ok) {
-                    console.log(`✅ Updated ${slug} → ${stageKey}`, data);
-                } else {
-                    console.error(`❌ Failed to update ${slug}:`, data.message);
+                let bodyData = null;
+
+                if (!wasInStage && isNowSelected) {
+                    // ➕ Add service to current stage
+                    bodyData = {
+                        serviceSlug,
+                        oldStage: "stage0",
+                        newStage: newStageKey,
+                    };
+                } else if (wasInStage && !isNowSelected) {
+                    // ➖ Remove service from current stage
+                    bodyData = {
+                        serviceSlug,
+                        oldStage: newStageKey,
+                        newStage: "stage0",
+                    };
+                }
+
+                if (bodyData) {
+                    const res = await fetch(
+                        `${API_BASE_URL}/api/section-items-chi-tiet-dich-vu/${sectionId}/stage`,
+                        {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(bodyData),
+                        }
+                    );
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        console.log(`✅ ${serviceSlug}: ${bodyData.oldStage} → ${bodyData.newStage}`);
+                    } else {
+                        console.error(`❌ Failed to update ${serviceSlug}:`, data.message);
+                    }
                 }
             }
         } catch (error) {
             console.error("❌ Error saving stage services:", error);
         }
     };
+
+
 
 
 
