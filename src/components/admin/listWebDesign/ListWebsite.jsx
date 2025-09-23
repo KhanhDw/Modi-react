@@ -104,7 +104,7 @@ export default function WebsiteTemplateList() {
     <div className="mx-auto p-4">
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Quản lý mẫu Website</h1>
+          <h1 className="text-2xl font-bold xs:text-sm sm:text-xl">Quản lý mẫu Website</h1>
           <Button
             onClick={() => navigate("new")}
             className="flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white"
@@ -155,9 +155,9 @@ export default function WebsiteTemplateList() {
               className="group border-2 border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800"
             >
               <CardContent className="px-4">
-                <div className="flex flex-col sm:flex-row min-h-[200px] gap-4 sm:gap-0">
+                <div className="flex flex-col md:flex-row min-h-[200px] gap-4 sm:gap-0 sm:gap-2">
                   {/* Hình ảnh */}
-                  <div className="relative w-full sm:w-120 h-40 sm:h-50 flex-shrink-0">
+                  <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-50 ">
                     {t.image_url ? (
                       <img
                         src={`${import.meta.env.VITE_MAIN_BE_URL}${t.image_url}`}
@@ -177,7 +177,7 @@ export default function WebsiteTemplateList() {
                   </div>
 
                   {/* Nội dung */}
-                  <div className="flex-1 px-0 sm:px-6 pr-0">
+                  <div className="flex-1 px-0 sm:px-auto pr-0">
                     <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-xl mb-1 line-clamp-2">{t.name}</h3>
                     <p className="text-sm text-gray-600 admin-dark:text-gray-400">
                       Người đăng: <span className="text-blue-600 font-medium ">Admin</span>
@@ -209,7 +209,7 @@ export default function WebsiteTemplateList() {
                   </div>
 
                   {/* Sidebar phải */}
-                  <div className="w-full sm:w-56 border-t sm:border-t-0 sm:border-l-2 border-gray-300 pt-4 sm:pt-0 sm:p-2 flex flex-col justify-between">
+                  <div className="w-full md:w-56 border-t md:border-t-0 md:border-l-2 border-gray-300 pt-4 md:pt-0 md:p-2 flex flex-col justify-between ">
                     <div className="flex items-center justify-end gap-1 mb-4">
                       <div
                         className={`${t.export_state ? "bg-green-600 text-white" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-lg`}
@@ -258,7 +258,7 @@ export default function WebsiteTemplateList() {
                       <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
                     </div>
 
-                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white">
+                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white gap mt-2">
                       Xem mẫu
                     </Button>
                   </div>

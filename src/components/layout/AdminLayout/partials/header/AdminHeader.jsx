@@ -107,7 +107,7 @@ const AdminHeader = ({
       >
         <div className="flex items-center justify-between p-4 mx-auto max-w-full">
           {/* Left */}
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center xs:gap-0 gap-3 min-w-0">
             <Button
               variant="ghost"
               size="icon"
@@ -137,20 +137,20 @@ const AdminHeader = ({
           </div>
 
           {/* Right */}
-          <div className="flex items-center space-x-2  flex-shrink-0">
+          <div className="flex items-center md:space-x-2  flex-shrink-0 ">
             {/* Search Icon cho mobile + tablet */}
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden "
               onClick={() => setIsSearchOpen(true)}
               aria-label="Mở tìm kiếm"
             >
-              <Search className="h-5 w-5 text-gray-600 admin-dark:text-gray-300" />
+              <Search className="h-5 w-5 text-gray-600 admin-dark:text-gray-300 " />
             </Button>
 
             {/* Search Component cho desktop */}
-            <div className="hidden md:block">
+            <div className="hidden md:block ">
               <AdminSearch  />
             </div>
 
