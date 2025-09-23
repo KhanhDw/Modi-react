@@ -30,7 +30,7 @@ import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormServi
 
 export default function ServiceTable() {
   const { initDataService, openEditServiceForm, handleDeleteService } =
-    useOutletContext();
+    useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
   console.log("initDataService:", initDataService); // kiểm tra dữ liệu
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,10 +39,10 @@ export default function ServiceTable() {
   // Lọc theo search
   const filteredService = Array.isArray(initDataService)
     ? initDataService.filter((service) =>
-        (service.translation?.ten_dich_vu || "")
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      )
+      (service.translation?.ten_dich_vu || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    )
     : [];
   const totalPages = Math.ceil(filteredService.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -50,6 +50,10 @@ export default function ServiceTable() {
     startIndex,
     startIndex + itemsPerPage
   );
+
+
+  console.log("currentData:::", currentData);
+
 
   return (
     <Card
@@ -118,7 +122,7 @@ export default function ServiceTable() {
                   Số lần đặt
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
-                  Đặc trưng
+                  Ngôn ngữ hỗ trợ
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
                   Trạng thái
@@ -129,93 +133,98 @@ export default function ServiceTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((item) => (
-                <TableRow
-                  key={item.id}
-                  className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
-                >
-                  <TableCell>
-                    {item.image_url ? (
-                      <img
-                        src={item.image_url}
-                        alt="Ảnh dịch vụ"
-                        style={{
-                          width: 60,
-                          height: 40,
-                          objectFit: "cover",
-                          borderRadius: 6,
-                        }}
-                      />
-                    ) : null}
-                  </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.translation?.ten_dich_vu || ""}
-                  </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.translation?.mo_ta || ""}
-                  </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.floor_price
-                      ? `₫${Number(item.floor_price).toLocaleString()}`
-                      : ""}
-                  </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {typeof item.booking_count === "number"
-                      ? item.booking_count
-                      : ""}
-                  </TableCell>
-                  <TableCell
-                    className="text-gray-900 admin-dark:text-gray-200"
-                    style={{
-                      maxWidth: 180,
-                      whiteSpace: "pre-line",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
+              {currentData.map((item) => {
+                return (
+                  <TableRow
+                    key={item.id}
+                    className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                   >
-                    {item.translation?.features || ""}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className="bg-green-600 text-white admin-dark:bg-green-500">
-                      {item.status === "Active"
-                        ? "Hoạt động"
-                        : "Không hoạt động"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu modal={false}>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-gray-600 hover:bg-gray-200 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                    <TableCell>
+                      {item.image_url ? (
+                        <img
+                          src={item.image_url}
+                          alt="Ảnh dịch vụ"
+                          style={{
+                            width: 60,
+                            height: 40,
+                            objectFit: "cover",
+                            borderRadius: 6,
+                          }}
+                        />
+                      ) : null}
+                    </TableCell>
+
+
+                    <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>
+                      {item.translation?.ten_dich_vu || "Chưa có thông tin tiếng việt"}
+                    </TableCell>
+                    <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>
+                      {item.translation?.mo_ta || "Chưa có thông tin tiếng việt"}
+                    </TableCell>
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                      {item.floor_price
+                        ? `₫${Number(item.floor_price).toLocaleString()}`
+                        : ""}
+                    </TableCell>
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                      {typeof item.booking_count === "number"
+                        ? item.booking_count
+                        : ""}
+                    </TableCell>
+                    <TableCell
+                      className="text-gray-900 admin-dark:text-gray-200"
+                    ><div className="flex flex-wrap gap-1">
+                        {item.totalLanguages.map((lang, index) => {
+                          return (
+                            <span key={`${lang}-${index}`} className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"} px-2 py-1 text-xs text-white  rounded-sm`}>{lang}</span>
+                          )
+                        }) || ""}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className="bg-green-600 text-white admin-dark:bg-green-500">
+                        {item.status === "Active"
+                          ? "Hoạt động"
+                          : "Không hoạt động"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-gray-600 hover:bg-gray-200 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="bg-white text-black border-gray-300 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
                         >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="bg-white text-black border-gray-300 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
-                      >
-                        <DropdownMenuItem
-                          onClick={() => openEditServiceForm(item)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
-                        >
-                          <Edit className="mr-2 h-4 w-4" />
-                          Chỉnh sửa
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDeleteService(item.id)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Xóa
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+                          <DropdownMenuItem
+                            onClick={() => openEditServiceForm(item)}
+                            className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            Cập nhật
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteService(item.id)}
+                            className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Xóa
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                )
+              }
+
+              )}
             </TableBody>
           </Table>
         </div>
@@ -235,11 +244,10 @@ export default function ServiceTable() {
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}
-              className={`px-3 ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-              }`}
+              className={`px-3 ${currentPage === i + 1
+                ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
+                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
+                }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}

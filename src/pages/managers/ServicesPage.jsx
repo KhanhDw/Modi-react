@@ -71,96 +71,78 @@ export default function ServicesPage() {
     }
   }, [location, Navigate]);
 
-  // Xu ly gui du lieu ve server thuc hien tao dich vu
-  // const handleCreateService = async (formData) => {
 
-  //   console.log("dsds:", formData);
-
-  //   let price = formData.price;
-
-  //   // Loại bỏ dấu chấm hoặc dấu phẩy hàng nghìn
-  //   price = price.replace(/[.,]/g, "");
-  //   price = parseFloat(price);
-
-  //   const dataService = {
-  //     name: formData.serviceName,
-  //     desc: formData.desc,
-  //     headerArticle: formData.header,
-  //     footerArticle: formData.footer,
-  //     contentArticle: JSON.stringify(formData.content || {}),
-  //     lang: formData.lang || "vi",
-  //     price: price || 0,
-  //   };
-
-  //   console.log("Dữ liệu gửi đi:", dataService);
-
-  //   try {
-  //     const res = await fetch(ServiceAPI.create(), {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(dataService),
-  //     });
-
-  //     if (!res.ok) {
-  //       const errorText = await res.text();
-  //       console.error("Server trả về lỗi:", errorText);
-  //       throw new Error("Loi khi tao dich vu");
-  //     }
-
-  //     const result = await res.json();
-  //     console.log("Kết quả tạo dịch vụ:", result);
-
-  //     await fetchServices();
-  //     handleClose();
-  //   } catch (err) {
-  //     console.error("Loi khi tao dich vu:", err);
-  //   }
-  // };
 
   // File: ServicesPage.jsx
   const handleCreateService = async (formData) => {
-    console.log("Dữ liệu nhận được từ form:", formData);
-
-    // formData.price đã là một con số sạch (ví dụ: 100000)
-    // Chúng ta sẽ sử dụng nó trực tiếp.
-
-    const payloadForAPI = {
-      name: formData.serviceName,
-      desc: formData.desc,
-      headerArticle: formData.header,
-      contentArticle: JSON.stringify(formData.content || {}),
-      lang: formData.lang || "vi",
-      price: formData.price || 0, // Sử dụng trực tiếp giá trị số từ formData
-    };
-
-    console.log("Dữ liệu chuẩn bị gửi lên API:", payloadForAPI);
-
     try {
-      const res = await fetch(ServiceAPI.create(), {
+      console.log("Dữ liệu nhận từ form:", formData);
+
+      const payload = {
+        ten_dich_vu: formData.ten_dich_vu,
+        slug: formData.slug,
+        lang: formData.lang,
+        mo_ta: formData.mo_ta,
+        features: formData.features,
+        details: formData.details,
+        floor_price: formData.floor_price,
+        image_url: formData.image_url,
+        status: formData.status || "Active",
+      };
+
+      console.log("Payload gửi lên API:", payload);
+
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payloadForAPI), // Gửi object đã chuẩn bị
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Server trả về lỗi:", errorText);
-        throw new Error("Lỗi khi tạo dịch vụ");
-      }
-
       const result = await res.json();
-      console.log("Kết quả tạo dịch vụ:", result);
-
-      await fetchServices(); // Tải lại danh sách dịch vụ
-      handleClose(); // Đóng form
+      if (!result.success) throw new Error(result.message);
+      console.log("Tạo dịch vụ thành công:", result);
+      await fetchServices();
+      handleClose();
     } catch (err) {
       console.error("Lỗi khi tạo dịch vụ:", err);
     }
   };
+
+  const handleCreateServiceTranslation = async (formData) => {
+    try {
+      console.log("Dữ liệu nhận từ form1111:", formData);
+
+      const payload = {
+        service_id: formData.service_id, // bắt buộc phải có service_id
+        lang: formData.lang,
+        ten_dich_vu: formData.ten_dich_vu,
+        slug: formData.slug,
+        mo_ta: formData.mo_ta,
+        features: formData.features,
+        details: formData.details,
+      };
+
+      console.log("Payload gửi lên API:", payload);
+
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/service-translations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error(result.message || "Có lỗi xảy ra");
+      }
+
+      await fetchServices();
+      handleClose();
+    } catch (err) {
+      console.error("Lỗi khi tạo bản dịch:", err);
+    }
+  };
+
+
+
 
   const handleDeleteService = async (id) => {
     try {
@@ -171,10 +153,11 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when delete service");
       }
+      await fetchServices();
+
     } catch (err) {
       console.log("Error: ", err);
     }
-    await fetchServices();
   };
 
   const openEditServiceForm = (service) => {
@@ -185,17 +168,37 @@ export default function ServicesPage() {
 
   const handleEditService = async (formData, id) => {
     console.log(id);
-    console.log(formData);
+    console.log("mmmmm:", formData);
     try {
+
+
+      const dataServiceUpdate = services.find((s) => s.id === id);
+      console.log("dataServiceUpdate::", dataServiceUpdate);
+
       const dataEditService = {
-        ten_dich_vu: formData.serviceName,
-        mo_ta: formData.desc,
-        price: formData.price,
-        headerArticle: formData.header,
-        contentArticle: JSON.stringify(formData.content || {}),
+        service_id: id,
+        ten_dich_vu: formData.ten_dich_vu,
+        slug: formData.slug,               // nếu cần update slug
+        lang: formData.lang,
+        mo_ta: formData.mo_ta,
+        features: formData.features,
+        details: formData.details,
+        image_url: formData.image_url,
+        floor_price: formData.floor_price || 0,
+        status: formData.status || "Active",
+        booking_count: formData.booking_count || 0, // nếu cần
       };
+
+      const getTotalLang = dataServiceUpdate.totalLanguages.includes(formData.lang);
+      console.log("getTotalLang:::", getTotalLang);
+
+      if (!getTotalLang) {
+        await handleCreateServiceTranslation(dataEditService);
+        return;
+      }
+
       console.log("Payload gửi đi:", dataEditService);
-      const res = await fetch(ServiceAPI.edit(id), {
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`, {
         method: "PUT",
         body: JSON.stringify(dataEditService),
         headers: {
@@ -433,10 +436,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive || location.pathname === "/managers/services"
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -446,10 +448,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_list"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -459,10 +460,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_booking"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -472,10 +472,9 @@ export default function ServicesPage() {
             <NavLink
               to="service_customer"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
