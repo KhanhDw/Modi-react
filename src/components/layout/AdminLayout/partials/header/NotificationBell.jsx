@@ -8,10 +8,9 @@ import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import fetchWithAuth from "@/utils/fetchWithAuth";
 import { io } from "socket.io-client";
 
+import NotificationAllDropdown from "@/components/layout/AdminLayout/partials/header/NotificationAllDropdown";
+
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
-
-
-
 
 export function NotificationBell() {
   useLenisLocal(".lenis-local");
@@ -21,6 +20,9 @@ export function NotificationBell() {
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [userId, setUserId] = useState(null)
+
+  const [showAll, setShowAll] = useState(false);
+
 
   const fetchNotifications = async (id) => {
     try {
@@ -44,7 +46,6 @@ export function NotificationBell() {
     }
   };
 
-
   // Fetch API lấy thông báo từ backend
   useEffect(() => {
     getCurrentUser()
@@ -59,9 +60,6 @@ export function NotificationBell() {
       socket.off("newLienHe");
     };
   }, []);
-
-
-
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
@@ -103,7 +101,6 @@ export function NotificationBell() {
     }
   };
 
-
   const getTypeColor = (type) => {
     switch (type) {
       case "success":
@@ -116,7 +113,6 @@ export function NotificationBell() {
         return "text-blue-600 admin-dark:text-blue-400";
     }
   };
-
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -137,16 +133,12 @@ export function NotificationBell() {
     };
   }, []);
 
-
-
-
   // Hàm xử lý chuỗi message
   const renderMessage = (message) => {
     // Tách chuỗi bằng dấu phân cách "khách hàng "
     const parts = message.split("Khách hàng ");
 
     // parts sẽ là ["", "xxx vừa liên hệ"]
-
 
     if (parts.length > 1) {
       // Tách tiếp phần tử thứ hai bằng dấu phân cách " vừa liên hệ"
@@ -158,7 +150,7 @@ export function NotificationBell() {
         const customerName = nameParts[0];
         return (
           <>
-            khách hàng <span className="font-bold">{customerName}</span> vừa liên hệ
+            khách hàng <span className="font-bold">{customerName}</span> vừa gửi liên hệ cho bạn
           </>
         );
       }
@@ -184,29 +176,30 @@ export function NotificationBell() {
         )}
       </Button>
 
-      {isOpen && (
+      {/* Dropdown thông báo */}
+      {isOpen && !showAll && (
         <div
           ref={dropdownRef}
-          className={`absolute right-0 mt-2 w-80 z-50 border rounded-md shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+          className={`absolute right-0 mt-2 w-80 xs:w-80 sm:w-80 md:w-80 lg:w-85 z-50 border rounded-md shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
             }`}
         >
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800">
-            <h3 className="font-semibold text-gray-900 admin-dark:text-white">
-              Thông báo
-            </h3>
+          {/* Header */}
+          <div className="flex items-center justify-between rounded-md p-4 border-b border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800">
+            <h3 className="font-semibold text-gray-900 admin-dark:text-white">Thông báo</h3>
             {unreadCount > 0 && (
               <Button
                 theme={isDark ? "admin" : "light"}
                 variant="ghost"
                 size="sm"
                 onClick={() => markAllAsRead(userId)}
-                className="text-xs admin-dark:hover:bg-gray-600 text-blue-600 hover:text-blue-800 admin-dark:text-blue-400 admin-dark:hover:text-blue-300 cursor-pointer"
+                className="text-xs admin-dark:hover:bg-gray-700 text-blue-500 hover:text-blue-600 hover:bg-gray-200 admin-dark:hover:text-blue-500 cursor-pointer"
               >
                 Đánh dấu tất cả đã đọc
               </Button>
             )}
           </div>
 
+          {/* Nội dung */}
           <ScrollArea className="h-96 lenis-local" data-lenis-prevent>
             {notifications.length === 0 ? (
               <div className="p-4 text-center text-gray-500 admin-dark:text-gray-400">
@@ -222,14 +215,10 @@ export function NotificationBell() {
                       : "bg-white admin-dark:bg-gray-800"
                       }`}
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4
-                            className={`font-medium text-sm ${getTypeColor(
-                              notification.type
-                            )}`}
-                          >
+                          <h4 className={`font-medium text-sm ${getTypeColor(notification.type)}`}>
                             {notification.title}
                           </h4>
                           {!notification.isRead && (
@@ -240,16 +229,13 @@ export function NotificationBell() {
                           {renderMessage(notification.message)}
                         </p>
                         <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-                          {/* {notification.createdAt} */}
-                          {
-                            new Date(notification.createdAt).toLocaleString("vi-VN", {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })
-                          }
+                          {new Date(notification.createdAt).toLocaleString("vi-VN", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </div>
 
@@ -258,17 +244,20 @@ export function NotificationBell() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-6 w-6 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-gray-200 cursor-pointer"
+                            className="h-6 w-6 text-gray-500 hover:bg-gray-200 hover:text-green-600 admin-dark:text-gray-400 admin-dark:hover:text-green-400 cursor-pointer"
                             onClick={() => markAsRead(notification.id)}
+                            title="Đánh dấu đã đọc"
                           >
                             <Check className="h-3 w-3" />
                           </Button>
                         )}
+
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 text-gray-500 hover:text-red-600 admin-dark:text-gray-400 admin-dark:hover:text-red-400 cursor-pointer"
+                          className="h-6 w-6 text-gray-500 hover:bg-gray-200 hover:text-red-600 admin-dark:text-gray-400 admin-dark:hover:text-red-400 cursor-pointer"
                           onClick={() => removeNotification(notification.id)}
+                          title="Xóa thông báo"
                         >
                           <X className="h-3 w-3" />
                         </Button>
@@ -279,13 +268,35 @@ export function NotificationBell() {
               </div>
             )}
           </ScrollArea>
+
+          {/* Footer */}
           <div className="overflow-hidden w-full bg-gray-700 admin-dark:bg-gray-900 border-t border-gray-200 admin-dark:border-gray-700 rounded-b-md">
-            <button className="w-full text-center text-xs text-white hover:bg-gray-600 admin-dark:hover:bg-gray-700  admin-dark:text-gray-400 admin-dark:hover:text-gray-100 duration-300 transition-all focus:outline-none cursor-pointer">
+            <button
+              className="w-full text-center text-xs text-white hover:bg-gray-600 admin-dark:hover:bg-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-gray-100 duration-300 transition-all focus:outline-none cursor-pointer py-1"
+              onClick={() => {
+                setShowAll(true); // Bật panel lớn
+                setIsOpen(false); // Tắt dropdown nhỏ
+              }}
+            >
               <span>Xem tất cả thông báo</span>
             </button>
           </div>
         </div>
       )}
+
+      {/* Giao diện panel lớn khi xem tất cả */}
+      {showAll && (
+        <NotificationAllDropdown
+          notifications={notifications}
+          isDark={isDark}
+          isOpen={showAll}
+          onClose={() => setShowAll(false)}
+          renderMessage={renderMessage}
+          markAsRead={markAsRead}
+          removeNotification={removeNotification}
+        />
+      )}
     </div>
   );
+
 }
