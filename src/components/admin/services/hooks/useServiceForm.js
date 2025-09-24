@@ -55,7 +55,12 @@ export const useServiceForm = (
         if (!formData.image_url.trim()) {
           newErrors.image_url = "Ảnh dịch vụ không hợp lệ";
         }
-      } else if (!(formData.image_url instanceof File)) {
+      } else if (formData.image_url instanceof File) {
+        // ✅ Check dung lượng file
+        if (formData.image_url.size > 10 * 1024 * 1024) {
+          newErrors.image_url = "Ảnh không được lớn hơn 10MB";
+        }
+      } else {
         newErrors.image_url = "Ảnh dịch vụ không hợp lệ";
       }
     }
