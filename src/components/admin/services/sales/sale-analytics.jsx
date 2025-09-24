@@ -20,7 +20,6 @@ import {
 
 export default function SaleAnalytics() {
   const { initDataService } = useOutletContext();
-  console.log(initDataService);
   const months = Array.from({ length: 12 }, (_, i) => ({
     month: `T${i + 1}`,
     revenue: 0,

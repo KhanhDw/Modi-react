@@ -21,14 +21,15 @@ import { useOutletContext } from "react-router-dom";
 export default function BookingForm() {
   const {
     initDataService,
-    initDataCustomer, // 👈 dữ liệu customer hiện có trong hệ thống
+    initDataCustomer,
     handleClose,
     editingBooking,
     handleCreateBooking,
     handleEditingBooking,
-  } = useOutletContext();
+  } = useOutletContext(); //src\pages\managers\ServicesPage.jsx
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({}); // 👈 state chứa lỗi
+
 
   useEffect(() => {
     if (editingBooking) {
@@ -44,15 +45,17 @@ export default function BookingForm() {
         ? formatDate(editingBooking.booking_date)
         : formatDate(new Date());
 
+      console.log("-->", editingBooking);
+
       setFormData({
-        cusName: editingBooking.name || "",
+        cusName: editingBooking.customer_name || "",
         cusPhone: editingBooking.phone || "",
         cusEmail: editingBooking.email || "",
         cusAddress: editingBooking.address || "",
         service: editingBooking.service_id
           ? editingBooking.service_id.toString()
           : "",
-        status: editingBooking.status || "",
+        status: editingBooking.status?.toLowerCase() || "",
         bookingDate: dateOnly,
         completedDate: editingBooking.completed_date
           ? formatDate(editingBooking.completed_date)
@@ -78,7 +81,7 @@ export default function BookingForm() {
       // Nếu có thì fill dữ liệu khách cũ
       setFormData({
         ...formData,
-        cusName: existCustomer.name,
+        cusName: existCustomer.customer_name,
         cusEmail: existCustomer.email,
         cusAddress: existCustomer.address,
         // có thể thêm các field khác nếu có
@@ -128,11 +131,11 @@ export default function BookingForm() {
     }
 
     if (!formData.completedDate) {
-      newErrors.completedDate = "Vui lòng chọn ngày hoàn thành.";
+      newErrors.completedDate = "Vui lòng chọn ngày bàn giao.";
     }
     if (formData.completedDate) {
       if (new Date(formData.completedDate) < new Date(formData.bookingDate)) {
-        newErrors.completedDate = "Ngày hoàn thành phải sau ngày đặt.";
+        newErrors.completedDate = "Ngày bàn giao phải sau ngày đặt.";
       }
     }
 
@@ -275,23 +278,27 @@ export default function BookingForm() {
                     Trạng thái
                   </Label>
                   <Select
-                    value={formData.status || ""}
+                    value={formData.status}
                     onValueChange={(value) => handleChange("status", value)}
+                    // Thêm key để đảm bảo Select component được re-render khi formData.status thay đổi
                     key={formData.status}
                   >
                     <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
                       <SelectValue placeholder="Chọn trạng thái">
-                        {formData.status === "pending"
-                          ? "Chưa hoàn thành"
-                          : formData.status === "completed"
-                          ? "Hoàn thành"
-                          : formData.status === "cancelled"
-                          ? "Hủy"
+                        {/* Hiển thị giá trị đã chọn hoặc placeholder */}
+                        {formData.status ?
+                          (formData.status === "pending" ? "Chờ xác nhận" :
+                            formData.status === "completed" ? "Hoàn thành" :
+                              formData.status === "cancelled" ? "Hủy" :
+                                formData.status === "processing" ? "Đang xử lý" :
+                                  formData.status === "confirmed" ? "Đã xác nhận" : "Chọn trạng thái")
                           : "Chọn trạng thái"}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                      <SelectItem value="pending">Chưa hoàn thành</SelectItem>
+                      <SelectItem value="pending">Chờ xác nhận</SelectItem>
+                      <SelectItem value="confirmed">Đã xác nhận</SelectItem>
+                      <SelectItem value="processing">Đang xử lý</SelectItem>
                       <SelectItem value="completed">Hoàn thành</SelectItem>
                       <SelectItem value="cancelled">Hủy</SelectItem>
                     </SelectContent>
@@ -310,15 +317,16 @@ export default function BookingForm() {
                       <SelectValue placeholder="Chọn dịch vụ" />
                     </SelectTrigger>
                     <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                      {initDataService.map((service) => (
-                        <SelectItem
-                          key={service.service_id}
-                          value={service.service_id.toString()}
-                          className="cursor-pointer px-3 py-2 hover:bg-blue-50"
-                        >
-                          {service.ten_dich_vu}
-                        </SelectItem>
-                      ))}
+                      {initDataService
+                        .map((service, index) => (
+                          <SelectItem
+                            key={`${index}`}
+                            value={String(service?.id ?? "")}
+                            className="cursor-pointer px-3 py-2 hover:bg-blue-50"
+                          >
+                            {service?.translation?.ten_dich_vu || "Dịch vụ không tên"}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   {errors.service && (
@@ -337,14 +345,14 @@ export default function BookingForm() {
                       handleChange("bookingDate", e.target.value)
                     }
                     className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
-                    // required
+                  // required
                   />
                   {errors.bookingDate && (
                     <p className="text-red-500 text-sm">{errors.bookingDate}</p>
                   )}
                 </div>
                 <div className="space-y-2 relative">
-                  <Label className="text-black">Ngày Hoàn thành</Label>
+                  <Label className="text-black">Ngày bàn giao</Label>
                   <input
                     type="date"
                     value={formData.completedDate || ""}
@@ -352,7 +360,7 @@ export default function BookingForm() {
                       handleChange("completedDate", e.target.value)
                     }
                     className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
-                    // required
+                  // required
                   />
                   {errors.completedDate && (
                     <p className="text-red-500 text-sm">

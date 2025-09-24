@@ -47,16 +47,20 @@ export default function ServiceBookingTable() {
     setCurrentPage(1); // reset trang khi filter thay đổi
   };
 
+
+  // Filter theo search + status
   // Filter theo search + status
   const filteredBooking = initDataBooking.filter((booking) => {
     const keyword = search.toLowerCase();
     const matchSearch =
-      booking.name.toLowerCase().includes(keyword) ||
-      booking.ten_dich_vu.toLowerCase().includes(keyword);
+      (booking.customer_name?.toLowerCase() || "").includes(keyword) ||
+      (booking.service_name?.toLowerCase() || "").includes(keyword);
     const matchStatus =
       statusFilter === "all" || booking.status === statusFilter;
     return matchSearch && matchStatus;
   });
+
+
 
   // Phân trang
   const totalPages = Math.ceil(filteredBooking.length / itemsPerPage);
@@ -152,7 +156,7 @@ export default function ServiceBookingTable() {
                   Ngày đặt
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
-                  Ngày hoàn thành
+                  Ngày bàn giao
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
                   Thao tác
@@ -162,22 +166,22 @@ export default function ServiceBookingTable() {
             <TableBody>
               {currentData.map((item, index) => (
                 <TableRow
-                  key={` ${item.id}${index}`}
+                  key={`${item.id}${index}`}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.name}
+                    {item.customer_name}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {item.ten_dich_vu}
+                    {item.service_name}
                   </TableCell>
                   <TableCell>
                     {item.status === "completed" ? (
                       <Badge className="bg-green-500 text-white admin-dark:bg-green-600">
                         Hoàn thành
                       </Badge>
-                    ) : item.status !== "cancelled" ? (
-                      <Badge className="bg-red-900 text-white admin-dark:bg-red-800">
+                    ) : item.status === "pending" ? (
+                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">
                         Chưa hoàn thành
                       </Badge>
                     ) : (
@@ -187,7 +191,7 @@ export default function ServiceBookingTable() {
                     )}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
-                    {`₫${item.price.toLocaleString()}`}
+                    {Number(item.price).toLocaleString("vi-VN")} ₫
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {new Date(item.booking_date).toLocaleDateString("vi-VN")}
@@ -204,7 +208,7 @@ export default function ServiceBookingTable() {
                           variant="ghost"
                           size="icon"
                           className="text-gray-600 hover:bg-gray-200 
-                            admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
                         >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
@@ -212,7 +216,7 @@ export default function ServiceBookingTable() {
                       <DropdownMenuContent
                         align="end"
                         className="bg-white text-black border-gray-300 
-                          admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+              admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
                       >
                         <DropdownMenuItem
                           onClick={() => openEditBookingForm(item)}
@@ -234,7 +238,19 @@ export default function ServiceBookingTable() {
                   </TableCell>
                 </TableRow>
               ))}
+
+              {currentData.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    className="text-center text-gray-500 py-4 admin-dark:text-gray-400"
+                  >
+                    Không tìm thấy đơn đặt dịch vụ nào.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
+
           </Table>
         </div>
 

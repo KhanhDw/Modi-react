@@ -300,6 +300,7 @@ export default function ServicesPage() {
     }
   };
 
+
   // All part of customer
   const fetchCustomer = async () => {
     setLoadingCustomers(true);
@@ -313,9 +314,15 @@ export default function ServicesPage() {
       setLoadingCustomers(false);
     }
   };
+
   useEffect(() => {
     fetchCustomer();
   }, []);
+
+  // Hàm refetch cho con gọi
+  const handleRefetchCustomer = () => {
+    fetchCustomer();
+  };
 
   const openEditCustomerForm = (customer) => {
     setTypeForm("customer");
@@ -345,6 +352,7 @@ export default function ServicesPage() {
       if (res.ok) {
         await fetchCustomer();
         handleClose();
+        await fetchBooking();
       }
     } catch (err) {
       console.error(err);
@@ -404,6 +412,7 @@ export default function ServicesPage() {
           openEditCustomerForm,
           handleEditingCustomer,
           handleDeleteCustomer,
+          handleRefetchCustomer, // Truyền hàm refetch cho con
         }}
       />
     );

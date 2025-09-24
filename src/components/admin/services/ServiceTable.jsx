@@ -36,7 +36,6 @@ export default function ServiceTable() {
 
   const { initDataService, openEditServiceForm, handleDeleteService } =
     useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
-  console.log("initDataService:", initDataService); // kiểm tra dữ liệu
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; // số dịch vụ trên 1 trang
@@ -55,10 +54,6 @@ export default function ServiceTable() {
     startIndex,
     startIndex + itemsPerPage
   );
-
-
-  console.log("currentData:::", currentData);
-
 
   const handleReaderDetailService = (slug) => {
     navigate(`/managers/services/read-detail/${slug}`);
@@ -101,6 +96,7 @@ export default function ServiceTable() {
                   admin-dark:placeholder-gray-400"
               />
             </div>
+
           </div>
         </div>
       </CardHeader>

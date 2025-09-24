@@ -150,7 +150,7 @@ export default function ServiceCustomerAnalytics() {
                       <p className="text-sm font-medium text-[#5ea25e] admin-dark:text-green-400">
                         {Math.floor(
                           (new Date() - new Date(customer.created_at)) /
-                            (1000 * 60 * 60 * 24)
+                          (1000 * 60 * 60 * 24)
                         )}{" "}
                         Ngày trước
                       </p>
@@ -158,6 +158,11 @@ export default function ServiceCustomerAnalytics() {
                   </div>
                 </div>
               ))}
+            {sortCustomersByCreatedAt.length === 0 && (
+              <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                Chưa có khách hàng mới
+              </p>
+            )}
           </CardContent>
         </Card>
         <Card
