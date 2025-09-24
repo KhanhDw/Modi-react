@@ -14,12 +14,12 @@ export default function DialogShowForm_Service() {
       onOpenChange={(isOpen) => {
         if (!isOpen) handleClose();
       }}
+      className="p-0 m-0"
     >
       <DialogOverlay className="fixed inset-0 bg-black/50 z-50" />
-      <DialogContent
-        className={`${
-          typeForm === "service" ? "min-w-[70vw]" : ""
-        } min-h-[60vh] bg-white p-6 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
+      <DialogContent showCloseButton={false}
+        className={`${typeForm === "service" ? "min-w-[70vw]" : ""
+          } min-h-[60vh] bg-white p-0 m-0 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
       >
         {typeForm === "service" ? (
           <ServiceForm />
@@ -30,15 +30,6 @@ export default function DialogShowForm_Service() {
         ) : (
           <p>Not found form - typeForm: {typeForm}</p>
         )}
-        <div className="flex justify-end mt-4">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-          >
-            Đóng
-          </button>
-        </div>
       </DialogContent>
     </Dialog>
   );

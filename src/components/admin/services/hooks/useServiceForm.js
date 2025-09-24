@@ -13,7 +13,8 @@ export const useServiceForm = (
 
   // Khi edit thì set lại dữ liệu form
   useEffect(() => {
-    if (editingService?.service_id) {
+    console.log("l;l;l;editingService:::", editingService);
+    if (editingService?.id) {
       setFormData({
         ten_dich_vu: editingService.ten_dich_vu || "",
         mo_ta: editingService.mo_ta || "",
@@ -24,7 +25,7 @@ export const useServiceForm = (
         details: editingService.details || "",
       });
     }
-  }, [editingService?.service_id, setFormData]);
+  }, [editingService?.id, setFormData]);
 
   // Validate dữ liệu form
   const validateForm = () => {
@@ -49,9 +50,16 @@ export const useServiceForm = (
       newErrors.floor_price = "Giá phải là số và không âm";
     }
 
-    if (formData.image_url && !formData.image_url.trim()) {
-      newErrors.image_url = "Ảnh dịch vụ không hợp lệ";
+    if (formData.image_url) {
+      if (typeof formData.image_url === "string") {
+        if (!formData.image_url.trim()) {
+          newErrors.image_url = "Ảnh dịch vụ không hợp lệ";
+        }
+      } else if (!(formData.image_url instanceof File)) {
+        newErrors.image_url = "Ảnh dịch vụ không hợp lệ";
+      }
     }
+
 
     if (formData.features && typeof formData.features !== "string") {
       newErrors.features = "Features phải là chuỗi (ngăn bằng '#')";
@@ -79,27 +87,39 @@ export const useServiceForm = (
       ? String(formData.floor_price).replace(/[^0-9]/g, "")
       : "";
 
-    const submitData = {
-      ten_dich_vu: formData.ten_dich_vu,
-      slug: formData.slug,
-      lang,
-      mo_ta: formData.mo_ta,
-      features: formData.features || "",
-      details: formData.details || "",
-      image_url: formData.image_url || "",
-      floor_price: priceRaw ? Number(priceRaw) : 0,
-      booking_count: 0,
-      status: formData.status || "Active",
-    };
+    const submitData = new FormData();
+    submitData.append("ten_dich_vu", formData.ten_dich_vu);
+    submitData.append("slug", formData.slug);
+    submitData.append("lang", lang);
+    submitData.append("mo_ta", formData.mo_ta);
+    submitData.append("features", formData.features || "");
+    submitData.append("details", formData.details || "");
+    submitData.append("floor_price", priceRaw ? Number(priceRaw) : 0);
+    submitData.append("booking_count", 0);
+    submitData.append("status", formData.status || "Active");
 
-    console.log("submitData chuẩn:", submitData);
+    // 👉 Nếu user upload file thì append file, nếu không thì append string
+    if (formData.image_url instanceof File) {
+      submitData.append("image_url", formData.image_url);
+    } else if (typeof formData.image_url === "string" && formData.image_url.trim()) {
+      submitData.append("image_url", formData.image_url);
+    }
 
+    // ✅ log FormData an toàn
+    for (let [key, value] of submitData.entries()) {
+      console.log(key, value);
+    }
+
+    console.log("editingService::", editingService);
     if (!editingService) {
       handleCreateService(submitData);
     } else {
+      console.log('-----', editingService.id);
       handleEditService(submitData, editingService.id);
     }
   };
+
+
 
   return {
     lang,

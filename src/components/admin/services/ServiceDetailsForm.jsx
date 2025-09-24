@@ -3,12 +3,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatCurrency, parseCurrency } from "./utils/formatters";
 import { UploadAPI } from "@/api/serviceAPI";
+import { useState } from "react";
 
 // Hàm chuyển text thành slug
 const toSlug = (str) => {
   return str
     .normalize("NFD") // chuẩn unicode
     .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
+    .replace(/đ/gi, "d") // chuyển đ hoặc Đ thành d
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "") // bỏ ký tự đặc biệt
     .trim()
@@ -21,10 +23,22 @@ export default function ServiceDetailsForm({
   errors,
   handleChange,
 }) {
+  const [preview, setPreview] = useState(null);
 
   const handleNameChange = (value) => {
     handleChange("ten_dich_vu", value);
     handleChange("slug", toSlug(value));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 👉 Chỉ tạo preview local, không upload
+    setPreview(URL.createObjectURL(file));
+
+    // Nếu bạn vẫn muốn lưu file gốc vào formData:
+    handleChange("image_url", file);
   };
 
   return (
@@ -106,38 +120,25 @@ export default function ServiceDetailsForm({
             id="image_url"
             type="file"
             accept="image/*"
-            onChange={async (e) => {
-              const file = e.target.files[0];
-              if (!file) return;
-              const formDataUpload = new FormData();
-              formDataUpload.append("image", file);
-              try {
-                const res = await fetch(UploadAPI.uploadImg(), {
-                  method: "POST",
-                  body: formDataUpload,
-                });
-                const result = await res.json();
-                if (result.success && result.data?.url) {
-                  handleChange("image_url", result.data.url);
-                } else {
-                  handleChange("image_url", "");
-                  alert("Upload ảnh thất bại");
-                }
-              } catch (err) {
-                handleChange("image_url", "");
-                alert("Lỗi upload ảnh");
-              }
-            }}
+            onChange={handleFileChange}
           />
-          {formData.image_url && (
+          {/* Nếu có preview thì ưu tiên hiển thị, không thì lấy từ server */}
+          {(preview || formData.image_url) && (
             <img
-              src={formData.image_url}
+              src={
+                preview ||
+                (formData.image_url?.startsWith("http")
+                  ? formData.image_url
+                  : `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}`)
+              }
               alt="Ảnh dịch vụ"
               className="max-h-32 rounded w-1/2 object-contain border"
               style={{ minWidth: "120px" }}
             />
           )}
         </div>
+
+
         {errors.image_url && (
           <p className="text-red-500 text-sm">{errors.image_url}</p>
         )}

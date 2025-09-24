@@ -78,24 +78,22 @@ export default function ServicesPage() {
     try {
       console.log("Dữ liệu nhận từ form:", formData);
 
-      const payload = {
-        ten_dich_vu: formData.ten_dich_vu,
-        slug: formData.slug,
-        lang: formData.lang,
-        mo_ta: formData.mo_ta,
-        features: formData.features,
-        details: formData.details,
-        floor_price: formData.floor_price,
-        image_url: formData.image_url,
-        status: formData.status || "Active",
-      };
+      let bodyData = formData;
+      let headers = {};
 
-      console.log("Payload gửi lên API:", payload);
+      // Nếu formData là FormData (tức có append)
+      if (formData instanceof FormData) {
+        bodyData = formData; // giữ nguyên
+      } else {
+        // nếu là object thường (chỉ tạo translation)
+        bodyData = JSON.stringify(formData);
+        headers["Content-Type"] = "application/json";
+      }
 
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: bodyData,
+        headers,
       });
 
       const result = await res.json();
@@ -108,32 +106,40 @@ export default function ServicesPage() {
     }
   };
 
-  const handleCreateServiceTranslation = async (formData) => {
+
+  const handleCreateServiceTranslation = async (formData, id) => {
     try {
-      console.log("Dữ liệu nhận từ form1111:", formData);
+      console.log("Dữ liệu nhận từ form (translation):", formData);
 
-      const payload = {
-        service_id: formData.service_id, // bắt buộc phải có service_id
-        lang: formData.lang,
-        ten_dich_vu: formData.ten_dich_vu,
-        slug: formData.slug,
-        mo_ta: formData.mo_ta,
-        features: formData.features,
-        details: formData.details,
-      };
-
-      console.log("Payload gửi lên API:", payload);
-
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/service-translations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        throw new Error(result.message || "Có lỗi xảy ra");
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
       }
 
+      const payload = {
+        service_id: id,
+        lang: formData.get("lang"),
+        ten_dich_vu: formData.get("ten_dich_vu"),
+        slug: formData.get("slug"),
+        mo_ta: formData.get("mo_ta"),
+        features: formData.get("features"),
+        details: formData.get("details"),
+      };
+
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/service-translations`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await res.json();
+      if (!res.ok || !result.success) {
+        throw new Error(result.message || "Có lỗi xảy ra khi tạo bản dịch");
+      }
+
+      console.log("Tạo bản dịch thành công:", result);
       await fetchServices();
       handleClose();
     } catch (err) {
@@ -141,6 +147,31 @@ export default function ServicesPage() {
     }
   };
 
+  const handleEditService = async (formData, id) => {
+    try {
+      const dataServiceUpdate = services.find((s) => s.id === id);
+
+      const getTotalLang = dataServiceUpdate.totalLanguages.includes(formData.get("lang"));
+
+      if (!getTotalLang) {
+        await handleCreateServiceTranslation(formData, id);
+        return;
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`, {
+        method: "PUT",
+        body: formData,   // trực tiếp gửi FormData
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Cập nhật thất bại");
+      console.log("✅ Update thành công:", result);
+      await fetchServices();
+      handleClose();
+    } catch (error) {
+      console.error("❌ Lỗi khi update service:", error.message);
+    }
+  };
 
 
 
@@ -166,57 +197,7 @@ export default function ServicesPage() {
     setShowForm(true);
   };
 
-  const handleEditService = async (formData, id) => {
-    console.log(id);
-    console.log("mmmmm:", formData);
-    try {
 
-
-      const dataServiceUpdate = services.find((s) => s.id === id);
-      console.log("dataServiceUpdate::", dataServiceUpdate);
-
-      const dataEditService = {
-        service_id: id,
-        ten_dich_vu: formData.ten_dich_vu,
-        slug: formData.slug,               // nếu cần update slug
-        lang: formData.lang,
-        mo_ta: formData.mo_ta,
-        features: formData.features,
-        details: formData.details,
-        image_url: formData.image_url,
-        floor_price: formData.floor_price || 0,
-        status: formData.status || "Active",
-        booking_count: formData.booking_count || 0, // nếu cần
-      };
-
-      const getTotalLang = dataServiceUpdate.totalLanguages.includes(formData.lang);
-      console.log("getTotalLang:::", getTotalLang);
-
-      if (!getTotalLang) {
-        await handleCreateServiceTranslation(dataEditService);
-        return;
-      }
-
-      console.log("Payload gửi đi:", dataEditService);
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(dataEditService),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Error when edit service data");
-      }
-      if (res.ok) {
-        await fetchServices();
-        handleClose();
-      }
-    } catch (err) {
-      console.log("Error: ", err);
-    }
-  };
 
   // All part of booking
   const fetchBooking = async () => {

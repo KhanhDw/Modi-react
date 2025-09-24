@@ -29,7 +29,7 @@ export default function ServiceForm() {
     lang: "",
     mo_ta: "",
     floor_price: "",
-    image_url: "",
+    image_url: null,
     features: "",
     details: "",
     status: "Active"
@@ -87,7 +87,7 @@ export default function ServiceForm() {
   };
 
   return (
-    <div className="max-h-[80vh] overflow-y-auto p-2">
+    <div className="max-h-[80vh] overflow-y-auto">
       <Card className="bg-white w-full mx-auto">
         <CardHeader className="relative">
           <CardTitle className="flex gap-2 items-center">
