@@ -27,8 +27,13 @@ import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
 import ServiceForm from "./service-form";
 import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormService";
+import ReaderDetailService from "./ReadDetailService";
+import { useNavigate } from "react-router-dom";
 
 export default function ServiceTable() {
+
+  const navigate = useNavigate();
+
   const { initDataService, openEditServiceForm, handleDeleteService } =
     useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
   console.log("initDataService:", initDataService); // kiểm tra dữ liệu
@@ -54,6 +59,10 @@ export default function ServiceTable() {
 
   console.log("currentData:::", currentData);
 
+
+  const handleReaderDetailService = (slug) => {
+    navigate(`/managers/services/read-detail/${slug}`);
+  }
 
   return (
     <Card
@@ -155,7 +164,7 @@ export default function ServiceTable() {
                     </TableCell>
 
 
-                    <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>
+                    <TableCell onClick={() => handleReaderDetailService(item.translation?.slug)} className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  hover:bg-slate-600 cursor-pointer`}>
                       {item.translation?.ten_dich_vu || "Chưa có thông tin tiếng việt"}
                     </TableCell>
                     <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>

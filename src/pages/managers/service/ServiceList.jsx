@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceTable from "@/components/admin/services/ServiceTable";
 import { useOutletContext } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
 export default function ServiceList() {
   const { handleOpen } = useOutletContext();
@@ -27,6 +28,7 @@ export default function ServiceList() {
       </div>
       <ServiceTable />
       <DialogShowForm_Service />
+      <Outlet />
     </div>
   );
 }

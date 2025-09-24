@@ -114,7 +114,7 @@ import TotalRevenueChart from "@/components/adminComponent/TotalRevenueChart"
 import VisitorInsights from "@/components/adminComponent/VisitorInsights"
 import WebsiteVisitorsDonut from "@/components/adminComponent/WebsiteVisitorsDonut"
 import TaskList from "@/components/adminComponent/TaskList"
-
+import ReaderDetailService from "@/components/admin/services/ReadDetailService";
 
 
 
@@ -185,9 +185,10 @@ const privateRoutes = [
     layout: AdminLayout,
     children: [
       { path: "service_overview", component: ServiceOverview },
-      { path: "service_list", component: ServiceList },
+      { path: "service_list", component: ServiceList, },
       { path: "service_booking", component: ServiceBooking },
       { path: "service_customer", component: ServiceCustomer },
+      { path: "read-detail/:slug", component: ReaderDetailService }
     ],
   },
   {
