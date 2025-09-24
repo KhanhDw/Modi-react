@@ -59,37 +59,52 @@ export default function ServiceCustomerTable() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Số khách hàng trên 1 trang
+  const itemsPerPage = 5;
 
-
+  // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
   const getFullInforCustomer = async (id) => {
-    setSelectedCustomerId(id);
-    setLoadingCustomer(true);
-    setOpenReadInforCustomer(true); // mở modal luôn, nhưng hiển thị loading
+    console.log("🎯 [getFullInforCustomer] Starting for customer ID:", id);
+
     try {
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/customers/${id}/full`);
-      if (!res.ok) throw new Error("Không thể lấy dữ liệu khách hàng");
-      const data = await res.json();
-      setCustomerDetail(data);
-    } catch (err) {
-      console.error("Fetch error:", err.message);
+      console.log("📝 [getFullInforCustomer] Setting loading state...");
+      setLoadingCustomer(true);
       setCustomerDetail(null);
-    } finally {
+      setOpenReadInforCustomer(false);
+
+      console.log("📡 [getFullInforCustomer] Making API call...");
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/customers/${id}/full`);
+      console.log("📨 [getFullInforCustomer] API Response status:", res.status);
+
+      if (!res.ok) throw new Error("Không thể lấy dữ liệu khách hàng");
+
+      const data = await res.json();
+      console.log("✅ [getFullInforCustomer] API Success! Data received:", data);
+
+      // Sử dụng setTimeout để đảm bảo state được cập nhật tuần tự
+      console.log("💾 [getFullInforCustomer] Setting customerDetail and opening modal...");
+      setCustomerDetail(data);
+
+      // Sử dụng setTimeout 0 để đảm bảo state update hoàn tất trước khi mở modal
+      setTimeout(() => {
+        setLoadingCustomer(false);
+        setOpenReadInforCustomer(true);
+        console.log("🎉 [getFullInforCustomer] Modal opened successfully!");
+      }, 0);
+
+    } catch (err) {
+      console.error("❌ [getFullInforCustomer] API Error:", err.message);
+      setCustomerDetail(null);
       setLoadingCustomer(false);
+      setOpenReadInforCustomer(false);
+      // Có thể thêm toast notification ở đây
     }
   };
 
-
-
-  useEffect(() => {
-
-  }, [selectedCustomerId]);
-
-
   const changeStatus = (status) => {
     setStatusFilter(status);
-    setCurrentPage(1); // reset trang khi filter thay đổi
+    setCurrentPage(1);
   };
+
   const filteredCustomer = initDataCustomer.filter((customer) => {
     const keyword = search.toLowerCase();
     const groupType = customer.type === "vip" ? "vip" : "thuong";
@@ -106,7 +121,6 @@ export default function ServiceCustomerTable() {
     return matchSearch && matchStatus;
   });
 
-  // Phân trang
   const totalPages = Math.ceil(filteredCustomer.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredCustomer.slice(
@@ -132,7 +146,7 @@ export default function ServiceCustomerTable() {
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
-                    setCurrentPage(1); // reset trang khi search thay đổi
+                    setCurrentPage(1);
                   }}
                   placeholder="Tìm kiếm khách hàng..."
                   className="pl-10 w-64 admin-dark:bg-gray-800 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
@@ -150,7 +164,7 @@ export default function ServiceCustomerTable() {
                 </SelectContent>
               </Select>
               <button
-                className="bg-gray-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-md shadow-lg transform transition-all duration-200 ease-in-out "
+                className="bg-gray-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-md shadow-lg transform transition-all duration-200 ease-in-out"
                 onClick={() => setOpenDialogImportCustomer(true)}
               >
                 Nhập dữ liệu khách hàng vào hệ thống
@@ -279,8 +293,8 @@ export default function ServiceCustomerTable() {
           </div>
         </CardContent>
       </Card>
-      {/* /* Component Upload Excel */}
 
+      {/* Component Upload Excel */}
       {openDialogImportCustomer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div className="relative bg-white admin-dark:bg-gray-900 rounded-lg shadow-2xl p-8 min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
@@ -297,29 +311,52 @@ export default function ServiceCustomerTable() {
         </div>
       )}
 
-      {/* open dialog read full information of user */}
+      {/* Modal hiển thị thông tin chi tiết khách hàng */}
       {openReadInforCustomer && (
-        <div className="fixed inset-0 admin-dark:bg-black flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-3xl relative">
+        <div className="fixed inset-0 admin-dark:bg-black bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white admin-dark:bg-gray-900 p-6 rounded-2xl shadow-2xl w-full max-w-3xl relative max-h-[90vh] overflow-y-auto">
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold"
-              onClick={() => setOpenReadInforCustomer(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-white text-2xl font-bold z-10"
+              onClick={() => {
+                console.log("❌ [Modal Close] User clicked close button");
+                setOpenReadInforCustomer(false);
+                setCustomerDetail(null);
+                setLoadingCustomer(false);
+                console.log("🧹 [Modal Close] Modal closed and states reset");
+              }}
             >
               &times;
             </button>
 
-            {loadingCustomer ? (
-              <div className="text-center py-10">Đang tải dữ liệu...</div>
-            ) : customerDetail ? (
-              <ReadInforCustomer data={customerDetail} />
-            ) : (
-              <div className="text-center py-10 text-red-500">Không tìm thấy dữ liệu</div>
-            )}
+            {(() => {
+              console.log("🖼️ [Modal Render] Current states:");
+              console.log("   - loadingCustomer:", loadingCustomer);
+              console.log("   - customerDetail:", customerDetail ? "✅ Has data" : "❌ No data");
+              console.log("   - openReadInforCustomer:", openReadInforCustomer);
+
+              if (loadingCustomer) {
+                console.log("⏳ [Modal Render] Showing loading state");
+                return (
+                  <div className="text-center py-10 admin-dark:text-white">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 admin-dark:border-white"></div>
+                    <p className="mt-4">Đang tải dữ liệu...</p>
+                  </div>
+                );
+              } else if (customerDetail) {
+                console.log("✅ [Modal Render] Rendering ReadInforCustomer with data");
+                return <ReadInforCustomer data={customerDetail} />;
+              } else {
+                console.log("❌ [Modal Render] Showing error state - no data available");
+                return (
+                  <div className="text-center py-10 text-red-500 admin-dark:text-red-400">
+                    Không tìm thấy dữ liệu hoặc có lỗi xảy ra
+                  </div>
+                );
+              }
+            })()}
           </div>
         </div>
       )}
-
-
     </div>
   );
 }
