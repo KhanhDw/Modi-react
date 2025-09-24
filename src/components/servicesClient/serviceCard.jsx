@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
-import React, { useState, useEffect, useRef, } from "react";
-import { ChevronUp, ChevronsDown, ChevronDown } from 'lucide-react';
 import useLenisLocal from '@/hook/useLenisLocal';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import HoverButtonsServiceCard from "./buttonServiceCard";
-import { useNavigate } from "react-router-dom";
 
 
 export default function ServiceCard({ service, onFetchService }) {
@@ -67,9 +65,9 @@ export default function ServiceCard({ service, onFetchService }) {
                 </div>
 
                 {/* Responsive Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-1 xl:grid-cols-3 gap-4 items-start px-2 pb-4 md:pr-4 lg:px-4 xl:px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 lg:grid-cols-1 xl:grid-cols-1 gap-4 items-start px-2 pb-4 md:pr-4 lg:px-4 xl:px-4">
                     {/* Left: Image */}
-                    <div className="md:col-span-2 lg:col-span-3 xl:col-span-1">
+                    <div className="md:col-span-2 lg:col-span-3 xl:col-span-2">
                         <div className="border-2 border-gray-400 dark:border-gray-200 dark:group-hover:shadow-gray-600
                 transition-all duration-200 shadow-lg w-full h-72
                 bg-gray-50 dark:bg-gray-800 rounded-md md:rounded-xl overflow-hidden grid place-items-center"
@@ -85,9 +83,9 @@ export default function ServiceCard({ service, onFetchService }) {
                     {/* Right: Features + Detail + Buttons */}
                     <div className="md:col-span-3 xl:col-span-2">
                         {/* Features & Toggle */}
-                        <div className="grid grid-cols-1 sm:grid-cols-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-5 lg:grid-cols-7">
                             {/* Features */}
-                            <div className="sm:col-span-4 relative overflow-hidden w-full sm:mb-2">
+                            <div className="sm:col-span-4 lg:col-span-6 relative overflow-hidden w-full sm:mb-2">
                                 {/* Features list */}
                                 <div className={`transition-all duration-500 ${!showDetails ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
                                     {features.length > 0 && (
@@ -133,7 +131,7 @@ export default function ServiceCard({ service, onFetchService }) {
 
                             {/* Toggle Buttons */}
                             {/* sm:col-span-1 */}
-                            <div className="grid place-items-center mt-2 sm:ml-2 lg:ml-3 xl:ml-1">
+                            <div className="grid place-items-center mt-2 sm:ml-2 lg:ml-3">
                                 <HoverButtonsServiceCard
                                     onClickUp={handleToUp}
                                     onClickDown={handleToDown}

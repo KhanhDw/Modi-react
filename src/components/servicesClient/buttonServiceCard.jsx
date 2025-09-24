@@ -1,6 +1,6 @@
-import { ChevronUp, ChevronDown } from "lucide-react";
-import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 
 export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valuePosition }) {
     const [hoverUp, setHoverUp] = useState(false);
@@ -8,10 +8,10 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
     const { isDark } = useTheme();
 
     return (
-        <div className="flex flex-row gap-2 h-full items-center justify-center">
+        <div className="flex flex-row sm:flex-col md:flex-col lg:flex-col gap-2 h-full items-center justify-center">
             {/* Up Button */}
             <div
-                className={`${valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-sm cursor-pointer`}
+                className={`${valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold xs:rounded-full sm:rounded-sm md:rounded-sm overflow-hidden cursor-pointer`}
                 onMouseEnter={() => setHoverUp(true)}
                 onMouseLeave={() => setHoverUp(false)}
                 onClick={onClickUp} // Gọi hàm từ props
@@ -25,7 +25,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
                     }}
                 />
                 <span
-                    className="relative px-1 py-5 sm:py-4 xs:py-3 transition-all ease-out rounded-sm duration-500"
+                    className="relative px-1 py-5 xs:rounded-full sm:rounded-sm md:rounded-sm sm:py-4 xs:py-3 transition-all ease-out rounded-sm duration-500"
                     style={{
                         backgroundColor: hoverUp ? "transparent" : isDark ? "#111827" : "#ffffff",
                     }}
@@ -45,7 +45,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
 
             {/* Down Button */}
             <div
-                className={`${!valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden rounded-sm cursor-pointer`}
+                className={`${!valuePosition ? "opacity-100" : "opacity-50"} relative p-0.5 inline-flex items-center justify-center font-bold xs:rounded-full sm:rounded-sm md:rounded-sm overflow-hidden rounded-sm cursor-pointer`}
                 onMouseEnter={() => setHoverDown(true)}
                 onMouseLeave={() => setHoverDown(false)}
                 onClick={onClickDown} // Gọi hàm từ props
@@ -59,7 +59,7 @@ export default function HoverButtonsServiceCard({ onClickUp, onClickDown, valueP
                     }}
                 />
                 <span
-                    className="relative px-1 py-5 sm:py-4 xs:py-3 transition-all ease-out rounded-sm duration-500"
+                    className="relative px-1 py-5 xs:rounded-full md:rounded-sm sm:rounded-sm sm:py-4 xs:py-3 transition-all ease-out rounded-sm duration-500"
                     style={{
                         backgroundColor: hoverDown ? "transparent" : isDark ? "#111827" : "#ffffff",
                     }}
