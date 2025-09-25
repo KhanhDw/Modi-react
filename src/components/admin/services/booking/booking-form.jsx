@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import CustomerCombobox from "./selectOldCustomer"
-
+import { Calendar } from "lucide-react";
 
 export default function BookingForm() {
   const {
@@ -40,6 +40,7 @@ export default function BookingForm() {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({}); // 👈 state chứa lỗi
   const [customerMode, setCustomerMode] = useState("new");
+  const [floorPriceOfservice, setFloorPriceOfservice] = useState(0);
 
 
   useEffect(() => {
@@ -85,32 +86,83 @@ export default function BookingForm() {
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" })); // reset lỗi khi người dùng nhập
+
+    if (field === "service") {
+      const selected = initDataService.find((s) => String(s.id) === String(value));
+      if (selected) {
+        setFloorPriceOfservice(selected.floor_price);
+      }
+    }
+    if (field === "price") {
+      const priceValue = parseFloat(value);
+      if (priceValue < floorPriceOfservice) {
+        setErrors((prev) => ({
+          ...prev,
+          price: `Giá không được thấp hơn ${Number(floorPriceOfservice).toLocaleString(
+            "vi-VN",
+            { style: "currency", currency: "VND" }
+          )}`
+        }));
+      }
+    }
   };
+
+  const formatCurrency = (value) => {
+    if (!value) return "";
+    const numericValue = value.replace(/\D/g, ""); // chỉ giữ số
+    const number = parseInt(numericValue, 10);
+    if (isNaN(number)) return "";
+    return number.toLocaleString("vi-VN");
+  };
+
+  const handlePriceChange = (value) => {
+    const rawValue = value.replace(/\D/g, ""); // bỏ dấu phẩy
+    const numeric = rawValue ? parseInt(rawValue, 10) : "";
+
+    setFormData((prev) => ({
+      ...prev,
+      price: numeric,
+    }));
+
+    // validate realtime
+    if (numeric && numeric < floorPriceOfservice) {
+      setErrors((prev) => ({
+        ...prev,
+        price: `Giá không được thấp hơn ${Number(
+          floorPriceOfservice
+        ).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}`,
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, price: "" }));
+    }
+  };
+
+
 
   const handleCheckCustomer = () => {
     const phone = formData.cusPhone?.trim();
     if (!phone) return;
 
     const existCustomer = initDataCustomer?.find((c) => c.phone === phone);
+
     if (existCustomer) {
-      // Nếu có thì fill dữ liệu khách cũ
-      setFormData({
-        ...formData,
-        cusName: existCustomer.customer_name,
-        cusEmail: existCustomer.email,
-        cusAddress: existCustomer.address,
-        // có thể thêm các field khác nếu có
-      });
+      // Nếu có khách cũ → fill vào form + khóa field
+      setFormData((prev) => ({
+        ...prev,
+        cusName: existCustomer.customer_name || prev.cusName,
+        cusEmail: existCustomer.email || prev.cusEmail,
+        cusAddress: existCustomer.address || prev.cusAddress,
+      }));
+      setCustomerMode("existing");
     } else {
-      // Nếu không có thì clear name/email/address để nhập mới
-      setFormData({
-        ...formData,
-        cusName: "",
-        cusEmail: "",
-        cusAddress: "",
-      });
+      // Nếu không có khách cũ → KHÔNG xoá giá trị đang nhập
+      // chỉ bật chế độ nhập mới
+      setCustomerMode("new");
     }
   };
+
+
+
   // Validation logic
   const validateForm = () => {
     let newErrors = {};
@@ -145,7 +197,13 @@ export default function BookingForm() {
       newErrors.price = "Vui lòng nhập giá.";
     } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
       newErrors.price = "Giá phải là số lớn hơn 0.";
+    } else if (parseFloat(formData.price) < floorPriceOfservice) {
+      newErrors.price = `Giá không được thấp hơn ${Number(floorPriceOfservice).toLocaleString(
+        "vi-VN",
+        { style: "currency", currency: "VND" }
+      )}`;
     }
+
 
 
     if (!formData.bookingDate) {
@@ -172,11 +230,26 @@ export default function BookingForm() {
 
     if (!isValid) return;
     if (!editingBooking) {
+
+
+      console.log("-->>>", formData);
       handleCreateBooking(formData);
     } else {
       handleEditingBooking(formData, editingBooking.id);
     }
   };
+
+
+
+  const floor_price_service = (id) => {
+    const service = initDataService.find((s) => String(s.id) === String(id));
+    if (service) {
+      setFloorPriceOfservice(service.floor_price);
+    } else {
+      setFloorPriceOfservice(0); // fallback khi không tìm thấy
+    }
+  };
+
 
   return (
     <Card className="bg-white w-full mx-auto">
@@ -238,8 +311,7 @@ export default function BookingForm() {
                   onChange={(e) => handleChange("cusPhone", e.target.value)}
                   onBlur={handleCheckCustomer}
                   placeholder="Nhập số điện thoại của khách hàng... "
-                  // required={!editingBooking}
-                  readOnly={editingBooking}
+                  readOnly={customerMode === "existing" || editingBooking}  // 👈 THÊM ĐIỀU KIỆN NÀY
                 />
                 {errors.cusPhone && (
                   <p className="text-red-500 text-sm">{errors.cusPhone}</p>
@@ -378,54 +450,68 @@ export default function BookingForm() {
               )}
 
               <div className="space-y-2">
-                <Label className="text-black" htmlFor="price">Giá *</Label>
+                <Label className="text-black flex w-full items-center justify-between" htmlFor="price" >
+                  <span>Giá *</span>
+                  <span>Giá thấp nhất của dịch vụ: {Number(floorPriceOfservice).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                </Label>
                 <Input
-                  type="number"
+                  type="text"
                   id="price"
                   className="text-black border border-black/30"
-                  value={formData.price || ""}
-                  onChange={(e) => handleChange("price", e.target.value)}
-                  placeholder="Nhập giá dịch vụ..."
-                  min="0"
+                  value={formatCurrency(String(formData.price))}
+                  onChange={(e) => handlePriceChange(e.target.value)}
+                  placeholder="Nhập giá dịch vụ... không được thấp hơn giá thấp nhất của dịch vụ"
                 />
                 {errors.price && (
                   <p className="text-red-500 text-sm">{errors.price}</p>
                 )}
+
               </div>
 
 
               {/* Dịch vụ + ngày đặt */}
               <div className="flex gap-4">
-                <div className="space-y-2 relative">
+                {/* Ngày đặt đơn */}
+                <div className="space-y-2 relative w-full">
                   <Label className="text-black">Ngày đặt đơn</Label>
                   <input
                     type="date"
                     value={formData.bookingDate || ""}
-                    onChange={(e) =>
-                      handleChange("bookingDate", e.target.value)
-                    }
+                    onChange={(e) => handleChange("bookingDate", e.target.value)}
                     className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
-                  // required
+                  />
+                  <Calendar
+                    className="absolute right-3 top-[50%] text-gray-500 cursor-pointer"
+                    size={18}
+                    onClick={(e) => {
+                      // focus input khi nhấn icon → trigger datepicker
+                      e.currentTarget.previousSibling.showPicker?.();
+                    }}
                   />
                   {errors.bookingDate && (
                     <p className="text-red-500 text-sm">{errors.bookingDate}</p>
                   )}
                 </div>
-                <div className="space-y-2 relative">
+
+                {/* Ngày bàn giao */}
+                <div className="space-y-2 relative w-full">
                   <Label className="text-black">Ngày bàn giao</Label>
                   <input
                     type="date"
                     value={formData.completedDate || ""}
-                    onChange={(e) =>
-                      handleChange("completedDate", e.target.value)
-                    }
+                    onChange={(e) => handleChange("completedDate", e.target.value)}
                     className="w-full px-3 py-2 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
-                  // required
+                  />
+                  <Calendar
+                    className="absolute right-3 top-[50%] text-gray-500 cursor-pointer"
+                    size={18}
+                    onClick={(e) => {
+                      // focus input khi nhấn icon → trigger datepicker
+                      e.currentTarget.previousSibling.showPicker?.();
+                    }}
                   />
                   {errors.completedDate && (
-                    <p className="text-red-500 text-sm">
-                      {errors.completedDate}
-                    </p>
+                    <p className="text-red-500 text-sm">{errors.completedDate}</p>
                   )}
                 </div>
               </div>

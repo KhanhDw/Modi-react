@@ -224,6 +224,7 @@ export default function ServicesPage() {
       email: formData.cusEmail,
       address: formData.cusAddress,
       service: formData.service,
+      price: formData.price,
       bookingDate: formData.bookingDate,
       completedDate: formData.completedDate,
     };
@@ -260,6 +261,7 @@ export default function ServicesPage() {
       const dataEditBooking = {
         status: formData.status,
         service: formData.service,
+        price: formData.price,
         bookingDate: formData.bookingDate,
         completedDate: formData.completedDate,
       };

@@ -104,7 +104,7 @@ export default function ServiceBooking() {
 
       <ServiceBookingTable />
       <DialogShowForm_Service />
-      <ServiceBookingAnalytics services={initDataService} />
+      <ServiceBookingAnalytics bookings={initDataBooking} />
     </div>
   );
 }

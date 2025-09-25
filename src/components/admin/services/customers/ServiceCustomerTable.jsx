@@ -42,6 +42,10 @@ import { useOutletContext } from "react-router-dom";
 import ExcelDataUploader from "./ExcelDataUploader";
 import ReadInforCustomer from "./ReadInforCustomer";
 import useLenisLocal from '@/hook/useLenisLocal'
+import ConfigCustomerVIP from "./configCustomerVIP";
+import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx"
+
 
 export default function ServiceCustomerTable() {
   const {
@@ -52,11 +56,14 @@ export default function ServiceCustomerTable() {
   } = useOutletContext();
   useLenisLocal(".lenis-local")
 
+  const [openConfigCustomerVIP, setOpenConfigCustomerVIP] = useState(false);
   const [openDialogImportCustomer, setOpenDialogImportCustomer] = useState(false);
   const [openReadInforCustomer, setOpenReadInforCustomer] = useState(false);
   const [customerDetail, setCustomerDetail] = useState(null);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [loadingCustomer, setLoadingCustomer] = useState(false);
+
+  const { minSpent } = useVipConfig();
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
@@ -65,7 +72,6 @@ export default function ServiceCustomerTable() {
 
   // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
   const getFullInforCustomer = async (id) => {
-    console.log("🎯 [getFullInforCustomer] Starting for customer ID:", id);
 
     try {
       console.log("📝 [getFullInforCustomer] Setting loading state...");
@@ -73,28 +79,22 @@ export default function ServiceCustomerTable() {
       setCustomerDetail(null);
       setOpenReadInforCustomer(false);
 
-      console.log("📡 [getFullInforCustomer] Making API call...");
       const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/customers/${id}/full`);
-      console.log("📨 [getFullInforCustomer] API Response status:", res.status);
 
       if (!res.ok) throw new Error("Không thể lấy dữ liệu khách hàng");
 
       const data = await res.json();
-      console.log("✅ [getFullInforCustomer] API Success! Data received:", data);
 
       // Sử dụng setTimeout để đảm bảo state được cập nhật tuần tự
-      console.log("💾 [getFullInforCustomer] Setting customerDetail and opening modal...");
       setCustomerDetail(data);
 
       // Sử dụng setTimeout 0 để đảm bảo state update hoàn tất trước khi mở modal
       setTimeout(() => {
         setLoadingCustomer(false);
         setOpenReadInforCustomer(true);
-        console.log("🎉 [getFullInforCustomer] Modal opened successfully!");
       }, 0);
 
     } catch (err) {
-      console.error("❌ [getFullInforCustomer] API Error:", err.message);
       setCustomerDetail(null);
       setLoadingCustomer(false);
       setOpenReadInforCustomer(false);
@@ -107,9 +107,15 @@ export default function ServiceCustomerTable() {
     setCurrentPage(1);
   };
 
+
+
   const filteredCustomer = initDataCustomer.filter((customer) => {
+
     const keyword = search.toLowerCase();
-    const groupType = customer.type === "vip" ? "vip" : "thuong";
+    const isVip = customer.total_spent >= minSpent;
+    const groupType = isVip ? "vip" : "thuong";
+
+    // const groupType = customer.type === "vip" ? "vip" : "thuong";
 
     const matchSearch =
       customer.name.toLowerCase().includes(keyword) ||
@@ -129,24 +135,6 @@ export default function ServiceCustomerTable() {
     startIndex,
     startIndex + itemsPerPage
   );
-
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 5; // số lượng page muốn hiển thị
-
-    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let end = Math.min(totalPages, start + maxVisible - 1);
-
-    // nếu số trang hiển thị chưa đủ thì điều chỉnh lại start
-    if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
 
 
 
@@ -200,9 +188,9 @@ export default function ServiceCustomerTable() {
               <TableHeader>
                 <TableRow className="admin-dark:border-gray-700">
                   <TableHead className="text-black admin-dark:text-white">Tên khách hàng</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Đã đặt</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Email</TableHead>
                   <TableHead className="text-black admin-dark:text-white">SĐT</TableHead>
+                  <TableHead className="text-black admin-dark:text-white">Email</TableHead>
+                  <TableHead className="text-black admin-dark:text-white">Đã đặt</TableHead>
                   <TableHead className="text-black admin-dark:text-white">Hoàn thành</TableHead>
                   <TableHead className="text-black admin-dark:text-white">Chi</TableHead>
                   <TableHead className="text-black admin-dark:text-white">Thao tác</TableHead>
@@ -214,14 +202,14 @@ export default function ServiceCustomerTable() {
                     <TableCell className="text-black admin-dark:text-white">
                       {customer.name}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white pl-6">
-                      {customer.booking_count || 0}
+                    <TableCell className="text-black admin-dark:text-white">
+                      {customer.phone || "Chưa cập nhật"}
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white">
                       {customer.email || "Chưa cập nhật"}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
-                      {customer.phone || "Chưa cập nhật"}
+                    <TableCell className="text-black admin-dark:text-white pl-6">
+                      {customer.booking_count || 0}
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white pl-9">
                       {
@@ -284,61 +272,40 @@ export default function ServiceCustomerTable() {
           {/* Pagination */}
           <div className="flex justify-between mt-4 gap-2 items-center">
             <div>
-              <button type="button" className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300">
+              <button onClick={() => setOpenConfigCustomerVIP(true)} type="button" className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300">
                 <span className=" transition-all duration-300  text-sm text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
                   Thiết lập điều kiện là khách hàng VIP
                 </span>
               </button>
             </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-              >
-                Trước
-              </Button>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
 
-              {/* Hiển thị trang đầu nếu currentPage > 3 */}
-              {currentPage > 3 && (
-                <>
-                  <Button onClick={() => setCurrentPage(1)}>1</Button>
-                  <span className="px-2">...</span>
-                </>
-              )}
-
-              {/* Trang xung quanh currentPage */}
-              {getPageNumbers().map((page) => (
-                <Button
-                  key={page}
-                  variant={currentPage === page ? "default" : "outline"}
-                  onClick={() => setCurrentPage(page)}
-                  className={`px-3 ${currentPage === page ? "bg-blue-600 text-white" : ""}`}
-                >
-                  {page}
-                </Button>
-              ))}
-
-              {/* Hiển thị trang cuối nếu currentPage < totalPages - 2 */}
-              {currentPage < totalPages - 2 && (
-                <>
-                  <span className="px-2">...</span>
-                  <Button onClick={() => setCurrentPage(totalPages)}>{totalPages}</Button>
-                </>
-              )}
-
-              <Button
-                variant="outline"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-              >
-                Sau
-              </Button>
-            </div>
 
           </div>
         </CardContent>
       </Card>
+
+      {openConfigCustomerVIP && (
+
+        <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center  min-h-screen">
+          <div className="relative  rounded-lg shadow-2xl  min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
+            <button hidden
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold"
+              onClick={() => setOpenConfigCustomerVIP(false)}
+              aria-label="Đóng"
+            >
+              &times;
+            </button>
+            <ConfigCustomerVIP setOpenConfigCustomerVIP={setOpenConfigCustomerVIP} />
+
+          </div>
+        </div>
+      )
+      }
 
       {/* Component Upload Excel */}
       {openDialogImportCustomer && (
@@ -365,26 +332,18 @@ export default function ServiceCustomerTable() {
         <div className="fixed inset-0 admin-dark:bg-black bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white admin-dark:bg-gray-900 p-6 rounded-2xl shadow-2xl w-full max-w-3xl relative max-h-[90vh] overflow-y-auto">
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-white text-2xl font-bold z-10"
+              className="rounded-full w-8 h-8 border border-gray-500 absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-white text-2xl font-bold z-10"
               onClick={() => {
-                console.log("❌ [Modal Close] User clicked close button");
                 setOpenReadInforCustomer(false);
                 setCustomerDetail(null);
                 setLoadingCustomer(false);
-                console.log("🧹 [Modal Close] Modal closed and states reset");
               }}
             >
               &times;
             </button>
 
             {(() => {
-              console.log("🖼️ [Modal Render] Current states:");
-              console.log("   - loadingCustomer:", loadingCustomer);
-              console.log("   - customerDetail:", customerDetail ? "✅ Has data" : "❌ No data");
-              console.log("   - openReadInforCustomer:", openReadInforCustomer);
-
               if (loadingCustomer) {
-                console.log("⏳ [Modal Render] Showing loading state");
                 return (
                   <div className="text-center py-10 admin-dark:text-white">
                     <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 admin-dark:border-white"></div>
@@ -392,10 +351,8 @@ export default function ServiceCustomerTable() {
                   </div>
                 );
               } else if (customerDetail) {
-                console.log("✅ [Modal Render] Rendering ReadInforCustomer with data");
                 return <ReadInforCustomer data={customerDetail} />;
               } else {
-                console.log("❌ [Modal Render] Showing error state - no data available");
                 return (
                   <div className="text-center py-10 text-red-500 admin-dark:text-red-400">
                     Không tìm thấy dữ liệu hoặc có lỗi xảy ra

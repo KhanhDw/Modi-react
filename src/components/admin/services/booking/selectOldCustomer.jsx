@@ -16,9 +16,6 @@ import { Button } from "@/components/ui/button"
 import { ChevronsUpDown } from "lucide-react"
 
 export default function CustomerCombobox({ customers, formData, setFormData }) {
-
-
-    console.log("customers:", customers)
     const [open, setOpen] = useState(false)
 
     return (

@@ -29,6 +29,9 @@ import ServiceForm from "./service-form";
 import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormService";
 import ReaderDetailService from "./ReadDetailService";
 import { useNavigate } from "react-router-dom";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx"
+
+
 
 export default function ServiceTable() {
 
@@ -234,41 +237,15 @@ export default function ServiceTable() {
           </Table>
         </div>
         {/* Pagination */}
-        <div className="flex justify-end mt-4 gap-2">
-          <Button
-            variant="outline"
-            disabled={currentPage === 1}
-            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
-              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-          >
-            Trước
-          </Button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <Button
-              key={i}
-              className={`px-3 ${currentPage === i + 1
-                ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
-                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-                }`}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </Button>
-          ))}
-
-          <Button
-            variant="outline"
-            disabled={currentPage === totalPages}
-            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
-              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-          >
-            Sau
-          </Button>
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm text-gray-500 admin-dark:text-gray-400">
+            Trang {currentPage} / {totalPages || 1}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
       </CardContent>
     </Card>

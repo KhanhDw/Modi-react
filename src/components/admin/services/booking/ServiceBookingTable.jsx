@@ -32,6 +32,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useOutletContext } from "react-router-dom";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx"
+
+
 
 export default function ServiceBookingTable() {
   const { initDataBooking, handleDeleteBooking, openEditBookingForm } =
@@ -48,7 +51,6 @@ export default function ServiceBookingTable() {
   };
 
 
-  // Filter theo search + status
   // Filter theo search + status
   const filteredBooking = initDataBooking.filter((booking) => {
     const keyword = search.toLowerCase();
@@ -256,41 +258,18 @@ export default function ServiceBookingTable() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-end mt-4 gap-2">
-          <Button
-            variant="outline"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
-              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
-          >
-            Trước
-          </Button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <Button
-              key={i}
-              variant={currentPage === i + 1 ? "default" : "outline"}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 ${currentPage === i + 1
-                ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
-                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-                }`}
-            >
-              {i + 1}
-            </Button>
-          ))}
-          <Button
-            variant="outline"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
-              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
-          >
-            Sau
-          </Button>
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm text-gray-500 admin-dark:text-gray-400">
+            Trang {currentPage} / {totalPages || 1}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
+
       </CardContent>
     </Card>
   );
