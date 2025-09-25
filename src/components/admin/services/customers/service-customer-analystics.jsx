@@ -100,6 +100,25 @@ export default function ServiceCustomerAnalytics() {
       totalCustomers: item.totalCustomers,
     }));
 
+
+
+  // Hàm format thời gian tương đối
+  function formatRelativeTime(dateString) {
+    const now = new Date();
+    const created = new Date(dateString);
+    const diffMs = now - created;
+
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMinutes < 1) return "Vừa xong";
+    if (diffMinutes < 60) return `${diffMinutes} phút trước`;
+    if (diffHours < 24) return `${diffHours} giờ trước`;
+    return `${diffDays} ngày trước`;
+  }
+
+
   return (
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-6">
@@ -144,16 +163,13 @@ export default function ServiceCustomerAnalytics() {
                             o.customer_id === customer.id
                         ).length
                       }
-                      đơn
+                      <span className="ml-1">đơn</span>
                     </Badge>
                     <div className="text-right">
                       <p className="text-sm font-medium text-[#5ea25e] admin-dark:text-green-400">
-                        {Math.floor(
-                          (new Date() - new Date(customer.created_at)) /
-                          (1000 * 60 * 60 * 24)
-                        )}{" "}
-                        Ngày trước
+                        {formatRelativeTime(customer.created_at)}
                       </p>
+
                     </div>
                   </div>
                 </div>

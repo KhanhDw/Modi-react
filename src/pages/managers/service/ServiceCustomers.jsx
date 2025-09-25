@@ -29,6 +29,19 @@ export default function ServiceCustomers() {
     );
   });
 
+  // Lấy danh sách customer_id từ các booking chưa hoàn thành
+  const activeCustomerIds = new Set(
+    initDataBooking
+      .filter((b) => b.status !== "completed") // chỉ lấy booking đang xử lý
+      .map((b) => b.customer_id)               // lấy id khách
+  );
+
+  // Đếm số lượng khách hàng duy nhất đang có booking
+  const customersOrderingService = initDataCustomer.filter((c) =>
+    activeCustomerIds.has(c.id)
+  );
+
+
 
   const handleOpenAddCustomer = () => {
     setOpenAddCustomer(true);
@@ -104,7 +117,7 @@ export default function ServiceCustomers() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black admin-dark:text-white">
-              {initDataBooking.filter((c) => c.status !== "completed").length}
+              {customersOrderingService.length}
             </div>
             {/* <p className="text-xs text-[#ac9a00]">+2 từ tháng trước</p> */}
           </CardContent>

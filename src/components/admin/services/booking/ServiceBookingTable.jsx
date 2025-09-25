@@ -176,19 +176,20 @@ export default function ServiceBookingTable() {
                     {item.service_name}
                   </TableCell>
                   <TableCell>
-                    {item.status === "completed" ? (
-                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">
-                        Hoàn thành
-                      </Badge>
-                    ) : item.status === "pending" ? (
-                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">
-                        Chưa hoàn thành
-                      </Badge>
+                    {item.status === "pending" ? (
+                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">Chờ xác nhận</Badge>
+                    ) : item.status === "completed" ? (
+                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">Hoàn thành</Badge>
+                    ) : item.status === "cancelled" ? (
+                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">Hủy</Badge>
+                    ) : item.status === "processing" ? (
+                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">Đang xử lý</Badge>
+                    ) : item.status === "confirmed" ? (
+                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">Đã xác nhận</Badge>
                     ) : (
-                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">
-                        Đơn bị hủy
-                      </Badge>
-                    )}
+                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">Không xác định</Badge>
+                    )
+                    }
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {Number(item.price).toLocaleString("vi-VN")} ₫

@@ -12,11 +12,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import CustomerCombobox from "./selectOldCustomer"
+
 
 export default function BookingForm() {
   const {
@@ -29,9 +39,11 @@ export default function BookingForm() {
   } = useOutletContext(); //src\pages\managers\ServicesPage.jsx
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({}); // 👈 state chứa lỗi
+  const [customerMode, setCustomerMode] = useState("new");
 
 
   useEffect(() => {
+
     if (editingBooking) {
       const formatDate = (date) => {
         const d = new Date(date);
@@ -45,7 +57,9 @@ export default function BookingForm() {
         ? formatDate(editingBooking.booking_date)
         : formatDate(new Date());
 
-      console.log("-->", editingBooking);
+      console.log("--1>", editingBooking);
+
+
 
       setFormData({
         cusName: editingBooking.customer_name || "",
@@ -55,6 +69,7 @@ export default function BookingForm() {
         service: editingBooking.service_id
           ? editingBooking.service_id.toString()
           : "",
+        price: editingBooking.price || "",
         status: editingBooking.status?.toLowerCase() || "",
         bookingDate: dateOnly,
         completedDate: editingBooking.completed_date
@@ -126,6 +141,13 @@ export default function BookingForm() {
       newErrors.service = "Vui lòng chọn dịch vụ.";
     }
 
+    if (!formData.price) {
+      newErrors.price = "Vui lòng nhập giá.";
+    } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
+      newErrors.price = "Giá phải là số lớn hơn 0.";
+    }
+
+
     if (!formData.bookingDate) {
       newErrors.bookingDate = "Vui lòng chọn ngày đặt.";
     }
@@ -172,6 +194,38 @@ export default function BookingForm() {
         <form onSubmit={handleSubmit}>
           <div className="gap-4">
             <div className="space-y-4">
+              <div className="flex gap-4 mb-4">
+                <Button
+                  type="button"
+                  variant={customerMode === "existing" ? "default" : "outline"}
+                  onClick={() => setCustomerMode("existing")}
+                >
+                  Khách hàng cũ
+                </Button>
+                <Button
+                  type="button"
+                  variant={customerMode === "new" ? "default" : "outline"}
+                  onClick={() => setCustomerMode("new")}
+                >
+                  Khách hàng mới
+                </Button>
+              </div>
+
+
+              {customerMode === "existing" && (
+                <div className="space-y-2">
+                  <Label className="text-black">Khách hàng *</Label>
+                  <CustomerCombobox
+                    customers={initDataCustomer}
+                    formData={formData}
+                    setFormData={setFormData}
+                  />
+                </div>
+              )}
+
+
+
+
               {/* Số điện thoại */}
               <div className="space-y-2">
                 <Label className="text-black" htmlFor="cusPhone">
@@ -203,15 +257,9 @@ export default function BookingForm() {
                   value={formData.cusName || ""}
                   onChange={(e) => handleChange("cusName", e.target.value)}
                   placeholder="Nhập Họ và Tên khách hàng... "
-                  // required={!editingBooking}
-                  readOnly={
-                    (!!formData.cusPhone &&
-                      initDataCustomer.some(
-                        (c) => c.phone === formData.cusPhone
-                      )) ||
-                    editingBooking
-                  }
+                  readOnly={customerMode === "existing" || editingBooking}
                 />
+
                 {errors.cusName && (
                   <p className="text-red-500 text-sm">{errors.cusName}</p>
                 )}
@@ -229,13 +277,7 @@ export default function BookingForm() {
                       value={formData.cusEmail || ""}
                       onChange={(e) => handleChange("cusEmail", e.target.value)}
                       placeholder="Nhập email của khách hàng... "
-                      readOnly={
-                        (!!formData.cusPhone &&
-                          initDataCustomer.some(
-                            (c) => c.phone === formData.cusPhone
-                          )) ||
-                        editingBooking
-                      }
+                      readOnly={customerMode === "existing" || editingBooking}
                     />
                     {errors.cusEmail && (
                       <p className="text-red-500 text-sm">{errors.cusEmail}</p>
@@ -334,6 +376,24 @@ export default function BookingForm() {
                   )}
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label className="text-black" htmlFor="price">Giá *</Label>
+                <Input
+                  type="number"
+                  id="price"
+                  className="text-black border border-black/30"
+                  value={formData.price || ""}
+                  onChange={(e) => handleChange("price", e.target.value)}
+                  placeholder="Nhập giá dịch vụ..."
+                  min="0"
+                />
+                {errors.price && (
+                  <p className="text-red-500 text-sm">{errors.price}</p>
+                )}
+              </div>
+
+
               {/* Dịch vụ + ngày đặt */}
               <div className="flex gap-4">
                 <div className="space-y-2 relative">

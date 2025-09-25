@@ -41,6 +41,7 @@ import {
 import { useOutletContext } from "react-router-dom";
 import ExcelDataUploader from "./ExcelDataUploader";
 import ReadInforCustomer from "./ReadInforCustomer";
+import useLenisLocal from '@/hook/useLenisLocal'
 
 export default function ServiceCustomerTable() {
   const {
@@ -49,6 +50,7 @@ export default function ServiceCustomerTable() {
     openEditCustomerForm,
     handleDeleteCustomer,
   } = useOutletContext();
+  useLenisLocal(".lenis-local")
 
   const [openDialogImportCustomer, setOpenDialogImportCustomer] = useState(false);
   const [openReadInforCustomer, setOpenReadInforCustomer] = useState(false);
@@ -127,6 +129,26 @@ export default function ServiceCustomerTable() {
     startIndex,
     startIndex + itemsPerPage
   );
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5; // số lượng page muốn hiển thị
+
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(totalPages, start + maxVisible - 1);
+
+    // nếu số trang hiển thị chưa đủ thì điều chỉnh lại start
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+
 
   return (
     <div className="space-y-6">
@@ -260,53 +282,80 @@ export default function ServiceCustomerTable() {
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-end mt-4 gap-2">
-            <Button
-              variant="outline"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="text-white admin-dark:text-gray-300 disabled:opacity-50 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700"
-            >
-              Trước
-            </Button>
-            {Array.from({ length: totalPages }, (_, i) => (
+          <div className="flex justify-between mt-4 gap-2 items-center">
+            <div>
+              <button type="button" className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300">
+                <span className=" transition-all duration-300  text-sm text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
+                  Thiết lập điều kiện là khách hàng VIP
+                </span>
+              </button>
+            </div>
+            <div className="flex items-center space-x-2">
               <Button
-                key={i}
-                variant={currentPage === i + 1 ? "default" : "outline"}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 ${currentPage === i + 1
-                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-700 admin-dark:hover:bg-blue-800"
-                  : "bg-white admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 border border-gray-300 admin-dark:border-gray-600 hover:bg-gray-100 admin-dark:hover:bg-gray-700"
-                  }`}
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
               >
-                {i + 1}
+                Trước
               </Button>
-            ))}
-            <Button
-              variant="outline"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="text-white admin-dark:text-gray-300 disabled:opacity-50 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700"
-            >
-              Sau
-            </Button>
+
+              {/* Hiển thị trang đầu nếu currentPage > 3 */}
+              {currentPage > 3 && (
+                <>
+                  <Button onClick={() => setCurrentPage(1)}>1</Button>
+                  <span className="px-2">...</span>
+                </>
+              )}
+
+              {/* Trang xung quanh currentPage */}
+              {getPageNumbers().map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 ${currentPage === page ? "bg-blue-600 text-white" : ""}`}
+                >
+                  {page}
+                </Button>
+              ))}
+
+              {/* Hiển thị trang cuối nếu currentPage < totalPages - 2 */}
+              {currentPage < totalPages - 2 && (
+                <>
+                  <span className="px-2">...</span>
+                  <Button onClick={() => setCurrentPage(totalPages)}>{totalPages}</Button>
+                </>
+              )}
+
+              <Button
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+              >
+                Sau
+              </Button>
+            </div>
+
           </div>
         </CardContent>
       </Card>
 
       {/* Component Upload Excel */}
       {openDialogImportCustomer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="relative bg-white admin-dark:bg-gray-900 rounded-lg shadow-2xl p-8 min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
-            <button
+        <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 min-h-screen">
+          <div className="relative bg-white admin-dark:bg-black rounded-lg shadow-2xl  min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
+            <button hidden
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold"
               onClick={() => setOpenDialogImportCustomer(false)}
               aria-label="Đóng"
             >
               &times;
             </button>
-            <h2 className="mb-4 text-lg font-semibold text-gray-800 admin-dark:text-white">Nhập dữ liệu khách hàng từ Excel</h2>
-            <ExcelDataUploader />
+            <ExcelDataUploader
+              openDialogImportCustomer={openDialogImportCustomer}
+              setOpenDialogImportCustomer={setOpenDialogImportCustomer}
+
+            />
           </div>
         </div>
       )}
