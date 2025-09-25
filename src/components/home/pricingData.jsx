@@ -108,3 +108,35 @@ const pricingData = [
 ];
 
 export default pricingData;
+// ở tren sai mẫu dữ liệu rồi ,
+// làm theo mẫu dữ liệu này
+/*
+{
+  "features":{
+    "Line1": "nội dung 1",
+    "Line2": "nội dung 2",
+    "Line3": "nội dung 3",
+    ....
+    "LineN": "nội dung N",
+  },
+  "title": {
+    "stage1": ["seo-service", "basic-website",...],
+    "stage2": ["re-vision",...],
+    "stage3": ["content-marketing",...]
+  },
+  checked: {
+      "seo-service": 
+      {
+        "stage1": {"Line1": true,"Line2": false,"Line3": true,"Line4": true}
+      },
+      "re-vision": 
+      {
+        "stage2": {"Line1": true,"Line2": true,"Line3": false,"Line4": true}
+      },
+      "content-marketing":
+      {
+        "stage3": {"Line1": false,"Line2": true,"Line3": true,"Line4": true}
+      }
+  }
+}
+*/ 
