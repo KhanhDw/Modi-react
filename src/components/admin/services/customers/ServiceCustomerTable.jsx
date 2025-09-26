@@ -74,7 +74,6 @@ export default function ServiceCustomerTable() {
   const getFullInforCustomer = async (id) => {
 
     try {
-      console.log("📝 [getFullInforCustomer] Setting loading state...");
       setLoadingCustomer(true);
       setCustomerDetail(null);
       setOpenReadInforCustomer(false);
@@ -187,6 +186,7 @@ export default function ServiceCustomerTable() {
             <Table>
               <TableHeader>
                 <TableRow className="admin-dark:border-gray-700">
+                  <TableHead className="text-black admin-dark:text-white">STT</TableHead>
                   <TableHead className="text-black admin-dark:text-white">Tên khách hàng</TableHead>
                   <TableHead className="text-black admin-dark:text-white">SĐT</TableHead>
                   <TableHead className="text-black admin-dark:text-white">Email</TableHead>
@@ -197,8 +197,13 @@ export default function ServiceCustomerTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentData.map((customer) => (
+                {currentData.map((customer, index) => (
                   <TableRow key={customer.id} className="admin-dark:border-gray-700 admin-dark:hover:bg-gray-750">
+
+                    <TableCell className="text-black admin-dark:text-white">
+                      {startIndex + index + 1}
+                    </TableCell>
+
                     <TableCell className="text-black admin-dark:text-white">
                       {customer.name}
                     </TableCell>

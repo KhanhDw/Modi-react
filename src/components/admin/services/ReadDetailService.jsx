@@ -209,7 +209,7 @@ export default function ReaderDetailService() {
                                         <p className="text-sm font-medium text-gray-500 admin-dark:text-gray-400">
                                             Số lần đặt
                                         </p>
-                                        <p className="text-xl font-bold text-gray-900 admin-dark:text-white">
+                                        <p className="text-xl font-bold text-gray-900 admin-dark:text-white ">
                                             {service.booking_count || 0}
                                         </p>
                                     </div>

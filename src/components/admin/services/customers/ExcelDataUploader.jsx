@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import useLenisLocal from '@/hook/useLenisLocal';
+import { useOutletContext } from "react-router-dom";
+
 
 function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustomer }) {
     useLenisLocal(".lenis-local");
+
+    const { handleRefetchCustomer } =
+        useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
 
     const [excelData, setExcelData] = useState(null);
     const [fileName, setFileName] = useState("");
@@ -25,33 +30,48 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
         reader.onload = (event) => {
             try {
                 const text = event.target.result;
-                // Đọc file CSV với mã hóa UTF-8
-                const workbook = XLSX.read(text, { type: "string", codepage: 65001 });
+                // Read file with string type and UTF-8 encoding
+                const workbook = XLSX.read(text, { type: "string", codepage: 65001, raw: false });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
 
-                const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                // Ensure phone numbers are treated as strings
+                const json = XLSX.utils.sheet_to_json(worksheet, {
+                    defval: "",
+                    raw: false, // Ensure formatted values are used (not raw numbers)
+                    cellText: true, // Preserve text formatting
+                });
 
-                const normalized = json.map((row) => ({
-                    name: row.name || "",
-                    phone: row.phone || "",
-                    email: row.email || "",
-                    address: row.address || "",
-                    type: "new",
-                    status: "active",
-                    total_spent: "0",
-                    booking_count: "0",
-                }));
+                const normalized = json.map((row) => {
+                    // Convert phone number to string and ensure leading zero
+                    let phone = row.phone ? String(row.phone).trim() : "";
+                    // Add leading zero if missing (assuming 10-digit Vietnamese numbers)
+                    if (phone && !phone.startsWith("0") && phone.length === 9) {
+                        phone = "0" + phone;
+                    } else if (!phone) {
+                        phone = "";
+                    }
+
+                    return {
+                        name: row.name || "",
+                        phone: phone,
+                        email: row.email || "",
+                        address: row.address || "",
+                        type: "new",
+                        status: "active",
+                        total_spent: "0",
+                        booking_count: "0",
+                    };
+                });
 
                 setExcelData(normalized);
             } catch (error) {
-                console.error("Lỗi khi đọc file CSV:", error);
+                console.error("Error reading CSV file:", error);
                 setExcelData(null);
                 alert("Lỗi khi đọc file CSV. Vui lòng kiểm tra lại định dạng hoặc mã hóa.");
             }
         };
 
-        // Đọc file dưới dạng text với UTF-8
         reader.readAsText(file, "UTF-8");
     };
 
@@ -127,8 +147,9 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
                 return;
             }
 
+            handleRefetchCustomer();
             // Thành công
-            alert(`Đã import thành công ${data.insertedCount} khách hàng.`);
+            alert(`Đã cập nhật ${data.insertedCount} dữ liệu khách hàng thành công .`);
             setExcelData(null);
             setFileName("");
         } catch (err) {

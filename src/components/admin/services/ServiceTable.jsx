@@ -115,6 +115,9 @@ export default function ServiceTable() {
                   hover:bg-gray-100 admin-dark:hover:bg-gray-800"
               >
                 <TableHead className="text-black admin-dark:text-gray-200">
+                  STT
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
                   Hình ảnh
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
@@ -123,30 +126,33 @@ export default function ServiceTable() {
                 <TableHead className="text-black admin-dark:text-gray-200">
                   Mô tả
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Giá
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Số lần đặt
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Ngôn ngữ hỗ trợ
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Trạng thái
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Thao tác
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((item) => {
+              {currentData.map((item, index) => {
                 return (
                   <TableRow
                     key={item.id}
                     className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                   >
+                    <TableCell className={`text-gray-900 admin-dark:text-gray-200  `}>
+                      {startIndex + index + 1}
+                    </TableCell>
                     <TableCell>
                       {item.image_url ? (
                         <img
@@ -169,19 +175,19 @@ export default function ServiceTable() {
                     <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>
                       {item.translation?.mo_ta || "Chưa có thông tin tiếng việt"}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
                       {item.floor_price
                         ? `₫${Number(item.floor_price).toLocaleString()}`
                         : ""}
                     </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
                       {typeof item.booking_count === "number"
                         ? item.booking_count
                         : ""}
                     </TableCell>
                     <TableCell
-                      className="text-gray-900 admin-dark:text-gray-200"
-                    ><div className="flex flex-wrap gap-1">
+                      className="text-gray-900 admin-dark:text-gray-200 flex items-center justify-center"
+                    ><div className="flex flex-wrap gap-1 text-center">
                         {item.totalLanguages.map((lang, index) => {
                           return (
                             <span key={`${lang}-${index}`} className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"} px-2 py-1 text-xs text-white  rounded-sm`}>{lang}</span>
@@ -189,14 +195,14 @@ export default function ServiceTable() {
                         }) || ""}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={`text-center`}>
                       <Badge className="bg-green-600 text-white admin-dark:bg-green-500">
                         {item.status === "Active"
                           ? "Hoạt động"
                           : "Không hoạt động"}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={`text-center`}>
                       <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                           <Button

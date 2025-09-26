@@ -12,6 +12,9 @@ import { BookingAPI } from "@/api/bookingAPI";
 import { CustomerAPI } from "@/api/customerAPI";
 import ThemeToggle from "@/components/layout/partials/ThemeToggle";
 
+
+
+
 export default function ServicesPage() {
   // Common part
   const [showForm, setShowForm] = useState(false);
@@ -415,6 +418,7 @@ export default function ServicesPage() {
           handleEditingCustomer,
           handleDeleteCustomer,
           handleRefetchCustomer, // Truyền hàm refetch cho con
+
         }}
       />
     );

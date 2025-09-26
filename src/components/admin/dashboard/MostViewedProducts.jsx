@@ -32,9 +32,14 @@ export default function MostViewedProducts() {
         return (
             <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
                 <CardHeader>
-                    <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-300">🔥 Sản phẩm được xem nhiều nhất</CardTitle>
-                    <CardDescription>Chưa có dữ liệu</CardDescription>
+                    <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
+                    <CardDescription>Danh sách Top sản phẩm theo lượt xem</CardDescription>
                 </CardHeader>
+                <CardContent className="space-y-2">
+                    <div className="text-center text-gray-500 admin-dark:text-gray-400 text-sm font-medium">
+                        Chưa Có Dữ Liệu
+                    </div>
+                </CardContent>
             </Card>
         )
     }
@@ -42,7 +47,7 @@ export default function MostViewedProducts() {
     return (
         <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
             <CardHeader>
-                <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-300">🔥 Sản phẩm được xem nhiều nhất</CardTitle>
+                <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
                 <CardDescription>Danh sách Top sản phẩm theo lượt xem</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

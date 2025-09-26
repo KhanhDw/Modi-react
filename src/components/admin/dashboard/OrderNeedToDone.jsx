@@ -1,74 +1,77 @@
+"use client";
+
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 
 export default function OrderNeedToDone({ bookings }) {
-  // Hàm tính trạng thái dựa trên thời gian
-  const getOrderStatus = (bookingDate, completedDate) => {
+  const getOrderStatus = (booking) => {
+    if (booking.status === "completed" || booking.status === "cancelled") return "Hoàn thành";
+
     const now = new Date();
+    const dueDate = booking.completed_date ? new Date(booking.completed_date) : null;
 
-    if (!completedDate) return "Đang xử lý";
+    if (!dueDate) return "Đang xử lý";
 
-    const due = new Date(completedDate);
-    const diffDays = (due - now) / (1000 * 60 * 60 * 24);
+    const diffDays = (dueDate - now) / (1000 * 60 * 60 * 24);
 
     if (diffDays < 0) return "Quá hạn";
     if (diffDays <= 5) return "Gần đến hạn";
     return "Đang xử lý";
   };
 
-  // Hàm lấy màu nền dựa trên trạng thái
   const getStatusBackground = (status) => {
     switch (status) {
       case "Quá hạn":
         return "bg-red-100 admin-dark:bg-red-900/30";
       case "Gần đến hạn":
         return "bg-yellow-100 admin-dark:bg-yellow-900/30";
+      case "Đang xử lý":
+        return "bg-transparent";
       default:
         return "bg-transparent";
     }
   };
 
-  // Hàm lấy màu chữ cho trạng thái
   const getStatusTextStyle = (status) => {
     switch (status) {
       case "Quá hạn":
         return "text-red-600 admin-dark:text-red-400";
       case "Gần đến hạn":
         return "text-yellow-600 admin-dark:text-yellow-400";
-      default:
+      case "Đang xử lý":
         return "text-green-600 admin-dark:text-green-400";
+      default:
+        return "text-gray-600 admin-dark:text-gray-400";
     }
   };
 
-  // Sắp xếp đơn hàng: Quá hạn -> Gần đến hạn -> Đang xử lý
   const statusPriority = {
     "Quá hạn": 1,
-    "Cũ chưa xong": 2,
+    "Gần đến hạn": 2,
     "Đang xử lý": 3,
   };
 
-  // Lọc trước các booking chưa hoàn thành
   const filteredBookings = bookings.filter(
-    (b) => b.status !== "completed" && b.status !== "cancelled"
+    (b) => b.status !== "completed" && b.status !== "cancelled" && b.is_deleted === 0
   );
 
-  // Sắp xếp: Đơn hàng có ngày hoàn thành gần nhất với hiện tại lên đầu
   const sortedOrders = filteredBookings.sort((a, b) => {
-    // Nếu không có ngày hoàn thành thì để xuống cuối
-    if (!a.completed_date && b.completed_date) return 1;
-    if (a.completed_date && !b.completed_date) return -1;
-    if (!a.completed_date && !b.completed_date) return 0;
+    const statusA = getOrderStatus(a);
+    const statusB = getOrderStatus(b);
 
-    // Sắp xếp theo ngày hoàn thành gần nhất với hiện tại
-    const now = new Date();
-    const diffA = Math.abs(new Date(a.completed_date) - now);
-    const diffB = Math.abs(new Date(b.completed_date) - now);
-    return diffA - diffB;
+    if (statusPriority[statusA] !== statusPriority[statusB]) {
+      return statusPriority[statusA] - statusPriority[statusB];
+    }
+
+    const dateA = a.completed_date ? new Date(a.completed_date) : new Date(0);
+    const dateB = b.completed_date ? new Date(b.completed_date) : new Date(0);
+
+    return dateA - dateB;
   });
 
   return (
@@ -87,16 +90,13 @@ export default function OrderNeedToDone({ bookings }) {
             <thead>
               <tr className="border-b border-gray-200 admin-dark:border-gray-700">
                 <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300">
-                  Đơn hàng
+                  Dịch vụ
                 </th>
                 <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300">
-                  Người đặt
+                  Khách hàng
                 </th>
                 <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300">
-                  Thời gian hoàn thành
-                </th>
-                <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300 hidden">
-                  Ngày tạo
+                  Ngày bàn giao
                 </th>
                 <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300">
                   Trạng thái
@@ -104,35 +104,41 @@ export default function OrderNeedToDone({ bookings }) {
               </tr>
             </thead>
             <tbody>
-              {sortedOrders.map((order, i) => {
-                const status = getOrderStatus(
-                  order.booking_date,
-                  order.completed_date
-                );
-                return (
-                  <tr
-                    key={i}
-                    className={`border-b border-gray-200 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-800 transition-colors ${getStatusBackground(
-                      status
-                    )}`}
-                  >
-                    <td className="py-3 flex items-center gap-2">
-                      <div
-                        className={`w-2 h-2 ${order.color} rounded-full`}
-                      ></div>
-                      <span>{order.ten_dich_vu}</span>
-                    </td>
-                    <td className="py-3 px-4">{order.name}</td>
-                    <td className="py-3 px-12">
-                      {new Date(order.completed_date).toLocaleDateString()}
-                    </td>
-                    <td className={`py-3 px-4 ${getStatusTextStyle(status)}`}>
-                      {status}
-                    </td>
-                    {/* <td className="py-3 px-4">{order.dueTime}</td> */}
-                  </tr>
-                );
-              })}
+              {sortedOrders.length > 0 ? (
+                sortedOrders.map((order, i) => {
+                  const status = getOrderStatus(order);
+                  return (
+                    <tr
+                      key={i}
+                      className={`border-b border-gray-200 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-800 transition-colors ${getStatusBackground(
+                        status
+                      )}`}
+                    >
+                      <td className="py-3 px-4 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <span className="truncate block max-w-30" title={order.service_name}>
+                          {order.service_name}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">{order.customer_name || "-"}</td>
+                      <td className="py-3 px-4">
+                        {order.completed_date
+                          ? new Date(order.completed_date).toLocaleDateString("vi-VN")
+                          : "-"}
+                      </td>
+                      <td className={`py-3 px-4 ${getStatusTextStyle(status)}`}>
+                        {status}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr className="border-b border-gray-200 admin-dark:border-gray-700">
+                  <td colSpan={4} className="py-4 text-center text-gray-500 admin-dark:text-gray-400">
+                    Không có đơn hàng nào cần hoàn thành
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

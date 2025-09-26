@@ -106,7 +106,7 @@ export default function WebsiteTemplatesDetail() {
         </div>
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => navigate("edit")}
+            onClick={() => navigate("/products/" + template.id)}
             className="flex items-center gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900"
           >
             <AppWindow className="h-4 w-4" />

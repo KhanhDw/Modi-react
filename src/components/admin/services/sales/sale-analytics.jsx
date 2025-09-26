@@ -18,24 +18,47 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const value = payload[0].value;
+    let display = "";
+
+    // Chuyển T1 → Tháng 1
+    const monthNumber = label.replace("T", "");
+    const displayLabel = `Tháng ${monthNumber}`;
+
+    // Format số tiền
+    if (value >= 1000000) display = (value / 1000000).toFixed(2) + " Triệu";
+    else if (value >= 1000) display = (value / 1000).toFixed(0) + "Nghìn";
+    else display = value.toLocaleString("vi-VN") + "₫";
+
+    return (
+      <div className="p-2 bg-white border border-gray-200 rounded shadow admin-dark:bg-gray-800 admin-dark:border-gray-600">
+        <p className="text-sm text-gray-700 admin-dark:text-gray-200">{displayLabel}</p>
+        <p className="font-semibold text-green-600 admin-dark:text-green-400">{display}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+
+
 export default function SaleAnalytics() {
-  const { initDataService } = useOutletContext();
-  const months = Array.from({ length: 12 }, (_, i) => ({
-    month: `T${i + 1}`,
-    revenue: 0,
-  }));
+  const { initDataService, initDataBooking } = useOutletContext();
+  const months = Array.from({ length: 12 }, (_, i) => ({ month: `T${i + 1}`, revenue: 0 }));
 
-  initDataService.forEach((s) => {
-    const revenue = s.revenue ? s.revenue : 0;
-    if (s.created_at) {
-      const date = new Date(s.created_at);
-      const monthIndex = date.getMonth();
-
-      const serviceRevenue = revenue || 0;
-
-      months[monthIndex].revenue += parseFloat(serviceRevenue) || 0;
+  initDataBooking.forEach((b) => {
+    // chỉ tính booking completed
+    if (b.status === "completed" && b.completed_date && b.is_deleted === 0) {
+      const date = new Date(b.completed_date);
+      const monthIndex = date.getMonth(); // 0 = Jan, 11 = Dec
+      months[monthIndex].revenue += Number(b.price) * (b.quantity || 1);
     }
   });
+
 
   return (
     <>
@@ -59,24 +82,8 @@ export default function SaleAnalytics() {
                   return value;
                 }}
               />
-              <Tooltip
-                formatter={(value) =>
-                  value.toLocaleString("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  })
-                }
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  borderColor: "#e5e7eb",
-                  color: "#374151",
-                }}
-                admin-dark:contentStyle={{
-                  backgroundColor: "#1f2937",
-                  borderColor: "#374151",
-                  color: "#d1d5db",
-                }}
-              />
+              <Tooltip content={<CustomTooltip />} />
+
               <Line
                 type="monotone"
                 dataKey="revenue"

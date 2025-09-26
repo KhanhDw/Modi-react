@@ -35,8 +35,8 @@ const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 // Menu gốc
 const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
-  { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
+  { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
   { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone },
   {

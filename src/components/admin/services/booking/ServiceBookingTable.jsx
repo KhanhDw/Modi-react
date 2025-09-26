@@ -143,6 +143,9 @@ export default function ServiceBookingTable() {
                   hover:bg-gray-100 admin-dark:hover:bg-gray-800"
               >
                 <TableHead className="text-black admin-dark:text-gray-200">
+                  STT
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
                   Tên khách hàng
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
@@ -171,6 +174,9 @@ export default function ServiceBookingTable() {
                   key={`${item.id}${index}`}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
+                  <TableCell className={`text-gray-900 admin-dark:text-gray-200`}>
+                    {startIndex + index + 1}
+                  </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {item.customer_name}
                   </TableCell>
