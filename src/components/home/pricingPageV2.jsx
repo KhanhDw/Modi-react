@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import PricingSlider from "./PricingSlider";
-import pricingData from "./pricingData";
+// import pricingData from "./pricingData";
+import PricingData from './pricingData';
 import PricingFooterPage from "./pricingFooterPage";
 
 export default function PricingPageV2() {
@@ -25,7 +26,8 @@ export default function PricingPageV2() {
                 </header>
 
                 <main>
-                    <PricingSlider stages={pricingData} />
+                    {/* <PricingSlider stages={pricingData} /> */}
+                    <PricingSlider data={PricingData} />
                 </main>
 
                 {!isAdmin && <PricingFooterPage />}
