@@ -29,6 +29,8 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
+import PageSpeed from "./PageSpeed";
+
 
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
@@ -210,8 +212,8 @@ const SidebarContent = ({
                     ? "bg-slate-700 text-white shadow-sm scale-[0.98]"
                     : "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
                   : isDark
-                  ? "text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-[0.99]"
-                  : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
+                    ? "text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-[0.99]"
+                    : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
               )}
               title={isCollapsed && !isMobile ? item.name : undefined}
               aria-label={item.name}
@@ -260,6 +262,30 @@ const SidebarContent = ({
           )}
         >
           {todayVisits.toLocaleString("vi-VN")}
+        </span>
+      </div>
+      {/* speed load page */}
+      <div className="px-2 flex items-center justify-between transition-all duration-300 ">
+        {isCollapsed && !isMobile ? (
+          ""
+        ) : (
+          <span
+            className={cn(
+              "font-medium text-xs transition-all duration-300 mb-2",
+              isDark ? "text-gray-50" : "text-gray-900"
+            )}
+          >
+            Tốc độ tải trang:
+          </span>
+        )}
+
+        <span
+          className={cn(
+            `${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center mb-2`,
+            isDark ? "text-gray-50" : "text-gray-900"
+          )}
+        >
+          <PageSpeed />
         </span>
       </div>
 
