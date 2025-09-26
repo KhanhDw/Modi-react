@@ -32,6 +32,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useOutletContext } from "react-router-dom";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx"
+
+
 
 export default function ServiceBookingTable() {
   const { initDataBooking, handleDeleteBooking, openEditBookingForm } =
@@ -47,16 +50,21 @@ export default function ServiceBookingTable() {
     setCurrentPage(1);
   };
 
+
+  // Filter theo search + status
   const filteredBooking = initDataBooking.filter((booking) => {
     const keyword = search.toLowerCase();
     const matchSearch =
-      booking.name.toLowerCase().includes(keyword) ||
-      booking.ten_dich_vu.toLowerCase().includes(keyword);
+      (booking.customer_name?.toLowerCase() || "").includes(keyword) ||
+      (booking.service_name?.toLowerCase() || "").includes(keyword);
     const matchStatus =
       statusFilter === "all" || booking.status === statusFilter;
     return matchSearch && matchStatus;
   });
 
+
+
+  // Phân trang
   const totalPages = Math.ceil(filteredBooking.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredBooking.slice(
@@ -132,7 +140,10 @@ export default function ServiceBookingTable() {
                 className="bg-gray-50 admin-dark:bg-gray-900 
                   hover:bg-gray-100 admin-dark:hover:bg-gray-800"
               >
-                <TableHead className="w-[20%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  STT
+                </TableHead>
+                <TableHead className="text-black admin-dark:text-gray-200">
                   Tên khách hàng
                 </TableHead>
                 <TableHead className="w-[20%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
@@ -147,8 +158,8 @@ export default function ServiceBookingTable() {
                 <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
                   Ngày đặt
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
-                  Ngày hoàn thành
+                <TableHead className="text-black admin-dark:text-gray-200">
+                  Ngày bàn giao
                 </TableHead>
                 <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
                   Thao tác
@@ -156,150 +167,113 @@ export default function ServiceBookingTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.length === 0 ? (
+              {currentData.map((item, index) => (
+                <TableRow
+                  key={`${item.id}${index}`}
+                  className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
+                >
+                  <TableCell className={`text-gray-900 admin-dark:text-gray-200`}>
+                    {startIndex + index + 1}
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {item.customer_name}
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {item.service_name}
+                  </TableCell>
+                  <TableCell>
+                    {item.status === "pending" ? (
+                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">Chờ xác nhận</Badge>
+                    ) : item.status === "completed" ? (
+                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">Hoàn thành</Badge>
+                    ) : item.status === "cancelled" ? (
+                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">Hủy</Badge>
+                    ) : item.status === "processing" ? (
+                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">Đang xử lý</Badge>
+                    ) : item.status === "confirmed" ? (
+                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">Đã xác nhận</Badge>
+                    ) : (
+                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">Không xác định</Badge>
+                    )
+                    }
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {Number(item.price).toLocaleString("vi-VN")} ₫
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {new Date(item.booking_date).toLocaleDateString("vi-VN")}
+                  </TableCell>
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                    {item.completed_date
+                      ? new Date(item.completed_date).toLocaleDateString("vi-VN")
+                      : "Không có"}
+                  </TableCell>
+                  <TableCell className="flex items-center space-x-2">
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-gray-600 hover:bg-gray-200 
+                admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="bg-white text-black border-gray-300 
+              admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                      >
+                        <DropdownMenuItem
+                          onClick={() => openEditBookingForm(item)}
+                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Chỉnh sửa
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          key={item.id}
+                          onClick={() => handleDeleteBooking(item.id)}
+                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Xóa
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+
+              {currentData.length === 0 && (
                 <TableRow>
                   <TableCell
                     colSpan={7}
-                    className="text-center py-8 text-gray-500 admin-dark:text-gray-400"
+                    className="text-center text-gray-500 py-4 admin-dark:text-gray-400"
                   >
-                    <div className="flex flex-col items-center">
-                      <svg
-                        className="w-10 h-10 sm:w-12 sm:h-12 text-gray-300 admin-dark:text-gray-600 mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                        ></path>
-                      </svg>
-                      <span className="text-sm font-medium text-gray-500 admin-dark:text-gray-300">
-                        Không có dữ liệu
-                      </span>
-                      <span className="text-xs text-gray-400 admin-dark:text-gray-500 mt-1">
-                        Chưa có đơn đặt nào được tìm thấy
-                      </span>
-                    </div>
+                    Không tìm thấy đơn đặt dịch vụ nào.
                   </TableCell>
                 </TableRow>
-              ) : (
-                currentData.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
-                  >
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate">
-                      {item.name}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate">
-                      {item.ten_dich_vu}
-                    </TableCell>
-                    <TableCell>
-                      {item.status === "completed" ? (
-                        <Badge className="bg-green-500 text-white admin-dark:bg-green-600 text-xs">
-                          Hoàn thành
-                        </Badge>
-                      ) : item.status !== "cancelled" ? (
-                        <Badge className="bg-red-900 text-white admin-dark:bg-red-800 text-xs">
-                          Chưa hoàn thành
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-red-500 text-white admin-dark:bg-red-600 text-xs">
-                          Đơn bị hủy
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
-                      {`₫${item.price.toLocaleString()}`}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
-                      {new Date(item.booking_date).toLocaleDateString("vi-VN")}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
-                      {item.completed_date
-                        ? new Date(item.completed_date).toLocaleDateString("vi-VN")
-                        : "Không có"}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-gray-600 hover:bg-gray-200 
-                              admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 w-8 h-8"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="bg-white text-black border-gray-300 
-                            admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
-                        >
-                          <DropdownMenuItem
-                            onClick={() => openEditBookingForm(item)}
-                            className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 text-xs sm:text-sm"
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Chỉnh sửa
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteBooking(item.id)}
-                            className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 text-xs sm:text-sm"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Xóa
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
               )}
             </TableBody>
+
           </Table>
         </div>
 
-        <div className="flex flex-wrap justify-center sm:justify-end mt-4 gap-2">
-          <Button
-            variant="outline"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="text-xs sm:text-sm text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
-              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50 px-3 py-1"
-          >
-            Trước
-          </Button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <Button
-              key={i}
-              variant={currentPage === i + 1 ? "default" : "outline"}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 text-xs sm:text-sm ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-              }`}
-            >
-              {i + 1}
-            </Button>
-          ))}
-          <Button
-            variant="outline"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="text-xs sm:text-sm text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
-              admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50 px-3 py-1"
-          >
-            Sau
-          </Button>
+        {/* Pagination */}
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm text-gray-500 admin-dark:text-gray-400">
+            Trang {currentPage} / {totalPages || 1}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
+
       </CardContent>
     </Card>
   );

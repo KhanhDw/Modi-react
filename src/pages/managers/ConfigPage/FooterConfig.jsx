@@ -293,7 +293,7 @@ export default function FooterConfigMultiLang() {
                                         : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
                                     }`}
                             >
-                                {lang === "vi" ? "🇻🇳 Tiếng Việt" : "🇬🇧 English"}
+                                {lang === "vi" ? "Tiếng Việt" : "English"}
                             </button>
                         ))}
                     </div>

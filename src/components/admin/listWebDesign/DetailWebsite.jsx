@@ -105,19 +105,18 @@ export default function WebsiteTemplatesDetail() {
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
           <Button
-            onClick={() => navigate("edit")}
-            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900"
+            onClick={() => navigate("/products/" + template.id)}
+            className="flex items-center gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900"
           >
             <AppWindow className="h-3 w-3 sm:h-4 sm:w-4" />
             Xem mẫu website
           </Button>
           <Button
             onClick={toggleExportState}
-            className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${
-              localExportState == 1
+            className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${localExportState == 1
                 ? "bg-green-600 hover:bg-green-700"
                 : "bg-gray-400 hover:bg-gray-500"
-            } text-white`}
+              } text-white`}
             disabled={isToggling}
           >
             {localExportState == 1 ? "Đã xuất bản" : "Chưa xuất bản"}
@@ -318,22 +317,20 @@ export default function WebsiteTemplatesDetail() {
                 <button
                   type="button"
                   onClick={() => setActiveLang("vi")}
-                  className={`flex px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
-                    activeLang === "vi"
+                  className={`flex px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${activeLang === "vi"
                       ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
                       : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                  }`}
+                    }`}
                 >
                   <span className="font-semibold">Tiếng Việt</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveLang("en")}
-                  className={`flex px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${
-                    activeLang === "en"
+                  className={`flex px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${activeLang === "en"
                       ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
                       : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                  }`}
+                    }`}
                 >
                   <span className="font-semibold">Tiếng Anh</span>
                 </button>

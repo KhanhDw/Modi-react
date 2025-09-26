@@ -55,7 +55,7 @@ export default function VisitorChart() {
         <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
             <CardHeader>
                 <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
-                <CardDescription>Lượt truy cập demo trong tuần</CardDescription>
+                <CardDescription>Lượt truy cập trong tuần</CardDescription>
             </CardHeader>
             <CardContent>
                 <ResponsiveContainer width="100%" height={300}>

@@ -6,6 +6,8 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import PricingPageV1 from "@/components/home/pricingPageV1.jsx";
 import PricingPageV2 from "@/components/home/pricingPageV2.jsx";
+import ChitietdichvuSection from "@/pages/managers/ConfigPage/renderSections/chitietdichvuSection.jsx";
+
 
 
 export default function RenderHomeConfig({
@@ -153,25 +155,18 @@ export default function RenderHomeConfig({
     const [showUI, setShowUI] = useState(false)
     const [dataServiceV2, setDataServiceV2] = useState([])
 
-
     useEffect(() => {
+        // console.log("9000:", currentData.chitietdichvu);
         setUiActive(currentData.chitietdichvu[0]?.title?.en);
     }, [currentData.chitietdichvu])
 
 
     async function transformPricingData(data, lang = "en") {
-
         if (!data) return;
 
-        console.log(data);
-
-        const titles = data.title?.[lang].title;
-        const serviceGroup = data.title?.[lang].serviceGroup;
-        const descriptions = data.description?.en; // luôn mặc định là en vì chỉ cần một nơi lưu dữ liệu true false là đủ
-
-        console.log(titles);
-        console.log(serviceGroup);
-        console.log("", descriptions);
+        const titles = data.title?.[lang]?.title; // object stage
+        const serviceGroup = data.title?.[lang]?.serviceGroup;
+        const descriptions = data.description?.en; // mặc định là en
 
         // 1. Tạo features list
         const features = Object.entries(serviceGroup).map(([key, label]) => ({
@@ -179,25 +174,24 @@ export default function RenderHomeConfig({
             label
         }));
 
-        // 2. Tạo packages list
-        const packages = titles.map(title => ({
-            title,
-            availability: descriptions[title]
-        }));
-
-
-        console.log("features:", features);
-        console.log("packages:", packages);
+        // 2. Tạo packages list (chuyển object stage -> array)
+        const packages = Object.entries(titles).map(([stage, arr]) => {
+            const title = arr[0]; // mỗi stage chỉ có 1 phần tử trong mảng
+            return {
+                stage,
+                title,
+                availability: descriptions?.[title] || {}
+            };
+        });
 
         return { features, packages };
     }
 
+
     useEffect(() => {
         async function loadData() {
             if (!currentData?.chitietdichvu?.[1]) return;
-            const { features, packages } = await transformPricingData(currentData.chitietdichvu[1], activeLang);
-            console.log("features:", features);
-            console.log("packages:", packages);
+            const { stage, features, packages } = await transformPricingData(currentData.chitietdichvu[1], activeLang);
         }
         loadData();
     }, [currentData.chitietdichvu])
@@ -509,7 +503,7 @@ export default function RenderHomeConfig({
             // ========================= CHI TIẾT DỊCH VỤ =========================
             case "chitietdichvu":
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-6 ">
                         {/* header */}
                         <div className="flex items-center justify-between">
                             <h1 className="font-bold text-2xl mb-4 text-left uppercase">CẤU HÌNH GIAO DIỆN VÀ NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
@@ -560,11 +554,11 @@ export default function RenderHomeConfig({
                                 )
                             }
 
-                            {!showUI && (
-                                <div>
-
-                                </div>
-                            )}
+                            {/* {!showUI && ( */}
+                            <div>
+                                <ChitietdichvuSection DataFeaturesOfGroupService={currentData.chitietdichvu[1]} />
+                            </div>
+                            {/* )} */}
 
 
                         </div>

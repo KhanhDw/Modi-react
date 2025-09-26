@@ -12,6 +12,9 @@ import { BookingAPI } from "@/api/bookingAPI";
 import { CustomerAPI } from "@/api/customerAPI";
 import ThemeToggle from "@/components/layout/partials/ThemeToggle";
 
+
+
+
 export default function ServicesPage() {
   // Common part
   const [showForm, setShowForm] = useState(false);
@@ -70,37 +73,109 @@ export default function ServicesPage() {
     }
   }, [location, navigate]);
 
+
+
+  // File: ServicesPage.jsx
   const handleCreateService = async (formData) => {
-    const payloadForAPI = {
-      name: formData.serviceName,
-      desc: formData.desc,
-      headerArticle: formData.header,
-      contentArticle: JSON.stringify(formData.content || {}),
-      lang: formData.lang || "vi",
-      price: formData.price || 0,
-    };
-
     try {
-      const res = await fetch(ServiceAPI.create(), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payloadForAPI),
-      });
+      console.log("Dữ liệu nhận từ form:", formData);
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Server trả về lỗi:", errorText);
-        throw new Error("Lỗi khi tạo dịch vụ");
+      let bodyData = formData;
+      let headers = {};
+
+      // Nếu formData là FormData (tức có append)
+      if (formData instanceof FormData) {
+        bodyData = formData; // giữ nguyên
+      } else {
+        // nếu là object thường (chỉ tạo translation)
+        bodyData = JSON.stringify(formData);
+        headers["Content-Type"] = "application/json";
       }
 
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services`, {
+        method: "POST",
+        body: bodyData,
+        headers,
+      });
+
+      const result = await res.json();
+      if (!result.success) throw new Error(result.message);
+      console.log("Tạo dịch vụ thành công:", result);
       await fetchServices();
       handleClose();
     } catch (err) {
       console.error("Lỗi khi tạo dịch vụ:", err);
     }
   };
+
+
+  const handleCreateServiceTranslation = async (formData, id) => {
+    try {
+      console.log("Dữ liệu nhận từ form (translation):", formData);
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      const payload = {
+        service_id: id,
+        lang: formData.get("lang"),
+        ten_dich_vu: formData.get("ten_dich_vu"),
+        slug: formData.get("slug"),
+        mo_ta: formData.get("mo_ta"),
+        features: formData.get("features"),
+        details: formData.get("details"),
+      };
+
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/service-translations`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await res.json();
+      if (!res.ok || !result.success) {
+        throw new Error(result.message || "Có lỗi xảy ra khi tạo bản dịch");
+      }
+
+      console.log("Tạo bản dịch thành công:", result);
+      await fetchServices();
+      handleClose();
+    } catch (err) {
+      console.error("Lỗi khi tạo bản dịch:", err);
+    }
+  };
+
+  const handleEditService = async (formData, id) => {
+    try {
+      const dataServiceUpdate = services.find((s) => s.id === id);
+
+      const getTotalLang = dataServiceUpdate.totalLanguages.includes(formData.get("lang"));
+
+      if (!getTotalLang) {
+        await handleCreateServiceTranslation(formData, id);
+        return;
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`, {
+        method: "PUT",
+        body: formData,   // trực tiếp gửi FormData
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Cập nhật thất bại");
+      console.log("✅ Update thành công:", result);
+      await fetchServices();
+      handleClose();
+    } catch (error) {
+      console.error("❌ Lỗi khi update service:", error.message);
+    }
+  };
+
+
 
   const handleDeleteService = async (id) => {
     try {
@@ -112,6 +187,7 @@ export default function ServicesPage() {
         throw new Error("Error when delete service");
       }
       await fetchServices();
+
     } catch (err) {
       console.log("Error: ", err);
     }
@@ -123,32 +199,7 @@ export default function ServicesPage() {
     setShowForm(true);
   };
 
-  const handleEditService = async (formData, id) => {
-    try {
-      const dataEditService = {
-        ten_dich_vu: formData.serviceName,
-        mo_ta: formData.desc,
-        price: formData.price,
-        headerArticle: formData.header,
-        contentArticle: JSON.stringify(formData.content || {}),
-      };
-      const res = await fetch(ServiceAPI.edit(id), {
-        method: "PUT",
-        body: JSON.stringify(dataEditService),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (!res.ok) {
-        throw new Error("Error when edit service data");
-      }
-      await fetchServices();
-      handleClose();
-    } catch (err) {
-      console.log("Error: ", err);
-    }
-  };
 
   // All part of booking
   const fetchBooking = async () => {
@@ -175,6 +226,7 @@ export default function ServicesPage() {
       email: formData.cusEmail,
       address: formData.cusAddress,
       service: formData.service,
+      price: formData.price,
       bookingDate: formData.bookingDate,
       completedDate: formData.completedDate,
     };
@@ -210,6 +262,7 @@ export default function ServicesPage() {
       const dataEditBooking = {
         status: formData.status,
         service: formData.service,
+        price: formData.price,
         bookingDate: formData.bookingDate,
         completedDate: formData.completedDate,
       };
@@ -247,6 +300,7 @@ export default function ServicesPage() {
     }
   };
 
+
   // All part of customer
   const fetchCustomer = async () => {
     setLoadingCustomers(true);
@@ -264,6 +318,11 @@ export default function ServicesPage() {
   useEffect(() => {
     fetchCustomer();
   }, []);
+
+  // Hàm refetch cho con gọi
+  const handleRefetchCustomer = () => {
+    fetchCustomer();
+  };
 
   const openEditCustomerForm = (customer) => {
     setTypeForm("customer");
@@ -291,8 +350,11 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when trying to update customer");
       }
-      await fetchCustomer();
-      handleClose();
+      if (res.ok) {
+        await fetchCustomer();
+        handleClose();
+        await fetchBooking();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -349,6 +411,8 @@ export default function ServicesPage() {
           openEditCustomerForm,
           handleEditingCustomer,
           handleDeleteCustomer,
+          handleRefetchCustomer, // Truyền hàm refetch cho con
+
         }}
       />
     );
