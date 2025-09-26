@@ -420,9 +420,9 @@ export default function ServicesPage() {
 
   return (
     <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
-      <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
-          <nav className="flex flex-col sm:flex-row sm:flex-wrap w-full sm:w-auto gap-2 sm:gap-3">
+      <div className="container  mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex w-full flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
+          <nav className="w-full flex flex-col sm:flex-row sm:flex-wrap sm:max-w-auto gap-2 sm:gap-3">
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
@@ -472,9 +472,6 @@ export default function ServicesPage() {
               Khách hàng
             </NavLink>
           </nav>
-          <div className="mt-3 sm:mt-0">
-            <ThemeToggle />
-          </div>
         </div>
         {content}
       </div>
