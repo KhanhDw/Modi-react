@@ -117,18 +117,18 @@ export default function EmailPage() {
   const averageOpenRate =
     emailCampaigns.length > 0
       ? (
-          (emailCampaigns.reduce((sum, campaign) => sum + campaign.opened / Math.max(campaign.sent, 1), 0) /
-            emailCampaigns.filter((c) => c.sent > 0).length) *
-          100
-        ).toFixed(1)
+        (emailCampaigns.reduce((sum, campaign) => sum + campaign.opened / Math.max(campaign.sent, 1), 0) /
+          emailCampaigns.filter((c) => c.sent > 0).length) *
+        100
+      ).toFixed(1)
       : "0"
   const averageClickRate =
     emailCampaigns.length > 0
       ? (
-          (emailCampaigns.reduce((sum, campaign) => sum + campaign.clicked / Math.max(campaign.sent, 1), 0) /
-            emailCampaigns.filter((c) => c.sent > 0).length) *
-          100
-        ).toFixed(1)
+        (emailCampaigns.reduce((sum, campaign) => sum + campaign.clicked / Math.max(campaign.sent, 1), 0) /
+          emailCampaigns.filter((c) => c.sent > 0).length) *
+        100
+      ).toFixed(1)
       : "0"
   const totalSent = emailCampaigns.reduce((sum, campaign) => sum + campaign.sent, 0)
 
@@ -154,7 +154,7 @@ export default function EmailPage() {
       <div className="grid gap-6 md:grid-cols-4">
         <Card theme={'admin'} className={'border border-gray-200 admin-dark:bg-gray-800'}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle  className="text-sm font-medium text-black admin-dark:text-foreground">Tổng subscribers</CardTitle>
+            <CardTitle className="text-sm font-medium text-black admin-dark:text-foreground">Tổng subscribers</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>

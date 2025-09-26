@@ -7,6 +7,8 @@ export default function ContactConfig() {
     const [companyInfo, setCompanyInfo] = useState([]);
     const [activeLang, setActiveLang] = useState("vi");
 
+    const [mapURLFetch, setMapUrlFetch] = useState([]);
+
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
     const fetchNameCompanyFooter = async () => {
@@ -25,7 +27,19 @@ export default function ContactConfig() {
                 setCompanyName(nameItem.description?.[activeLang] || nameItem.description?.vi || "");
             }
         } catch (err) {
-            alert("Lỗi tải dữ liệu công ty");
+            console.error("Lỗi tải dữ liệu công ty", err);
+        }
+    };
+    const fetchUrlGoogleMapContact = async () => {
+        try {
+            const res = await fetch(
+                `${API_BASE_URL}/api/section-items/type/urlgooglemap?slug=contact`
+            );
+            const data = await res.json();
+            setMapUrlFetch(data);
+            setMapUrl(data[0]?.title?.en || "");
+        } catch (err) {
+            console.error("Lỗi tải dữ liệu", err);
         }
     };
 
@@ -40,7 +54,8 @@ export default function ContactConfig() {
     }, [activeLang, companyInfo]);
 
     useEffect(() => {
-        fetchNameCompanyFooter(activeLang);
+        fetchNameCompanyFooter();
+        fetchUrlGoogleMapContact();
     }, [activeLang]);
 
     const handleSaveName = async () => {
@@ -63,59 +78,79 @@ export default function ContactConfig() {
         }
     };
 
-    const handleSave = () => {
-        setSavedMapUrl(mapUrl); // Lưu URL
-        console.log("Saved Map URL:", mapUrl);
+
+
+
+    const extractSrcFromIframe = (iframeString) => {
+        const match = iframeString.match(/src="([^"]+)"/);
+        return match ? match[1] : iframeString; // nếu không match thì trả về nguyên string
     };
+
+
+
+    const handleSaveUrlMap = async () => {
+        // Lấy đúng src từ iframe
+        const extractedUrl = extractSrcFromIframe(mapUrl);
+
+        setSavedMapUrl(extractedUrl);
+        console.log("Saved Map URL:", extractedUrl);
+
+
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/contact-config/${mapURLFetch[0].id}/update-url-map`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        vi: extractedUrl,
+                        en: extractedUrl,
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                fetchUrlGoogleMapContact();
+            } else {
+                console.error("Lưu thất bại:", response.status);
+            }
+        } catch (err) {
+            console.error("Lỗi lưu URL", err);
+        }
+    };
+
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-4 md:p-3 lg:p-2 items-start min-h-screen">
             {/* Left: thông tin và lưu địa chỉ map */}
             <div className="lg:col-span-2 col-span-1 space-y-4">
 
-                {/* Nút chuyển ngôn ngữ */}
-                {/* <div className="flex space-x-2 mb-6">
-                    {['vi', 'en'].map((lang) => (
-                        <button
-                            key={lang}
-                            className={`px-4 py-2 rounded-md shadow-md cursor-pointer font-medium transition ${activeLang === lang
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900"
-                                }`}
-                            onClick={() => setActiveLang(lang)}
-                        >
-                            {lang === "vi" ? "Tiếng Việt" : "English"}
-                        </button>
-                    ))}
-                </div> */}
-
-                <div className="flex items-center justify-end space-x-3 mb-6">
-                    <span className="text-base font-medium admin-dark:text-white text-gray-900">
-                        {activeLang === 'vi' ? 'Tiếng Việt' : 'English'}
-                    </span>
-
-                    <div className="relative inline-block w-12 h-6 align-middle select-none transition duration-200 cursor-pointer">
-                        <input
-                            type="checkbox"
-                            id="language-switch"
-                            className="peer sr-only"
-                            checked={activeLang === 'en'}
-                            onChange={(e) => setActiveLang(e.target.checked ? 'en' : 'vi')}
-                        />
-                        <label
-                            htmlFor="language-switch"
-                            className="block h-6 bg-gray-400 rounded-full peer-checked:bg-blue-600 transition duration-300 ease-in-out cursor-pointer"
-                        ></label>
-                        <span
-                            className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out peer-checked:translate-x-6 cursor-pointer"
-                        ></span>
-                    </div>
-                </div>
-
                 {/* Tên công ty */}
                 <div>
-                    <label className="block text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
-                        {activeLang === "vi" ? "Tên công ty" : "Company Name"}
+                    <label className="flex w-full items-center justify-between text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
+                        <p> {activeLang === "vi" ? "Tên công ty" : "Company Name"}</p>
+                        <div className="flex items-center justify-end space-x-3 ">
+                            <span className="text-base font-medium admin-dark:text-white text-gray-900">
+                                {activeLang === 'vi' ? 'Tiếng Việt' : 'English'}
+                            </span>
+
+                            <div className="relative inline-block w-12 h-6 align-middle select-none transition duration-200 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    id="language-switch"
+                                    className="peer sr-only"
+                                    checked={activeLang === 'en'}
+                                    onChange={(e) => setActiveLang(e.target.checked ? 'en' : 'vi')}
+                                />
+                                <label
+                                    htmlFor="language-switch"
+                                    className="block h-6 bg-gray-400 rounded-full peer-checked:bg-blue-600 transition duration-300 ease-in-out cursor-pointer"
+                                ></label>
+                                <span
+                                    className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out peer-checked:translate-x-6 cursor-pointer"
+                                ></span>
+                            </div>
+                        </div>
                     </label>
                     <input
                         type="text"
@@ -155,25 +190,25 @@ export default function ContactConfig() {
                 {/* Nút lưu */}
                 <button
                     className="inline-flex h-10 shadow-md items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
-                    onClick={handleSave}
+                    onClick={handleSaveUrlMap}
                 >
                     {activeLang === "vi" ? "Lưu" : "Save"}
                 </button>
 
                 {/* Hiển thị URL đã lưu */}
-                {savedMapUrl && (
+                {/* {savedMapUrl && (
                     <span className="block text-sm text-gray-900 font-medium admin-dark:text-gray-300">
                         {activeLang === "vi" ? "Địa chỉ Url Google Map:" : "Saved Google Map URL:"} <br />
                         <span className="text-blue-600 break-all">{savedMapUrl}</span>
                     </span>
-                )}
+                )} */}
             </div>
 
             {/* Right: Preview bản đồ */}
             <div className="lg:col-span-3 shadow-sm h-[700px] border border-slate-300 rounded-md overflow-hidden admin-dark:border-slate-700">
-                {savedMapUrl ? (
+                {mapURLFetch ? (
                     <iframe
-                        src={savedMapUrl}
+                        src={mapURLFetch[0]?.title?.en}
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}

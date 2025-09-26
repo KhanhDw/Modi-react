@@ -29,14 +29,16 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
+import PageSpeed from "./PageSpeed";
+
 
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
 // Menu gốc
 const menuItems = [
   { name: "Tổng quan", path: "/managers/dashboard", icon: LayoutDashboard },
-  { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Dịch vụ", path: "/managers/services", icon: Handshake },
+  { name: "Liên hệ", path: "/managers/contact", icon: Mail },
   { name: "Tin tức", path: "/managers/news", icon: Newspaper },
   { name: "Truyền thông", path: "/managers/marketing", icon: Megaphone },
   {
@@ -66,7 +68,6 @@ const SidebarContent = ({
   const [todayVisits, setTodayVisits] = useState(0);
   const [user, setUser] = useState(null);
 
-  // Check active path
   const isActive = (path) =>
     pathname === path || pathname.startsWith(path + "/");
 
@@ -93,17 +94,11 @@ const SidebarContent = ({
 
   // Filter menu theo role
   const filteredMenuItems = menuItems.filter((item) => {
-    if (user?.role === "dev") {
-      return true; // dev thấy tất cả
-    }
-
+    if (user?.role === "dev") return true;
     if (user?.role === "admin") {
-      // admin không thấy component
       if (item.path === "/managers/components") return false;
       return true;
     }
-
-    // user thường: ẩn admin-zone + component
     if (
       item.path === "/managers/admin-zone" ||
       item.path === "/managers/components"
@@ -113,7 +108,7 @@ const SidebarContent = ({
     return true;
   });
 
-  // Redirect khi vào page-config
+  // Redirect page-config
   useEffect(() => {
     if (pathname === "/managers/page-config") {
       navigate("/managers/page-config/header", { replace: true });
@@ -141,41 +136,60 @@ const SidebarContent = ({
     socket.on("newVisit", () => {
       fetchData();
     });
-
     return () => {
       socket.off("newVisit");
     };
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200 admin-dark:bg-gray-900 admin-dark:border-gray-700">
+    <div
+      className={cn(
+        "flex flex-col h-full border-r",
+        isDark
+          ? "bg-gray-800 border-gray-700 text-gray-50"
+          : "bg-white border-gray-200 text-gray-900"
+      )}
+    >
       {/* Header */}
       {!isMobile && (
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 admin-dark:border-gray-700">
+        <div
+          className={cn(
+            "flex items-center justify-between h-16 px-4 border-b",
+            isDark ? "border-gray-700" : "border-gray-200"
+          )}
+        >
           <h1
             className={cn(
-              "font-bold text-gray-900 admin-dark:text-gray-50 transition-all duration-300 ease-in-out",
-              isCollapsed && !isMobile ? "text-2xl" : "text-xl",
+              "font-bold transition-all duration-300 ease-in-out",
+              isDark ? "text-gray-50" : "text-gray-900",
+              isCollapsed && !isMobile ? "text-2xl" : "text-xl"
             )}
           >
             {isCollapsed && !isMobile ? "M" : "Modi"}
           </h1>
 
-          {/* Collapse Button */}
           {!isMobile && (
             <Button
               theme={isDark ? "admin" : "light"}
               variant="ghost"
               size="icon"
-              className="h-8 w-8 transition-transform duration-200 hover:scale-110 text-slate-800 admin-dark:text-slate-100 cursor-pointer"
+              className={cn(
+                "h-8 w-8 transition-transform duration-200 hover:scale-110 cursor-pointer",
+                isDark ? "text-slate-100" : "text-slate-800"
+              )}
               onClick={toggleCollapse}
               aria-label={isCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
             >
-              {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              {isCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
             </Button>
           )}
         </div>
       )}
+
       {/* Menu */}
       <nav
         className={cn(
@@ -183,40 +197,47 @@ const SidebarContent = ({
           isCollapsed && !isMobile ? "px-2" : "px-3"
         )}
       >
-        {filteredMenuItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            onClick={onClose}
-            className={cn(
-              "flex items-center py-3 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out group",
-              isCollapsed && !isMobile ? "justify-center" : "px-3",
-              isActive(item.path)
-                ? "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
-                : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99] admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
-            )}
-            title={isCollapsed && !isMobile ? item.name : undefined}
-            aria-label={item.name}
-          >
-            <item.icon
+        {filteredMenuItems.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={onClose}
               className={cn(
-                "h-5 w-5 transition-all duration-200 ease-in-out group-hover:scale-110",
-                isCollapsed && !isMobile ? "" : "mr-3"
+                "flex items-center py-3 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out group",
+                isCollapsed && !isMobile ? "justify-center" : "px-3",
+                active
+                  ? isDark
+                    ? "bg-slate-700 text-white shadow-sm scale-[0.98]"
+                    : "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
+                  : isDark
+                    ? "text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-[0.99]"
+                    : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
               )}
-            />
-            <span
-              className={cn(
-                "transition-opacity duration-300 ease-in-out",
-                isCollapsed && !isMobile
-                  ? "opacity-0 w-0 overflow-hidden"
-                  : "opacity-100",
-                !isMobile && "whitespace-nowrap"
-              )}
+              title={isCollapsed && !isMobile ? item.name : undefined}
+              aria-label={item.name}
             >
-              {item.name}
-            </span>
-          </Link>
-        ))}
+              <item.icon
+                className={cn(
+                  "h-5 w-5 transition-all duration-200 ease-in-out group-hover:scale-110",
+                  isCollapsed && !isMobile ? "" : "mr-3"
+                )}
+              />
+              <span
+                className={cn(
+                  "transition-opacity duration-300 ease-in-out",
+                  isCollapsed && !isMobile
+                    ? "opacity-0 w-0 overflow-hidden"
+                    : "opacity-100",
+                  !isMobile && "whitespace-nowrap"
+                )}
+              >
+                {item.name}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Today visits */}
@@ -224,27 +245,68 @@ const SidebarContent = ({
         {isCollapsed && !isMobile ? (
           ""
         ) : (
-          <span className="font-medium text-xs text-gray-900 admin-dark:text-gray-50 transition-all duration-300 mb-2">
+          <span
+            className={cn(
+              "font-medium text-xs transition-all duration-300 mb-2",
+              isDark ? "text-gray-50" : "text-gray-900"
+            )}
+          >
             Lượt truy cập hôm nay:
           </span>
         )}
 
         <span
-          className={`${isCollapsed && !isMobile ? "w-full" : ""
-            } font-medium text-xs text-center text-gray-900 admin-dark:text-gray-50 mb-2`}
+          className={cn(
+            `${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center mb-2`,
+            isDark ? "text-gray-50" : "text-gray-900"
+          )}
         >
           {todayVisits.toLocaleString("vi-VN")}
         </span>
       </div>
+      {/* speed load page */}
+      <div className="px-2 flex items-center justify-between transition-all duration-300 ">
+        {isCollapsed && !isMobile ? (
+          ""
+        ) : (
+          <span
+            className={cn(
+              "font-medium text-xs transition-all duration-300 mb-2",
+              isDark ? "text-gray-50" : "text-gray-900"
+            )}
+          >
+            Tốc độ tải trang:
+          </span>
+        )}
+
+        <span
+          className={cn(
+            `${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center mb-2`,
+            isDark ? "text-gray-50" : "text-gray-900"
+          )}
+        >
+          <PageSpeed />
+        </span>
+      </div>
 
       {/* Theme Toggle */}
-      <div className="p-3 border-t border-gray-200 admin-dark:border-gray-600 overflow-hidden">
+      <div
+        className={cn(
+          "p-3 border-t overflow-hidden",
+          isDark ? "border-gray-600" : "border-gray-200"
+        )}
+      >
         <Button
           theme={isDark ? "admin" : "light"}
           onClick={toggleTheme}
           variant="outline"
           size="sm"
-          className="w-full text-xs cursor-pointer border-gray-700  bg-gray-200 text-slate-800 admin-dark:text-slate-100"
+          className={cn(
+            "w-full text-xs cursor-pointer",
+            isDark
+              ? "bg-slate-800 text-slate-100 border-gray-600"
+              : "bg-gray-200 text-slate-800 border-gray-700"
+          )}
         >
           <>
             {!(isCollapsed && isMobile) && (isDark ? <SunMedium /> : <Moon />)}
@@ -257,17 +319,20 @@ const SidebarContent = ({
 };
 
 const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
-  const { isDark } = useAdminTheme(); // 👈 thêm dòng này
+  const { isDark } = useAdminTheme();
+
   return (
     <>
-      {/* Desktop */}
+      {/* Desktop ≥ lg */}
       <div
         className={cn(
           "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-2 lg:top-2 lg:bottom-2",
-          "lg:rounded-2xl lg:border lg:border-gray-200 admin-dark:lg:border-gray-700",
-          "overflow-hidden bg-white admin-dark:bg-gray-800 shadow-lg z-10",
+          "lg:rounded-2xl lg:border overflow-hidden z-10",
           "transition-all duration-300 ease-in-out transform",
-          isCollapsed ? "lg:w-16" : "lg:w-64"
+          isCollapsed ? "lg:w-16" : "lg:w-64",
+          isDark
+            ? "bg-gray-800 border-gray-700 text-gray-50"
+            : "bg-white border-gray-200 text-gray-900"
         )}
       >
         <SidebarContent
@@ -276,32 +341,48 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
         />
       </div>
 
-      {/* Mobile */}
+      {/* Mobile < lg */}
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent
           side="left"
           className={cn(
-            "w-64 p-0 overflow-hidden shadow-lg border-r transition-transform duration-300 ease-in-out",
+            "w-[80vw] max-w-xs p-0 overflow-hidden border-r transition-transform duration-300 ease-in-out",
             isDark
               ? "bg-gray-800 border-gray-700 text-gray-50"
               : "bg-white border-gray-200 text-gray-900"
           )}
         >
-          <SheetHeader className="h-16 admin-dark:bg-gray-800 flex items-center justify-between flex-row px-4 border-b border-gray-200 admin-dark:border-gray-800">
-            <SheetTitle className="text-xl font-bold text-gray-900 admin-dark:text-gray-50">Modi</SheetTitle>
+          <SheetHeader
+            className={cn(
+              "h-16 flex items-center justify-between flex-row px-4 border-b",
+              isDark ? "border-gray-700" : "border-gray-200"
+            )}
+          >
+            <SheetTitle
+              className={cn(
+                "text-lg font-bold",
+                isDark ? "text-gray-50" : "text-gray-900"
+              )}
+            >
+              Modi
+            </SheetTitle>
             <SheetDescription className="sr-only">
               Menu điều hướng admin
             </SheetDescription>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 transition-transform duration-200 hover:scale-110"
+              className={cn(
+                "h-8 w-8 transition-transform duration-200 hover:scale-110",
+                isDark ? "text-slate-100" : "text-slate-800"
+              )}
               onClick={onClose}
               aria-label="Đóng menu"
             >
               <X className="h-4 w-4" />
             </Button>
           </SheetHeader>
+
           <SidebarContent
             isCollapsed={false}
             toggleCollapse={toggleCollapse}

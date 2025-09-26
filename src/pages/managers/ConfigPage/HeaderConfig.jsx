@@ -3,21 +3,18 @@ import { motion } from "framer-motion";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import ServiceDropdownHeaderMenu from "@/pages/managers/ConfigPage/headerConfig/ServiceDropdownHeaderMenu.jsx";
 
-
-// --- Custom File Input ---
 function FileInput({ label, onChange }) {
     return (
         <div className="flex flex-col gap-2">
-            <label className="font-semibold text-gray-700 admin-dark:text-gray-300">{label}</label>
+            <label className="font-semibold text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">{label}</label>
             <div className="relative">
                 <input
                     type="file"
                     accept="image/*"
                     onChange={onChange}
-                    className="w-full p-3 rounded-xl bg-gray-50 admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-600 shadow-sm
-                     cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-gray-50 admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-600 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400 transition text-xs sm:text-sm"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 admin-dark:text-gray-400 font-semibold">
+                <span className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 admin-dark:text-gray-400 font-semibold text-xs sm:text-sm">
                     📁
                 </span>
             </div>
@@ -25,28 +22,25 @@ function FileInput({ label, onChange }) {
     );
 }
 
-
 export default function HeaderConfigLogo() {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState("/logoModi.png");
-    const [logoItem, setLogoItem] = useState(null); // lưu section_item hiện tại
+    const [logoItem, setLogoItem] = useState(null);
     const [toast, setToast] = useState(null);
     const lang = "vi";
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
-    // 🔹 Chuẩn hóa image_url (tránh lưu cả domain)
     function normalizeImageUrl(url) {
         if (!url) return "";
         try {
             const u = new URL(url, import.meta.env.VITE_MAIN_BE_URL);
-            return u.pathname; // chỉ lấy path
+            return u.pathname;
         } catch {
             return url;
         }
     }
 
-    // 🔹 Load logo từ API
     const fetchLogo = async () => {
         try {
             setLoading(true);
@@ -60,8 +54,6 @@ export default function HeaderConfigLogo() {
 
                 setLogoItem(item);
                 setLogo(fullUrl);
-
-                // ✅ cập nhật localStorage
                 localStorage.setItem("app_logo", fullUrl);
             }
         } catch (err) {
@@ -72,17 +64,14 @@ export default function HeaderConfigLogo() {
         }
     };
 
-    // 🔹 Lấy logo ban đầu từ localStorage (nếu có) → rồi fetch từ API để làm mới
     useEffect(() => {
         const cachedLogo = localStorage.getItem("app_logo");
         if (cachedLogo) {
             setLogo(cachedLogo);
         }
         fetchLogo();
-
     }, []);
 
-    // 🔹 Chọn file mới
     const handleLogoChange = (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile) return;
@@ -90,7 +79,6 @@ export default function HeaderConfigLogo() {
         setLogo(URL.createObjectURL(selectedFile));
     };
 
-    // 🔹 Upload ảnh
     const uploadImage = async (file, id, section = "logo", field = "image_url") => {
         if (!file) return null;
         const formData = new FormData();
@@ -107,7 +95,6 @@ export default function HeaderConfigLogo() {
         return result?.data?.url || result?.url || null;
     };
 
-    // 🔹 Lưu logo (update section_item)
     const handleSave = async () => {
         if (!logoItem) return alert("Chưa có logo trong database");
         try {
@@ -115,7 +102,6 @@ export default function HeaderConfigLogo() {
 
             let updatedItem = { ...logoItem };
 
-            // Nếu có file mới thì upload
             if (file) {
                 const url = await uploadImage(file, logoItem.id, "logo");
                 if (url) {
@@ -132,8 +118,6 @@ export default function HeaderConfigLogo() {
             const fullUrl = `${API_BASE_URL}${updatedItem.image_url}`;
             setLogo(fullUrl);
             setLogoItem(updatedItem);
-
-            // ✅ cập nhật localStorage sau khi save
             localStorage.setItem("app_logo", fullUrl);
 
             setToast({ message: "Lưu thành công!", type: "success" });
@@ -146,13 +130,13 @@ export default function HeaderConfigLogo() {
         }
     };
 
-    if (loading) return <p className="text-center text-gray-700 admin-dark:text-gray-300">⏳ Đang tải...</p>;
+    if (loading) return <p className="text-center text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm py-6">⏳ Đang tải...</p>;
 
     return (
-        <div className="p-6 max-w-4xl mx-auto space-y-12">
-            {/* ===== Header Preview ===== */}
+        <div className="p-2 sm:p-4 md:p-6 max-w-4xl mx-auto space-y-6 sm:space-y-8">
+            {/* Header Preview */}
             <motion.div
-                className="flex items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-3xl shadow-2xl p-8  md:flex-row  gap-8 "
+                className="flex flex-col items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg p-4 sm:p-6 md:p-8 gap-4 sm:gap-6"
                 initial={{ opacity: 0, y: -40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
@@ -160,30 +144,28 @@ export default function HeaderConfigLogo() {
                 <motion.img
                     src={logo}
                     alt="Logo"
-                    className="w-60 shadow-lg rounded-xl object-cover cursor-pointer"
-                    whileHover={{ scale: 1.1, rotate: 1 }}
+                    className="w-32 sm:w-40 md:w-48 lg:w-60 shadow-md rounded-lg object-cover cursor-pointer"
+                    whileHover={{ scale: 1.05 }}
                     onError={(e) => (e.currentTarget.src = "/logoModi.png")}
                 />
             </motion.div>
 
-            {/* ===== Config Form ===== */}
+            {/* Config Form */}
             <motion.div
-                className="bg-white admin-dark:bg-gray-900 p-6 rounded-3xl shadow-xl border border-gray-200 admin-dark:border-gray-700 space-y-6"
+                className="bg-white admin-dark:bg-gray-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-md border border-gray-200 admin-dark:border-gray-700 space-y-4 sm:space-y-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
             >
-                <div className="space-y-4 flex items-center justify-between gap-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                     <div className="w-full">
-
                         <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
                     </div>
-                    <div className="flex items-end gap-2">
+                    <div className="flex items-end gap-2 w-full sm:w-auto">
                         <motion.button
                             onClick={handleSave}
                             disabled={loading}
-                            className="py-3 px-4  bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg
-                         transition-all flex justify-center items-center gap-2 cursor-pointer"
+                            className="w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                         >
@@ -192,17 +174,11 @@ export default function HeaderConfigLogo() {
                     </div>
                 </div>
 
-                <div className="w-full flex flex-col space-y-3">
-                    <label className="font-semibold text-gray-700 admin-dark:text-gray-300"> Cấu hình danh sách dịch vụ</label>
-                    <ServiceDropdownHeaderMenu
-                        lang={lang}
-                    />
+                <div className="w-full flex flex-col space-y-3 sm:space-y-4">
+                    <label className="font-semibold text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">Cấu hình danh sách dịch vụ</label>
+                    <ServiceDropdownHeaderMenu lang={lang} />
                 </div>
-
-
             </motion.div>
-
-
 
             {toast && (
                 <NotificationToast

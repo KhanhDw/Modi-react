@@ -2,55 +2,50 @@ import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } f
 import { motion } from "framer-motion";
 import useLenisLocal from '@/hook/useLenisLocal';
 
-
-
-// =================== COMPONENT: BANNER PREVIEW ===================
 function BannerPreview({ banner, lang }) {
     return (
         <motion.div
-            className="overflow-hidden relative h-64 flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl shadow-xl"
+            className="relative h-48 sm:h-56 md:h-64 flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg sm:rounded-2xl shadow-xl"
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h1 className="text-4xl font-bold drop-shadow-lg">{banner?.title?.[lang] || "Chưa có tiêu đề"}</h1>
-            <p className="mt-2 p-2 text-lg italic opacity-90">{banner?.slogan?.[lang] || "Chưa có slogan"}</p>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold drop-shadow-lg text-center px-2">{banner?.title?.[lang] || "Chưa có tiêu đề"}</h1>
+            <p className="mt-1 sm:mt-2 p-1 sm:p-2 text-sm sm:text-base md:text-lg italic opacity-90 text-center">{banner?.slogan?.[lang] || "Chưa có slogan"}</p>
         </motion.div>
     );
 }
 
-// =================== COMPONENT: ABOUT PREVIEW ===================
 function AboutPreview({ about, lang }) {
     return (
         <motion.div
-            className="overflow-hidden p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg space-y-4"
+            className="p-4 sm:p-6 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-3 sm:space-y-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-center text-3xl font-bold text-indigo-600 admin-dark:text-white">{about?.title?.[lang] || "Chưa có tiêu đề"}</h2>
-            <p className="text-gray-600 admin-dark:text-gray-300">{about?.description?.[lang] || "Chưa có mô tả"}</p>
+            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-indigo-600 admin-dark:text-white">{about?.title?.[lang] || "Chưa có tiêu đề"}</h2>
+            <p className="text-gray-600 admin-dark:text-gray-300 text-sm sm:text-base">{about?.description?.[lang] || "Chưa có mô tả"}</p>
         </motion.div>
     );
 }
 
-// =================== COMPONENT: VISION & MISSION PREVIEW ===================
 function VisionMissionPreview({ visionMission, lang }) {
     return (
         <motion.div
-            className="overflow-hidden p-6 bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg space-y-6"
+            className="p-4 sm:p-6 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-4 sm:space-y-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-3xl font-bold text-indigo-600 text-center admin-dark:text-white">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-600 text-center admin-dark:text-white">
                 {lang === "vi" ? "Tầm nhìn & Sứ mệnh" : "Vision & Mission"}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {(visionMission || []).map((item, index) => (
                     <motion.div
                         key={index}
-                        className="flex flex-col items-center text-center p-4 bg-gray-50 admin-dark:bg-gray-900 rounded-xl shadow hover:shadow-xl transition"
+                        className="flex flex-col items-center text-center p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-900 rounded-lg sm:rounded-xl shadow hover:shadow-xl transition"
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.2 }}
@@ -59,11 +54,11 @@ function VisionMissionPreview({ visionMission, lang }) {
                             <img
                                 src={item.img}
                                 alt={item.title?.[lang]}
-                                className="w-28 h-28 object-cover rounded-full mb-4 shadow-lg"
+                                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-cover rounded-full mb-3 sm:mb-4 shadow-lg"
                             />
                         )}
-                        <h3 className="text-xl font-semibold text-indigo-600 admin-dark:text-white">{item.title?.[lang]}</h3>
-                        <p className="mt-2 text-gray-600 admin-dark:text-gray-300">{item.description?.[lang]}</p>
+                        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-indigo-600 admin-dark:text-white">{item.title?.[lang]}</h3>
+                        <p className="mt-1 sm:mt-2 text-gray-600 admin-dark:text-gray-300 text-sm sm:text-base">{item.description?.[lang]}</p>
                     </motion.div>
                 ))}
             </div>
@@ -71,7 +66,6 @@ function VisionMissionPreview({ visionMission, lang }) {
     );
 }
 
-// =================== COMPONENT: TEXT EDITOR ===================
 const TextEditor = forwardRef(
     ({ label, fields, data, onChange, lang, haveImage = false }, ref) => {
         const [preview, setPreview] = useState("");
@@ -98,30 +92,23 @@ const TextEditor = forwardRef(
         const handleFileChange = (field, file) => {
             if (!file) return;
 
-            // tạo preview
             const tempUrl = URL.createObjectURL(file);
             setPreview(tempUrl);
             setIsImageError(false);
 
-            // lưu file trực tiếp vào state (chưa upload)
             handleChange(field, file);
         };
 
-        // expose upload cho parent
         useImperativeHandle(ref, () => ({
             async uploadImage() {
                 if (data?.image_url instanceof File) {
-                    const fieldName = "image_url"; // 👈 field động trùng với backend
+                    const fieldName = "image_url";
                     const formData = new FormData();
 
-                    // gửi file
                     formData.append("file", data.image_url);
-
-                    // gửi kèm metadata
-                    formData.append("id", data.id);            // id của section_item
-                    formData.append("field", "image_url");     // tên field ảnh
-                    formData.append("section", "about");       // tuỳ section nào
-
+                    formData.append("id", data.id);
+                    formData.append("field", "image_url");
+                    formData.append("section", "about");
 
                     try {
                         const res = await fetch(
@@ -134,8 +121,8 @@ const TextEditor = forwardRef(
 
                         const result = await res.json();
                         if (result?.url) {
-                            handleChange("image_url", result.data?.url || result.url); // thay file bằng url
-                            setPreview(""); // bỏ preview → dùng ảnh server
+                            handleChange("image_url", result.data?.url || result.url);
+                            setPreview("");
                             setIsImageError(false);
                         }
                     } catch (err) {
@@ -145,21 +132,20 @@ const TextEditor = forwardRef(
             },
         }));
 
-        // =============== Render ảnh theo logic ưu tiên ===============
         const renderImage = () => {
             if (preview) {
                 return (
                     <img
                         src={preview}
                         alt="Ảnh tạm thời"
-                        className="mt-2 w-150 h-100 object-cover rounded-lg shadow border-2 border-indigo-400"
+                        className="mt-2 w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg shadow border-2 border-indigo-400"
                         onError={() => setIsImageError(true)}
                     />
                 );
             } else if (typeof data?.image_url === "string") {
                 if (isImageError) {
                     return (
-                        <div className="mt-2 w-full h-48 flex items-center justify-center border-2 border-dashed border-red-400 rounded-lg text-red-500">
+                        <div className="mt-2 w-full h-32 sm:h-40 md:h-48 flex items-center justify-center border-2 border-dashed border-red-400 rounded-lg text-red-500 text-xs sm:text-sm">
                             Ảnh lỗi
                         </div>
                     );
@@ -172,15 +158,14 @@ const TextEditor = forwardRef(
                                 : "/no-image.png"
                         }
                         alt="Ảnh fetch từ server"
-                        className="mt-2 w-full h-48 object-cover rounded-lg shadow"
+                        className="mt-2 w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg shadow"
                         onError={() => setIsImageError(true)}
                     />
-
                 );
             } else {
                 if (haveImage) {
                     return (
-                        <div className="mt-2 w-full h-48 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg text-gray-400">
+                        <div className="mt-2 w-full h-32 sm:h-40 md:h-48 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg text-gray-400 text-xs sm:text-sm">
                             Chưa có ảnh xem trước
                         </div>
                     );
@@ -189,8 +174,8 @@ const TextEditor = forwardRef(
         };
 
         return (
-            <div className="p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-xl shadow space-y-2">
-                <h3 className="font-bold text-lg">{label}</h3>
+            <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3">
+                <h3 className="font-bold text-base sm:text-lg">{label}</h3>
 
                 {fields.map((field) =>
                     field.name === "image_url" ? (
@@ -201,11 +186,7 @@ const TextEditor = forwardRef(
                                 onChange={(e) =>
                                     handleFileChange(field.name, e.target.files[0])
                                 }
-                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                           file:rounded-full file:border-0
-                           file:text-sm file:font-semibold
-                           file:bg-indigo-50 file:text-indigo-700
-                           hover:file:bg-indigo-100"
+                                className="block w-full text-xs sm:text-sm text-gray-500 file:mr-3 sm:mr-4 file:py-1 sm:py-2 file:px-3 sm:px-4 file:rounded-full file:border-0 file:text-xs sm:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                             />
                         </div>
                     ) : (
@@ -220,9 +201,7 @@ const TextEditor = forwardRef(
                                     : data?.[field.name] || ""
                             }
                             onChange={(e) => handleChange(field.name, e.target.value)}
-                            data-lenis-prevent
-                            className="lenis-local w-full px-3 py-2 border border-slate-300 admin-dark:border-slate-700 
-                         rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            className="w-full px-2 sm:px-3 py-1 sm:py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 text-xs sm:text-sm"
                         />
                     )
                 )}
@@ -233,10 +212,6 @@ const TextEditor = forwardRef(
     }
 );
 
-
-
-
-// =================== COMPONENT: LIST EDITOR ===================
 function ListEditor({ section, data, onChange, lang }) {
     useLenisLocal(".lenis-local");
 
@@ -265,49 +240,31 @@ function ListEditor({ section, data, onChange, lang }) {
     };
 
     return (
-        <div className="p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-xl shadow space-y-4">
-            <h3 className="font-bold text-lg ">{section}</h3>
+        <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-3 sm:space-y-4">
+            <h3 className="font-bold text-base sm:text-lg">{section}</h3>
             {data.map((item, index) => (
-                <div key={index} className="p-3 bg-white admin-dark:bg-gray-800 rounded-xl shadow space-y-2">
+                <div key={index} className="p-2 sm:p-3 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3">
                     <input
                         type="text"
                         placeholder="Tiêu đề..."
                         value={item.title?.[lang] || ""}
                         onChange={(e) => handleChange(index, "title", e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        className="w-full px-2 sm:px-3 py-1 sm:py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 text-xs sm:text-sm"
                     />
                     <textarea
                         placeholder="Mô tả..."
                         value={item.description?.[lang] || ""}
                         onChange={(e) => handleChange(index, "description", e.target.value)}
-                        rows={6}
+                        rows={4}
                         data-lenis-prevent
-                        className=" w-full px-3 py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        className="w-full px-2 sm:px-3 py-1 sm:py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 text-xs sm:text-sm"
                     />
-                    {/* <div className="flex items-center gap-2">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleImageUpload(index, e.target.files[0])}
-                            className="flex-1 px-3 py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                        />
-                        <button
-                            onClick={() => removeItem(index)}
-                            className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        >
-                            <FaTrash />
-                        </button>
-                    </div> */}
-                    {/* {item.img && (
-                        <img src={item.img} alt="Preview" className="w-full h-40 object-cover rounded-lg mt-2" />
-                    )} */}
                 </div>
             ))}
         </div>
     );
 }
 
-// =================== MAIN CONFIG ABOUT PAGE ===================
 export default function AboutConfig() {
     const aboutRef = useRef();
     const [lang, setLang] = useState("vi");
@@ -322,18 +279,12 @@ export default function AboutConfig() {
         visionMission: DEFAULT_VISION_MISSION,
     });
 
-    // Load config từ API
     useEffect(() => {
         fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items`)
             .then((res) => res.json())
             .then((data) => {
-                // lấy section_id = 1 -> banner
                 const banner = data.find((item) => item.section_id === 1) || {};
-
-                // lấy section_id = 2 -> about
                 const about = data.find((item) => item.section_id === 2) || {};
-
-                // lấy section_id = 3 -> vision + mission
                 const visionMission = data.filter((item) => item.section_id === 3) || [];
 
                 setConfig({
@@ -356,7 +307,6 @@ export default function AboutConfig() {
                         position: vm.position || 0,
                     })),
                 });
-
             })
             .catch((err) => console.error("Fetch error:", err));
     }, []);
@@ -367,7 +317,6 @@ export default function AboutConfig() {
 
     const handleSave = async () => {
         try {
-            // Banner
             if (config.banner?.id) {
                 await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/${config.banner.id}`, {
                     method: "PUT",
@@ -381,7 +330,6 @@ export default function AboutConfig() {
                 });
             }
 
-            // About
             if (config.about?.id) {
                 await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/${config.about.id}`, {
                     method: "PUT",
@@ -389,7 +337,6 @@ export default function AboutConfig() {
                     body: JSON.stringify({
                         title: config.about.title,
                         description: config.about.description,
-                        // image_url: config.about.image_url || "",
                         image_url: typeof config.about.image_url === "string"
                             ? config.about.image_url
                             : null,
@@ -398,7 +345,6 @@ export default function AboutConfig() {
                 });
             }
 
-            // Vision & Mission (nhiều item)
             for (let i = 0; i < config.visionMission.length; i++) {
                 const vm = config.visionMission[i];
                 if (vm.id) {
@@ -414,10 +360,7 @@ export default function AboutConfig() {
                     });
                 }
             }
-            // để ở đây để tránh bị ghe đè dữ liệu  bên server, 
-            // do tách thành 2 function update và update ảnh, 
-            // nêu ảnh được update đầu tiên thì lần update tiếp theo sẽ không có ảnh,
-            // mà chỉ là thông tin nên ảnh cập nhật trước đó sẽ bị mất
+
             await aboutRef.current?.uploadImage();
 
             alert("Đã lưu cấu hình thành công!");
@@ -427,23 +370,21 @@ export default function AboutConfig() {
         }
     };
 
-
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 items-start">
-            {/* Form chỉnh sửa */}
-            <div className="flex flex-col overflow-auto space-y-6">
-                <div className="flex justify-between">
+        <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 items-start">
+            <div className="flex flex-col space-y-4 sm:space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-3">
                     <button
                         onClick={handleSave}
-                        className="py-2 px-2 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition cursor-pointer"
+                        className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-indigo-700 transition text-xs sm:text-sm"
                     >
                         Lưu cấu hình
                     </button>
                     <button
                         onClick={() => setLang(lang === "vi" ? "en" : "vi")}
-                        className="py-2 px-2 bg-gray-900 admin-dark:bg-transparent admin-dark:border-1 text-white rounded-xl shadow hover:bg-gray-700 transition cursor-pointer"
+                        className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-gray-900 admin-dark:bg-transparent admin-dark:border admin-dark:border-gray-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition text-xs sm:text-sm"
                     >
-                        <p className="font-semibold">{lang === "vi" ? "Tiếng Việt" : "English"}</p>
+                        {lang === "vi" ? "Tiếng Việt" : "English"}
                     </button>
                 </div>
 
@@ -480,8 +421,7 @@ export default function AboutConfig() {
                 />
             </div>
 
-            {/* Preview */}
-            <div className="space-y-8">
+            <div className="space-y-4 sm:space-y-6">
                 <BannerPreview banner={config.banner} lang={lang} />
                 <AboutPreview about={config.about} lang={lang} />
                 <VisionMissionPreview visionMission={config.visionMission} lang={lang} />

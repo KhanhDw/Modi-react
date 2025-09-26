@@ -7,6 +7,6 @@ export const BookingAPI = {
   create: () => `${bookingUrl}`,
   edit: (id) => `${bookingUrl}/${id}`,
   delete: (id) => `${bookingUrl}/${id}`,
-  getCountBeforeAndCurrentMonth: () => `${bookingUrl}/before-current-month`,
-  getRevenueBeforeAndCurrentMonth: () => `${bookingUrl}/revenue-before-current`,
+  getCountBeforeAndCurrentMonth: () => `${bookingUrl}/stats/count`,
+  getRevenueBeforeAndCurrentMonth: () => `${bookingUrl}/stats/revenue`,
 };

@@ -5,8 +5,11 @@ import OrderNeedToDone from "@/components/admin/dashboard/OrderNeedToDone";
 import MostViewedProducts from "@/components/admin/dashboard/MostViewedProducts";
 import { useState, useEffect } from "react";
 import { BookingAPI } from "@/api/bookingAPI";
-import { Outlet } from "react-router-dom";
+import useServicesAndBookings from "@/hook/useServicesAndBookings"; // <-- dùng named import
+
 export default function DashboardPage() {
+  const { services, bookings, loading } = useServicesAndBookings();
+
   const [contacts, setContacts] = useState(null);
   const [contactsLastMonth, setContactsLastMonth] = useState(null);
 
@@ -23,48 +26,21 @@ export default function DashboardPage() {
   const [visits, setVisits] = useState(null);
   const [visitsLastMonth, setVisitsLastMonth] = useState(null);
 
-  const [bookings, setBookings] = useState([]);
-
-  useEffect(() => {
-    const fetchBooking = async () => {
-      try {
-        const res = await fetch(BookingAPI.getALL());
-        if (res.ok) {
-          const data = await res.json();
-          setBookings(Array.isArray(data) ? data : []);
-        } else {
-          throw new Error("Error when getting booking data");
-        }
-      } catch (err) {
-        console.error("Error: ", err);
-      }
-    };
-    fetchBooking();
-  }, []);
   // =============================
   // tính lượt liên hệ trong tháng
   // =============================
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const url = `${
-          import.meta.env.VITE_MAIN_BE_URL
-        }/api/lienhe/month/total`;
-        const urlLastMonth = `${
-          import.meta.env.VITE_MAIN_BE_URL
-        }/api/lienhe/before-current-month/total`;
+        const url = `${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe/month/total`;
+        const urlLastMonth = `${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe/before-current-month/total`;
 
-        const [res, resLast] = await Promise.all([
-          fetch(url),
-          fetch(urlLastMonth),
-        ]);
+        const [res, resLast] = await Promise.all([fetch(url), fetch(urlLastMonth)]);
         const data = await res.json();
         const dataLast = await resLast.json();
 
         setContacts(data.total);
         setContactsLastMonth(dataLast.total);
-
-        console.log(data.tatal, dataLast.total);
       } catch (err) {
         console.error("Lỗi khi fetch liên hệ:", err);
       }
@@ -72,8 +48,11 @@ export default function DashboardPage() {
     fetchContacts();
   }, []);
 
+  // =============================
+  // tính booking count & revenue
+  // =============================
   useEffect(() => {
-    const fetchBooking = async () => {
+    const fetchBookingStats = async () => {
       try {
         const [resCount, resRevenue] = await Promise.all([
           fetch(BookingAPI.getCountBeforeAndCurrentMonth()),
@@ -84,27 +63,23 @@ export default function DashboardPage() {
         setBookingCount(dataCount);
         setBookingRevenue(dataRevenue);
       } catch (err) {
-        console.error("Error fetching booking count or booking revenue:", err);
+        console.error("Error fetching booking stats:", err);
       }
     };
 
-    fetchBooking();
+    fetchBookingStats();
   }, []);
 
+  // =============================
+  // tính lượt visit
+  // =============================
   useEffect(() => {
     const fetchVisits = async () => {
       try {
-        const url = `${
-          import.meta.env.VITE_MAIN_BE_URL
-        }/api/site/visits/month/total`;
-        const urlLastMonth = `${
-          import.meta.env.VITE_MAIN_BE_URL
-        }/api/site/visits/before-current-month/total`;
+        const url = `${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/month/total`;
+        const urlLastMonth = `${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/before-current-month/total`;
 
-        const [res, resLast] = await Promise.all([
-          fetch(url),
-          fetch(urlLastMonth),
-        ]);
+        const [res, resLast] = await Promise.all([fetch(url), fetch(urlLastMonth)]);
         const data = await res.json();
         const dataLast = await resLast.json();
 
@@ -116,6 +91,10 @@ export default function DashboardPage() {
     };
     fetchVisits();
   }, []);
+
+  if (loading) {
+    return <div className="p-6 text-center text-green-800">Đang tải...</div>;
+  }
 
   return (
     <div className="flex bg-white admin-dark:bg-gray-900">
