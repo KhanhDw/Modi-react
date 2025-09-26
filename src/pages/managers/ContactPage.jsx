@@ -158,16 +158,14 @@ export default function ContactPage() {
         className: "overflow-hidden",
         render: (value) => (
           <span
-            className={` inline-flex items-center px-1 sm:px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap truncate ${
-              value === "Đã phản hồi"
-                ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200"
-                : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
-            }`}
+            className={` inline-flex items-center px-1 sm:px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap truncate ${value === "Đã phản hồi"
+              ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200"
+              : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
+              }`}
           >
             <div
-              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mr-1 sm:mr-2 flex-shrink-0 ${
-                value === "Đã phản hồi" ? "admin-dark:bg-emerald-400 bg-emerald-400" : "admin-dark:bg-amber-400 bg-amber-400"
-              }`}
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mr-1 sm:mr-2 flex-shrink-0 ${value === "Đã phản hồi" ? "admin-dark:bg-emerald-400 bg-emerald-400" : "admin-dark:bg-amber-400 bg-amber-400"
+                }`}
             ></div>
             {value}
           </span>
@@ -304,11 +302,10 @@ export default function ContactPage() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`relative inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold ${
-                    currentPage === page
-                      ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                      : 'admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
-                  }`}
+                  className={`relative inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold ${currentPage === page
+                    ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                    : 'admin-dark:text-gray-200 admin-dark:ring-gray-600 admin-dark:hover:bg-gray-700 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                    }`}
                 >
                   {page}
                 </button>
@@ -348,7 +345,7 @@ export default function ContactPage() {
   return (
     <div className="admin-dark:bg-gray-900 bg-white min-h-screen">
       <div className="mx-auto max-w-[100%] px-2 sm:px-4 md:px-6">
-        <div className="flex flex-col gap-3 sm:gap-4 mb-4">
+        <div className="flex sm:flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-4">
           <h1 className="text-lg sm:text-xl font-bold admin-dark:text-gray-100 text-gray-900">
             Quản lý liên hệ
           </h1>
@@ -375,20 +372,18 @@ export default function ContactPage() {
 
         <div className="mb-4 sm:mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           <div
-            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "all" && dateFilter === "all"
-                ? "admin-dark:border-blue-500 admin-dark:bg-blue-900/20 border-blue-400 bg-blue-50"
-                : "admin-dark:border-gray-600 admin-dark:hover:border-blue-400 border-gray-200 hover:border-blue-300"
-            }`}
+            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${statusFilter === "all" && dateFilter === "all"
+              ? "admin-dark:border-blue-500 admin-dark:bg-blue-900/20 border-blue-400 bg-blue-50"
+              : "admin-dark:border-gray-600 admin-dark:hover:border-blue-400 border-gray-200 hover:border-blue-300"
+              }`}
             onClick={handleShowAll}
           >
             <div className="p-3 sm:p-4">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div
-                    className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center ${
-                      statusFilter === "all" && dateFilter === "all" ? "bg-blue-600" : "bg-blue-500"
-                    }`}
+                    className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center ${statusFilter === "all" && dateFilter === "all" ? "bg-blue-600" : "bg-blue-500"
+                      }`}
                   >
                     <svg className="w-4 sm:w-5 h-4 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-2-2V10a2 2 0 012-2h2"></path>
@@ -411,11 +406,10 @@ export default function ContactPage() {
           </div>
 
           <div
-            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "pending"
-                ? "admin-dark:border-amber-500 admin-dark:bg-amber-900/20 border-amber-400 bg-amber-50"
-                : "admin-dark:border-gray-600 admin-dark:hover:border-amber-400 border-gray-200 hover:border-amber-300"
-            }`}
+            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${statusFilter === "pending"
+              ? "admin-dark:border-amber-500 admin-dark:bg-amber-900/20 border-amber-400 bg-amber-50"
+              : "admin-dark:border-gray-600 admin-dark:hover:border-amber-400 border-gray-200 hover:border-amber-300"
+              }`}
             onClick={() => handleStatusFilterChange(statusFilter === "pending" ? "all" : "pending")}
           >
             <div className="p-3 sm:p-4">
@@ -445,20 +439,18 @@ export default function ContactPage() {
           </div>
 
           <div
-            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "responded"
-                ? "admin-dark:border-emerald-500 admin-dark:bg-emerald-900/20 border-emerald-400 bg-emerald-50"
-                : "admin-dark:border-gray-600 admin-dark:hover:border-emerald-400 border-gray-200 hover:border-emerald-300"
-            }`}
+            className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${statusFilter === "responded"
+              ? "admin-dark:border-emerald-500 admin-dark:bg-emerald-900/20 border-emerald-400 bg-emerald-50"
+              : "admin-dark:border-gray-600 admin-dark:hover:border-emerald-400 border-gray-200 hover:border-emerald-300"
+              }`}
             onClick={() => handleStatusFilterChange(statusFilter === "responded" ? "all" : "responded")}
           >
             <div className="p-3 sm:p-4">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div
-                    className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center ${
-                      statusFilter === "responded" ? "bg-emerald-600" : "bg-emerald-500"
-                    }`}
+                    className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center ${statusFilter === "responded" ? "bg-emerald-600" : "bg-emerald-500"
+                      }`}
                   >
                     <svg className="w-4 sm:w-5 h-4 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>

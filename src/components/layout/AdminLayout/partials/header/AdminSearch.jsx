@@ -54,11 +54,11 @@ export default function AdminSearch({ isFullScreen = false }) {
       setBlogResults(
         Array.isArray(blogsData)
           ? blogsData.map((blog) => ({
-              id: `blog-${blog.id}`,
-              title: blog.title,
-              category: "blogs",
-              url: `/managers/news/${blog.id}/view`,
-            }))
+            id: `blog-${blog.id}`,
+            title: blog.title,
+            category: "blogs",
+            url: `/managers/news/${blog.id}/view`,
+          }))
           : []
       );
 
@@ -69,11 +69,11 @@ export default function AdminSearch({ isFullScreen = false }) {
       setLienHeResults(
         Array.isArray(lienheData)
           ? lienheData.map((lh) => ({
-              id: `lienhe-${lh.id}`,
-              title: `${lh.ho_ten} – "${lh.noi_dung?.slice(0, 50)}..."`,
-              category: "lienhe",
-              url: `/managers/contact`,
-            }))
+            id: `lienhe-${lh.id}`,
+            title: `${lh.ho_ten} – "${lh.noi_dung?.slice(0, 50)}..."`,
+            category: "lienhe",
+            url: `/managers/contact`,
+          }))
           : []
       );
 
@@ -85,11 +85,11 @@ export default function AdminSearch({ isFullScreen = false }) {
       setMarketingResults(
         Array.isArray(marketingData)
           ? marketingData.map((mk) => ({
-              id: `marketing-${mk.id}`,
-              title: mk.title,
-              category: "marketing",
-              url: `/managers/marketing/${mk.id}/view`,
-            }))
+            id: `marketing-${mk.id}`,
+            title: mk.title,
+            category: "marketing",
+            url: `/managers/marketing/${mk.id}/view`,
+          }))
           : []
       );
 
@@ -101,11 +101,11 @@ export default function AdminSearch({ isFullScreen = false }) {
       setWebsiteTemplateResults(
         Array.isArray(websiteTemplateData)
           ? websiteTemplateData.map((ws) => ({
-              id: `web-${ws.id}`,
-              title: ws.name,
-              category: "webTemplate",
-              url: `/managers/website-templates/${ws.id}`,
-            }))
+            id: `web-${ws.id}`,
+            title: ws.name,
+            category: "webTemplate",
+            url: `/managers/website-templates/${ws.id}`,
+          }))
           : []
       );
     };
@@ -155,7 +155,7 @@ export default function AdminSearch({ isFullScreen = false }) {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             className={cn(
-              "pl-10 pr-10 py-3 rounded-xl shadow-md border-[3px]",
+              "pl-10 pr-10 py-3 rounded-xl shadow-md focus:border-[3px]",
               "border-gray-400 admin-dark:border-gray-600",
               "bg-white placeholder:text-gray-400 focus:outline-none",
               "hover:shadow-lg transition-all duration-300 ease-in-out",
@@ -165,7 +165,7 @@ export default function AdminSearch({ isFullScreen = false }) {
                 : "  md:w-[10rem] lg:w-[10rem] xl:w-[15rem] 2xl:w-[15rem]"
             )}
             ref={searchInputRef}
-          />  
+          />
           {searchQuery && (
             <button
               onClick={clearSearch}
@@ -183,8 +183,8 @@ export default function AdminSearch({ isFullScreen = false }) {
 
       {showResults && (
         <div
-              data-lenis-prevent
-              className={cn(
+          data-lenis-prevent
+          className={cn(
             "absolute top-full left-0 mt-2",
             "bg-slate-50 admin-dark:bg-gray-800 text-gray-800 admin-dark:text-white",
             "border border-gray-700 rounded-lg shadow-xl overflow-hidden z-50",

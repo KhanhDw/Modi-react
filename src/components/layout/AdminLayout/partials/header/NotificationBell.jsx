@@ -184,7 +184,7 @@ export function NotificationBell() {
             /* mobile full screen */
             fixed inset-0 w-full h-full sm:inset-0 sm:w-full sm:h-full
             /* từ md trở lên giữ nguyên kiểu dropdown */
-            md:absolute md:inset-auto md:mt-2 md:w-[580px] xl:w-[680px] md:-right-20 sm:-right-86 xs:-right-66
+            md:absolute md:inset-auto md:mt-2 md:w-76 xl:w-95 md:-right-20 sm:-right-86 xs:-right-66
           `}
         >
           {/* Header */}
@@ -228,8 +228,8 @@ export function NotificationBell() {
                   <div
                     key={notification.id}
                     className={`p-4 hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors ${!notification.isRead
-                        ? "bg-blue-50 admin-dark:bg-blue-900/20"
-                        : "bg-white admin-dark:bg-gray-800"
+                      ? "bg-blue-50 admin-dark:bg-blue-900/20"
+                      : "bg-white admin-dark:bg-gray-800"
                       }`}
                   >
                     <div className="flex items-center justify-between gap-2">
