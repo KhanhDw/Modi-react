@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import RenderHomeConfig from "./renderSectionHomeConfig";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 
-// ===================== PARSERS =====================
 const sectionParsers = {
     banner: (data) =>
         data.map((item) => ({
@@ -62,7 +61,6 @@ export default function HomeConfigMultiLang() {
 
     const currentData = homeData[activeLang];
 
-    // ===================== FETCH CHUNG =====================
     const fetchSection = async (type) => {
         try {
             const res = await fetch(
@@ -88,7 +86,6 @@ export default function HomeConfigMultiLang() {
         Promise.all(sections.map((type) => fetchSection(type)));
     }, [activeLang]);
 
-    // ===================== HANDLE CHANGE =====================
     const handleChange = (section, id, field, value) => {
         setHomeData((prev) => {
             const copy = structuredClone(prev);
@@ -113,7 +110,6 @@ export default function HomeConfigMultiLang() {
         });
     };
 
-    // ===================== HANDLE FILE CHANGE =====================
     const handleFileChange = (section, id, file) => {
         if (file) {
             const previewUrl = URL.createObjectURL(file);
@@ -129,7 +125,6 @@ export default function HomeConfigMultiLang() {
         }
     };
 
-    // ===================== UPLOAD IMAGE =====================
     const uploadImage = async (file, id, section, field = "image_url") => {
         if (!file) return null;
         const formData = new FormData();
@@ -161,7 +156,6 @@ export default function HomeConfigMultiLang() {
         }
     }
 
-    // ===================== SAVE =====================
     const handleSave = async (section) => {
         const data = homeData[activeLang][section];
 
@@ -181,7 +175,6 @@ export default function HomeConfigMultiLang() {
                             description: { ...(oldItem.description || {}), ...(item.description || {}) },
                         };
 
-                        // Chuẩn hóa ảnh trước khi lưu
                         if (mergedItem.image_url) mergedItem.image_url = normalizeImageUrl(mergedItem.image_url);
                         if (mergedItem.banner) mergedItem.banner = normalizeImageUrl(mergedItem.banner);
 
@@ -238,20 +231,20 @@ export default function HomeConfigMultiLang() {
         }
     };
 
-    // ===================== RENDER =====================
     return (
-        <div className="p-6 max-w-6xl mx-auto space-y-8">
+        <div className="p-2 sm:p-4 md:p-6 max-w-6xl mx-auto space-y-6 sm:space-y-8">
             {/* LANG TABS */}
-            <div className="flex gap-4 mb-6">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
                 {["vi", "en"].map((lang) => (
                     <motion.button
                         key={lang}
                         onClick={() => setActiveLang(lang)}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`px-4 py-2 rounded-lg font-semibold transition ${activeLang === lang
-                            ? "bg-indigo-600 text-white shadow-md cursor-pointer"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700 cursor-pointer"
+                        className={`px-3 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition w-full sm:w-auto
+                            ${activeLang === lang
+                                ? "bg-indigo-600 text-white shadow-md"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
                             }`}
                     >
                         {lang === "vi" ? "Tiếng Việt" : "English"}
@@ -267,9 +260,10 @@ export default function HomeConfigMultiLang() {
                         onClick={() => setActiveSection(sec.key)}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`px-4 py-2 rounded-lg font-semibold transition ${activeSection === sec.key
-                            ? "bg-indigo-600 text-white shadow-md cursor-pointer"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700 cursor-pointer"
+                        className={`px-3 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition flex-1 sm:flex-none text-center
+                            ${activeSection === sec.key
+                                ? "bg-indigo-600 text-white shadow-md"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
                             }`}
                     >
                         {sec.label}
@@ -278,7 +272,7 @@ export default function HomeConfigMultiLang() {
             </div>
 
             {/* SECTION CONTENT */}
-            <div className="bg-white p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-xl shadow-md transition">
+            <div className="bg-white p-3 sm:p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-lg sm:rounded-xl shadow-md transition">
                 <RenderHomeConfig
                     activeSection={activeSection}
                     currentData={currentData}
@@ -290,7 +284,6 @@ export default function HomeConfigMultiLang() {
                 />
             </div>
 
-            {/* ✅ Hiển thị Toast */}
             {toast && (
                 <NotificationToast
                     message={toast.message}

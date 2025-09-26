@@ -17,13 +17,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import FilterModalListTemplateWebAdmin from "@/components/admin/templateWebsite/filterModalListTemplateWeb";
-import { useLenisToggle } from "@/contexts/LenisContext"
-
-
+import { useLenisToggle } from "@/contexts/LenisContext";
 
 export default function WebsiteTemplateList() {
   const { templates, handleDelete } = useOutletContext();
-  const { setEnabled } = useLenisToggle()
+  const { setEnabled } = useLenisToggle();
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,18 +36,15 @@ export default function WebsiteTemplateList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Reset trang khi search/filter thay đổi
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, filters]);
 
-  // Các option filter
-  const availableTags = [...new Set(templates?.flatMap(t => t.tags || []))];
-  const availableTech = [...new Set(templates?.flatMap(t => t.tech || []))];
-  const availableTopFeatures = [...new Set(templates?.flatMap(t => t.top_features || []))];
+  const availableTags = [...new Set(templates?.flatMap((t) => t.tags || []))];
+  const availableTech = [...new Set(templates?.flatMap((t) => t.tech || []))];
+  const availableTopFeatures = [...new Set(templates?.flatMap((t) => t.top_features || []))];
   const availableAuthors = [...new Set(templates?.map(() => "Admin"))];
 
-  // Lọc template
   const filteredTemplates = templates?.filter((t) => {
     const search = searchTerm.toLowerCase();
 
@@ -58,17 +53,17 @@ export default function WebsiteTemplateList() {
       t.name?.toLowerCase().includes(search) ||
       t.description?.toLowerCase().includes(search) ||
       t.category?.toLowerCase().includes(search) ||
-      t.tags?.some(tag => tag.toLowerCase().includes(search)) ||
-      t.tech?.some(tech => tech.toLowerCase().includes(search)) ||
-      t.top_features?.some(f => f.toLowerCase().includes(search));
+      t.tags?.some((tag) => tag.toLowerCase().includes(search)) ||
+      t.tech?.some((tech) => tech.toLowerCase().includes(search)) ||
+      t.top_features?.some((f) => f.toLowerCase().includes(search));
 
     const matchesTechnology =
       filters.technologies.length === 0 ||
-      filters.technologies.some(tech => t.tech?.includes(tech));
+      filters.technologies.some((tech) => t.tech?.includes(tech));
 
     const matchesTags =
       filters.tags.length === 0 ||
-      filters.tags.some(tag => t.tags?.includes(tag));
+      filters.tags.some((tag) => t.tags?.includes(tag));
 
     const matchesAuthor =
       filters.authors.length === 0 || filters.authors.includes("Admin");
@@ -81,18 +76,15 @@ export default function WebsiteTemplateList() {
     return matchesSearch && matchesTechnology && matchesTags && matchesAuthor && matchesStatus;
   }) || [];
 
-  // Phân trang
   const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentTemplates = filteredTemplates.slice(startIndex, startIndex + itemsPerPage);
 
-  // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
   };
 
-  // Format price
   const ProductPrice = ({ price }) => {
     if (price == null) return <span className="text-gray-500 text-xs">Chưa cập nhật giá</span>;
     return <span>{Number(price).toLocaleString("vi-VN")}</span>;
@@ -100,26 +92,28 @@ export default function WebsiteTemplateList() {
 
   const handleDialogToggle = (open) => {
     if (open) {
-      document.documentElement.style.overflow = "hidden"; // chặn scroll native
-      setEnabled(false)  // disable lenis
+      document.documentElement.style.overflow = "hidden";
+      setEnabled(false);
     } else {
-      document.documentElement.style.overflow = ""; // bật lại
-      setEnabled(true)   // enable lenis
+      document.documentElement.style.overflow = "";
+      setEnabled(true);
     }
   };
 
   return (
     <div className="mx-auto p-4">
-      {/* Header */}
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Quản lý mẫu Website</h1>
-          <Button onClick={() => navigate("new")} className="flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white">
+          <h1 className="text-2xl font-bold xs:text-sm sm:text-xl">Quản lý mẫu Website</h1>
+          <Button
+            onClick={() => navigate("new")}
+            className="flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white"
+          >
             <Plus className="h-4 w-4" /> Thêm mẫu mới
           </Button>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
             <FilterModalListTemplateWebAdmin
               filters={filters}
@@ -140,13 +134,12 @@ export default function WebsiteTemplateList() {
               />
             </div>
           </div>
-          <div className="flex items-center gap-1 text-gray-600 admin-dark:text-white font-semibold">
-            <p>Hiện có</p> {templates.length} <p>website mẫu</p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 text-gray-600 admin-dark:text-white font-semibold">
+            <p>Hiện có {templates.length} website mẫu</p>
           </div>
         </div>
       </div>
 
-      {/* Danh sách */}
       <div className="space-y-4">
         {currentTemplates.length === 0 ? (
           <div className="text-center py-12">
@@ -162,9 +155,9 @@ export default function WebsiteTemplateList() {
               className="group border-2 border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800"
             >
               <CardContent className="px-4">
-                <div className="flex min-h-[200px]">
+                <div className="flex flex-col md:flex-row min-h-[200px] gap-4 sm:gap-0 sm:gap-2">
                   {/* Hình ảnh */}
-                  <div className="relative w-120 h-50 flex-shrink-0">
+                  <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-50 ">
                     {t.image_url ? (
                       <img
                         src={`${import.meta.env.VITE_MAIN_BE_URL}${t.image_url}`}
@@ -184,7 +177,7 @@ export default function WebsiteTemplateList() {
                   </div>
 
                   {/* Nội dung */}
-                  <div className="flex-1 px-6 pr-0">
+                  <div className="flex-1 px-0 sm:px-auto pr-0">
                     <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-xl mb-1 line-clamp-2">{t.name}</h3>
                     <p className="text-sm text-gray-600 admin-dark:text-gray-400">
                       Người đăng: <span className="text-blue-600 font-medium ">Admin</span>
@@ -216,7 +209,7 @@ export default function WebsiteTemplateList() {
                   </div>
 
                   {/* Sidebar phải */}
-                  <div className="w-56 border-l-2 border-gray-300 p-2 flex flex-col justify-between">
+                  <div className="w-full md:w-56 border-t md:border-t-0 md:border-l-2 border-gray-300 pt-4 md:pt-0 md:p-2 flex flex-col justify-between ">
                     <div className="flex items-center justify-end gap-1 mb-4">
                       <div
                         className={`${t.export_state ? "bg-green-600 text-white" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-lg`}
@@ -265,7 +258,7 @@ export default function WebsiteTemplateList() {
                       <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
                     </div>
 
-                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white">
+                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white gap mt-2">
                       Xem mẫu
                     </Button>
                   </div>

@@ -126,6 +126,7 @@ const ProfilePage = () => {
                 setUser(prev => ({ ...prev, avatar_url: res.data.avatar_url }));
                 setPreview(newAvatarUrl);
                 alert("Cập nhật ảnh đại diện thành công");
+                window.location.reload();
             }
         } catch (err) {
             console.error("Lỗi upload avatar:", err);
@@ -173,6 +174,7 @@ const ProfilePage = () => {
                 }));
                 setIsEditInfo(false);
                 alert("Cập nhật thông tin thành công");
+                window.location.reload();
             }
         } catch (err) {
             console.error("Lỗi cập nhật thông tin:", err);
@@ -227,6 +229,7 @@ const ProfilePage = () => {
                 setNewPassword("");
                 setConfirmPassword("");
                 setIsEditPassword(false);
+                fetchUser();
             }
         } catch (err) {
             console.error("Lỗi đổi mật khẩu:", err);

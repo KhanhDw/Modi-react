@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import { Settings, UserCircle, LogOut, SunMedium, Moon } from "lucide-react";
+import { CgWebsite } from "react-icons/cg";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
@@ -11,17 +11,17 @@ import {
   CustomDropdownLabel,
 } from "@/components/adminComponent/CustomDropdown";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
 
-const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
+const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url}) => {
   const { isDark, toggleTheme } = useAdminTheme();
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-
       if (token) {
         await axios.post(
           `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/logout`,
@@ -29,11 +29,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
-
-      // Xóa token localStorage
       localStorage.removeItem("accessToken");
-
-      // Điều hướng về trang login
       navigate("/login");
     } catch (err) {
       console.error(err);
@@ -44,12 +40,12 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
   return (
     <div className="z-2">
       <CustomDropdown
-        className=""
+        className="w-64 md:w-72" // Tăng chiều rộng dropdown trên mobile và desktop
         trigger={
           <Button
             variant="ghost"
             size="icon"
-            className=" text-gray-600 hover:bg-gray-100 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-150 cursor-pointer"
+            className="text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150 cursor-pointer"
             aria-label="Cài đặt"
           >
             <Settings color={isDark ? '#ffffff' : '#000000'} className="h-5 w-5" />
@@ -57,17 +53,58 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
         }
         align="end"
       >
-        <CustomDropdownLabel>Cài đặt</CustomDropdownLabel>
-        <CustomDropdownSeparator />
+        
+        
 
-        {/* Sticky Header Toggle */}
-        <CustomDropdownItem asChild>
-          <div className="flex items-center justify-between w-full">
+        {/* Profile Link - chỉ hiển thị trên mobile */}
+        <CustomDropdownItem asChild className="md:hidden">
+          <NavLink
+            to="/managers/profile"
+            className="flex items-center font-medium gap-2 hover:underline underline-offset-4 px-4 py-2"
+          >
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={avatar_url || "https://randomuser.me/api/portraits/lego/1.jpg"} />
+              <AvatarFallback>😢</AvatarFallback>
+            </Avatar>
+            {username || "Hồ sơ"}
+          </NavLink>
+        </CustomDropdownItem>
+        {/* Notification Link - chỉ hiển thị trên mobile */}
+          <CustomDropdownItem asChild className="md:hidden">
+            <div 
+               className="flex items-center justify-start w-full font-medium gap-2 hover:underline underline-offset-4 px-4 py-2 pl-1.5"
+              onClick={(e) => {
+                // tìm button trong NotificationBell và trigger click
+                const btn = e.currentTarget.querySelector("button");
+                if (btn) btn.click();
+              }}
+            >
+              <NotificationBell className="h-4 w-4 text-gray-500 dark:text-gray-400 "/>
+              <span className="font-medium -ml-3">Thông báo</span>
+            </div>
+          </CustomDropdownItem>
+
+        {/* Website Link - chỉ hiển thị trên mobile */}
+        <CustomDropdownItem asChild className="md:hidden">
+          <NavLink
+            to={`${import.meta.env.VITE_MAIN_FE_URL}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center font-medium gap-2 hover:underline underline-offset-4 px-4 py-2"
+          >
+            <CgWebsite className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            Xem Website
+          </NavLink>
+        </CustomDropdownItem>
+
+        {/* Sticky Header Toggle - ẩn trên mobile */}
+        <CustomDropdownItem asChild className="hidden lg:flex">
+          <div className="flex items-center justify-between w-full px-4 py-2">
             <Label
               htmlFor="sticky-header"
-              className="flex items-center gap-2 cursor-pointer"
+              className="flex items-center gap-2 cursor-pointer text-sm"
             >
-              <Settings className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+              <Settings className="h-4 w-4 text-gray-500 dark:text-gray-400" />
               Giữ header cố định
             </Label>
             <Switch
@@ -81,12 +118,12 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
 
         {/* Theme Toggle */}
         <CustomDropdownItem asChild>
-          <div className="flex items-center justify-between w-full">
-            <Label className="flex items-center gap-2 cursor-pointer">
+          <div className="flex items-center justify-between w-full px-4 py-2">
+            <Label className="flex items-center gap-2 cursor-pointer text-sm">
               {isDark ? (
-                <Moon className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+                <Moon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
               ) : (
-                <SunMedium className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+                <SunMedium className="h-4 w-4 text-gray-500 dark:text-gray-400" />
               )}
               Giao diện {isDark ? "tối" : "sáng"}
             </Label>
@@ -94,30 +131,19 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky }) => {
               id="change-theme-admin"
               checked={isDark}
               onCheckedChange={toggleTheme}
-              className="data-[state=checked]:bg-blue-600 cursor-pointer"
+              className="data-[state=checked]:bg-blue-600 cursor-pointer xs:relative xs:z-0"
             />
           </div>
         </CustomDropdownItem>
-
-        {/* Profile Link */}
-        {/* <CustomDropdownItem asChil >
-          <NavLink
-            onClick={() => navigate("/managers/profile")}
-            className="flex items-center font-medium gap-2 hover:underline underline-offset-4"
-          >
-            <UserCircle className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
-            Hồ sơ
-          </NavLink>
-        </CustomDropdownItem> */}
 
         <CustomDropdownSeparator />
 
         {/* Logout */}
         <CustomDropdownItem
-          className="text-red-600 admin-dark:text-red-400 hover:bg-red-50 admin-dark:hover:bg-red-900/50 active:scale-[0.98] transition-all"
+          className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50 active:scale-[0.98] transition-all px-4 py-2"
           onClick={handleLogout}
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-4 w-4 mr-2" />
           Đăng xuất
         </CustomDropdownItem>
       </CustomDropdown>

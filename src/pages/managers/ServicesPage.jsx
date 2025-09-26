@@ -20,7 +20,7 @@ export default function ServicesPage() {
   const [loadingCustomers, setLoadingCustomers] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-  const [typeForm, setTypeForm] = useState(null); // service || booking || customer || article
+  const [typeForm, setTypeForm] = useState(null); // service || booking || customer
   // SERVICE LIST
   const [services, setServices] = useState([]);
   const [editingService, setEditingService] = useState(null);
@@ -46,7 +46,6 @@ export default function ServicesPage() {
   };
 
   // All part of SERVICE
-  // Lấy danh sách dịch vụ từ API
   const fetchServices = async () => {
     setLoadingServices(true);
     try {
@@ -69,73 +68,17 @@ export default function ServicesPage() {
     if (location.pathname === "/managers/services") {
       navigate("/managers/services/service_overview", { replace: true });
     }
-  }, [location, Navigate]);
+  }, [location, navigate]);
 
-  // Xu ly gui du lieu ve server thuc hien tao dich vu
-  // const handleCreateService = async (formData) => {
-
-  //   console.log("dsds:", formData);
-
-  //   let price = formData.price;
-
-  //   // Loại bỏ dấu chấm hoặc dấu phẩy hàng nghìn
-  //   price = price.replace(/[.,]/g, "");
-  //   price = parseFloat(price);
-
-  //   const dataService = {
-  //     name: formData.serviceName,
-  //     desc: formData.desc,
-  //     headerArticle: formData.header,
-  //     footerArticle: formData.footer,
-  //     contentArticle: JSON.stringify(formData.content || {}),
-  //     lang: formData.lang || "vi",
-  //     price: price || 0,
-  //   };
-
-  //   console.log("Dữ liệu gửi đi:", dataService);
-
-  //   try {
-  //     const res = await fetch(ServiceAPI.create(), {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(dataService),
-  //     });
-
-  //     if (!res.ok) {
-  //       const errorText = await res.text();
-  //       console.error("Server trả về lỗi:", errorText);
-  //       throw new Error("Loi khi tao dich vu");
-  //     }
-
-  //     const result = await res.json();
-  //     console.log("Kết quả tạo dịch vụ:", result);
-
-  //     await fetchServices();
-  //     handleClose();
-  //   } catch (err) {
-  //     console.error("Loi khi tao dich vu:", err);
-  //   }
-  // };
-
-  // File: ServicesPage.jsx
   const handleCreateService = async (formData) => {
-    console.log("Dữ liệu nhận được từ form:", formData);
-
-    // formData.price đã là một con số sạch (ví dụ: 100000)
-    // Chúng ta sẽ sử dụng nó trực tiếp.
-
     const payloadForAPI = {
       name: formData.serviceName,
       desc: formData.desc,
       headerArticle: formData.header,
       contentArticle: JSON.stringify(formData.content || {}),
       lang: formData.lang || "vi",
-      price: formData.price || 0, // Sử dụng trực tiếp giá trị số từ formData
+      price: formData.price || 0,
     };
-
-    console.log("Dữ liệu chuẩn bị gửi lên API:", payloadForAPI);
 
     try {
       const res = await fetch(ServiceAPI.create(), {
@@ -143,7 +86,7 @@ export default function ServicesPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payloadForAPI), // Gửi object đã chuẩn bị
+        body: JSON.stringify(payloadForAPI),
       });
 
       if (!res.ok) {
@@ -152,11 +95,8 @@ export default function ServicesPage() {
         throw new Error("Lỗi khi tạo dịch vụ");
       }
 
-      const result = await res.json();
-      console.log("Kết quả tạo dịch vụ:", result);
-
-      await fetchServices(); // Tải lại danh sách dịch vụ
-      handleClose(); // Đóng form
+      await fetchServices();
+      handleClose();
     } catch (err) {
       console.error("Lỗi khi tạo dịch vụ:", err);
     }
@@ -171,10 +111,10 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when delete service");
       }
+      await fetchServices();
     } catch (err) {
       console.log("Error: ", err);
     }
-    await fetchServices();
   };
 
   const openEditServiceForm = (service) => {
@@ -184,8 +124,6 @@ export default function ServicesPage() {
   };
 
   const handleEditService = async (formData, id) => {
-    console.log(id);
-    console.log(formData);
     try {
       const dataEditService = {
         ten_dich_vu: formData.serviceName,
@@ -194,7 +132,6 @@ export default function ServicesPage() {
         headerArticle: formData.header,
         contentArticle: JSON.stringify(formData.content || {}),
       };
-      console.log("Payload gửi đi:", dataEditService);
       const res = await fetch(ServiceAPI.edit(id), {
         method: "PUT",
         body: JSON.stringify(dataEditService),
@@ -206,10 +143,8 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when edit service data");
       }
-      if (res.ok) {
-        await fetchServices();
-        handleClose();
-      }
+      await fetchServices();
+      handleClose();
     } catch (err) {
       console.log("Error: ", err);
     }
@@ -256,13 +191,12 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when try to create new booking");
       }
+      await fetchBooking();
+      await fetchCustomer();
+      handleClose();
     } catch (err) {
       console.error("Error: ", err);
     }
-
-    await fetchBooking();
-    await fetchCustomer();
-    handleClose();
   };
 
   const openEditBookingForm = (booking) => {
@@ -291,10 +225,8 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when edit booking data");
       }
-      if (res.ok) {
-        await fetchBooking();
-        handleClose();
-      }
+      await fetchBooking();
+      handleClose();
     } catch (err) {
       console.error("ERROR: ", err);
     }
@@ -309,7 +241,6 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when delete service");
       }
-
       setBooking((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       console.log("Error: ", err);
@@ -329,6 +260,7 @@ export default function ServicesPage() {
       setLoadingCustomers(false);
     }
   };
+
   useEffect(() => {
     fetchCustomer();
   }, []);
@@ -338,6 +270,7 @@ export default function ServicesPage() {
     setEditingCustomer(customer);
     setShowForm(true);
   };
+
   const handleEditingCustomer = async (formData, id) => {
     try {
       const dataEditCustomer = {
@@ -356,12 +289,10 @@ export default function ServicesPage() {
       });
 
       if (!res.ok) {
-        throw new error("Error when trying to update customer");
+        throw new Error("Error when trying to update customer");
       }
-      if (res.ok) {
-        await fetchCustomer();
-        handleClose();
-      }
+      await fetchCustomer();
+      handleClose();
     } catch (err) {
       console.error(err);
     }
@@ -375,9 +306,7 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when trying to delete customer");
       }
-      if (res.ok) {
-        setCustomers((prev) => prev.filter((c) => c.id !== id));
-      }
+      setCustomers((prev) => prev.filter((c) => c.id !== id));
     } catch (err) {
       console.error(err);
     }
@@ -386,18 +315,20 @@ export default function ServicesPage() {
   let content = null;
 
   if (loadingServices || loadingBookings || loadingCustomers) {
-    return <div className="p-6 text-center text-green-800">Đang tải...</div>;
+    content = (
+      <div className="p-4 sm:p-6 text-center text-green-800 admin-dark:text-green-400 text-sm sm:text-base">
+        Đang tải...
+      </div>
+    );
   } else {
     content = (
       <Outlet
         context={{
-          // Common
           typeForm,
           handleOpen,
           handleClose,
           showForm,
           setShowForm,
-          //Dich vu
           initDataService: services,
           editingService,
           setEditingService,
@@ -405,7 +336,6 @@ export default function ServicesPage() {
           openEditServiceForm,
           handleEditService,
           handleDeleteService,
-          // Booking
           initDataBooking: bookings,
           handleCreateBooking,
           handleDeleteBooking,
@@ -413,7 +343,6 @@ export default function ServicesPage() {
           editingBooking,
           setEditingBooking,
           handleEditingBooking,
-          // Customer
           initDataCustomer: customers,
           editingCustomer,
           setEditingCustomer,
@@ -426,76 +355,62 @@ export default function ServicesPage() {
   }
 
   return (
-    <div className="bg-white admin-dark:bg-gray-900 rounded-2xl ">
-      <div className="container mx-auto">
-        <div className="mb-6">
-          <nav className="flex justify-center">
+    <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
+      <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
+          <nav className="flex flex-col sm:flex-row sm:flex-wrap w-full sm:w-auto gap-2 sm:gap-3">
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive || location.pathname === "/managers/services"
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
-              <BarChart3 className="h-4 w-4" />
+              <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
               Tổng quan
             </NavLink>
             <NavLink
               to="service_list"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
-              <Target className="h-4 w-4" />
+              <Target className="h-4 w-4 sm:h-5 sm:w-5" />
               Danh sách dịch vụ
             </NavLink>
             <NavLink
               to="service_booking"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
-              <ShoppingCart className="h-4 w-4" />
+              <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
               Đơn đặt
             </NavLink>
             <NavLink
               to="service_customer"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                  ? "bg-muted admin-dark:bg-gray-700 text-white"
+                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
-              <Users className="h-4 w-4" />
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
               Khách hàng
             </NavLink>
-            {/* <NavLink
-            to="service_review"
-            className={({ isActive }) =>
-              `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${
-                isActive
-                  ? "bg-muted admin-dark:bg-gray-700 text-white"
-                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
-              }`
-            }
-          >
-            <Target className="h-4 w-4" />
-            Đánh giá dịch vụ
-          </NavLink> */}
           </nav>
+          <div className="mt-3 sm:mt-0">
+            <ThemeToggle />
+          </div>
         </div>
         {content}
       </div>

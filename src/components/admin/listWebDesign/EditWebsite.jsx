@@ -10,9 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useOutletContext, useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from 'react-number-format';
 
-
-
-
 const categories = ["E-commerce", "Portfolio", "Business", "Blog", "Landing Page", "Corporate", "Creative"];
 
 export default function WebsiteTemplateEdit() {
@@ -21,9 +18,7 @@ export default function WebsiteTemplateEdit() {
 
   const to01 = (v) => (v === 1 || v === "1" || v === true || v === "true" ? 1 : 0);
 
-
   useEffect(() => {
-    // Chặn reload / đóng tab khi đang mở form
     const handleBeforeUnload = (e) => {
       e.preventDefault();
       e.returnValue = "";
@@ -34,7 +29,6 @@ export default function WebsiteTemplateEdit() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
-
 
   const { templates, handleSave, handleAdd } = useOutletContext();
   const template = id !== "new" ? templates.find((t) => String(t.id) === id) : null;
@@ -52,7 +46,7 @@ export default function WebsiteTemplateEdit() {
         tech: Array.isArray(template.tech) ? template.tech : [],
         top_features: Array.isArray(template.top_features) ? template.top_features : [],
         tags: Array.isArray(template.tags) ? template.tags : [],
-        export_state: to01(template.export_state), // <- luôn 0/1
+        export_state: to01(template.export_state),
         lang: template.lang ?? "vi",
       };
     }
@@ -66,7 +60,7 @@ export default function WebsiteTemplateEdit() {
       tech: [],
       top_features: [],
       tags: [],
-      export_state: 0, // <- 0/1
+      export_state: 0,
       lang: "vi",
     };
   });
@@ -77,6 +71,7 @@ export default function WebsiteTemplateEdit() {
   const [newTopFeature, setNewTopFeature] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [localExportState, setLocalExportState] = useState(0);
+  const [preview, setPreview] = useState("");
 
   useEffect(() => {
     if (template) {
@@ -114,9 +109,6 @@ export default function WebsiteTemplateEdit() {
     }
   }, [template, id]);
 
-
-
-
   const addTag = () => {
     if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
       setFormData((prev) => ({
@@ -140,9 +132,6 @@ export default function WebsiteTemplateEdit() {
       addTag();
     }
   };
-
-  // top_features----------------------------------
-
 
   const addTopFeature = () => {
     if (newTopFeature.trim() && !formData.top_features.includes(newTopFeature.trim())) {
@@ -168,8 +157,6 @@ export default function WebsiteTemplateEdit() {
     }
   };
 
-  // tech---------------------------------------
-
   const addTech = () => {
     if (newTech.trim() && !formData.tech.includes(newTech.trim())) {
       setFormData((prev) => ({
@@ -194,12 +181,10 @@ export default function WebsiteTemplateEdit() {
     }
   };
 
-  // Bảo đảm option luôn chứa giá trị hiện tại từ CSDL (kể cả khi không có trong mảng categories)
   const categoryOptions = [
     ...(formData.category && !categories.includes(formData.category) ? [formData.category] : []),
     ...categories,
   ];
-
 
   const toggleExportState = async () => {
     if (isLoading) return;
@@ -207,28 +192,18 @@ export default function WebsiteTemplateEdit() {
     setFormData((prev) => ({ ...prev, export_state: formData.export_state === 1 ? 0 : 1 }));
   };
 
-
-  const [preview, setPreview] = useState("");
-
-
-
   const handleFileChange = (e) => {
     const fileImage = e.target.files[0];
-    const { name } = e.target; // "image_url"
-
+    const { name } = e.target;
 
     if (fileImage) {
-      console.log(name, fileImage);
-      // chỉ lấy tên file
       setFormData((prev) => ({
         ...prev,
         [name]: fileImage,
       }));
-
-      // Nếu vẫn muốn có preview
       const objectUrl = URL.createObjectURL(fileImage);
       setPreview(objectUrl);
-      setFile(fileImage); // Lưu file để gửi lên server
+      setFile(fileImage);
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -243,24 +218,17 @@ export default function WebsiteTemplateEdit() {
     }
   };
 
-
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
-
-
-
-
   const [activeLang, setActiveLang] = useState("vi");
 
-  // params: lang = "" | "en"
   const handleChangeLang = async (lang = "") => {
     if (!id) return;
     try {
-      // thêm "/" nếu có lang
       const langPath = lang === 'en' ? `/${lang}` : "";
       const url = `${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/web-samples/${id}`;
       const res = await fetch(url);
@@ -279,36 +247,29 @@ export default function WebsiteTemplateEdit() {
           top_features: [],
         }));
       } else {
-        // ✅ Có dữ liệu -> hiển thị bình thường
         setFormData(websiteData);
       }
 
       setActiveLang(lang);
     } catch (err) {
       console.error("Lỗi khi lấy dữ liệu:", err);
-      setError("Không thể tải dữ liệu. Vui lòng thử lại.");
     }
-
-    console.log("Đang load lang:", lang);
   };
 
   const handleActiveLangbtn = (lang) => {
     if (lang !== activeLang) {
-      // cảnh báo nếu chuyển từ vi sang en
       const confirmMsg =
         lang === "en"
           ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
           : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
 
       const proceed = window.confirm(confirmMsg);
-      if (!proceed) return; // nếu user nhấn Hủy thì không chuyển
+      if (!proceed) return;
     }
 
     setActiveLang(lang);
     handleChangeLang(lang);
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -321,23 +282,19 @@ export default function WebsiteTemplateEdit() {
         formDataUpload.append("image_url", file);
       }
 
-      // ✅ Thêm translations thủ công (FE cần gửi JSON.stringify)
       const translations = [
         {
           lang: activeLang,
-          name: formData.name,            // lấy từ state formData
+          name: formData.name,
           description: formData.description,
           tags: formData.tags ?? [],
           top_features: formData.top_features ?? []
         }
-        // có thể thêm lang khác nếu cần
       ];
       formDataUpload.append("translations", JSON.stringify(translations));
 
-      // append các field khác từ state formData
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "image_url" || key === "name" || key === "description" || key === "tags" || key === "top_features") {
-          // bỏ qua vì đã đưa vào translations
           return;
         }
         if (Array.isArray(value)) {
@@ -347,7 +304,6 @@ export default function WebsiteTemplateEdit() {
         }
       });
 
-      // append ngày tháng
       const today = new Date().toISOString().split("T")[0];
       if (template) {
         formDataUpload.append("updated_at", today);
@@ -366,9 +322,9 @@ export default function WebsiteTemplateEdit() {
     }
   };
 
-  return (<>
-    <div className="mx-auto max-w-fit">
-      <div className="flex items-center justify-between mb-8">
+  return (
+    <div className="mx-auto max-w-full p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -378,11 +334,11 @@ export default function WebsiteTemplateEdit() {
             <ArrowLeft className="h-4 w-4 text-gray-900 admin-dark:text-gray-100" />
             Quay lại
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
             {template ? "Chỉnh sửa mẫu" : "Thêm mẫu mới"}
           </h1>
         </div>
-        <div className="flex justify-center items-center space-x-4">
+        <div className="flex justify-center items-center gap-2 sm:gap-4">
           {[
             { key: "vi", label: "Tiếng Việt" },
             { key: "en", label: "Tiếng Anh" },
@@ -392,8 +348,8 @@ export default function WebsiteTemplateEdit() {
               type="button"
               name={lang.key}
               onClick={() => handleActiveLangbtn(lang.key)}
-              className={`flex px-3 py-1.5 rounded-md font-semibold text-xl transition-colors
-        ${activeLang === lang.key
+              className={`flex px-2 sm:px-3 py-1 sm:py-1.5 rounded-md font-semibold text-sm sm:text-xl transition-colors
+                ${activeLang === lang.key
                   ? "bg-blue-600 text-white admin-dark:bg-blue-500 admin-dark:text-white"
                   : "bg-blue-100 text-blue-800 hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
                 }`}
@@ -402,31 +358,28 @@ export default function WebsiteTemplateEdit() {
             </button>
           ))}
         </div>
-
       </div>
 
-      <div className="flex  gap-7 items-start">
-        <Card className="w-120 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-          <CardHeader className={"flex items-center justify-between"}>
-            <CardTitle className="text-gray-900 admin-dark:text-gray-100">Thông tin mẫu</CardTitle>
-            <CardTitle className="text-gray-900 admin-dark:text-gray-100">
-              <Button
-                type="button"
-                onClick={toggleExportState}
-                className={`w-full ${localExportState === 1 ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 hover:bg-gray-500"} text-white cursor-pointer`}
-                disabled={isLoading}
-              >
-                {localExportState === 1 ? "Đã xuất bản" : "Chưa xuất bản"}
-              </Button>
-            </CardTitle>
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        <Card className="w-full lg:w-120 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle className="text-gray-900 admin-dark:text-gray-100 text-lg sm:text-xl">Thông tin mẫu</CardTitle>
+            <Button
+              type="button"
+              onClick={toggleExportState}
+              className={`w-full sm:w-auto mt-2 sm:mt-0 ${localExportState === 1 ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 hover:bg-gray-500"} text-white cursor-pointer text-sm sm:text-base`}
+              disabled={isLoading}
+            >
+              {localExportState === 1 ? "Đã xuất bản" : "Chưa xuất bản"}
+            </Button>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6 ">
-              <div className="space-y-2 ">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="space-y-2">
                 <Label htmlFor="name" className="text-gray-800 admin-dark:text-gray-200">Tên mẫu *</Label>
                 <Input
                   id="name"
-                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none"
+                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="Nhập tên mẫu website"
@@ -438,7 +391,7 @@ export default function WebsiteTemplateEdit() {
                 <Label htmlFor="description" className="text-gray-800 admin-dark:text-gray-200">Mô tả *</Label>
                 <Textarea
                   id="description"
-                  className="bg-white  admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none"
+                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
                   value={formData.description}
                   onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                   placeholder="Mô tả chi tiết về mẫu website"
@@ -447,14 +400,14 @@ export default function WebsiteTemplateEdit() {
                 />
               </div>
 
-              <div className="flex items-center justify-bettween w-full">
-                <div className="w-full space-y-2">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <div className="flex-1 space-y-2">
                   <Label htmlFor="category" className="text-gray-800 admin-dark:text-gray-200">Danh mục *</Label>
                   <Select
                     value={formData.category || ""}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
                   >
-                    <SelectTrigger className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100 cursor-pointer">
+                    <SelectTrigger className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100 cursor-pointer text-sm sm:text-base">
                       <SelectValue placeholder="Chọn danh mục" />
                     </SelectTrigger>
                     <SelectContent className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border border-gray-300 admin-dark:border-gray-600">
@@ -466,26 +419,21 @@ export default function WebsiteTemplateEdit() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="w-full space-y-2">
-                  <Label
-                    htmlFor="price"
-                    className="text-gray-800 admin-dark:text-gray-200"
-                  >
-                    Giá *
-                  </Label>
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor="price" className="text-gray-800 admin-dark:text-gray-200">Giá *</Label>
                   <NumericFormat
-                    value={formData.price ?? ""} // để rỗng nếu chưa có giá trị
+                    value={formData.price ?? ""}
                     onValueChange={(values) => {
                       setFormData((prev) => ({
                         ...prev,
-                        price: values.floatValue || 0, // floatValue sẽ là số hoặc undefined
+                        price: values.floatValue || 0,
                       }));
                     }}
-                    thousandSeparator="," // phân cách hàng nghìn
-                    decimalScale={0} // không cho nhập số thập phân
-                    allowNegative={false} // không cho nhập số âm
-                    prefix="đ " // thêm tiền tố "đ "
-                    className="bg-white admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-300 text-gray-900 admin-dark:text-gray-100 rounded-md px-3 py-2"
+                    thousandSeparator=","
+                    decimalScale={0}
+                    allowNegative={false}
+                    prefix="đ "
+                    className="bg-white admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-300 text-gray-900 admin-dark:text-gray-100 rounded-md px-3 py-2 text-sm sm:text-base"
                     placeholder="Nhập giá tiền"
                   />
                 </div>
@@ -494,13 +442,12 @@ export default function WebsiteTemplateEdit() {
               <div className="space-y-2">
                 <Label htmlFor="image_url" className="text-gray-800 admin-dark:text-gray-200">URL hình ảnh</Label>
                 <div className="flex gap-2">
-                  {/* {isUploadFileImage ? ( */}
                   <Input
                     id="image_url"
                     name="image_url"
                     type="file"
                     accept="image/*"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 cursor-pointer"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 cursor-pointer text-sm sm:text-base"
                     onChange={handleFileChange}
                   />
                 </div>
@@ -511,7 +458,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="urlGitHub"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
                     value={formData.url_github}
                     onChange={(e) => setFormData((prev) => ({ ...prev, url_github: e.target.value }))}
                     placeholder="https://github.com/<userName>/<Repo>"
@@ -524,7 +471,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="tech"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
                     value={newTech}
                     onChange={(e) => setNewTech(e.target.value)}
                     onKeyPress={handleKeyPressTech}
@@ -534,19 +481,18 @@ export default function WebsiteTemplateEdit() {
                     type="button"
                     onClick={addTech}
                     variant="outline"
-                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer"
+                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer text-sm sm:text-base"
                   >
                     Thêm
                   </Button>
                 </div>
-
                 {formData?.tech?.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.tech.map((tech) => (
                       <Badge
                         key={tech}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300"
+                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm"
                         onClick={() => removeTech(tech)}
                       >
                         {tech} ×
@@ -556,13 +502,12 @@ export default function WebsiteTemplateEdit() {
                 )}
               </div>
 
-
               <div className="space-y-2">
                 <Label htmlFor="top_features" className="text-gray-800 admin-dark:text-gray-200">Tính năng nổi bật</Label>
                 <div className="flex gap-2">
                   <Input
                     id="top_features"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
                     value={newTopFeature}
                     onChange={(e) => setNewTopFeature(e.target.value)}
                     onKeyPress={handleKeyPressTopFeature}
@@ -572,19 +517,18 @@ export default function WebsiteTemplateEdit() {
                     type="button"
                     onClick={addTopFeature}
                     variant="outline"
-                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer"
+                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer text-sm sm:text-base"
                   >
                     Thêm
                   </Button>
                 </div>
-
                 {formData?.top_features?.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.top_features.map((top_feature) => (
                       <Badge
                         key={top_feature}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300"
+                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm"
                         onClick={() => removeTopFeature(top_feature)}
                       >
                         {top_feature} ×
@@ -599,7 +543,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="tags"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
                     onKeyPress={handleKeyPress}
@@ -609,19 +553,18 @@ export default function WebsiteTemplateEdit() {
                     type="button"
                     onClick={addTag}
                     variant="outline"
-                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer"
+                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer text-sm sm:text-base"
                   >
                     Thêm
                   </Button>
                 </div>
-
                 {formData?.tags?.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.tags.map((tag) => (
                       <Badge
                         key={tag}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300"
+                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm"
                         onClick={() => removeTag(tag)}
                       >
                         {tag} ×
@@ -634,45 +577,43 @@ export default function WebsiteTemplateEdit() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500 cursor-pointer"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500 cursor-pointer text-sm sm:text-xl"
               >
                 <Save className="h-4 w-4 mr-2" />
-                <span className="font-semibold text-xl">{isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"} {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</span>
+                <span className="font-semibold">{isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"} {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</span>
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="w-fit  bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+        <Card className="w-full lg:w-fit bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="text-gray-900 admin-dark:text-gray-100">Xem trước</CardTitle>
+            <CardTitle className="text-gray-900 admin-dark:text-gray-100 text-lg sm:text-xl">Xem trước</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 ">
+            <div className="space-y-4">
               {preview ? (
-                <div className="relative overflow-hidden rounded-lg min-w-120 border-2 border-gray-300 admin-dark:border-gray-700">
-                  <div className="w-fit h-50 admin-dark:border-gray-800 rounded-lg overflow-hidden">
+                <div className="relative overflow-hidden rounded-lg w-full lg:w-120 border-2 border-gray-300 admin-dark:border-gray-700">
+                  <div className="w-full lg:w-120 h-40 lg:h-50 admin-dark:border-gray-800 rounded-lg overflow-hidden">
                     <img
                       src={preview}
-                      // src={formData.image_url ? `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}` : ""}
                       alt="Preview"
-                      className="w-120 h-50 object-cover"
+                      className="w-full lg:w-120 h-40 lg:h-50 object-cover"
                     />
                   </div>
                   <div className="absolute top-2 left-2">
-                    <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300">
+                    <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">
                       {formData.category || "Chưa có danh mục"}
                     </Badge>
                   </div>
                 </div>
-
               ) : (
-                <div className="relative overflow-hidden rounded-lg w-fit border-2 border-gray-300 admin-dark:border-gray-700">
-                  <div className="w-120 h-50 flex items-center justify-center border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
-                    <h1>Chưa có ảnh</h1>
+                <div className="relative overflow-hidden rounded-lg w-full lg:w-120 border-2 border-gray-300 admin-dark:border-gray-700">
+                  <div className="w-full lg:w-120 h-40 lg:h-50 flex items-center justify-center border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
+                    <h1 className="text-sm sm:text-base">Chưa có ảnh</h1>
                   </div>
                   <div className="absolute top-2 left-2">
-                    <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300">
+                    <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">
                       {formData.category || "Chưa có danh mục"}
                     </Badge>
                   </div>
@@ -680,17 +621,16 @@ export default function WebsiteTemplateEdit() {
               )}
 
               <div>
-                <h3 className="font-semibold text-lg mb-2 text-gray-900 admin-dark:text-gray-100">
+                <h3 className="font-semibold text-base sm:text-lg mb-2 text-gray-900 admin-dark:text-gray-100">
                   {formData.name || "Tên mẫu"}
                 </h3>
-                <p className="max-w-6xl wrap-anywhere text-muted-foreground text-sm mb-3 admin-dark:text-gray-400">
+                <p className="max-w-full sm:max-w-6xl wrap-anywhere text-muted-foreground text-xs sm:text-sm mb-3 admin-dark:text-gray-400">
                   {formData.description || "Mô tả mẫu website"}
                 </p>
-
                 {formData.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {formData.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs admin-dark:bg-gray-700 admin-dark:text-gray-300">
+                      <Badge key={tag} variant="outline" className="text-xs sm:text-sm admin-dark:bg-gray-700 admin-dark:text-gray-300">
                         {tag}
                       </Badge>
                     ))}
@@ -701,7 +641,6 @@ export default function WebsiteTemplateEdit() {
           </CardContent>
         </Card>
       </div>
-    </div >
-  </>
+    </div>
   );
 }

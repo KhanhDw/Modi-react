@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useOutletContext } from "react-router-dom";
-import ServiceForm from "./service-form";
 import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormService";
 
 export default function ServiceTable() {
@@ -39,10 +38,10 @@ export default function ServiceTable() {
   // Lọc theo search
   const filteredService = Array.isArray(initDataService)
     ? initDataService.filter((service) =>
-        (service.translation?.ten_dich_vu || "")
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      )
+      (service.translation?.ten_dich_vu || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    )
     : [];
   const totalPages = Math.ceil(filteredService.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -56,47 +55,43 @@ export default function ServiceTable() {
       className="bg-gray-100 rounded-xl border border-gray-300 shadow-sm 
         admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
     >
-      <CardHeader>
-        <div className="flex items-center justify-between">
+      <CardHeader className="px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <CardTitle className="text-gray-900 admin-dark:text-gray-100">
+            <CardTitle className="text-lg sm:text-lg md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
               Danh sách dịch vụ
             </CardTitle>
-            <CardDescription className="text-gray-600 admin-dark:text-gray-400">
+            <CardDescription className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
               Quản lý tất cả dịch vụ
             </CardDescription>
           </div>
           {/* Search */}
-          <div className="flex items-center gap-2">
-            <div
-              className="relative bg-white rounded-md shadow-sm text-black 
-                admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:shadow-gray-900/50"
-            >
-              <Search
-                className="absolute left-3 top-[10px] h-4 w-4 text-gray-500 
-                  admin-dark:text-gray-400"
-              />
-              <Input
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setCurrentPage(1); // reset về trang đầu khi tìm kiếm
-                }}
-                placeholder="Tìm kiếm dịch vụ..."
-                className="pl-10 w-64 bg-transparent border-gray-300 
-                  admin-dark:border-gray-600 admin-dark:text-gray-200 
-                  admin-dark:placeholder-gray-400"
-              />
-            </div>
+          <div className="relative w-full sm:w-48 md:w-64">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 
+                admin-dark:text-gray-400"
+            />
+            <Input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1); // reset về trang đầu khi tìm kiếm
+              }}
+              placeholder="Tìm kiếm dịch vụ..."
+              className="pl-10 text-xs sm:text-sm bg-white border-gray-300 
+                admin-dark:bg-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 
+                admin-dark:placeholder-gray-400 rounded-md shadow-sm w-full"
+            />
           </div>
         </div>
       </CardHeader>
-      <CardContent className="text-black admin-dark:text-gray-200">
+      <CardContent className="px-4 sm:px-6 text-black admin-dark:text-gray-200">
         <div
           className="rounded-md border border-gray-300 bg-white shadow-sm 
-            admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
+            admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50
+            w-full overflow-x-auto"
         >
-          <Table>
+          <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow
                 className="bg-gray-50 admin-dark:bg-gray-900 
@@ -108,13 +103,13 @@ export default function ServiceTable() {
                 <TableHead className="text-black admin-dark:text-gray-200">
                   Tên dịch vụ
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="w-[30%] sm:w-[25%] md:w-[20%] text-black admin-dark:text-gray-200 font-semibold ">
                   Mô tả
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="w-[20%] sm:w-[15%] md:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
                   Giá
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="w-[15%] sm:w-[15%] md:w-[10%] text-black admin-dark:text-gray-200 font-semibold ">
                   Số lần đặt
                 </TableHead>
                 <TableHead className="text-black admin-dark:text-gray-200">
@@ -123,7 +118,7 @@ export default function ServiceTable() {
                 <TableHead className="text-black admin-dark:text-gray-200">
                   Trạng thái
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="w-[10%] sm:w-[10%] md:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
                   Thao tác
                 </TableHead>
               </TableRow>
@@ -220,13 +215,13 @@ export default function ServiceTable() {
           </Table>
         </div>
         {/* Pagination */}
-        <div className="flex justify-end mt-4 gap-2">
+        <div className="flex flex-wrap justify-center sm:justify-end mt-4 gap-2">
           <Button
             variant="outline"
             disabled={currentPage === 1}
-            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
+            className="text-xs sm:text-sm text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
               admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
+              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50 px-3 py-1"
             onClick={() => setCurrentPage((prev) => prev - 1)}
           >
             Trước
@@ -235,11 +230,10 @@ export default function ServiceTable() {
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}
-              className={`px-3 ${
-                currentPage === i + 1
+              className={`px-3 ${currentPage === i + 1
                   ? "bg-blue-600 text-white hover:bg-blue-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600"
                   : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 admin-dark:hover:bg-gray-600"
-              }`}
+                }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}
@@ -249,9 +243,9 @@ export default function ServiceTable() {
           <Button
             variant="outline"
             disabled={currentPage === totalPages}
-            className="text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
+            className="text-xs sm:text-sm text-gray-700 border-gray-300 bg-white hover:bg-gray-100 
               admin-dark:text-gray-200 admin-dark:bg-gray-700 admin-dark:border-gray-600 
-              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50"
+              admin-dark:hover:bg-gray-600 admin-dark:disabled:opacity-50 px-3 py-1"
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >
             Sau
