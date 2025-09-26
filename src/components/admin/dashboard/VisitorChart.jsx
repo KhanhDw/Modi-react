@@ -5,6 +5,7 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts"
 import { useEffect, useState } from "react"
+import SiteVisitsModal from "./siteVisitorModal.jsx"
 
 
 const visitorData = [
@@ -22,6 +23,7 @@ export default function VisitorChart() {
     const url = `${import.meta.env.VITE_MAIN_BE_URL}/api/site/visits/current-week`
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
+    const [openVistor, setOpenVistor] = useState(false);
 
 
 
@@ -51,52 +53,55 @@ export default function VisitorChart() {
     }, [])
 
     return (
-        <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
-            <CardHeader>
-                <div className="flex items-center justify-between">
-                    <div>
-                        <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
-                        <CardDescription>Lượt truy cập trong tuần</CardDescription>
+        <div>
+            <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+                <CardHeader>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
+                            <CardDescription>Lượt truy cập trong tuần</CardDescription>
+                        </div>
+                        <div>
+                            <button onClick={() => setOpenVistor(true)} className="text-blue-500 admin-dark:text-blue-400 hover:text-black border border-gray-600 px-3 py-2 rounded-sm cursor-pointer admin-dark:hover:bg-black hover:bg-gray-200  transition-colors duration-200">
+                                <p className="text-xs font-medium   ">Xem thống kê</p>
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <button className="border border-gray-800">
-                            <p className="text-xs font-medium text-blue-500 admin-dark:text-blue-400">Xem thống kê</p>
-                        </button>
-                    </div>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart
-                        // data={visitorData}
-                        data={data}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Tooltip
-                            content={({ active, payload }) => {
-                                if (!active || !payload || !payload.length) return null
+                </CardHeader>
+                <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                            // data={visitorData}
+                            data={data}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
+                            <XAxis dataKey="day" />
+                            <YAxis />
+                            <Tooltip
+                                content={({ active, payload }) => {
+                                    if (!active || !payload || !payload.length) return null
 
-                                const dayLabel = payload[0].payload.weekday // "Thứ 2", "Thứ 3", ...
-                                const visitors = payload[0].value
+                                    const dayLabel = payload[0].payload.weekday // "Thứ 2", "Thứ 3", ...
+                                    const visitors = payload[0].value
 
-                                return (
-                                    <div className="rounded-lg bg-white p-2 text-sm shadow 
-                      text-black admin-dark:bg-gray-900 admin-dark:text-white">
-                                        <p className="font-medium">{dayLabel}</p>
-                                        <p>{visitors} lượt truy cập</p>
-                                    </div>
-                                )
-                            }}
-                        />
+                                    return (
+                                        <div className="rounded-lg bg-white p-2 text-sm shadow 
+                          text-black admin-dark:bg-gray-900 admin-dark:text-white">
+                                            <p className="font-medium">{dayLabel}</p>
+                                            <p>{visitors} lượt truy cập</p>
+                                        </div>
+                                    )
+                                }}
+                            />
 
 
 
-                        <Bar dataKey="visitors" fill="#10b981" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                </ResponsiveContainer>
-            </CardContent>
-        </Card>
+                            <Bar dataKey="visitors" fill="#10b981" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
+            <SiteVisitsModal open={openVistor} onClose={() => setOpenVistor(false)} />
+        </div>
     )
 }
