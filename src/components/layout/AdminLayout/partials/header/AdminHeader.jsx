@@ -88,9 +88,9 @@ const AdminHeader = ({
 
   const headerStyle = isHeaderSticky
     ? {
-        width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
-        left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
-      }
+      width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
+      left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
+    }
     : {};
 
   return (
@@ -151,7 +151,7 @@ const AdminHeader = ({
 
             {/* Search Component cho desktop */}
             <div className="hidden md:block ">
-              <AdminSearch  />
+              <AdminSearch />
             </div>
 
             {/* Website link - chỉ hiển thị trên desktop */}
@@ -179,27 +179,27 @@ const AdminHeader = ({
             </div>
 
             {/* Avatar - chỉ hiển thị trên desktop */}
-          <NavLink to="/managers/profile">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-2 text-gray-600 admin-dark:text-gray-300 hidden md:flex 
+            <NavLink to="/managers/profile">
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2 text-gray-600 admin-dark:text-gray-300  md:flex 
                         hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer px-2 py-1"
-            >
-              <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarImage
-                  src={
-                    avatar_url ||
-                    "https://randomuser.me/api/portraits/lego/1.jpg"
-                  }
-                />
-                <AvatarFallback>😢</AvatarFallback>
-              </Avatar>
-              {/* Chỉ hiện tên khi từ xl trở lên */}
-              <span className="hidden xl:inline text-sm font-bold truncate">
-                {username || "Khách"}
-              </span>
-            </Button>
-          </NavLink>
+              >
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarImage
+                    src={
+                      avatar_url ||
+                      "https://randomuser.me/api/portraits/lego/1.jpg"
+                    }
+                  />
+                  <AvatarFallback>😢</AvatarFallback>
+                </Avatar>
+                {/* Chỉ hiện tên khi từ xl trở lên */}
+                <span className="hidden xl:inline text-sm font-bold truncate">
+                  {username || "Khách"}
+                </span>
+              </Button>
+            </NavLink>
             {/* Settings */}
             <AdminSettingsDropdown
               isHeaderSticky={isHeaderSticky}
@@ -212,58 +212,58 @@ const AdminHeader = ({
       </header>
 
       {/* Search Fullscreen cho mobile */}
-{isSearchOpen && (
-  <div className="fixed inset-0 z-50 bg-white admin-dark:bg-slate-900 flex flex-col p-4 ">
-    <div className="flex h-full flex-col">
-      {/* Desktop giữ nguyên thứ tự */}
-      <div className="hidden md:flex md:flex-col h-full">
-        {/* Thanh nhập tìm kiếm */}
-        <div className="flex items-center justify-between mb-4 ">
-          <h2 className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
-            Tìm kiếm
-          </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsSearchOpen(false)}
-            aria-label="Đóng tìm kiếm"
-          >
-            <X className="h-6 w-6 text-gray-600 admin-dark:text-gray-300" />
-          </Button>
-        </div>
-        {/* Component search */}
-        <div className="flex-1 overflow-y-auto">
-          <AdminSearch isFullScreen />
-        </div>
-      </div>
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-50 bg-white admin-dark:bg-slate-900 flex flex-col p-4 ">
+          <div className="flex h-full flex-col">
+            {/* Desktop giữ nguyên thứ tự */}
+            <div className="hidden md:flex md:flex-col h-full">
+              {/* Thanh nhập tìm kiếm */}
+              <div className="flex items-center justify-between mb-4 ">
+                <h2 className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
+                  Tìm kiếm
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsSearchOpen(false)}
+                  aria-label="Đóng tìm kiếm"
+                >
+                  <X className="h-6 w-6 text-gray-600 admin-dark:text-gray-300" />
+                </Button>
+              </div>
+              {/* Component search */}
+              <div className="flex-1 overflow-y-auto">
+                <AdminSearch isFullScreen />
+              </div>
+            </div>
 
-      {/* Mobile: kết quả trên, search bar dính dưới */}
-      <div className="flex flex-col h-full md:hidden">
-        {/* Kết quả + gợi ý */}
-        <div className="flex-1 overflow-y-auto">
-          <AdminSearch isFullScreen />
-        </div>
+            {/* Mobile: kết quả trên, search bar dính dưới */}
+            <div className="flex flex-col h-full md:hidden">
+              {/* Kết quả + gợi ý */}
+              <div className="flex-1 overflow-y-auto">
+                <AdminSearch isFullScreen />
+              </div>
 
-        {/* Thanh nhập dính dưới */}
-        <div className="border-t pt-3 mt-auto">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
-              Tìm kiếm
-            </h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSearchOpen(false)}
-              aria-label="Đóng tìm kiếm"
-            >
-              <X className="h-6 w-6 text-gray-600 admin-dark:text-gray-300" />
-            </Button>
+              {/* Thanh nhập dính dưới */}
+              <div className="border-t pt-3 mt-auto">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
+                    Tìm kiếm
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsSearchOpen(false)}
+                    aria-label="Đóng tìm kiếm"
+                  >
+                    <X className="h-6 w-6 text-gray-600 admin-dark:text-gray-300" />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
     </>
   );
