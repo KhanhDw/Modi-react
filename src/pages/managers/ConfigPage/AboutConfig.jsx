@@ -371,7 +371,7 @@ export default function AboutConfig() {
     };
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 items-start">
+        <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 items-start">
             <div className="flex flex-col space-y-4 sm:space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-3">
                     <button

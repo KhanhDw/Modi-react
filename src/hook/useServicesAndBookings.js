@@ -13,6 +13,8 @@ export default function useServicesAndBookings() {
             const res = await fetch(ServiceAPI.getALL());
             const data = await res.json();
             setServices(Array.isArray(data.data) ? data.data : []);
+            console.log("90900::::", data);
+
         } catch (err) {
             console.error("Lỗi lấy dịch vụ:", err);
         }
@@ -23,7 +25,6 @@ export default function useServicesAndBookings() {
             const res = await fetch(BookingAPI.getALL());
             const data = await res.json();
             setBookings(Array.isArray(data) ? data : []);
-            console.log("90900::::", data);
         } catch (err) {
             console.error("Lỗi lấy booking:", err);
         }

@@ -279,26 +279,26 @@ export default function FooterConfigMultiLang() {
                 }}
                 lang={activeLang}
             />
-                <div className="border-t border-gray-300 admin-dark:border-gray-600"></div>
-            <div className="space-y-6 sm:space-y-8 max-w-6xl w-full mx-auto px-2 sm:px-4">
-                <div className="flex flex-col items-center gap-3 sm:gap-4">
-                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 w-full">
+            <div className="border-t border-gray-300 admin-dark:border-gray-600"></div>
+            <div className="space-y-6 sm:space-y-8 max-w-5xl w-full mx-auto px-2 sm:px-4">
+                <div className="flex w-full xs:flex-col md:flex-row md:justify-between items-center gap-3 sm:gap-4">
+                    <div className=" flex items-center justify-center  gap-2 xs:gap-3 ">
                         {["vi", "en"].map((lang) => (
                             <button
                                 key={lang}
                                 onClick={() => setActiveLang(lang)}
-                                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow transition w-full sm:w-auto
+                                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md font-semibold text-xs sm:text-sm shadow transition
                                     ${activeLang === lang
                                         ? "bg-indigo-600 text-white"
                                         : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
                                     }`}
                             >
-                                {lang === "vi" ? "Tiếng Việt" : "English"}
+                                {lang === "vi" ? "Việt" : "Anh"}
                             </button>
                         ))}
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 border px-2 py-1 rounded-lg sm:rounded-xl bg-gray-400 admin-dark:bg-amber-600 w-full">
+                    <div className="flex items-center flex-wrap justify-center gap-2 xs:gap-3 border p-2  rounded-lg xs:rounded-xl bg-gray-400 admin-dark:bg-slate-900 ">
                         {[
                             { key: "company", label: "Thông tin công ty" },
                             { key: "services", label: "Dịch vụ" },
@@ -308,13 +308,13 @@ export default function FooterConfigMultiLang() {
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className={`px-2 sm:px-3 py-1 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition flex-1 sm:flex-none text-center
+                                className={`px-2 xs:text-xs sm:px-3 py-1 xs:py-2 rounded-lg font-medium transition sm:flex-none text-center
                                     ${activeTab === tab.key
                                         ? "bg-indigo-500 text-white"
                                         : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
                                     }`}
                             >
-                                {tab.label}
+                                <p className="text-xs sm:text-sm">{tab.label}</p>
                             </button>
                         ))}
                     </div>
@@ -450,9 +450,8 @@ export default function FooterConfigMultiLang() {
                             <button
                                 type="button"
                                 onClick={toggleThongBaoBoCongThuong}
-                                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold ${
-                                    !enableBoCongThuong ? "bg-red-700" : "bg-green-600"
-                                } border border-gray-600 text-white`}
+                                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold ${!enableBoCongThuong ? "bg-red-700" : "bg-green-600"
+                                    } border border-gray-600 text-white`}
                             >
                                 <p>{enableBoCongThuong ? "Đã" : "Chưa"}</p>
                                 <span>thông báo cho bộ công thương</span>
@@ -474,18 +473,16 @@ export default function FooterConfigMultiLang() {
                                         <input
                                             type="text"
                                             disabled={!enableBoCongThuong}
-                                            className={`w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm ${
-                                                !enableBoCongThuong ? "text-gray-400 admin-dark:text-gray-600" : "text-gray-800 admin-dark:text-gray-200"
-                                            }`}
+                                            className={`w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm ${!enableBoCongThuong ? "text-gray-400 admin-dark:text-gray-600" : "text-gray-800 admin-dark:text-gray-200"
+                                                }`}
                                             placeholder="URL"
                                             value={bct.description?.[activeLang] || ""}
                                             onChange={(e) => updateThongBao(bct.id, "description", e.target.value, true)}
                                         />
                                     </div>
                                     <div
-                                        className={`flex justify-center ${
-                                            !enableBoCongThuong ? "pointer-events-none cursor-not-allowed opacity-50" : "cursor-pointer"
-                                        } select-none`}
+                                        className={`flex justify-center ${!enableBoCongThuong ? "pointer-events-none cursor-not-allowed opacity-50" : "cursor-pointer"
+                                            } select-none`}
                                     >
                                         <a
                                             href={API_BASE_URL}

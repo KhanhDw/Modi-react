@@ -38,7 +38,6 @@ export default function VisitorChart() {
                     visitors: d.total ?? 0,   // null -> 0
                 }))
 
-                console.log("d:", chartData);
 
                 setData(chartData)
             } catch (err) {
@@ -54,8 +53,17 @@ export default function VisitorChart() {
     return (
         <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
             <CardHeader>
-                <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
-                <CardDescription>Lượt truy cập trong tuần</CardDescription>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
+                        <CardDescription>Lượt truy cập trong tuần</CardDescription>
+                    </div>
+                    <div>
+                        <button className="border border-gray-800">
+                            <p className="text-xs font-medium text-blue-500 admin-dark:text-blue-400">Xem thống kê</p>
+                        </button>
+                    </div>
+                </div>
             </CardHeader>
             <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
