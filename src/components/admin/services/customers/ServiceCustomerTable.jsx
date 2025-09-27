@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,8 +8,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -16,35 +30,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useLenisLocal from '@/hook/useLenisLocal';
 import {
-  Search,
   Edit,
-  Trash2,
-  MoreHorizontal,
   Eye,
   Filter,
+  MoreHorizontal,
+  Search,
+  Trash2,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
 import ReadInforCustomer from "./ReadInforCustomer";
-import useLenisLocal from '@/hook/useLenisLocal'
-import ConfigCustomerVIP from "./configCustomerVIP";
-import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
-import Pagination from "@/components/admin/services/utils/Pagination.jsx"
 
 
 export default function ServiceCustomerTable() {
@@ -141,14 +140,14 @@ export default function ServiceCustomerTable() {
     <div className="space-y-6">
       <Card className="bg-gray-100 admin-dark:bg-gray-900 admin-dark:border-gray-700">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-col xl:flex-row items-center justify-between">
             <div>
-              <CardTitle className="admin-dark:text-white">Danh sách khách hàng</CardTitle>
-              <CardDescription className="text-gray-600 admin-dark:text-gray-400">
+              <CardTitle className="admin-dark:text-white text-xl xl:text-start text-center">Danh sách khách hàng</CardTitle>
+              <CardDescription className="text-gray-600 mt-2 mb-2 xl:text-start text-center admin-dark:text-gray-400">
                 Quản lý tất cả khách hàng đã sử dụng dịch vụ
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2">
               <div className="relative bg-white admin-dark:bg-gray-800 rounded-md shadow-sm text-black admin-dark:text-white">
                 <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <Input
@@ -162,21 +161,21 @@ export default function ServiceCustomerTable() {
                 />
               </div>
               <Select value={statusFilter} onValueChange={changeStatus}>
-                <SelectTrigger className="w-40 bg-white admin-dark:bg-gray-800 text-black admin-dark:text-white border border-gray-300 admin-dark:border-gray-600 rounded">
+                <SelectTrigger className="w-40 bg-white admin-dark:bg-gray-800 text-black admin-dark:text-white border border-gray-300 admin-dark:border-gray-600 rounded cursor-pointer">
                   <Filter className="h-4 w-4 mr-2 text-black admin-dark:text-white" />
-                  <SelectValue placeholder="Trạng thái" />
+                  <SelectValue className="cursor-pointer" placeholder="Trạng thái" />
                 </SelectTrigger>
-                <SelectContent className="bg-white admin-dark:bg-gray-800 admin-dark:border-gray-600 text-black admin-dark:text-white">
-                  <SelectItem value="all" className="admin-dark:hover:bg-gray-700">Tất cả</SelectItem>
-                  <SelectItem value="new" className="admin-dark:hover:bg-gray-700">Thường</SelectItem>
-                  <SelectItem value="vip" className="admin-dark:hover:bg-gray-700">Vip</SelectItem>
+                <SelectContent className="bg-white admin-dark:bg-gray-800 admin-dark:border-gray-600 text-black admin-dark:text-white cursor-pointer">
+                  <SelectItem value="all" className="admin-dark:hover:bg-gray-700 cursor-pointer">Tất cả</SelectItem>
+                  <SelectItem value="new" className="admin-dark:hover:bg-gray-700 cursor-pointer">Thường</SelectItem>
+                  <SelectItem value="vip" className="admin-dark:hover:bg-gray-700 cursor-pointer">Vip</SelectItem>
                 </SelectContent>
               </Select>
               <button
-                className="bg-gray-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-md shadow-lg transform transition-all duration-200 ease-in-out"
+                className="bg-gray-600 hover:bg-slate-700 text-white font-bold p-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
                 onClick={() => setOpenDialogImportCustomer(true)}
               >
-                Nhập dữ liệu khách hàng vào hệ thống
+                <span className="text-sm lg:text-base">Nhập dữ liệu khách hàng</span>
               </button>
             </div>
           </div>
@@ -277,7 +276,7 @@ export default function ServiceCustomerTable() {
           {/* Pagination */}
           <div className="flex justify-between mt-4 gap-2 items-center">
             <div>
-              <button onClick={() => setOpenConfigCustomerVIP(true)} type="button" className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300">
+              <button onClick={() => setOpenConfigCustomerVIP(true)} type="button" className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer">
                 <span className=" transition-all duration-300  text-sm text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
                   Thiết lập điều kiện là khách hàng VIP
                 </span>
@@ -299,7 +298,7 @@ export default function ServiceCustomerTable() {
         <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center  min-h-screen">
           <div className="relative  rounded-lg shadow-2xl  min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
             <button hidden
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold cursor-pointer"
               onClick={() => setOpenConfigCustomerVIP(false)}
               aria-label="Đóng"
             >
@@ -314,10 +313,10 @@ export default function ServiceCustomerTable() {
 
       {/* Component Upload Excel */}
       {openDialogImportCustomer && (
-        <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 min-h-screen">
-          <div className="relative bg-white admin-dark:bg-black rounded-lg shadow-2xl  min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
+        <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center admin-dark:bg-black/90 bg-white min-h-screen">
+          <div className="relative rounded-lg w-full flex flex-col items-center p-2">
             <button hidden
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold cursor-pointer"
               onClick={() => setOpenDialogImportCustomer(false)}
               aria-label="Đóng"
             >
@@ -337,7 +336,7 @@ export default function ServiceCustomerTable() {
         <div className="fixed inset-0 admin-dark:bg-black bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white admin-dark:bg-gray-900 p-6 rounded-2xl shadow-2xl w-full max-w-3xl relative max-h-[90vh] overflow-y-auto">
             <button
-              className="rounded-full w-8 h-8 border border-gray-500 absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-white text-2xl font-bold z-10"
+              className="rounded-full cursor-pointer w-8 h-8 border border-gray-500 absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-white text-2xl font-bold z-10"
               onClick={() => {
                 setOpenReadInforCustomer(false);
                 setCustomerDetail(null);

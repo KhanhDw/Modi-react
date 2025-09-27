@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CategoryServiceSelector from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/DialogForm/CategoryServiceSelector";
 import ChildServiceSelector from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/DialogForm/ChildServiceSelector";
+import { useEffect, useState } from "react";
 
 
 // Hàm remove dấu tiếng Việt
@@ -180,7 +180,7 @@ export default function DialogForm({
                         <Button
                             disabled={!canSave}
                             onClick={handleSave}
-                            className="bg-primary text-primary-foreground hover:bg-primary/80 disabled:opacity-50"
+                            className="bg-primary text-primary-foreground hover:bg-primary/80 disabled:opacity-50 cursor-pointer"
                         >
                             Lưu
                         </Button>
@@ -188,7 +188,7 @@ export default function DialogForm({
                             variant="outline"
                             onClick={() => setOpen(false)}
                             className="border-gray-300 text-gray-700 hover:bg-gray-100
-                                admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800"
+                                admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800 cursor-pointer"
                         >
                             Hủy
                         </Button>

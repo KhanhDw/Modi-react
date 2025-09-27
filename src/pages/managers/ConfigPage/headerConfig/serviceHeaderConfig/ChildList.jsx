@@ -1,8 +1,8 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Plus, Pencil } from "lucide-react";
-import EmptyState from "./EmptyState";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
+import { FileText, Pencil, Plus } from "lucide-react";
+import EmptyState from "./EmptyState";
 
 export default function ChildList({ selectedCategory, lang, onAdd, onDelete, onEdit }) {
     useLenisLocal(".lenis-local");
@@ -19,7 +19,7 @@ export default function ChildList({ selectedCategory, lang, onAdd, onDelete, onE
                 {selectedCategory && (
                     <Button
                         size="sm"
-                        className="bg-primary text-gray-900 admin-dark:text-white hover:bg-primary/90 transition-colors"
+                        className="bg-primary text-gray-900 admin-dark:text-white hover:bg-primary/90 transition-colors cursor-pointer"
                         onClick={onAdd}
                     >
                         <Plus className="h-4 w-4 mr-1" /> Thêm
@@ -48,6 +48,7 @@ export default function ChildList({ selectedCategory, lang, onAdd, onDelete, onE
                                         size="sm"
                                         variant="outline"
                                         onClick={() => onEdit(child)}
+                                        className="cursor-pointer"
                                     >
                                         <Pencil className="h-4 w-4 mr-1" /> Sửa
                                     </Button>
@@ -55,6 +56,7 @@ export default function ChildList({ selectedCategory, lang, onAdd, onDelete, onE
                                         size="sm"
                                         variant="destructive"
                                         onClick={() => onDelete(child)}
+                                        className="cursor-pointer"
                                     >
                                         Xóa
                                     </Button>

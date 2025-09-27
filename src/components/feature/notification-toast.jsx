@@ -1,7 +1,7 @@
 // cách để import file này: import NotificationToast from "@/components/feature/notification-toast.jsx"
 
-import { useState, useEffect } from "react"
-import { Check, X, AlertCircle, Info } from "lucide-react"
+import { AlertCircle, Check, Info, X } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export default function NotificationToast({ message, type = "success", duration = 3000, onClose }) {
   const [isVisible, setIsVisible] = useState(true)
@@ -58,7 +58,7 @@ export default function NotificationToast({ message, type = "success", duration 
           setIsVisible(false)
           onClose?.()
         }}
-        className="ml-2 hover:opacity-80"
+        className="ml-2 hover:opacity-80 cursor-pointer"
       >
         <X className="w-4 h-4" />
       </button>

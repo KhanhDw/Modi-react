@@ -1,14 +1,14 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 export default function CustomerForm() {
@@ -176,14 +176,14 @@ export default function CustomerForm() {
             </div>
           </div>
           <div className="flex gap-3 mt-6">
-            <Button type="submit" className="flex-1 hover:bg-gray-500/25">
+            <Button type="submit" className="flex-1 hover:bg-gray-500/25 cursor-pointer">
               Cập nhật người dùng
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 cursor-pointer"
             >
               Thoát
             </Button>

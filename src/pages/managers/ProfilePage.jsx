@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { FiCamera, FiEdit, FiSave, FiX, FiEye, FiEyeOff } from "react-icons/fi";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { FiCamera, FiEdit, FiEye, FiEyeOff, FiSave, FiX } from "react-icons/fi";
 
 const ProfilePage = () => {
     const [avatar, setAvatar] = useState(null);
@@ -269,15 +269,15 @@ const ProfilePage = () => {
     if (!user) return <p className="text-center">Không tìm thấy người dùng</p>;
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-6 admin-dark:bg-gray-900">
-            <h2 className="text-3xl font-extrabold text-gray-800 admin-dark:text-white mb-10 text-center">
+        <div className="max-w-7xl mx-auto admin-dark:bg-gray-900">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800 admin-dark:text-white mb-10 text-center">
                 Hồ sơ cá nhân
             </h2>
 
-            <div className="bg-white admin-dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300 border border-gray-200 admin-dark:border-gray-700">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white admin-dark:bg-gray-800 sm:p-2 xl:p-4 rounded-md md:rounded-xl shadow-lg transition-colors duration-300 border border-gray-200 admin-dark:border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4 xl:gap-6 gap-8">
                     {/* Cột 1: Avatar */}
-                    <div className="flex flex-col items-center border-r border-gray-200 admin-dark:border-gray-700 pr-4">
+                    <div className="flex flex-col mt-3 items-center border-r border-gray-200 admin-dark:border-gray-700 pr-4">
                         <div className="relative group w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg cursor-pointer">
                             <img
                                 src={
@@ -317,9 +317,9 @@ const ProfilePage = () => {
                     </div>
 
                     {/* Cột 2: Thông tin cá nhân */}
-                    <section className="border rounded-2xl border-gray-200 admin-dark:border-gray-700 p-6">
-                        <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-xl font-semibold text-gray-900 admin-dark:text-white">
+                    <section className="border rounded-md md:rounded-xl border-gray-200 admin-dark:border-gray-700 p-2 sm:p-3 md:p-3 xl:gap-4">
+                        <div className="flex justify-between md:flex-col lg:flex-row md:gap-2 items-center mb-6">
+                            <h4 className="text-base sm:text-[18px] md:text-[18px] lg:text-xl font-semibold text-gray-900 admin-dark:text-white">
                                 Thông tin cá nhân
                             </h4>
                             <button
@@ -341,7 +341,7 @@ const ProfilePage = () => {
                                     type="text"
                                     value={user.username}
                                     readOnly
-                                    className="w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition cursor-not-allowed"
+                                    className="w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition cursor-not-allowed"
                                 />
                             </div>
 
@@ -354,7 +354,7 @@ const ProfilePage = () => {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     readOnly={!isEditInfo}
-                                    className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                    className={`w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
                                     ${!isEditInfo ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                 />
                             </div>
@@ -368,7 +368,7 @@ const ProfilePage = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     readOnly={!isEditInfo}
-                                    className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                    className={`w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
                                     ${!isEditInfo ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                 />
                             </div>
@@ -382,7 +382,7 @@ const ProfilePage = () => {
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     readOnly={!isEditInfo}
-                                    className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                    className={`w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
                                     ${!isEditInfo ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                 />
                             </div>
@@ -408,7 +408,7 @@ const ProfilePage = () => {
                                 <button
                                     type="submit"
                                     disabled={updatingInfo}
-                                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-sm px-4 py-2 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-sm px-4 py-2 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 >
                                     {updatingInfo ? (
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -422,9 +422,9 @@ const ProfilePage = () => {
                     </section>
 
                     {/* Cột 3: Đổi mật khẩu */}
-                    <section className="border rounded-2xl border-gray-200 admin-dark:border-gray-700 p-6">
-                        <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-xl font-semibold text-gray-900 admin-dark:text-white">
+                    <section className="border rounded-md md:rounded-xl border-gray-200 admin-dark:border-gray-700 p-2 sm:p-3 md:p-3">
+                        <div className="flex justify-between md:flex-col lg:flex-row md:gap-2 items-center mb-6">
+                            <h4 className="text-base sm:text-[18px] md:text-[18px] lg:text-xl font-semibold text-gray-900 admin-dark:text-white">
                                 Đổi mật khẩu
                             </h4>
                             <button
@@ -449,7 +449,7 @@ const ProfilePage = () => {
                                         readOnly={!isEditPassword}
                                         value={oldPassword}
                                         onChange={(e) => setOldPassword(e.target.value)}
-                                        className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                        className={`w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
                                         ${!isEditPassword ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                         style={{ lineHeight: "1.25rem" }}
                                     />
@@ -457,7 +457,7 @@ const ProfilePage = () => {
                                         <button
                                             type="button"
                                             onClick={() => togglePasswordVisibility('old')}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                                         >
                                             {showPasswords.old ? <FiEyeOff /> : <FiEye />}
                                         </button>
@@ -476,7 +476,7 @@ const ProfilePage = () => {
                                         readOnly={!isEditPassword}
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
-                                        className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                        className={`w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
                                         ${!isEditPassword ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                         style={{ lineHeight: "1.25rem" }}
                                     />
@@ -484,7 +484,7 @@ const ProfilePage = () => {
                                         <button
                                             type="button"
                                             onClick={() => togglePasswordVisibility('new')}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                                         >
                                             {showPasswords.new ? <FiEyeOff /> : <FiEye />}
                                         </button>
@@ -503,7 +503,7 @@ const ProfilePage = () => {
                                         readOnly={!isEditPassword}
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className={`w-full rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
+                                        className={`w-full rounded-md md:rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-white admin-dark:bg-gray-800 px-4 py-2 pr-10 text-gray-900 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition
                                         ${!isEditPassword ? "cursor-not-allowed bg-gray-50" : "cursor-text"}`}
                                         style={{ lineHeight: "1.25rem" }}
                                     />
@@ -511,7 +511,7 @@ const ProfilePage = () => {
                                         <button
                                             type="button"
                                             onClick={() => togglePasswordVisibility('confirm')}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                                         >
                                             {showPasswords.confirm ? <FiEyeOff /> : <FiEye />}
                                         </button>
@@ -523,7 +523,7 @@ const ProfilePage = () => {
                                 <button
                                     type="submit"
                                     disabled={changingPassword}
-                                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-sm px-4 py-2 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 hover:from-purple-700 hover:via-pink-600 hover:to-red-500 text-white font-semibold text-sm px-4 py-2 rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 >
                                     {changingPassword ? (
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

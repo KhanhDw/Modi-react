@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useLocation, useOutletContext } from "react-router-dom";
+import DailyRevenueTable from "@/components/admin/services/overview/DailyRevenueTable";
+import SaleAnalytics from "@/components/admin/services/sales/sale-analytics";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -7,11 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Target, DollarSign, Star, Layers, ChevronLeft, ChevronRight } from "lucide-react";
-import SaleAnalytics from "@/components/admin/services/sales/sale-analytics";
 import useLenisLocal from "@/hook/useLenisLocal";
-import DailyRevenueTable from "@/components/admin/services/overview/DailyRevenueTable";
+import { ChevronLeft, ChevronRight, DollarSign, Layers, Star, Target } from "lucide-react";
+import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 
 // Hàm chuyển đổi bookings → services
@@ -88,24 +88,24 @@ export default function ServiceOverview() {
     <div className="text-black admin-dark:text-white">
       <div className="space-y-6">
         {/* 4 thẻ thống kê */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md border admin-dark:border-gray-700">
+        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium admin-dark:text-white text-black ">Tổng dịch vụ</CardTitle>
               <Layers className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{initDataService.length}</div>
+              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">{initDataService.length}</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md border admin-dark:border-gray-700">
+          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium admin-dark:text-white text-black">Tổng doanh thu</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">
                 {totalRevenue.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
@@ -115,23 +115,23 @@ export default function ServiceOverview() {
 
           </Card>
 
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md border admin-dark:border-gray-700">
+          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium admin-dark:text-white text-black">Đơn đặt</CardTitle>
               <Target className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{initDataBooking.length}</div>
+              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">{initDataBooking.length}</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md border admin-dark:border-gray-700">
+          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium admin-dark:text-white text-black">Khách hàng</CardTitle>
               <Star className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">
                 {initDataCustomer.filter((c) => c.status === "active").length}
               </div>
             </CardContent>
@@ -140,7 +140,7 @@ export default function ServiceOverview() {
 
         {/* Dịch vụ hot + Analytics */}
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md border admin-dark:border-gray-700">
+          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 admin-dark:border-gray-700">
             <CardHeader className={`flex flex-row items-center justify-between`}>
               <div>
                 <CardTitle className={`admin-dark:text-white`}>Dịch vụ hot</CardTitle>

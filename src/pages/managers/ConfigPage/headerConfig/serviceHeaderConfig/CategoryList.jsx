@@ -1,9 +1,9 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Folder, Plus, Pencil } from "lucide-react";
-import { cn } from "@/lib/utils";
-import EmptyState from "./EmptyState";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
+import { cn } from "@/lib/utils";
+import { Folder, Pencil, Plus } from "lucide-react";
+import EmptyState from "./EmptyState";
 
 export default function CategoryList({
     categories,
@@ -27,7 +27,7 @@ export default function CategoryList({
                 </div>
                 <Button
                     size="sm"
-                    className="bg-primary text-black/80 admin-dark:text-white hover:bg-primary/90 transition-colors"
+                    className="bg-primary text-black/80 admin-dark:text-white hover:bg-primary/90 transition-colors cursor-pointer"
                     onClick={onAdd}
                 >
                     <Plus className="h-4 w-4 mr-1" /> Thêm
@@ -59,6 +59,7 @@ export default function CategoryList({
                                         e.stopPropagation();
                                         onEdit(cat); // 👈 gọi hàm edit
                                     }}
+                                    className="cursor-pointer"
                                 >
                                     <Pencil className="h-4 w-4" />
                                 </Button>
@@ -69,6 +70,7 @@ export default function CategoryList({
                                         e.stopPropagation();
                                         onDelete(cat);
                                     }}
+                                    className="cursor-pointer"
                                 >
                                     Xóa
                                 </Button>

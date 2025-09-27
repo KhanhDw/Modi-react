@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { InputField, TextareaField, SafeImage } from "./componentHomeConfig";
-import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import PricingPageV1 from "@/components/home/pricingPageV1.jsx";
 import PricingPageV2 from "@/components/home/pricingPageV2.jsx";
+import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
 import ChitietdichvuSection from "@/pages/managers/ConfigPage/renderSections/chitietdichvuSection.jsx";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import { InputField, SafeImage, TextareaField } from "./componentHomeConfig";
 
 
 
@@ -251,7 +251,7 @@ export default function RenderHomeConfig({
                                     <button
                                         onClick={() => setVitri(defaultVitri)} // khôi phục lại vitri gốc từ DB
                                         disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        className={`font-bold py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
                                                 ? "bg-gray-400 cursor-not-allowed"
                                                 : "bg-blue-500 hover:bg-blue-700 text-white"
@@ -264,7 +264,7 @@ export default function RenderHomeConfig({
                                     <button
                                         onClick={handleResetDefault}
                                         disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        className={`font-bold cursor-pointer py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${isVitriSameAsDefault(defaultVitri)
                                                 ? "bg-gray-400 cursor-not-allowed"
                                                 : "bg-blue-500 hover:bg-blue-700 text-white"
@@ -276,7 +276,7 @@ export default function RenderHomeConfig({
                                     <button
                                         onClick={() => savePositions(vitri)}
                                         disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        className={`font-bold py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
                                                 ? "bg-gray-400 cursor-not-allowed"
                                                 : "bg-green-500 hover:bg-green-700 text-white"
@@ -525,7 +525,7 @@ export default function RenderHomeConfig({
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setUiActive("V1")}
-                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all 
+                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all
                                                  ${uiActive === "V1"
                                                 ? "bg-green-700 text-white"
                                                 : "border-gray-500 hover:bg-gray-100/20"}`}
@@ -535,7 +535,7 @@ export default function RenderHomeConfig({
 
                                     <button
                                         onClick={() => setUiActive("V2")}
-                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all 
+                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all
                                                  ${uiActive === "V2"
                                                 ? "border-blue-500 bg-blue-500 text-white"
                                                 : "border-gray-500 hover:bg-gray-100/20"}`}

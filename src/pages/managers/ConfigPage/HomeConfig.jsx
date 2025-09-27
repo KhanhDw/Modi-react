@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import RenderHomeConfig from "./renderSectionHomeConfig";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { Switch } from "@/components/ui/switch.jsx";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import RenderHomeConfig from "./renderSectionHomeConfig";
 
 const sectionParsers = {
     banner: (data) =>
@@ -234,8 +234,6 @@ export default function HomeConfigMultiLang() {
 
     return (
         <div className="p-2 sm:p-4 md:p-6 max-w-6xl mx-auto ">
-
-
             {/* SECTION TABS */}
             <div className={`${activeSection === "vitri" ? "pb-3" : "pb-0"} flex flex-wrap gap-3 items-center justify-between`}>
                 <div className="flex flex-wrap gap-3 items-center">
@@ -245,7 +243,7 @@ export default function HomeConfigMultiLang() {
                             onClick={() => setActiveSection(sec.key)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`px-3 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition flex-1 sm:flex-none text-center
+                            className={`px-3 sm:px-4 cursor-pointer py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition flex-1 sm:flex-none text-center
                                 ${activeSection === sec.key
                                     ? "bg-indigo-600 text-white shadow-md"
                                     : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
@@ -259,7 +257,7 @@ export default function HomeConfigMultiLang() {
                 {activeSection !== "vitri" &&
                     (
                         <div className="relative flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
-                            <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2">
+                            <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2 mb-5">
                                 {/* Hiển thị ở md+ */}
                                 <span className="hidden md:inline">
                                     {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from "react";
-import { motion } from "framer-motion";
 import useLenisLocal from '@/hook/useLenisLocal';
+import { motion } from "framer-motion";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 function BannerPreview({ banner, lang }) {
     return (
@@ -186,7 +186,7 @@ const TextEditor = forwardRef(
                                 onChange={(e) =>
                                     handleFileChange(field.name, e.target.files[0])
                                 }
-                                className="block w-full text-xs sm:text-sm text-gray-500 file:mr-3 sm:mr-4 file:py-1 sm:py-2 file:px-3 sm:px-4 file:rounded-full file:border-0 file:text-xs sm:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                                className="block w-full text-xs text-gray-500 file:mr-3 sm:mr-4 file:py-1 sm:py-2 file:px-3 sm:px-4 file:rounded-full file:border-0 file:text-xs sm:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                             />
                         </div>
                     ) : (
@@ -380,13 +380,13 @@ export default function AboutConfig() {
                     <div className="rounded-2xl bg-slate-700 flex flex-col sm:flex-row justify-end md:gap-5 sm:gap-3 border border-gray-800 px-2 py-3 w-fit">
                         <button
                             onClick={() => setLang(lang === "vi" ? "en" : "vi")}
-                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-gray-900 admin-dark:bg-gray-900 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition text-xs sm:text-sm"
+                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-gray-900 admin-dark:bg-gray-900 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition text-xs sm:text-sm cursor-pointer"
                         >
                             {lang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
                         </button>
                         <button
                             onClick={handleSave}
-                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-indigo-700 transition text-xs sm:text-sm"
+                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-indigo-700 transition text-xs sm:text-sm cursor-pointer"
                         >
                             Lưu cấu hình
                         </button>

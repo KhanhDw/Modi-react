@@ -1,10 +1,15 @@
 import {
     Card, CardContent, CardDescription, CardHeader, CardTitle
 } from "@/components/ui/card"
-import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-} from "recharts"
 import { useEffect, useState } from "react"
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis, YAxis
+} from "recharts"
 import SiteVisitsModal from "./siteVisitorModal.jsx"
 
 
@@ -54,16 +59,16 @@ export default function VisitorChart() {
 
     return (
         <div>
-            <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+            <Card className="bg-white border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center xs:flex-col sm:flex-row sm:justify-between xs:gap-2 xs:justify-center justify-between">
                         <div>
-                            <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
-                            <CardDescription>Lượt truy cập trong tuần</CardDescription>
+                            <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
+                            <CardDescription className="xs:text-center sm:text-start">Lượt truy cập trong tuần</CardDescription>
                         </div>
                         <div>
-                            <button onClick={() => setOpenVistor(true)} className="text-blue-500 admin-dark:text-blue-400 hover:text-black border border-gray-600 px-3 py-2 rounded-sm cursor-pointer admin-dark:hover:bg-black hover:bg-gray-200  transition-colors duration-200">
-                                <p className="text-xs font-medium   ">Xem thống kê</p>
+                            <button onClick={() => setOpenVistor(true)} className="text-blue-500 admin-dark:text-blue-400 hover:text-black border border-gray-600 px-3 py-2 rounded-sm cursor-pointer shadow-sm admin-dark:hover:bg-black hover:bg-gray-200  transition-colors duration-200">
+                                <p className="text-xs font-medium">Xem thống kê</p>
                             </button>
                         </div>
                     </div>
@@ -85,7 +90,7 @@ export default function VisitorChart() {
                                     const visitors = payload[0].value
 
                                     return (
-                                        <div className="rounded-lg bg-white p-2 text-sm shadow 
+                                        <div className="rounded-lg bg-white p-2 text-sm shadow
                           text-black admin-dark:bg-gray-900 admin-dark:text-white">
                                             <p className="font-medium">{dayLabel}</p>
                                             <p>{visitors} lượt truy cập</p>

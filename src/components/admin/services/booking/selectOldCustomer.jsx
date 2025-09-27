@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
     Command,
     CommandEmpty,
@@ -12,8 +12,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
 import { ChevronsUpDown } from "lucide-react"
+import { useState } from "react"
 
 export default function CustomerCombobox({ customers, formData, setFormData }) {
     const [open, setOpen] = useState(false)
@@ -24,7 +24,7 @@ export default function CustomerCombobox({ customers, formData, setFormData }) {
                 <Button
                     variant="outline"
                     role="combobox"
-                    className="w-full justify-between border border-black/30 text-black"
+                    className="w-full justify-between border border-black/30 text-white admin-dark:text-gray-100 cursor-pointer"
                 >
                     {formData.cusName && formData.cusPhone
                         ? `${formData.cusName} - ${formData.cusPhone}`

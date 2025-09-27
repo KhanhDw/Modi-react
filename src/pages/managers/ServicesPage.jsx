@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
+import { BookingAPI } from "@/api/bookingAPI";
+import { CustomerAPI } from "@/api/customerAPI";
+import { ServiceAPI } from "@/api/serviceAPI";
+import { BarChart3, ShoppingCart, Target, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   NavLink,
   Outlet,
   useLocation,
-  Navigate,
-  useNavigate,
+  useNavigate
 } from "react-router-dom";
-import { BarChart3, Users, Target, ShoppingCart } from "lucide-react";
-import { ServiceAPI } from "@/api/serviceAPI";
-import { BookingAPI } from "@/api/bookingAPI";
-import { CustomerAPI } from "@/api/customerAPI";
-import ThemeToggle from "@/components/layout/partials/ThemeToggle";
 
 
 
@@ -420,13 +418,13 @@ export default function ServicesPage() {
 
   return (
     <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
-      <div className="container  mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+      <div className="container mx-auto md:px-2 lg:px-2">
         <div className="flex w-full flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
           <nav className="w-full flex flex-col sm:flex-row sm:flex-wrap sm:max-w-auto gap-2 sm:gap-3">
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
                   ? "bg-muted admin-dark:bg-gray-700 text-white"
                   : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
@@ -438,7 +436,7 @@ export default function ServicesPage() {
             <NavLink
               to="service_list"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium text-center ${isActive
                   ? "bg-muted admin-dark:bg-gray-700 text-white"
                   : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
@@ -450,7 +448,7 @@ export default function ServicesPage() {
             <NavLink
               to="service_booking"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive
                   ? "bg-muted admin-dark:bg-gray-700 text-white"
                   : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
@@ -462,7 +460,7 @@ export default function ServicesPage() {
             <NavLink
               to="service_customer"
               className={({ isActive }) =>
-                `flex flex-1 items-center gap-2 p-2 mx-2 rounded-md text-sm font-medium ${isActive
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive
                   ? "bg-muted admin-dark:bg-gray-700 text-white"
                   : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`

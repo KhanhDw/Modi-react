@@ -1,9 +1,8 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import ServiceBookingTable from "@/components/admin/services/booking/ServiceBookingTable";
 import ServiceBookingAnalytics from "@/components/admin/services/booking/service-booking-analytics";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Target, BadgeCheck, Trash2, Package, Loader2, CheckCircle } from "lucide-react";
+import { BadgeCheck, CheckCircle, Loader2, Package, Plus, Target, Trash2 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
 
@@ -66,7 +65,7 @@ export default function ServiceBooking() {
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 admin-dark:text-white">
+          <h2 className="text-lg sm:text-xl md:text-[22px] font-bold text-gray-900 admin-dark:text-white">
             Quản lý đơn
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground admin-dark:text-gray-400 mt-1">
@@ -74,7 +73,7 @@ export default function ServiceBooking() {
           </p>
         </div>
         <Button
-          className="bg-primary hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+          className="bg-primary cursor-pointer hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
           onClick={() => handleOpen("booking")}
         >
           <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
@@ -83,11 +82,11 @@ export default function ServiceBooking() {
       </div>
 
       {/* Cards */}
-      <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid gap-2 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6">
         {cards.map(card => (
           <Card
             key={card.key}
-            className="bg-white admin-dark:bg-[#374151] rounded-xl p-2 shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]"
+            className="bg-white admin-dark:bg-[#374151] rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]"
           >
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium admin-dark:text-gray-300">

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import ServiceDropdownHeaderMenu from "@/pages/managers/ConfigPage/headerConfig/ServiceDropdownHeaderMenu.jsx";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function FileInput({ label, onChange }) {
     return (
@@ -165,7 +165,7 @@ export default function HeaderConfigLogo() {
                         <motion.button
                             onClick={handleSave}
                             disabled={loading}
-                            className="whitespace-nowrap w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                            className="whitespace-nowrap w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 text-xs sm:text-sm cursor-pointer"
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                         >
