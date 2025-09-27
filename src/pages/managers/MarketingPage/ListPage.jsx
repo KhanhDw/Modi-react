@@ -44,7 +44,7 @@ export default function ListPage() {
                     setSelectedStatus={setSelectedStatus}
                 />
                 <Link to={`${location.pathname}/add`}>
-                    <Button className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button className="cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black hover:text-white">
                         <Plus className="h-4 w-4" />
                         Thêm bài viết
                     </Button>

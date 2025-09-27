@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState, useEffect } from "react";
+import { Switch } from "@/components/ui/switch";
 
 export default function WebsiteTemplatesDetail() {
   const { id } = useParams();
@@ -114,8 +115,8 @@ export default function WebsiteTemplatesDetail() {
           <Button
             onClick={toggleExportState}
             className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${localExportState == 1
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-gray-400 hover:bg-gray-500"
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-gray-400 hover:bg-gray-500"
               } text-white`}
             disabled={isToggling}
           >
@@ -313,27 +314,9 @@ export default function WebsiteTemplatesDetail() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 sm:space-y-4">
-              <div className="flex justify-center items-center gap-2 sm:gap-3">
-                <button
-                  type="button"
-                  onClick={() => setActiveLang("vi")}
-                  className={`flex px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${activeLang === "vi"
-                      ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
-                      : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                    }`}
-                >
-                  <span className="font-semibold">Tiếng Việt</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveLang("en")}
-                  className={`flex px-2 sm:px-3 py-1 sm:py-2 rounded-md text-xs sm:text-sm ${activeLang === "en"
-                      ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
-                      : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                    }`}
-                >
-                  <span className="font-semibold">Tiếng Anh</span>
-                </button>
+              <div className="flex justify-between items-center admin-dark:bg-gray-700 px-3 py-2 rounded-lg">
+                <h1>Ngôn ngữ bài viết: {activeLang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}</h1>
+                <Switch onClick={() => setActiveLang(activeLang === "vi" ? "en" : "vi")} checked={activeLang === "en"} />
               </div>
               <Button
                 onClick={() => navigate(`edit`)}

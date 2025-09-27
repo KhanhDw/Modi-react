@@ -207,10 +207,10 @@ const TextEditor_mantine = forwardRef(({ valueContextNews }, ref) => {
             defaultColorScheme="light"
             forceColorScheme={colorScheme}
         >
-            <div className="mx-auto">
+            <div className="mx-auto w-full">
                 <RichTextEditor
                     editor={editor}
-                    className="border rounded-xl shadow-sm admin-dark:border-gray-700 admin-dark:bg-gray-800 bg-white"
+                    className=" border rounded-xl shadow-sm admin-dark:border-gray-700 admin-dark:bg-gray-800 bg-white"
                 >
                     <RichTextEditor.Toolbar
                         sticky

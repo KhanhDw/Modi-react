@@ -2,8 +2,6 @@ import { Textarea } from "@material-tailwind/react";
 import React, { useState, useEffect, useRef } from "react";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 
-
-
 export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel }) {
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -12,14 +10,15 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
     image: "",
     author_id: 1,          // mặc định = 1
     status: "draft",       // mặc định là draft
-    published_at: new Date().toISOString().slice(0, 16), // format cho input datetime-local
+    published_at: new Date().toISOString().slice(0, 16),
   });
 
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [activeLang, setActiveLang] = useState("vi");
 
-
+  // ✅ Thêm state errors
+  const [errors, setErrors] = useState({});
 
   // Reset form khi blog prop thay đổi
   useEffect(() => {
@@ -30,15 +29,15 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         content: blog.content ?? "",
         image: blog.image ?? "",
         author_id: blog.author_id ?? 1,
-        status: blog.status ?? prev.status, // ✅ giữ lại status hiện tại nếu blog không có
-        lang: blog.lang ?? prev.lang, // ✅ giữ lại lang hiện tại nếu blog không có
+        status: blog.status ?? prev.status,
+        lang: blog.lang ?? prev.lang,
         published_at: blog.published_at
           ? blog.published_at.slice(0, 16)
           : prev.published_at,
       }));
       setPreview(blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : "");
-      setFile(null); // Reset file input
-      setActiveLang(blog.lang ?? 'vi');
+      setFile(null);
+      setActiveLang(blog.lang ?? "vi");
     } else {
       setFormData({
         title: "",
@@ -46,26 +45,28 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         image: "",
         author_id: 1,
         lang: "vi",
-        status: "draft",   // chỉ reset khi form add mới
+        status: "draft",
         published_at: new Date().toISOString().slice(0, 16),
       });
       setPreview("");
       setFile(null);
-      setActiveLang('vi');
+      setActiveLang("vi");
     }
   }, [blog]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-
-      // Preview
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreview(objectUrl);
     } else {
@@ -76,21 +77,33 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
           : ""
       );
     }
-  };
 
+    if (errors.image) {
+      setErrors((prev) => ({ ...prev, image: "" }));
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Kiểm tra file khi tạo mới (không có blog)
-    if (!formData && !file) {
-      alert("Vui lòng chọn ảnh trước khi lưu.");
-      return;
-    }
+    const newErrors = {};
 
     const contentHTML = editorRef.current?.getHTML()?.trim() ?? "";
 
-    // Gom dữ liệu thành object thường
+    if (!formData.title.trim()) {
+      newErrors.title = "Vui lòng nhập tiêu đề.";
+    }
+    if (!contentHTML) {
+      newErrors.content = "Nội dung không được để trống.";
+    }
+    if (!blog && !file) {
+      newErrors.image = "Vui lòng chọn ảnh.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const dataToSubmit = {
       ...formData,
       lang: activeLang,
@@ -98,51 +111,52 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
       content: contentHTML,
     };
 
-    // Debug
-    console.log("--- DataToSubmit debug ---", dataToSubmit, file);
-
-    // Truyền object lên cha
     onSubmit(dataToSubmit, file);
   };
 
-
   const handleActiveLangbtn = (lang) => {
     if (lang !== activeLang) {
-      // cảnh báo nếu chuyển từ vi sang en
       const confirmMsg =
         lang === "en"
           ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
           : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
 
       const proceed = window.confirm(confirmMsg);
-      if (!proceed) return; // nếu user nhấn Hủy thì không chuyển
+      if (!proceed) return;
     }
 
     setActiveLang(lang);
     handleChangeLang(lang);
   };
 
-
-
   return (
     <form
       onSubmit={handleSubmit}
       className="flex flex-col lg:flex-row w-full gap-6 items-start"
     >
-      {/* Left column: Form */}
-      <div className="w-full lg:w-1/3 flex flex-col gap-5 p-4 rounded-xl border-2 border-gray-300 admin-dark:bg-slate-800">
-        {/* Form content (lang switch, title, image, status, buttons) */}
-        <div className="flex flex-wrap sm:flex-nowrap justify-start sm:justify-end gap-2 sm:gap-4 mb-4">
+      {/* Left column */}
+      <div className="w-full lg:w-1/3 flex flex-col gap-5 p-4 rounded-xl border-2 border-gray-300 admin-dark:border-gray-700 admin-dark:bg-slate-800">
+        {!blog?.id && (
+          <div className="flex flex-col items-center justify-center w-full">
+            <p className="text-sm">Chỉ thiết lập thêm nội dung cho Tiếng Việt</p>
+            <p className="text-sm">
+              Cập nhật nội dung Tiếng Anh (sau khi thêm tin tức).
+            </p>
+          </div>
+        )}
+
+        {/* Lang switch */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-center  gap-2 sm:gap-4 mb-4">
           <button
             type="button"
             name="vi"
             onClick={() => handleActiveLangbtn("vi")}
-            className={`flex px-2 py-1 rounded-md text-sm cursor-pointer font-semibold ${activeLang === "vi"
-              ? "bg-blue-500 text-white admin-dark:bg-blue-500 admin-dark:text-white cursor-pointer"
+            className={`flex items-center justify-center flex-col px-2 py-1 rounded-md text-xs cursor-pointer font-semibold ${activeLang === "vi"
+              ? "bg-gray-200 text-white admin-dark:bg-gray-900 admin-dark:text-gray-300 cursor-pointer"
               : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300 cursor-pointer"
               }`}
           >
-            Tiếng Việt
+            Thiết lập nội dung tiếng Việt
           </button>
           {blog?.id && (
             <button
@@ -150,11 +164,11 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               name="en"
               onClick={() => handleActiveLangbtn("en")}
               className={`flex px-2 py-1 rounded-md text-sm cursor-pointer font-semibold ${activeLang === "en"
-                ? "bg-blue-500 text-white admin-dark:bg-blue-500 admin-dark:text-white cursor-pointer"
+                ? "bg-blue-500 text-white admin-dark:bg-gray-900 admin-dark:text-white cursor-pointer"
                 : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300 cursor-pointer"
                 }`}
             >
-              Tiếng Anh
+              Thiết lập nội dung tiếng Anh
             </button>
           )}
         </div>
@@ -165,20 +179,19 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             Tiêu đề
           </label>
           <Textarea
-            type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            required
-            spellCheck="false"
             placeholder="Nhập tiêu đề"
             rows={3}
-            className="w-full px-3 py-2 border border-slate-300 admin-dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:border-none focus:ring-gray-300 admin-dark:text-gray-200"
+            className={`w-full px-3 py-2 border-2 rounded-lg  focus:ring-0 admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200
+            ${errors.title ? "border-red-500" : "border-gray-300 admin-dark:border-slate-800"}`}
           />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
         </div>
 
         {/* Status & Published */}
-        <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Trạng thái
@@ -187,30 +200,32 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-3 py-2 border-2 outline-none border-slate-300 rounded-lg bg-white admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200 cursor-pointer"
+              className="w-full px-3 py-2 border-2 rounded-lg cursor-pointer admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200"
             >
               <option value="draft">Nháp</option>
               <option value="published">Công khai</option>
             </select>
           </div>
 
-          {blog && (
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
-                Ngày đăng
-              </label>
-              <input
-                type="datetime-local"
-                name="published_at"
-                value={formData.published_at}
-                onChange={handleChange}
-                className="w-full outline-none border-2 px-3 py-2 admin-dark:border-slate-700 border-gray-300 rounded-lg admin-dark:text-gray-200"
-              />
-            </div>
-          )}
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
+              Ngày đăng
+            </label>
+            <input
+              type="datetime-local"
+              name="published_at"
+              value={formData.published_at}
+              onChange={handleChange}
+              disabled={!blog} // ❌ không cho chỉnh khi thêm mới
+              className={`w-full px-3 py-2 border-2 rounded-lg 
+      admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200
+      ${!blog ? "bg-gray-200 text-gray-500 cursor-not-allowed" : ""}`} // style khi disable
+            />
+          </div>
+
         </div>
 
-        {/* Image Upload */}
+        {/* Image */}
         <div>
           <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
             Ảnh
@@ -220,8 +235,10 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             accept="image/*"
             name="image"
             onChange={handleFileChange}
-            className="w-full px-3 py-2 border-2 border-slate-300 admin-dark:border-slate-700 rounded-lg admin-dark:text-gray-200 cursor-pointer"
+            className={`w-full px-3 py-2 border-2 rounded-lg cursor-pointer admin-dark:text-gray-200 ${errors.image ? "border-red-500" : "border-slate-300 admin-dark:border-slate-700"
+              }`}
           />
+          {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
           <div className="mt-2 border w-full flex justify-center items-center rounded p-1">
             {preview ? (
               <img
@@ -261,17 +278,16 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         </div>
       </div>
 
-      {/* Right column: Editor */}
-      <div className="w-full lg:w-2/3 p-4 rounded-xl border-2 border-gray-300 admin-dark:bg-slate-800 mt-4 lg:mt-0">
+      {/* Right column */}
+      <div className="admin-dark:border-gray-700 w-full lg:w-2/3 p-4 rounded-xl border-2 border-gray-300 admin-dark:bg-slate-800 mt-4 lg:mt-0">
         <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
           Nội dung
         </label>
         <div className="w-full">
           <TextEditorWrapper ref={editorRef} value={formData.content} />
+          {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content}</p>}
         </div>
       </div>
     </form>
-
-
   );
 }

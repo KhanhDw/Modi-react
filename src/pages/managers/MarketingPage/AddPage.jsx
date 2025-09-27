@@ -143,10 +143,10 @@ export default function AddPage() {
             <div className="flex flex-col lg:flex-row gap-4">
                 {/* Cột trái */}
                 {!isOpenEditNetwork ? (
-                    <div className="lg:w-1/3 flex flex-col gap-3">
+                    <div className="lg:w-1/3 flex flex-col gap-3  admin-dark:border-gray-700">
 
                         {/* Mạng xã hội + Trạng thái + Tags */}
-                        <div className="p-3 border-2 border-slate-300 rounded-2xl bg-gray-50 admin-dark:bg-gray-800 space-y-3">
+                        <div className="p-3 border-2 border-slate-300 admin-dark:border-gray-700 rounded-2xl bg-gray-50 admin-dark:bg-gray-800 space-y-3">
                             {/* Tiêu đề */}
                             <div className="rounded-2xl bg-gray-50 admin-dark:bg-gray-800 space-y-3">
                                 <Label>Tiêu đề</Label>
@@ -268,7 +268,7 @@ export default function AddPage() {
                 )}
 
                 {/* Cột phải */}
-                <div className="lg:w-2/3 flex flex-col gap-3 p-3 border-2 border-slate-300 rounded-2xl bg-gray-50 admin-dark:bg-gray-800 shadow-sm">
+                <div className="lg:w-2/3 flex flex-col gap-3 p-3 border-2 border-slate-300 admin-dark:border-gray-700 rounded-2xl bg-gray-50 admin-dark:bg-gray-800 shadow-sm">
                     <Label>Nội dung bài viết</Label>
                     <TextEditorWrapper ref={editorRef} value={formData.content} />
                 </div>

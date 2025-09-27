@@ -3,7 +3,7 @@ import { Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogOverlay } from "@/components/ui/dialog";
 import useLenisLocal from "@/hook/useLenisLocal";
 import React, { useEffect } from "react";
 
@@ -92,6 +92,8 @@ export default function FilterModalListTemplateWebAdmin({
         </Button>
       </DialogTrigger>
 
+      <DialogOverlay className="bg-black/50 backdrop-blur-sm fixed inset-0 z-40" />
+
       <DialogContent
         className="lenis-local w-fit flex flex-col items-start max-w-none max-h-[80vh] 
                    overflow-hidden rounded-xl shadow-lg 
@@ -100,14 +102,14 @@ export default function FilterModalListTemplateWebAdmin({
         data-lenis-prevent
       >
         <DialogHeader className="h-fit w-full flex items-center justify-between border-b border-gray-200 admin-dark:border-gray-700">
-          <DialogTitle className="flex items-center justify-between pb-3 w-full text-lg font-semibold">
+          <DialogTitle className="flex flex-wrap items-center justify-between pb-3 w-full text-lg font-semibold">
             <p>Bộ lọc</p>
             <Button
               theme="admin"
               variant="ghost"
               size="sm"
               onClick={clearAllFilters}
-              className="text-sm text-gray-600 admin-dark:text-gray-400 admin-dark:hover:text-white transition cursor-pointer"
+              className="border border-gray-300 admin-dark:border-gray-600 mr-10 text-sm text-gray-600 admin-dark:text-gray-400 admin-dark:hover:text-white transition cursor-pointer"
             >
               Xóa tất cả
             </Button>

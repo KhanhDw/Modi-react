@@ -3,8 +3,9 @@ import { FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
 import axios from "axios";
 import UserForm from "@/components/admin/userForm/UserForm.jsx";
 import "../../styles/scrollbar.css";
+import PageList from "@/components/feature/pagination.jsx";
 
-const PAGE_SIZE = 8;
+const DEFAULT_PAGE_SIZE = 8;
 
 function removeVietnameseTones(str) {
   return str
@@ -18,11 +19,13 @@ function removeVietnameseTones(str) {
 export default function AdminZonePage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [fade, setFade] = useState(true);
   const [users, setUsers] = useState([]);
   const [columns, setColumns] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [paginatedData, setPaginatedData] = useState([]);
 
   // quản lý form
   const [showForm, setShowForm] = useState(false);
@@ -42,22 +45,14 @@ export default function AdminZonePage() {
     }
   };
 
-  // Gọi API lấy user hiện tại
   const fetchCurrentUser = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.error("Chưa có token, cần login trước");
-        return;
-      }
+      if (!token) return;
 
       const res = await axios.get(
         `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setCurrentUser(res.data.user);
@@ -67,8 +62,8 @@ export default function AdminZonePage() {
   };
 
   useEffect(() => {
-    fetchCurrentUser(); // load user hiện tại
-    fetchUsers(); // load danh sách user
+    fetchCurrentUser();
+    fetchUsers();
   }, []);
 
   const filteredData = useMemo(() => {
@@ -82,18 +77,13 @@ export default function AdminZonePage() {
     );
   }, [search, users]);
 
-  const paginatedData = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return filteredData.slice(start, start + PAGE_SIZE);
-  }, [page, filteredData]);
-
-  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(filteredData.length / pageSize);
 
   useEffect(() => {
     setFade(false);
     const timeout = setTimeout(() => setFade(true), 150);
     return () => clearTimeout(timeout);
-  }, [page, search]);
+  }, [page, search, pageSize]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa người dùng này?")) return;
@@ -108,13 +98,11 @@ export default function AdminZonePage() {
   if (loading) return <div className="p-6">Đang tải dữ liệu...</div>;
 
   const formatValue = (value) => {
-    // Kiểm tra xem giá trị có phải là ngày tháng hợp lệ hay không
     const date = new Date(value);
     if (!isNaN(date.getTime())) {
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+      return `${String(date.getDate()).padStart(2, "0")}/${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}/${date.getFullYear()}`;
     }
     return value;
   };
@@ -124,7 +112,7 @@ export default function AdminZonePage() {
       <div className="mx-auto rounded-xl border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 p-6 transition-all duration-500 ease-in-out">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 admin-dark:text-white flex-shrink-0 whitespace-nowrap">
+          <h2 className="text-xl font-semibold text-gray-900 admin-dark:text-white">
             Quản lý tài khoản nhân viên
           </h2>
 
@@ -152,9 +140,9 @@ export default function AdminZonePage() {
               setShowForm(true);
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white border border-transparent
-            admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 
-            admin-dark:text-gray-200 admin-dark:border-gray-600
-            px-2 py-2 rounded-lg transition flex-shrink-0 cursor-pointer text-sm sm:text-base min-w-[90px] whitespace-nowrap"
+              admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 
+              admin-dark:text-gray-200 admin-dark:border-gray-600
+              px-2 py-2 rounded-lg transition flex-shrink-0 cursor-pointer text-sm sm:text-base min-w-[90px] whitespace-nowrap"
             type="button"
           >
             + Thêm mới
@@ -163,12 +151,11 @@ export default function AdminZonePage() {
 
         {/* Table */}
         <div
-          className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${
-            fade ? "opacity-100 shadow-md" : "opacity-0"
-          }`}
+          className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${fade ? "opacity-100 shadow-md" : "opacity-0"
+            }`}
         >
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
-            <thead className="sticky top-0 z-1">
+            <thead>
               <tr className="bg-gray-50 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 uppercase tracking-wider text-xs sm:text-sm border-b border-gray-200 admin-dark:border-gray-700">
                 {columns.map((col) => (
                   <th
@@ -183,60 +170,45 @@ export default function AdminZonePage() {
                 </th>
               </tr>
             </thead>
-
             <tbody>
               {paginatedData.length > 0 ? (
                 paginatedData.map((item) => (
                   <tr
                     key={item.id}
-                    className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer border-b border-gray-100 admin-dark:border-gray-700"
+                    className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 border-b border-gray-100 admin-dark:border-gray-700"
                   >
                     {Object.keys(item)
                       .filter((key) => key !== "id")
                       .map((key, index) => {
                         let cellContent = item[key];
-
                         if (key === "created_at" || key === "updated_at") {
                           cellContent = formatValue(item[key]);
                         } else if (key === "avatar_url") {
                           const rawUrl = item[key];
-                          let avatarUrl = null;
-
-                          if (rawUrl) {
-                            avatarUrl = rawUrl.startsWith("/image/")
-                              ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
-                              : rawUrl;
-                          }
+                          let avatarUrl = rawUrl?.startsWith("/image/")
+                            ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
+                            : rawUrl;
 
                           cellContent = avatarUrl ? (
-                            <div className="flex justify-center items-center">
-                              <img
-                                src={avatarUrl}
-                                alt="Avatar"
-                                className="w-10 h-10 rounded-full object-cover border border-gray-200 admin-dark:border-gray-600"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                  e.currentTarget.insertAdjacentHTML(
-                                    "afterend",
-                                    '<div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">N/A</div>'
-                                  );
-                                }}
-                              />
-                            </div>
+                            <img
+                              src={avatarUrl}
+                              alt="Avatar"
+                              className="w-10 h-10 rounded-full object-cover border border-gray-200 admin-dark:border-gray-600"
+                              onError={(e) =>
+                                (e.currentTarget.style.display = "none")
+                              }
+                            />
                           ) : (
-                            <div className="flex justify-center items-center">
-                              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
-                                N/A
-                              </div>
+                            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
+                              N/A
                             </div>
                           );
                         }
-
                         return (
                           <td
                             key={index}
-                            className={`px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-sm
-    ${index === 0 ? "whitespace-nowrap font-medium" : ""}`}
+                            className={`px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 ${index === 0 ? "whitespace-nowrap font-medium" : ""
+                              }`}
                           >
                             {cellContent}
                           </td>
@@ -246,35 +218,27 @@ export default function AdminZonePage() {
                     <td className="px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-center">
                       <div className="flex justify-center gap-4">
                         <button
-                          title="Chỉnh sửa"
                           onClick={() => {
                             setEditingUser(item);
                             setShowForm(true);
                           }}
-                          disabled={currentUser && item.id === currentUser.id} // disable nếu là user hiện tại
-                          className={`flex items-center gap-1 transition cursor-pointer
-    ${
-      currentUser && item.id === currentUser.id
-        ? "text-gray-400 cursor-not-allowed"
-        : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 admin-dark:hover:text-blue-300"
-    }
-  `}
+                          disabled={currentUser && item.id === currentUser.id}
+                          className={`flex items-center gap-1 transition cursor-pointer ${currentUser && item.id === currentUser.id
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500"
+                            }`}
                         >
                           <FiEdit2 size={18} />
                           <span className="text-sm font-medium">Sửa</span>
                         </button>
 
                         <button
-                          title="Xóa"
                           onClick={() => handleDelete(item.id)}
                           disabled={currentUser && item.id === currentUser.id}
-                          className={`flex items-center gap-1 transition cursor-pointer
-    ${
-      currentUser && item.id === currentUser.id
-        ? "text-gray-400 cursor-not-allowed"
-        : "text-red-600 admin-dark:text-red-500 hover:text-red-500 admin-dark:hover:text-red-400"
-    }
-  `}
+                          className={`flex items-center gap-1 transition cursor-pointer ${currentUser && item.id === currentUser.id
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-red-600 admin-dark:text-red-500 hover:text-red-500"
+                            }`}
                         >
                           <FiTrash2 size={18} />
                           <span className="text-sm font-medium">Xóa</span>
@@ -298,48 +262,16 @@ export default function AdminZonePage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-col sm:flex-row items-center justify-between text-gray-500 admin-dark:text-gray-400 text-sm mt-6 gap-4 sm:gap-0">
-          <div>
-            Hiển thị {(page - 1) * PAGE_SIZE + 1} -{" "}
-            {Math.min(page * PAGE_SIZE, filteredData.length)} trong tổng số{" "}
-            {filteredData.length}
-          </div>
-          <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
-            >
-              &lt;
-            </button>
-            {[...Array(totalPages).keys()].map((num) => {
-              const isActive = page === num + 1;
-              return (
-                <button
-                  key={num + 1}
-                  onClick={() => setPage(num + 1)}
-                  className={`w-7 h-7 rounded-full flex items-center justify-center border ${
-                    isActive
-                      ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
-                      : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"
-                  } transition cursor-pointer`}
-                >
-                  {num + 1}
-                </button>
-              );
-            })}
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
-            >
-              &gt;
-            </button>
-          </div>
+        <div className="flex items-center gap-4">
+          <PageList
+            data={filteredData}
+            pageSize={pageSize}
+            onPageChange={setPaginatedData}
+            onPageNumberChange={setPage}
+          />
         </div>
       </div>
 
-      {/* Popup form thêm/sửa */}
       {showForm && (
         <UserForm
           user={editingUser}

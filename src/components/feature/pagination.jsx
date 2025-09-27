@@ -1,4 +1,7 @@
 // src\components\feature\pagination.jsx
+
+// cách import file:  import PageList from "@/components/feature/pagination.jsx";
+
 import React, { useState, useEffect } from "react";
 
 export default function PageList({ data, pageSize = 6, onPageChange, onPageNumberChange }) {
@@ -31,11 +34,31 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
     }, [page, data, onPageChange, onPageNumberChange]);
 
     const renderPageNumbers = () => {
-        let pages = [];
-        if (totalPages <= 4) {
+        const pages = [];
+        const maxVisible = 3; // số nút hiển thị quanh page hiện tại
+
+        if (totalPages <= 7) {
+            // nếu ít trang thì hiển thị hết
             for (let i = 1; i <= totalPages; i++) pages.push(i);
         } else {
-            pages = [1, "...", totalPages];
+            pages.push(1);
+
+            if (page > maxVisible + 2) {
+                pages.push("...");
+            }
+
+            const start = Math.max(2, page - maxVisible);
+            const end = Math.min(totalPages - 1, page + maxVisible);
+
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+
+            if (page < totalPages - (maxVisible + 1)) {
+                pages.push("...");
+            }
+
+            pages.push(totalPages);
         }
 
         return pages.map((num, idx) =>
@@ -54,19 +77,25 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
         );
     };
 
+
     return (
-        <div className="w-full p-3 flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-                Hiển thị <span className="font-medium">{startIndex + 1}</span> –{" "}
+        <div className="w-full p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            {/* Thông tin hiển thị */}
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                Hiển thị{" "}
+                <span className="font-medium">{startIndex + 1}</span> –{" "}
                 <span className="font-medium">{endIndex}</span> trong{" "}
                 <span className="font-semibold">{totalRows}</span> dòng
             </div>
 
-            <div className="flex items-center justify-center space-x-2 mt-4">
+            {/* Pagination */}
+            <div className="flex items-center justify-center space-x-2">
                 <button
                     onClick={() => setPage((p) => Math.max(p - 1, 1))}
                     disabled={page === 1}
-                    className="px-3 py-1 border rounded-lg disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed
+                   text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600
+                   hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                 >
                     ←
                 </button>
@@ -76,11 +105,14 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
                 <button
                     onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                     disabled={page === totalPages}
-                    className="px-3 py-1 border rounded-lg disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed
+                   text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600
+                   hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                 >
                     →
                 </button>
             </div>
         </div>
     );
+
 }

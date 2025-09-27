@@ -29,6 +29,7 @@ import DialogShowForm_Service from "@/pages/managers/service/DialogShowFormServi
 import ReaderDetailService from "./ReadDetailService";
 import { useNavigate } from "react-router-dom";
 import Pagination from "@/components/admin/services/utils/Pagination.jsx"
+import WarningMessage from "./utils/warningMessage";
 
 
 
@@ -247,6 +248,7 @@ export default function ServiceTable() {
           <div className="text-sm text-gray-500 admin-dark:text-gray-400">
             Trang {currentPage} / {totalPages || 1}
           </div>
+          <WarningMessage />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

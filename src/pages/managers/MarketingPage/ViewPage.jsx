@@ -96,9 +96,11 @@ export const ShowContextBlog = ({ parsedContent }) => {
     return (
         <div
             className="prose max-w-none text-gray-800 leading-relaxed admin-dark:text-gray-200
-            prose-p:text-inherit prose-strong:text-inherit prose-li:text-inherit prose-blockquote:text-inherit"
+  prose-p:text-inherit prose-strong:text-inherit prose-li:text-inherit prose-blockquote:text-inherit
+  prose-img:mx-auto prose-img:block"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
+
     );
 };
 
@@ -132,7 +134,7 @@ export default function ViewPage() {
             setPost(data);
         } catch (err) {
             console.error("Lỗi khi tải bài viết:", err);
-            setError("Không thể tải bài viết. Vui lòng thử lại sau.");
+            setError("Không tìm thấy bài viết hoặc bạn chưa cập nhật ngôn ngữ này cho bài viết");
         } finally {
             setLoading(false);
         }
@@ -156,15 +158,29 @@ export default function ViewPage() {
         );
     }
 
-    if (error || !post) {
+    if (error) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 px-4">
-                <p className="text-xl text-red-600 dark:text-red-400 mb-4">{error || "Không tìm thấy bài viết."}</p>
+                <p className="text-xl text-red-600 dark:text-red-400 mb-4">{error}</p>
                 <button
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate(-1)}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors duration-300"
                 >
-                    Quay về Trang chủ
+                    Quay lại
+                </button>
+            </div>
+        );
+    }
+
+    if (!post) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 px-4">
+                <p className="text-xl text-gray-500 dark:text-gray-400 mb-4">Ngôn ngữ cho tiếng Anh của bài viết chưa có.</p>
+                <button
+                    onClick={() => navigate(-1)}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors duration-300"
+                >
+                    Quay lại
                 </button>
             </div>
         );

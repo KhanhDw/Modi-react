@@ -62,7 +62,7 @@ export default function PageHeader({
               {!isHiddenFilter && (
                 <button
                   onClick={toggleSortOrder}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm text-center cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-[#5B8FB9]  text-white transition text-sm text-center cursor-pointer"
                 >
                   Sắp xếp: {sortOrder === "asc" ? "Cũ nhất" : "Mới nhất"}
                 </button>
