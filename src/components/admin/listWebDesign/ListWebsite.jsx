@@ -107,7 +107,7 @@ export default function WebsiteTemplateList() {
           <h1 className="text-2xl font-bold xs:text-sm sm:text-xl">Quản lý mẫu Website</h1>
           <Button
             onClick={() => navigate("new")}
-            className="flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white"
+            className="flex items-center gap-2 cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black hover:text-white"
           >
             <Plus className="h-4 w-4" /> Thêm mẫu mới
           </Button>

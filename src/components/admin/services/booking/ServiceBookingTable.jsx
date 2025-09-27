@@ -262,7 +262,6 @@ export default function ServiceBookingTable() {
         </div>
 
         {/* Pagination */}
-        {/* Pagination */}
         <div className="flex justify-between items-center mt-4">
           <div className="text-sm text-gray-500 admin-dark:text-gray-400">
             Trang {currentPage} / {totalPages || 1}

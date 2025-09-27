@@ -125,83 +125,84 @@ export default function ContactConfig() {
             {/* Left: thông tin và lưu địa chỉ map */}
             <div className="lg:col-span-2 col-span-1 space-y-4">
 
-                {/* Tên công ty */}
-                <div>
-                    <label className="flex w-full items-center justify-between text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
-                        <p> {activeLang === "vi" ? "Tên công ty" : "Company Name"}</p>
-                        <div className="flex items-center justify-end space-x-3 ">
-                            <span className="text-base font-medium admin-dark:text-white text-gray-900">
-                                {activeLang === 'vi' ? 'Tiếng Việt' : 'English'}
-                            </span>
+                <div className="p-4 border admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
+                    {/* Tên công ty */}
+                    <div>
+                        <label className="flex w-full items-center justify-between text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
+                            <p>Thiết lập Tên công ty {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</p>
+                            <div className="flex items-center justify-end space-x-3 ">
+                                <span className="text-base font-medium admin-dark:text-white text-gray-900">
+                                    {activeLang === 'vi' ? 'Tiếng Việt' : 'English'}
+                                </span>
 
-                            <div className="relative inline-block w-12 h-6 align-middle select-none transition duration-200 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    id="language-switch"
-                                    className="peer sr-only"
-                                    checked={activeLang === 'en'}
-                                    onChange={(e) => setActiveLang(e.target.checked ? 'en' : 'vi')}
-                                />
-                                <label
-                                    htmlFor="language-switch"
-                                    className="block h-6 bg-gray-400 rounded-full peer-checked:bg-blue-600 transition duration-300 ease-in-out cursor-pointer"
-                                ></label>
-                                <span
-                                    className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out peer-checked:translate-x-6 cursor-pointer"
-                                ></span>
+                                <div className="relative inline-block w-12 h-6 align-middle select-none transition duration-200 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        id="language-switch"
+                                        className="peer sr-only "
+                                        checked={activeLang === 'en'}
+                                        onChange={(e) => setActiveLang(e.target.checked ? 'en' : 'vi')}
+                                    />
+                                    <label
+                                        htmlFor="language-switch"
+                                        className="block h-6 bg-gray-400 rounded-full peer-checked:bg-blue-600 transition duration-300 ease-in-out cursor-pointer"
+                                    ></label>
+                                    <span
+                                        className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out peer-checked:translate-x-6 cursor-pointer"
+                                    ></span>
+                                </div>
                             </div>
-                        </div>
-                    </label>
-                    <input
-                        type="text"
-                        placeholder={activeLang === "vi" ? "Nhập tên công ty..." : "Enter company name..."}
-                        className="w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-none"
-                        value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
-                    />
+                        </label>
+                        <input
+                            type="text"
+                            placeholder={activeLang === "vi" ? "Nhập tên công ty..." : "Enter company name..."}
+                            className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-3 py-2 focus:outline-none "
+                            value={companyName}
+                            onChange={(e) => setCompanyName(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Nút lưu */}
+                    <div className="flex justify-end">
+                        <button
+                            className="inline-flex shadow-md h-10 items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
+                            onClick={handleSaveName}
+                        >
+                            Lưu tên công ty
+                        </button>
+                    </div>
+
                 </div>
-
-                {/* Nút lưu */}
-                <button
-                    className="inline-flex shadow-md h-10 items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
-                    onClick={handleSaveName}
-                >
-                    {activeLang === "vi" ? "Lưu" : "Save"}
-                </button>
-
                 {/* URL Google Map */}
-                <div>
-                    <label className="block text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
-                        {activeLang === "vi" ? "Địa chỉ Google Map" : "Google Map URL"}
-                    </label>
-                    <textarea
-                        placeholder={
-                            activeLang === "vi"
-                                ? "Nhập URL Google Maps vào đây..."
-                                : "Enter Google Maps URL..."
-                        }
-                        className="w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-none"
-                        value={mapUrl}
-                        onChange={(e) => setMapUrl(e.target.value)}
-                        rows={4}
-                    />
+                <div className="p-4 border admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
+                    <div>
+                        <label className="block text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
+                            Thiết lập địa chỉ Google Map
+                        </label>
+                        <textarea
+                            placeholder={
+                                activeLang === "vi"
+                                    ? "Nhập URL Google Maps vào đây..."
+                                    : "Enter Google Maps URL..."
+                            }
+                            className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-3 py-2 focus:outline-none"
+                            value={mapUrl}
+                            onChange={(e) => setMapUrl(e.target.value)}
+                            rows={8}
+                        />
+                    </div>
+
+                    {/* Nút lưu */}
+                    <div className="flex justify-end">
+                        <button
+                            className="inline-flex h-10 shadow-md items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
+                            onClick={handleSaveUrlMap}
+                        >
+                            Lưu địa chỉ Google Map
+                        </button>
+                    </div>
+
                 </div>
-
-                {/* Nút lưu */}
-                <button
-                    className="inline-flex h-10 shadow-md items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
-                    onClick={handleSaveUrlMap}
-                >
-                    {activeLang === "vi" ? "Lưu" : "Save"}
-                </button>
-
-                {/* Hiển thị URL đã lưu */}
-                {/* {savedMapUrl && (
-                    <span className="block text-sm text-gray-900 font-medium admin-dark:text-gray-300">
-                        {activeLang === "vi" ? "Địa chỉ Url Google Map:" : "Saved Google Map URL:"} <br />
-                        <span className="text-blue-600 break-all">{savedMapUrl}</span>
-                    </span>
-                )} */}
             </div>
 
             {/* Right: Preview bản đồ */}

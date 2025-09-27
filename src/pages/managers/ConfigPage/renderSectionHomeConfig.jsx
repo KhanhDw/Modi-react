@@ -295,6 +295,7 @@ export default function RenderHomeConfig({
             case "banner":
                 return (
                     <div className="space-y-6">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin và ảnh banner</h1></div>
                         {(currentData.banner || []).map((b, i) => (
                             <div
                                 key={b.id ?? `banner-${i}`}
@@ -350,6 +351,7 @@ export default function RenderHomeConfig({
             case "nenTang":
                 return (
                     <div className="space-y-4">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin nền tảng</h1></div>
                         {(currentData.nenTang || []).map((n, i) => {
                             return <div key={n.id ?? `nenTang-${i}`}>
                                 <InputField
@@ -390,6 +392,7 @@ export default function RenderHomeConfig({
             case "cards":
                 return (
                     <div className="space-y-6">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin cho 3 thẻ nội dung</h1></div>
                         <div className="grid md:grid-cols-3 gap-6">
                             {(currentData.cards || []).map((c, i) => (
                                 <div
@@ -446,6 +449,7 @@ export default function RenderHomeConfig({
             case "dichVu":
                 return (
                     <div className="space-y-6">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin cho 6 nhóm dịch vụ chính</h1></div>
                         <div className="grid md:grid-cols-2 gap-6">
                             {(currentData.dichVu || []).map((d, i) => (
                                 <div
@@ -505,9 +509,9 @@ export default function RenderHomeConfig({
                 return (
                     <div className="space-y-6 ">
                         {/* header */}
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1></div>
                         <div className="flex items-center justify-between">
-                            <h1 className="font-bold text-2xl mb-4 text-left uppercase">CẤU HÌNH GIAO DIỆN VÀ NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
-                            <div>
+                            <div hidden={true}>
                                 <button
                                     onClick={() => setShowUI((pre) => !pre)}
                                     className="hover:bg-indigo-800 admin-dark:hover:bg-indigo-600 hover:text-gray-50 admin-dark:text-gray-200 text-gray-900 duration-400 transition-all border border-gray-600 px-2 py-1 rounded-md  ">
@@ -516,7 +520,7 @@ export default function RenderHomeConfig({
                                     </span>
                                 </button>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div hidden={true} className="flex items-center gap-2">
                                 <span>Giao diện:</span>
                                 <div className="flex items-center gap-2">
                                     <button
@@ -591,6 +595,8 @@ export default function RenderHomeConfig({
             case "loiIch":
                 return (
                     <div className="space-y-6">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG lợi ích của công ty mang đến cho khách hàng</h1></div>
+
                         {(currentData?.loiIch || []).map((item, i) => (
                             <div
                                 key={item.id ?? `li-${i}`}
@@ -627,6 +633,8 @@ export default function RenderHomeConfig({
             case "khauHieu":
                 return (
                     <div className="space-y-6">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG khẩu hiệu của công ty</h1></div>
+
                         {(currentData?.khauHieu || []).map((k, i) => (
                             <div key={k.id ?? `kh-${i}`} className="space-y-4">
                                 <InputField
@@ -665,6 +673,8 @@ export default function RenderHomeConfig({
             case "khachHang":
                 return (
                     <div className="space-y-6">
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG cam kết với khách hàng</h1></div>
+
                         {(currentData?.khachHang || []).map((k, i) => (
                             <div key={k.id ?? `kh-${i}`} className="space-y-4 p-3 rounded-lg shadow-sm">
                                 <TextareaField

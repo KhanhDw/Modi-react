@@ -123,3 +123,13 @@ input:-webkit-autofill {
 .preview-html img {
     display: none; /* ẩn ảnh trong đoạn preview */
 }
+
+/* căn giữa cho ảnh trong blog */
+.custom-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}

@@ -171,18 +171,14 @@ export default function SocialNetworkManager({
                                     </div>
 
                                     <div className="flex items-center justify-between gap-2">
-                                        <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
-                                        <Button
-                                            onClick={() => {
-                                                const query = "color picker"; // 👈 nội dung cần search
-                                                const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                                                window.open(url, "_blank"); // mở tab mới
-                                            }}
-                                            variant="outline"
-                                            className="mt-2 cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
-                                        >
-                                            Tìm trên Google
-                                        </Button>
+                                        <label htmlFor="color-picker-update" className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">Chọn màu:</label>
+                                        <input
+                                            value={color}
+                                            onChange={(e) => setColor(e.target.value)}
+                                            type="color"
+                                            className="w-full h-12 cursor-pointer rounded-lg border border-gray-500 admin-dark:bg-gray-800 bg-gray-200"
+                                            title="Chọn màu"
+                                        />
 
                                     </div>
                                 </div>
@@ -213,19 +209,15 @@ export default function SocialNetworkManager({
                                         <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
                                     </div>
-                                    <div className="flex items-center justify-between gap-3">
-                                        <input value={color} onChange={(e) => setColor(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập mã màu HEX (ví dụ: #ff0000)" />
-                                        <Button
-                                            onClick={() => {
-                                                const query = "color picker"; // 👈 nội dung cần search
-                                                const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                                                window.open(url, "_blank"); // mở tab mới
-                                            }}
-                                            variant="outline"
-                                            className="mt-2 cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
-                                        >
-                                            Tìm trên Google
-                                        </Button>
+                                    <div className="flex flex-col  gap-3">
+                                        <label htmlFor="color-picker-add" className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">Chọn màu:</label>
+                                        <input
+                                            value={color}
+                                            onChange={(e) => setColor(e.target.value)}
+                                            type="color"
+                                            className="w-full h-12 cursor-pointer rounded-lg border border-gray-500 admin-dark:bg-gray-800 bg-gray-200"
+                                            title="Chọn màu"
+                                        />
 
                                     </div>
                                 </div>

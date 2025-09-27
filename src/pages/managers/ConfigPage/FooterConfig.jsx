@@ -4,6 +4,8 @@ import FooterView from "@/pages/managers/ConfigPage/FooterView";
 import { Button } from "@/components/ui/button";
 import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
 import useLenisLocal from '@/hook/useLenisLocal'
+import { Switch } from "@/components/ui/switch.jsx";
+
 
 export default function FooterConfigMultiLang() {
     useLenisLocal(".lenis-local")
@@ -283,19 +285,16 @@ export default function FooterConfigMultiLang() {
             <div className="space-y-6 sm:space-y-8 max-w-5xl w-full mx-auto px-2 sm:px-4">
                 <div className="flex w-full xs:flex-col md:flex-row md:justify-between items-center gap-3 sm:gap-4">
                     <div className=" flex items-center justify-center  gap-2 xs:gap-3 ">
-                        {["vi", "en"].map((lang) => (
-                            <button
-                                key={lang}
-                                onClick={() => setActiveLang(lang)}
-                                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md font-semibold text-xs sm:text-sm shadow transition
-                                    ${activeLang === lang
-                                        ? "bg-indigo-600 text-white"
-                                        : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
-                                    }`}
-                            >
-                                {lang === "vi" ? "Việt" : "Anh"}
-                            </button>
-                        ))}
+
+
+                        <div className="border border-gray-500 flex flex-col z-2 rounded-lg p-3 xs:w-full xs:flex-row items-center justify-end gap-2">
+                            {/* Hiển thị ở md+ */}
+                            <span >
+                                {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
+                            </span>
+
+                            <Switch checked={activeLang === "en"} onClick={() => setActiveLang((pre) => pre === "vi" ? "en" : "vi")} />
+                        </div>
                     </div>
 
                     <div className="flex items-center flex-wrap justify-center gap-2 xs:gap-3 border p-2  rounded-lg xs:rounded-xl bg-gray-400 admin-dark:bg-slate-900 ">
@@ -324,7 +323,7 @@ export default function FooterConfigMultiLang() {
                         onClick={handleSave}
                         className="w-full sm:w-auto px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
                     >
-                        Lưu Nội Dung
+                        Lưu Cập Nhật
                     </Button>
                 </div>
 

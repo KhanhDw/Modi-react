@@ -1,16 +1,36 @@
-import PageHeader from "@/components/admin/common/PageHeader";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { isAfter, parseISO } from "date-fns";
+import { Clock, Edit, Trash2 } from "lucide-react";
+import PageHeader from "@/components/admin/common/PageHeader";
 import useBlogs from "@/hook/useBlogsAdmin";
-import React, { useState, useEffect, useMemo } from "react";
-import { Clock } from "lucide-react";
+import PageList from "@/components/feature/pagination.jsx"; // giả sử bạn có sẵn
 
+// ========================== Helpers ==========================
 export const isFuture = (dt) => {
     try {
         const date = typeof dt === "string" ? parseISO(dt) : new Date(dt);
         return isAfter(date, new Date());
     } catch {
         return false;
+    }
+};
+
+export const removeAccents = (str) => {
+    if (!str) return "";
+    return str
+        .normalize("NFD") // tách chữ và dấu
+        .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
+        .toLowerCase();
+};
+
+export const parseContentSafe = (value) => {
+    try {
+        return typeof value === "string" && value.trim().startsWith("[")
+            ? JSON.parse(value)
+            : value;
+    } catch {
+        return value;
     }
 };
 
@@ -50,13 +70,15 @@ export const renderSlateToHTML = (nodes) => {
     return nodes.map(renderNode).join("");
 };
 
+// ========================== Component ==========================
 export default function BlogsListPage() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const PAGE_SIZE = 6;
+    const [paginatedBlogs, setPaginatedBlogs] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const PAGE_SIZE = 6;
 
     const {
         blogs,
@@ -64,7 +86,6 @@ export default function BlogsListPage() {
         showForm,
         loading,
         error,
-        setBlogs,
         handleAdd,
         handleEdit,
         handleDelete,
@@ -73,15 +94,7 @@ export default function BlogsListPage() {
         fetchBlogs,
     } = useBlogs();
 
-    const removeAccents = (str) => {
-        if (!str) return "";
-        return str
-            .normalize("NFD") // tách chữ và dấu
-            .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
-            .toLowerCase();
-    };
-
-    // Search logic không phân biệt hoa thường, dấu
+    // Search logic
     const filteredBlogs = useMemo(() => {
         if (!blogs) return [];
         if (!searchTerm.trim()) return blogs;
@@ -91,43 +104,41 @@ export default function BlogsListPage() {
         return blogs.filter((b) => {
             const title = removeAccents(b.title);
             let content = "";
-            try {
-                content =
-                    typeof b.content === "string" && b.content.trim().startsWith("[")
-                        ? JSON.parse(b.content)
-                            .map((n) => (n.text ? removeAccents(n.text) : ""))
-                            .join(" ")
-                        : removeAccents(b.content);
-            } catch {
-                content = removeAccents(b.content);
+
+            const parsed = parseContentSafe(b.content);
+            if (Array.isArray(parsed)) {
+                content = parsed
+                    .map((n) => (n.text ? removeAccents(n.text) : ""))
+                    .join(" ");
+            } else {
+                content = removeAccents(parsed);
             }
 
             return title.includes(term) || content.includes(term);
         });
     }, [searchTerm, blogs]);
 
-    const totalPages = Math.ceil(filteredBlogs.length / PAGE_SIZE);
-    const paginatedBlogs = filteredBlogs.slice(
-        (currentPage - 1) * PAGE_SIZE,
-        currentPage * PAGE_SIZE
-    );
-
     useEffect(() => {
         fetchBlogs();
     }, []);
 
-    const handlePageChange = (page) => {
-        if (page < 1 || page > totalPages) return;
-        setCurrentPage(page);
-    };
-
-    const handleSearch = async (keyword) => {
-        setSearchTerm(keyword);
-        setCurrentPage(1);
-    };
-
-    if (!blogs || loading) return <div className="p-6 text-center text-green-700">Đang tải...</div>;
+    // Loading / Error UI
+    if (loading) return <div className="p-6 text-center text-green-700">Đang tải...</div>;
     if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
+    if (!blogs) return null;
+
+    // Helper render status
+    const renderStatus = (value, publishedAt) => {
+        if (value === "draft") return <span className="text-yellow-600">Nháp</span>;
+        if (value === "published")
+            return (
+                <div className="flex items-center gap-1">
+                    <span className="text-green-600">Công khai</span>
+                    {publishedAt && isFuture(publishedAt) && <Clock size={14} />}
+                </div>
+            );
+        return value;
+    };
 
     return (
         <div>
@@ -140,7 +151,6 @@ export default function BlogsListPage() {
                     sortOrder={sortOrder}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
-                    APISearch={handleSearch}
                 />
             </div>
 
@@ -173,116 +183,89 @@ export default function BlogsListPage() {
                                     {columns.map((col) => {
                                         const value = blog[col.name];
 
-                                        // STT
-                                        if (col.name === "id") {
-                                            return (
-                                                <td key={col.name} className="px-3 sm:px-4 py-3 whitespace-nowrap">
-                                                    {(currentPage - 1) * PAGE_SIZE + (index + 1)}
-                                                </td>
-                                            );
-                                        }
-
-                                        // Image column
-                                        if (col.type === "image") {
-                                            return (
-                                                <td key={col.name} className="px-3 sm:px-4 py-3">
-                                                    {value ? (
+                                        switch (col.type) {
+                                            case "image":
+                                                return (
+                                                    <td key={col.name} className="px-3 sm:px-4 py-3">
                                                         <img
-                                                            src={`${import.meta.env.VITE_MAIN_BE_URL}${value}`}
+                                                            src={
+                                                                value
+                                                                    ? `${import.meta.env.VITE_MAIN_BE_URL}${value}`
+                                                                    : "/no-image.png"
+                                                            }
                                                             alt="blog"
                                                             className="max-w-[70px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
                                                             onError={(e) => {
                                                                 e.currentTarget.src = "/no-image.png";
                                                             }}
                                                         />
-                                                    ) : (
-                                                        <img
-                                                            src="/no-image.png"
-                                                            alt="no-image"
-                                                            className="max-w-[70px] h-auto object-cover rounded-lg border border-gray-200 admin-dark:border-gray-600"
-                                                        />
-                                                    )}
-                                                </td>
-                                            );
+                                                    </td>
+                                                );
+                                            case "date":
+                                                return (
+                                                    <td key={col.name} className="px-3 sm:px-4 py-3">
+                                                        {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
+                                                    </td>
+                                                );
+                                            case "enum":
+                                                return (
+                                                    <td key={col.name} className="px-3 sm:px-4 py-3">
+                                                        {renderStatus(value, blog.published_at)}
+                                                    </td>
+                                                );
+                                            default:
+                                                if (col.name === "id") {
+                                                    return (
+                                                        <td
+                                                            key={col.name}
+                                                            className="px-3 sm:px-4 py-3 whitespace-nowrap"
+                                                        >
+                                                            {(currentPage - 1) * PAGE_SIZE + (index + 1)}
+                                                        </td>
+                                                    );
+                                                }
+                                                if (col.name === "title") {
+                                                    return (
+                                                        <td
+                                                            key={col.name}
+                                                            onClick={() =>
+                                                                navigate(`${location.pathname}/${blog.id}/view`)
+                                                            }
+                                                            className="px-3 sm:px-4 py-3 hover:text-blue-600 truncate max-w-[200px] cursor-pointer"
+                                                        >
+                                                            {value}
+                                                        </td>
+                                                    );
+                                                }
+                                                if (col.name === "content") {
+                                                    const parsedValue = parseContentSafe(value);
+                                                    const htmlContent = Array.isArray(parsedValue)
+                                                        ? renderSlateToHTML(parsedValue)
+                                                        : parsedValue;
+
+                                                    return (
+                                                        <td
+                                                            key={col.name}
+                                                            className="px-3 sm:px-4 py-3 text-gray-500 max-w-[300px]"
+                                                        >
+                                                            <div
+                                                                className="preview-html prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-gray-500 text-[15px]"
+                                                                style={{
+                                                                    display: "-webkit-box",
+                                                                    WebkitBoxOrient: "vertical",
+                                                                    WebkitLineClamp: 2,
+                                                                }}
+                                                                dangerouslySetInnerHTML={{ __html: htmlContent }}
+                                                            />
+                                                        </td>
+                                                    );
+                                                }
+                                                return (
+                                                    <td key={col.name} className="px-3 sm:px-4 py-3">
+                                                        {value}
+                                                    </td>
+                                                );
                                         }
-
-                                        // Title column
-                                        if (col.name === "title") {
-                                            return (
-                                                <td
-                                                    key={col.name}
-                                                    onClick={() => navigate(`${location.pathname}/${blog.id}/view`)}
-                                                    className="px-3 sm:px-4 py-3 hover:text-blue-600 truncate max-w-[200px] cursor-pointer"
-                                                >
-                                                    {value}
-                                                </td>
-                                            );
-                                        }
-
-                                        // Content column
-                                        if (col.name === "content") {
-                                            let parsedValue = [];
-                                            try {
-                                                parsedValue =
-                                                    typeof value === "string" && value.trim().startsWith("[")
-                                                        ? JSON.parse(value)
-                                                        : value;
-                                            } catch {
-                                                parsedValue = value;
-                                            }
-
-                                            const htmlContent = Array.isArray(parsedValue)
-                                                ? renderSlateToHTML(parsedValue)
-                                                : parsedValue;
-
-                                            return (
-                                                <td key={col.name} className="px-3 sm:px-4 py-3 text-gray-500 max-w-[300px]">
-                                                    <div
-                                                        className="preview-html prose prose-sm max-w-none line-clamp-2 break-words admin-dark:text-gray-500 text-[15px]"
-                                                        style={{
-                                                            display: "-webkit-box",
-                                                            WebkitBoxOrient: "vertical",
-                                                            WebkitLineClamp: 2
-                                                        }}
-                                                        dangerouslySetInnerHTML={{ __html: htmlContent }}
-                                                    />
-                                                </td>
-                                            );
-                                        }
-
-                                        // Date column
-                                        if (col.type === "date") {
-                                            return (
-                                                <td key={col.name} className="px-3 sm:px-4 py-3">
-                                                    {value ? new Date(value).toLocaleDateString("vi-VN") : "—"}
-                                                </td>
-                                            );
-                                        }
-
-                                        // Enum column
-                                        if (col.type === "enum") {
-                                            return (
-                                                <td key={col.name} className="px-3 sm:px-4 py-3">
-                                                    {value === "draft" ? (
-                                                        <span className="text-yellow-600">Nháp</span>
-                                                    ) : value === "published" ? (
-                                                        <div className="flex items-center gap-1">
-                                                            <span className="text-green-600">Công khai</span>
-                                                            {blog.published_at && isFuture(blog.published_at) && <Clock size={14} />}
-                                                        </div>
-                                                    ) : (
-                                                        value
-                                                    )}
-                                                </td>
-                                            );
-                                        }
-
-                                        // Default column
-                                        return (
-                                            <td key={col.name} className="px-3 sm:px-4 py-3">
-                                                {value}
-                                            </td>
-                                        );
                                     })}
 
                                     {/* Actions */}
@@ -290,15 +273,22 @@ export default function BlogsListPage() {
                                         <div className="flex justify-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(blog)}
-                                                className="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs transition cursor-pointer"
+                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600 
+                          text-gray-700 hover:bg-blue-600 hover:text-white
+                          admin-dark:text-gray-200 admin-dark:hover:bg-blue-700/80 
+                          rounded-lg text-xs transition cursor-pointer"
                                             >
-                                                Sửa
+                                                <Edit size={14} />
                                             </button>
+
                                             <button
                                                 onClick={() => handleDelete(blog.id)}
-                                                className="flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs transition cursor-pointer"
+                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600 
+                          text-gray-700 hover:bg-red-600 hover:text-white
+                          admin-dark:text-gray-200 admin-dark:hover:bg-red-700/80
+                          rounded-lg text-xs transition cursor-pointer"
                                             >
-                                                Xóa
+                                                <Trash2 size={14} />
                                             </button>
                                         </div>
                                     </td>
@@ -315,46 +305,14 @@ export default function BlogsListPage() {
                             </tr>
                         )}
                     </tbody>
-                </table>
-            </div>
 
-            {/* Pagination giống AdminZone */}
-            <div className="flex flex-col sm:flex-row items-center justify-between text-gray-500 admin-dark:text-gray-400 text-sm mt-6 gap-4 sm:gap-0">
-                <div>
-                    Hiển thị {(currentPage - 1) * PAGE_SIZE + 1} -{" "}
-                    {Math.min(currentPage * PAGE_SIZE, filteredBlogs.length)} trong tổng số {filteredBlogs.length}
-                </div>
-                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
-                    >
-                        &lt;
-                    </button>
-                    {[...Array(totalPages).keys()].map((num) => {
-                        const isActive = currentPage === num + 1;
-                        return (
-                            <button
-                                key={num + 1}
-                                onClick={() => handlePageChange(num + 1)}
-                                className={`w-7 h-7 rounded-full flex items-center justify-center border ${isActive
-                                    ? "bg-blue-600 border-blue-600 text-white font-semibold shadow-lg admin-dark:bg-gray-400 admin-dark:border-gray-400 admin-dark:text-white"
-                                    : "border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-blue-100 admin-dark:hover:bg-gray-800"
-                                    } transition cursor-pointer`}
-                            >
-                                {num + 1}
-                            </button>
-                        );
-                    })}
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-300 admin-dark:border-gray-600 text-gray-700 admin-dark:text-gray-300 hover:bg-purple-100 admin-dark:hover:bg-gray-800 disabled:text-gray-300 admin-dark:disabled:text-gray-500 transition cursor-pointer"
-                    >
-                        &gt;
-                    </button>
-                </div>
+                </table>
+                <PageList
+                    data={filteredBlogs}
+                    pageSize={PAGE_SIZE}
+                    onPageChange={setPaginatedBlogs}
+                    onPageNumberChange={setCurrentPage}
+                />
             </div>
         </div>
     );
