@@ -121,7 +121,7 @@ export default function AdminZonePage() {
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
               size={20}
             />
-            <input
+            <input autoComplete="off"
               type="search"
               placeholder="Tìm kiếm..."
               value={search}

@@ -348,7 +348,7 @@ export default function FooterConfigMultiLang() {
                                             className="lenis-local w-full px-3 sm:px-4 py-4 sm:py-6 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition resize-y text-xs sm:text-sm"
                                         />
                                     ) : (
-                                        <input
+                                        <input autoComplete="off"
                                             type="text"
                                             value={value}
                                             onChange={(e) => handleChangeInfo(info.id, "description", e.target.value)}
@@ -371,7 +371,7 @@ export default function FooterConfigMultiLang() {
                             <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div className="flex flex-col gap-1 sm:gap-2">
                                     <p className="text-xs sm:text-sm text-gray-500 admin-dark:text-gray-400 whitespace-nowrap">Tiêu đề</p>
-                                    <input
+                                    <input autoComplete="off"
                                         type="text"
                                         className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                         placeholder="Tên dịch vụ"
@@ -390,7 +390,7 @@ export default function FooterConfigMultiLang() {
                                             rows={4}
                                         />
                                     ) : (
-                                        <input
+                                        <input autoComplete="off"
                                             type="text"
                                             className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                             placeholder="URL"
@@ -412,7 +412,7 @@ export default function FooterConfigMultiLang() {
                         </div>
                         {socials.map((s) => (
                             <div key={s.id} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                                <input
+                                <input autoComplete="off"
                                     type="text"
                                     readOnly={true}
                                     className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-none transition text-xs sm:text-sm"
@@ -429,7 +429,7 @@ export default function FooterConfigMultiLang() {
                                         rows={4}
                                     />
                                 ) : (
-                                    <input
+                                    <input autoComplete="off"
                                         type="text"
                                         className="w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm"
                                         placeholder="URL"
@@ -469,7 +469,7 @@ export default function FooterConfigMultiLang() {
                                                 Không để đường dẫn ảnh sẽ không hiển thị
                                             </p>
                                         </div>
-                                        <input
+                                        <input autoComplete="off"
                                             type="text"
                                             disabled={!enableBoCongThuong}
                                             className={`w-full p-2 sm:p-3 rounded border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition text-xs sm:text-sm ${!enableBoCongThuong ? "text-gray-400 admin-dark:text-gray-600" : "text-gray-800 admin-dark:text-gray-200"

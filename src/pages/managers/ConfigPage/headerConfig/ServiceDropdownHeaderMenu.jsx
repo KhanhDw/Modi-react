@@ -62,6 +62,8 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
             const merged = await Promise.all(requests);
             setMenuData(merged);
+
+            console.log("-->", merged);
         } catch (err) {
             console.error(err);
             setToast({ message: "Lỗi tải dữ liệu: " + err.message, type: "error" });
@@ -139,7 +141,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             };
 
             setMenuData(prev => [...prev, newCat]);
-            setSelectedCategory(newCat);
+            // setSelectedCategory(newCat);
             setToast({ message: "Thêm danh mục thành công!", type: "success" });
 
             // close & reset dialog
@@ -538,6 +540,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                         listIdServices={dialog.listIdServices}
                         setListIdServices={setDialogListIdServices}
                         listServiceOfParent={listServiceOfParent}
+                        disableItemSelectedbyName_groupServices={menuData}
                         onSubmit={handleSubmitDialog}
                     />
                 </div>

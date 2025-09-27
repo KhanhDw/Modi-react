@@ -37,6 +37,7 @@ export default function DialogForm({
     listIdServices,
     setListIdServices,
     listServiceOfParent,
+    disableItemSelectedbyName_groupServices,
     onSubmit,
 }) {
 
@@ -164,6 +165,7 @@ export default function DialogForm({
                                 services={services}
                                 listIdServices={listIdServices}
                                 setListIdServices={setListIdServices}
+                                disableItemSelectedbyName_groupServices={disableItemSelectedbyName_groupServices}
                             />
                         ) : (
                             <ChildServiceSelector

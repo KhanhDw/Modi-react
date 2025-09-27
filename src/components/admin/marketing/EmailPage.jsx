@@ -347,11 +347,11 @@ export default function EmailPage() {
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Tên chiến dịch</label>
-                <input className="px-3 py-2 border rounded-md" placeholder="Nhập tên chiến dịch..." />
+                <input autoComplete="off" className="px-3 py-2 border rounded-md" placeholder="Nhập tên chiến dịch..." />
               </div>
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Tiêu đề email</label>
-                <input className="px-3 py-2 border rounded-md" placeholder="Nhập tiêu đề email..." />
+                <input autoComplete="off" className="px-3 py-2 border rounded-md" placeholder="Nhập tiêu đề email..." />
               </div>
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Danh sách gửi</label>
@@ -397,7 +397,7 @@ export default function EmailPage() {
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Tên danh sách</label>
-                <input className="px-3 py-2 border rounded-md" placeholder="Nhập tên danh sách..." />
+                <input autoComplete="off" className="px-3 py-2 border rounded-md" placeholder="Nhập tên danh sách..." />
               </div>
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Mô tả</label>

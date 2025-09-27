@@ -245,7 +245,7 @@ export default function ContactPage() {
             Quản lý liên hệ
           </h1>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
-            <input
+            <input autoComplete="off"
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

@@ -107,7 +107,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
         </h3>
 
         <form onSubmit={handleSubmit} className="grid gap-3">
-          <input
+          <input autoComplete="off"
             name="full_name"
             value={form.full_name}
             onChange={handleChange}
@@ -115,7 +115,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
             className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
             required
           />
-          <input
+          <input autoComplete="off"
             name="username"
             value={form.username}
             onChange={handleChange}
@@ -123,7 +123,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
             className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
             required
           />
-          <input
+          <input autoComplete="off"
             name="email"
             type="email"
             value={form.email}
@@ -132,7 +132,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
             className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
             required
           />
-          <input
+          <input autoComplete="off"
             name="phone"
             value={form.phone}
             onChange={handleChange}
@@ -151,14 +151,14 @@ export default function UserForm({ user, onClose, onSuccess }) {
             <option className="text-black" value="deve">dev</option>
           </select>
 
-          <input
+          <input autoComplete="off"
             type="file"
             accept="image/*"
             onChange={handleFile}
             className="w-full p-2 rounded border border-gray-300 admin-dark:border-gray-600 focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-300 transition cursor-pointer"
           />
 
-          <input
+          <input autoComplete="off"
             name="avatar_url"
             value={form.avatar_url}
             onChange={handleChange}
@@ -178,7 +178,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </div>
           )}
 
-          <input
+          <input autoComplete="off"
             name="password"
             type="password"
             value={form.password}

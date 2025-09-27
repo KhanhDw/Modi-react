@@ -16,7 +16,7 @@ function FileInput({ label, onChange }) {
         <div className="flex flex-col gap-2">
             <label className="font-semibold text-gray-700 admin-dark:text-gray-300">{label}</label>
             <div className="relative">
-                <input
+                <input autoComplete="off"
                     type="file"
                     accept="image/*"
                     onChange={onChange}

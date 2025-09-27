@@ -211,7 +211,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Ngày đăng
             </label>
-            <input
+            <input autoComplete="off"
               type="datetime-local"
               name="published_at"
               value={formData.published_at}
@@ -230,7 +230,7 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
           <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
             Ảnh
           </label>
-          <input
+          <input autoComplete="off"
             type="file"
             accept="image/*"
             name="image"

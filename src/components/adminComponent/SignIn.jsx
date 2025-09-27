@@ -27,7 +27,7 @@ const SignIn = () => {
                 <form>
                     {/* Email */}
                     <div className="mb-4 relative">
-                        <input
+                        <input autoComplete="off"
                             type="email"
                             placeholder="Enter your email"
                             className="w-full pr-10 pl-4 py-3 border border-gray-300 admin-dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#5d5fef] focus:border-transparent transition duration-150 bg-transparent text-gray-800 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400"
@@ -38,7 +38,7 @@ const SignIn = () => {
 
                     {/* Password */}
                     <div className="mb-4 relative">
-                        <input
+                        <input autoComplete="off"
                             type={showPassword ? 'text' : 'password'}
                             placeholder="Enter your password"
                             className="w-full px-4 py-3 border border-gray-300 admin-dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#5d5fef] focus:border-transparent transition duration-150 bg-transparent text-gray-800 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400"
@@ -55,7 +55,7 @@ const SignIn = () => {
                     {/* Remember + Forgot */}
                     <div className="flex justify-between items-center mb-6 text-sm">
                         <label className="flex items-center gap-2 cursor-pointer text-gray-700 admin-dark:text-gray-300">
-                            <input
+                            <input autoComplete="off"
                                 type="checkbox"
                                 className="w-4 h-4 border border-gray-300 admin-dark:border-gray-600 text-[#5d5fef] focus:ring-[#5d5fef]"
                             />

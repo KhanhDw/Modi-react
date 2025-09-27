@@ -390,7 +390,7 @@ export default function ImageUpload({
                         } ${enableDragDrop ? 'cursor-pointer' : ''}`}
                     onClick={() => enableDragDrop && fileInputRef.current?.click()}
                 >
-                    <input
+                    <input autoComplete="off"
                         ref={fileInputRef}
                         type="file"
                         multiple
@@ -412,7 +412,7 @@ export default function ImageUpload({
 
                 {/* Manual File Input */}
                 <div className="mb-4">
-                    <input
+                    <input autoComplete="off"
                         type="file"
                         multiple
                         accept={allowedTypes.join(',')}

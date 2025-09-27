@@ -8,7 +8,7 @@ function Checkbox({ checked, onChange, label, disabled }) {
                 : "hover:text-indigo-600 admin-dark:hover:text-indigo-400"
                 }`}
         >
-            <input
+            <input autoComplete="off"
                 type="checkbox"
                 className={`appearance-none h-6 w-6 rounded-md border-2 border-gray-300 admin-dark:border-gray-600
           checked:bg-indigo-600 checked:border-indigo-600
@@ -37,7 +37,7 @@ function Radio({ id, name, value, checked, onChange, label, disabled }) {
                 : "hover:text-indigo-600 admin-dark:hover:text-indigo-400"
                 }`}
         >
-            <input
+            <input autoComplete="off"
                 type="radio"
                 id={id}
                 name={name}
