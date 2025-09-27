@@ -147,7 +147,7 @@ export default function FooterView({ data, services = [], socials = [], privacy 
                 {/* Bottom */}
                 <div className="flex flex-col items-center justify-between pt-6 border-t border-gray-700 md:flex-row">
                     <p className="mb-4 text-sm text-gray-400 md:mb-0 3xl:text-xl">
-                        © {new Date().getFullYear()} - Bản quyền thuộc về {currentData.name_company || "???"}
+                        © {new Date().getFullYear()} - {currentData.name_company || "???"}
                     </p>
                     <div className="flex gap-3">
                         {socials

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import RenderHomeConfig from "./renderSectionHomeConfig";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import { Switch } from "@/components/ui/switch.jsx";
 
 const sectionParsers = {
     banner: (data) =>
@@ -232,47 +233,51 @@ export default function HomeConfigMultiLang() {
     };
 
     return (
-        <div className="p-2 sm:p-4 md:p-6 max-w-6xl mx-auto space-y-6 sm:space-y-8">
-            {/* LANG TABS */}
-            <div className="flex flex-wrap gap-2 sm:gap-3">
-                {["vi", "en"].map((lang) => (
-                    <motion.button
-                        key={lang}
-                        onClick={() => setActiveLang(lang)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`px-3 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition w-full sm:w-auto
-                            ${activeLang === lang
-                                ? "bg-indigo-600 text-white shadow-md"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
-                            }`}
-                    >
-                        {lang === "vi" ? "Tiếng Việt" : "English"}
-                    </motion.button>
-                ))}
-            </div>
+        <div className="p-2 sm:p-4 md:p-6 max-w-6xl mx-auto ">
+
 
             {/* SECTION TABS */}
-            <div className="flex flex-wrap gap-3 mb-6">
-                {sectionsConfig.map((sec) => (
-                    <motion.button
-                        key={sec.key}
-                        onClick={() => setActiveSection(sec.key)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`px-3 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition flex-1 sm:flex-none text-center
-                            ${activeSection === sec.key
-                                ? "bg-indigo-600 text-white shadow-md"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
-                            }`}
-                    >
-                        {sec.label}
-                    </motion.button>
-                ))}
+            <div className={`${activeSection === "vitri" ? "pb-3" : "pb-0"} flex flex-wrap gap-3 items-center justify-between`}>
+                <div className="flex flex-wrap gap-3 items-center">
+                    {sectionsConfig.map((sec) => (
+                        <motion.button
+                            key={sec.key}
+                            onClick={() => setActiveSection(sec.key)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`px-3 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition flex-1 sm:flex-none text-center
+                                ${activeSection === sec.key
+                                    ? "bg-indigo-600 text-white shadow-md"
+                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:hover:bg-gray-700"
+                                }`}
+                        >
+                            {sec.label}
+                        </motion.button>
+                    ))}
+                </div>
+                {/* LANG TABS */}
+                {activeSection !== "vitri" &&
+                    (
+                        <div className="relative flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
+                            <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2">
+                                {/* Hiển thị ở md+ */}
+                                <span className="hidden md:inline">
+                                    {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
+                                </span>
+                                {/* Hiển thị ở xs */}
+                                <span className="inline md:hidden">
+                                    {activeLang === "vi" ? "Ngôn ngữ Việt" : "Ngôn ngữ Anh"}
+                                </span>
+                                <Switch checked={activeLang === "en"} onClick={() => setActiveLang((pre) => pre === "vi" ? "en" : "vi")} />
+                            </div>
+                            <div className=" absolute top-[70%] left-0 bg-gray-800 w-full h-6"></div>
+                        </div>
+                    )
+                }
             </div>
 
             {/* SECTION CONTENT */}
-            <div className="bg-white p-3 sm:p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-lg sm:rounded-xl shadow-md transition">
+            <div className="bg-white p-3 sm:p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-lg shadow-md transition">
                 <RenderHomeConfig
                     activeSection={activeSection}
                     currentData={currentData}
@@ -284,13 +289,15 @@ export default function HomeConfigMultiLang() {
                 />
             </div>
 
-            {toast && (
-                <NotificationToast
-                    message={toast.message}
-                    type={toast.type}
-                    onClose={() => setToast(null)}
-                />
-            )}
-        </div>
+            {
+                toast && (
+                    <NotificationToast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={() => setToast(null)}
+                    />
+                )
+            }
+        </div >
     );
 }

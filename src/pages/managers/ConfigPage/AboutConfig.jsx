@@ -373,19 +373,24 @@ export default function AboutConfig() {
     return (
         <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 items-start">
             <div className="flex flex-col space-y-4 sm:space-y-6">
-                <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-3">
-                    <button
-                        onClick={handleSave}
-                        className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-indigo-700 transition text-xs sm:text-sm"
-                    >
-                        Lưu cấu hình
-                    </button>
-                    <button
-                        onClick={() => setLang(lang === "vi" ? "en" : "vi")}
-                        className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-gray-900 admin-dark:bg-transparent admin-dark:border admin-dark:border-gray-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition text-xs sm:text-sm"
-                    >
-                        {lang === "vi" ? "Tiếng Việt" : "English"}
-                    </button>
+                <div className="flex items-center justify-between">
+                    <div>
+
+                    </div>
+                    <div className="rounded-2xl bg-slate-700 flex flex-col sm:flex-row justify-end md:gap-5 sm:gap-3 border border-gray-800 px-2 py-3 w-fit">
+                        <button
+                            onClick={() => setLang(lang === "vi" ? "en" : "vi")}
+                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-gray-900 admin-dark:bg-gray-900 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition text-xs sm:text-sm"
+                        >
+                            {lang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-indigo-700 transition text-xs sm:text-sm"
+                        >
+                            Lưu cấu hình
+                        </button>
+                    </div>
                 </div>
 
                 <TextEditor

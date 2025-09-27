@@ -157,15 +157,15 @@ export default function HeaderConfigLogo() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
             >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className=" flex flex-col sm:flex-row md:items-end sm:items-center justify-between gap-3 sm:gap-4">
                     <div className="w-full">
                         <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
                     </div>
-                    <div className="flex items-end gap-2 w-full sm:w-auto">
+                    <div className="flex items-end gap-2 w-full sm:w-auto ">
                         <motion.button
                             onClick={handleSave}
                             disabled={loading}
-                            className="w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                            className="whitespace-nowrap w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                         >
