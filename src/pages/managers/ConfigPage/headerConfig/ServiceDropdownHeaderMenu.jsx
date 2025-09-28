@@ -52,6 +52,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                             id: section.id,
                             name: section.title,
                             type: section.type,
+                            postion: section.position,
                             children: items.data?.map(child => ({
                                 id: child.id,
                                 title: child.title,
@@ -62,8 +63,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
             const merged = await Promise.all(requests);
             setMenuData(merged);
-
-            console.log("-->", merged);
         } catch (err) {
             console.error(err);
             setToast({ message: "Lỗi tải dữ liệu: " + err.message, type: "error" });
@@ -83,7 +82,10 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 id: child.id,
                 title: child.title,
                 description: child.description,
+                postion: child.position,
             }));
+
+            console.log(updatedChildren);
 
             setMenuData(prev =>
                 prev.map(cat => cat.id === category.id ? { ...cat, children: updatedChildren } : cat)
@@ -218,7 +220,8 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 description: { en: slugify(nameEn), vi: "" },
             };
 
-            const res = await fetch(`${API_BASE_URL}/api/sections/${catId}`, {
+            // const res = await fetch(`${API_BASE_URL}/api/sections/${catId}`, {
+            const res = await fetch(`${API_BASE_URL}/api/service-header-config/${catId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
@@ -336,6 +339,59 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             setLoading(false);
         }
     };
+
+    const updatePositionCategory = async (listCategory) => {
+        try {
+            for (const item of listCategory) {
+                const res = await fetch(
+                    `${API_BASE_URL}/api/service-header-config/${item.type}/position`,
+                    {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ position: item.postion }),
+                    }
+                );
+
+                if (!res.ok) {
+                    throw new Error(`Update failed for type: ${item.type}`);
+                }
+
+                const data = await res.json();
+            }
+        } catch (err) {
+            console.error(err);
+            setToast({ message: err.message, type: "error" });
+        }
+    };
+
+    async function updateSectionItemPositionsChild(data) {
+        try {
+            // Format lại: đổi "postion" -> "position"
+            const formattedItems = data.map(item => ({
+                id: item.id,
+                position: item.postion   // đổi key cho đúng backend
+            }));
+
+            const response = await fetch(`${API_BASE_URL}/api/section-items/update/bulk-update-positions`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ items: formattedItems }),
+            });
+
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Update failed");
+
+            console.log("✅ Update success:", result);
+            return result;
+        } catch (err) {
+            console.error("❌ Update error:", err);
+            throw err;
+        }
+    }
+
+
 
     const selectSubItemSection = (cat) => {
         setSelectedCategory(cat);
@@ -493,6 +549,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 onAdd={() => openAddCategory()}
                 onDelete={(cat) => setConfirmDialog({ open: true, type: "category", target: cat })}
                 onEdit={(cat) => openEditCategory(cat)}
+                onReorder={updatePositionCategory}
             />
 
             {/* Child Items */}
@@ -502,6 +559,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 onAdd={() => openAddChild(selectedCategory)}
                 onDelete={(child) => setConfirmDialog({ open: true, type: "child", target: child })}
                 onEdit={(child) => openEditChild(child, selectedCategory)}
+                onSortEnd={updateSectionItemPositionsChild}
             />
 
             {/* Dialog */}
