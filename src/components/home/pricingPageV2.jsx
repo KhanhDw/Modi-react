@@ -25,7 +25,7 @@ export default function PricingPageV2() {
                 </header>
 
                 <main>
-                    <PricingSlider stages={pricingData} />
+                    <PricingSlider />
                 </main>
 
                 {!isAdmin && <PricingFooterPage />}
