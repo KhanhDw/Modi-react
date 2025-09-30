@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { CheckCircle2, Circle } from "lucide-react";
 import { getAllBridge, createBridge, deleteBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
 
 export default function ServiceSelectionForGroupServiceModal({
@@ -19,9 +21,11 @@ export default function ServiceSelectionForGroupServiceModal({
     lineActive,
     serviceMiniSelected,
     serviceGroupCurrentStage, // {1:[],2:[],3:[]}
+    stageMaster, // Thêm stageMaster để lấy title_vi
 }) {
     const [bridges, setBridges] = useState([]);
     const [selectedServiceIds, setSelectedServiceIds] = useState([]);
+    const [initialSelectedIds, setInitialSelectedIds] = useState([]);
 
     // Lấy toàn bộ bridge từ BE
     const fetchBridgeData = async () => {
@@ -29,27 +33,32 @@ export default function ServiceSelectionForGroupServiceModal({
             const bridgeResult = await getAllBridge();
             setBridges(bridgeResult);
 
-            // lọc ra những service đã gắn với lineActive hiện tại
             if (lineActive) {
                 const selected = bridgeResult
                     .filter(
-                        (b) =>
-                            b.list_mini_service_id === lineActive.id &&
-                            b.stage === String(currentStage)
+                        (b) => Number(b.list_mini_service_id) === Number(lineActive.id) && Number(b.stage_id) === Number(currentStage)
                     )
-                    .map((b) => b.services_stage_id);
-                setSelectedServiceIds(selected);
+                    .map((b) => b.service_id);
+
+                setSelectedServiceIds(selected); // State để theo dõi lựa chọn hiện tại
+                setInitialSelectedIds(selected); // State để so sánh sự thay đổi
+            } else {
+                setSelectedServiceIds([]);
+                setInitialSelectedIds([]);
             }
         } catch (err) {
             console.log("Error fetchBridgeData:", err);
         }
     };
 
+
+
     useEffect(() => {
         if (isOpen) {
             fetchBridgeData();
         }
-    }, [isOpen]);
+    }, [isOpen, lineActive, currentStage]); // 👈 thêm dependency để khi đổi stage cũng sync lại
+
 
     // ✅ Lấy dịch vụ của stage hiện tại
     const servicesInStage = serviceGroupCurrentStage?.[currentStage] || [];
@@ -68,133 +77,118 @@ export default function ServiceSelectionForGroupServiceModal({
         if (!lineActive) return;
 
         try {
-            const currentBridges = bridges.filter(
-                (b) =>
-                    b.list_mini_service_id === lineActive.id &&
-                    b.stage === String(currentStage)
-            );
-            const currentServiceIds = currentBridges.map((b) => b.services_stage_id);
+            // So sánh `selectedServiceIds` (hiện tại) với `initialSelectedIds` (ban đầu)
 
             // Service mới chọn → cần tạo bridge
             const toCreate = selectedServiceIds.filter(
-                (id) => !currentServiceIds.includes(id)
+                (id) => !initialSelectedIds.includes(id)
             );
 
             // Service bỏ chọn → cần xóa bridge
-            const toDelete = currentServiceIds.filter(
+            const toDelete = initialSelectedIds.filter(
                 (id) => !selectedServiceIds.includes(id)
             );
 
-            // Thực hiện tạo
-            for (const serviceStageId of toCreate) {
-                await createBridge({
-                    list_mini_service_id: lineActive.id,
-                    services_stage_id: serviceStageId, // 👈 đây phải là services_stage.id
-                });
-            }
+            // Thực hiện các promise song song
+            await Promise.all([
+                ...toCreate.map(serviceId =>
+                    createBridge({
+                        service_id: serviceId,
+                        list_mini_service_id: lineActive.id,
+                        stage_id: currentStage,
+                    })
+                ),
+                ...toDelete.map(serviceId =>
+                    deleteBridge(serviceId, lineActive.id, currentStage)
+                ),
+            ]);
 
-
-            // Thực hiện xóa
-            for (const serviceStageId of toDelete) {
-                const bridgeToDelete = currentBridges.find(
-                    (b) => b.services_stage_id === serviceStageId
-                );
-                if (bridgeToDelete) {
-                    await deleteBridge(bridgeToDelete.id);
-                }
-            }
-
-
-            await fetchBridgeData(); // reload lại state
-            onClose(); // đóng modal
+            onClose();
         } catch (error) {
             console.log("Error save bridge:", error);
         }
     };
 
+    // Kiểm tra xem có thay đổi chưa lưu không
+    const hasChanges = JSON.stringify([...selectedServiceIds].sort()) !== JSON.stringify([...initialSelectedIds].sort());
+
+    const currentStageTitle = stageMaster.find(s => Number(s.id) === Number(currentStage))?.title_vi || `Giai đoạn ${currentStage}`;
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogOverlay className="bg-black/60 backdrop-blur-sm" />
-            <DialogContent className="admin-dark:bg-gray-800 admin-dark:text-white w-4xl max-w-4xl">
-                <DialogHeader className="space-y-3">
-                    <DialogTitle className="text-xl">
-                        Chọn dịch vụ cho ServiceGroup - Giai đoạn {currentStage}
+            <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
+            <DialogContent className="admin-dark:bg-gray-900/95 admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-4xl h-full sm:h-auto sm:max-h-[90vh] flex flex-col">
+                <DialogHeader className="space-y-3 pr-6">
+                    <DialogTitle className="text-xl text-foreground">
+                        Chọn hạng mục cho gói dịch vụ - {currentStageTitle}
                     </DialogTitle>
 
                     {lineActive && (
-                        <div className="p-4 bg-green-50 admin-dark:bg-green-900/20 rounded-lg border border-green-200 admin-dark:border-green-800">
-                            <div className="flex items-center justify-between">
+                        <div className="p-4 bg-primary/5 admin-dark:bg-primary/10 rounded-lg border border-primary/20 admin-dark:border-primary/30">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                                 <div className="space-y-1">
-                                    <p className="text-sm text-gray-600 admin-dark:text-gray-400">
+                                    <p className="text-sm text-muted-foreground">
                                         Đang chọn dịch vụ cho ServiceGroup:
                                     </p>
-                                    <p className="font-semibold text-green-700 admin-dark:text-green-300">
+                                    <p className="font-semibold text-primary">
                                         {lineActive.title_vi || "Line demo"}
                                     </p>
-                                    <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                                    <p className="text-sm text-muted-foreground">
                                         {lineActive.title_en || "Line EN demo"}
                                     </p>
                                 </div>
-                                <div className="flex gap-2">
-                                    <Badge variant="outline" className="bg-white admin-dark:bg-gray-800">
+                                <div className="flex gap-2 self-end sm:self-center">
+                                    <Badge variant="outline" className="bg-card text-muted-foreground admin-dark:border-slate-600">
                                         ID: {lineActive.id || "sg-demo"}
                                     </Badge>
-                                    <Badge variant="secondary">Giai đoạn {currentStage}</Badge>
+                                    <Badge variant="secondary">{currentStageTitle}</Badge>
                                 </div>
                             </div>
                         </div>
                     )}
                 </DialogHeader>
 
-                <div className="py-4">
+                <div className="py-4 flex-1 overflow-y-auto pr-2">
                     <div className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <Badge variant="secondary">Giai đoạn {currentStage}</Badge>
-                            <Badge variant="outline" className="bg-green-100 text-green-700">
+                        <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                                 Đã chọn: {selectedServiceIds.length} dịch vụ
                             </Badge>
                         </div>
-                        {lineActive && (
-                            <Badge variant="outline" className="max-w-xs truncate">
-                                {lineActive.title_vi || "Line demo"}
-                            </Badge>
-                        )}
                     </div>
 
                     {/* Danh sách dịch vụ stage hiện tại */}
-                    <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto scrollbar-hide">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {servicesInStage.length === 0 ? (
                             <p className="text-center text-muted-foreground py-6">
-                                Chưa có dịch vụ nào trong giai đoạn {currentStage}
+                                Chưa có dịch vụ nào trong giai đoạn "{currentStageTitle}"
                             </p>
                         ) : (
                             servicesInStage.map((service) => {
-                                const isSelected = selectedServiceIds.includes(service.services_stage_id);
+                                const isSelected = selectedServiceIds.includes(service.id);
+
 
                                 return (
                                     <div
-                                        key={service.services_stage_id}
-                                        onClick={() => toggleSelectService(service.services_stage_id)} // 👈 dùng services_stage_id
-                                        className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${isSelected
-                                            ? "bg-green-500 text-white border-green-500 ring-2 ring-green-200 admin-dark:bg-green-600 admin-dark:border-green-600"
-                                            : "bg-card hover:bg-muted admin-dark:bg-card admin-dark:hover:bg-muted border-border hover:border-green-300"
-                                            }`}
+                                        key={service.id}
+                                        onClick={() => toggleSelectService(service.id)}
+                                        className={cn(
+                                            "p-4 border rounded-lg cursor-pointer transition-all duration-200 flex items-center gap-4",
+                                            isSelected
+                                                ? "bg-primary/5 border-primary/40 ring-2 ring-primary/20"
+                                                : "bg-background hover:bg-gray-50 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50 border-border hover:border-primary/30"
+                                        )}
                                     >
-                                        <div className="flex items-center justify-between">
-                                            <div className="space-y-1 flex-1">
-                                                <div className="font-medium">{service.translation?.ten_dich_vu}</div>
-                                                <div className="text-xs opacity-70">Slug: {service.translation?.slug}</div>
-                                                <div className="text-xs opacity-70">
-                                                    Service ID: {service.id} | StageRow ID: {service.services_stage_id}
-                                                </div>
+                                        {isSelected ? (
+                                            <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0" />
+                                        ) : (
+                                            <Circle className="w-6 h-6 text-muted-foreground flex-shrink-0" />
+                                        )}
+                                        <div className="space-y-1 flex-1">
+                                            <div className="font-medium">{service.translation?.ten_dich_vu}</div>
+                                            <div className="text-xs text-gray-500 admin-dark:text-gray-400">
+                                                <span className="text-xs text-gray-500 admin-dark:text-gray-400">ID: {service.id}</span> | <span className="font-mono">{service.translation?.slug}</span>
                                             </div>
-                                            {isSelected && (
-                                                <div className="flex-shrink-0 ml-3">
-                                                    <div className="bg-white text-green-600 px-2 py-1 rounded-full text-xs font-medium">
-                                                        Đã chọn
-                                                    </div>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 );
@@ -203,18 +197,18 @@ export default function ServiceSelectionForGroupServiceModal({
                     </div>
                 </div>
 
-                <DialogFooter>
+                <DialogFooter className="pt-4 border-t admin-dark:border-gray-700">
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center gap-4">
                             <div className="text-sm text-muted-foreground">
-                                Đã chọn: {selectedServiceIds.length} dịch vụ cho
-                                <span className="font-medium ml-1">
+                                Đang chọn cho:
+                                <span className="font-semibold text-foreground ml-1">
                                     "{lineActive?.title_vi || "Line demo"}"
                                 </span>
                             </div>
-                            {bridges.length > 0 && (
-                                <Badge variant="outline" className="bg-yellow-100 text-yellow-700">
-                                    Có thay đổi chưa lưu
+                            {hasChanges && (
+                                <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300 admin-dark:bg-yellow-900/40 admin-dark:text-yellow-300 admin-dark:border-yellow-700/60">
+                                    Chưa lưu thay đổi
                                 </Badge>
                             )}
                         </div>
@@ -223,7 +217,7 @@ export default function ServiceSelectionForGroupServiceModal({
                                 Hủy
                             </Button>
                             <Button
-                                className="bg-green-600 hover:bg-green-700"
+                                className="bg-primary hover:bg-primary/90"
                                 onClick={handleSaveSelectForMiniService}
                             >
                                 Xác nhận lưu ({selectedServiceIds.length})

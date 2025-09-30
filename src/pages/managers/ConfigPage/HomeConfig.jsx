@@ -237,7 +237,7 @@ export default function HomeConfigMultiLang() {
 
 
             {/* SECTION TABS */}
-            <div className={`${activeSection === "vitri" ? "pb-3" : "pb-0"} flex flex-wrap gap-3 items-center justify-between`}>
+            <div className={` pb-3 flex flex-wrap gap-3 items-center justify-between`}>
                 <div className="flex flex-wrap gap-3 items-center">
                     {sectionsConfig.map((sec) => (
                         <motion.button
@@ -255,10 +255,16 @@ export default function HomeConfigMultiLang() {
                         </motion.button>
                     ))}
                 </div>
+
+            </div>
+
+            {/* SECTION CONTENT */}
+            <div className="bg-white p-3 sm:p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-lg shadow-md transition">
+
                 {/* LANG TABS */}
-                {activeSection !== "vitri" &&
+                {activeSection !== "vitri" && activeSection !== "chitietdichvu" ?
                     (
-                        <div className="relative flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
+                        <div className=" mb-4 flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
                             <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2">
                                 {/* Hiển thị ở md+ */}
                                 <span className="hidden md:inline">
@@ -270,14 +276,10 @@ export default function HomeConfigMultiLang() {
                                 </span>
                                 <Switch checked={activeLang === "en"} onClick={() => setActiveLang((pre) => pre === "vi" ? "en" : "vi")} />
                             </div>
-                            <div className=" absolute top-[70%] left-0 bg-gray-800 w-full h-6"></div>
                         </div>
-                    )
+                    ) : null
                 }
-            </div>
 
-            {/* SECTION CONTENT */}
-            <div className="bg-white p-3 sm:p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-lg shadow-md transition">
                 <RenderHomeConfig
                     activeSection={activeSection}
                     currentData={currentData}

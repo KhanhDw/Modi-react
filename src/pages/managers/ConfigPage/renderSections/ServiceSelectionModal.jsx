@@ -1,5 +1,6 @@
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -7,6 +8,7 @@ import {
     DialogOverlay,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import useLenisLocal from "@/hook/useLenisLocal";
 import React, { useEffect, useState } from "react";
@@ -28,16 +30,18 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
             // lọc ra danh sách service nào đã có trong stage hiện tại
             const preSelected = serviceResult.filter((s) =>
                 serviceStageResult.some(
-                    (st) => st.service_id === s.id && String(st.stage) === String(currentStage)
+                    (st) => st.service_id === s.id && String(st.stage_id) === String(currentStage)
                 )
             );
 
+            // đánh dấu service nào đã nằm trong stage khác
             const withOtherStageFlag = serviceResult.map((s) => ({
                 ...s,
                 inOtherStage: serviceStageResult.some(
-                    (st) => st.service_id === s.id && String(st.stage) !== String(currentStage)
+                    (st) => st.service_id === s.id && String(st.stage_id) !== String(currentStage)
                 ),
             }));
+
 
             setServiceFetch(withOtherStageFlag);
             setSelectedServices(preSelected);
@@ -74,23 +78,26 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
         setIsSaving(true);
         try {
             const existingStageServices = serviceStageFetch.filter(
-                (st) => st.stage === String(currentStage)
+                (st) => String(st.stage_id) === String(currentStage)
             );
 
             const existingIds = existingStageServices.map((st) => st.service_id);
             const selectedIds = selectedServices.map((s) => s.id);
 
+            // thêm mới
             const toAdd = selectedIds.filter((id) => !existingIds.includes(id));
             for (const service_id of toAdd) {
-                await createServiceStage({ service_id, stage: currentStage });
+                await createServiceStage({ service_id, stage_id: currentStage });
             }
 
+            // xóa bỏ
             const toRemove = existingStageServices.filter(
                 (st) => !selectedIds.includes(st.service_id)
             );
             for (const item of toRemove) {
                 await deleteServiceStage(item.id);
             }
+
 
             await fetchDataService(); // ✅ load lại state sau khi lưu
             onSaved();
@@ -106,18 +113,16 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogOverlay className="bg-black/60 backdrop-blur-sm" />
-            <DialogContent className="admin-dark:bg-gray-800 admin-dark:text-white w-4xl">
-                <DialogHeader>
-                    <div className="flex items-center justify-between">
-                        <DialogTitle>Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
-                    </div>
+            <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
+            <DialogContent className="admin-dark:bg-gray-900/95 admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-2xl">
+                <DialogHeader className="pr-6">
+                    <DialogTitle className="text-xl text-foreground">Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
                 </DialogHeader>
 
                 <div className="py-4">
                     <div
                         data-lenis-prevent
-                        className="lenis-local grid grid-cols-1 gap-3 max-h-96 overflow-y-auto scrollbar-hide"
+                        className="lenis-local grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2"
                     >
                         {serviceFetch
                             .filter((service) => service.status === "Active")
@@ -134,10 +139,10 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
                                         className={cn(
                                             "p-3 border rounded-lg text-center relative transition-colors cursor-pointer",
                                             isSelected
-                                                ? "bg-primary text-primary-foreground border-primary admin-dark:bg-primary admin-dark:text-primary-foreground admin-dark:border-primary"
+                                                ? "bg-primary/5 border-primary/40 ring-2 ring-primary/20 text-primary font-semibold"
                                                 : isDisabled
-                                                    ? "bg-muted/50 text-muted-foreground border-muted cursor-not-allowed admin-dark:bg-muted/30 admin-dark:text-muted-foreground"
-                                                    : "bg-card hover:bg-muted admin-dark:bg-card admin-dark:hover:bg-muted"
+                                                    ? "bg-gray-100 text-gray-400 border-dashed cursor-not-allowed admin-dark:bg-muted/50 admin-dark:text-muted-foreground/50"
+                                                    : "bg-background hover:bg-gray-50 hover:border-primary/30 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50"
                                         )}
                                     >
                                         <button
@@ -148,28 +153,27 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
                                             <p>{service.translation.ten_dich_vu}</p>
                                         </button>
                                         {inOtherStage && !isSelected && (
-                                            <div className="text-xs text-muted-foreground mt-1">
+                                            <div className="text-xs text-muted-foreground/60 mt-1">
                                                 Đã được chọn ở stage khác
                                             </div>
                                         )}
                                     </div>
                                 );
                             })}
-
                     </div>
                 </div>
 
-                <DialogFooter>
+                <DialogFooter className="pt-4 border-t admin-dark:border-gray-700">
                     <div className="flex items-center justify-between w-full">
                         <div>
-                            <div className="text-sm text-muted-foreground mt-4">
+                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                                 Đã chọn: {selectedServices.length} dịch vụ
-                            </div>
+                            </Badge>
                         </div>
                         <div className="flex gap-2">
-                            <Button onClick={onClose} variant="outline">
-                                Đóng
-                            </Button>
+                            <DialogClose asChild>
+                                <Button variant="outline">Đóng</Button>
+                            </DialogClose>
                             <Button onClick={handleSave} disabled={isSaving}>
                                 {isSaving ? "Đang lưu..." : "Lưu"}
                             </Button>

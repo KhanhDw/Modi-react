@@ -4,9 +4,9 @@ import { InputField, TextareaField, SafeImage } from "./componentHomeConfig";
 import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
-import PricingPageV1 from "@/components/home/pricingPageV1.jsx";
-import PricingPageV2 from "@/components/home/pricingPageV2.jsx";
+import { Eye } from "lucide-react";
 import ChitietdichvuSection from "@/pages/managers/ConfigPage/renderSections/chitietdichvuSection.jsx";
+import PricingPage from "@/components/home/PricingSlider.jsx";
 
 
 
@@ -150,6 +150,10 @@ export default function RenderHomeConfig({
     ///////////////////////////////////////////////
 
     // ========== chi tiết dịch vụ ===================
+
+    const [isViewTable, setIsViewTable] = useState(false);
+
+
     // ========== kết thúc chi tiết dịch vụ ===================
 
     ///////////////////////////////////////////////
@@ -247,7 +251,7 @@ export default function RenderHomeConfig({
             case "banner":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin và ảnh banner</h1></div>
+                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin và biểu ngữ</h1></div>
                         {(currentData.banner || []).map((b, i) => (
                             <div
                                 key={b.id ?? `banner-${i}`}
@@ -461,12 +465,24 @@ export default function RenderHomeConfig({
                 return (
                     <div className="space-y-6 ">
                         {/* header */}
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1></div>
+                        <div className="flex items-center justify-between border-b-2 pb-2">
+                            <h1 className="uppercase font-bold text-2xl mb-4 text-center ">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
+                            <div>
+                                <button onClick={() => setIsViewTable((pre) => !pre)} className="flex items-center gap-2 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300">
+
+                                    {!isViewTable && <div className="flex items-center gap-2"><Eye className="w-5 h-5" /><span>Xem thử giao diện</span></div>}
+                                    {isViewTable && <span>Quay lại</span>}
+                                </button>
+                            </div>
+                        </div>
                         {/* body */}
                         <div className="">
-                            <div>
+                            {!isViewTable && <div>
                                 <ChitietdichvuSection />
-                            </div>
+                            </div>}
+                            {isViewTable && <div>
+                                <PricingPage />
+                            </div>}
                         </div>
                     </div>
                 );
