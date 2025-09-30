@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * Theme Toggle Component for About Page
@@ -56,27 +57,40 @@ export default function ThemeToggle() {
   const { isDark, toggleTheme } = useTheme()
   const { language, toggleLanguage } = useLanguage()
 
+  const animationProps = {
+    initial: { y: -10, opacity: 0, rotate: -90 },
+    animate: { y: 0, opacity: 1, rotate: 0 },
+    exit: { y: 10, opacity: 0, rotate: 90 },
+    transition: { type: "spring", stiffness: 300, damping: 20 },
+  };
+
   return (
-    // <div className="fixed top-6 right-6 z-50 flex space-x-3">
-    <div className="flex space-x-3">
+    <div className="flex items-center space-x-1 bg-gray-100/80 dark:bg-gray-800/50 rounded-full p-1">
       {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
         className={`
-      p-2 rounded-lg
-      bg-transparent
-      text-gray-400 dark:text-white
-      transition duration-300 ease-in-out
-      hover:text-green-600 dark:hover:text-green-400
-      hover:shadow-lg hover:scale-105
-      active:scale-105 active:shadow-md
-      cursor-pointer
-      lg:hover:outline-none lg:hover:border-none lg:hover:ring-2 lg:hover:ring-green-800
-    `}
+          relative w-9 h-9 flex items-center justify-center rounded-full
+          text-gray-500 dark:text-gray-400
+          hover:bg-gray-200 dark:hover:bg-gray-700
+          hover:text-yellow-500 dark:hover:text-yellow-400
+          transition-colors duration-200
+          cursor-pointer
+        `}
         title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
-        {isDark ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+        <AnimatePresence mode="wait" initial={false}>
+          {isDark ? (
+            <motion.div key="sun" {...animationProps}>
+              <Sun className="w-5 h-5" />
+            </motion.div>
+          ) : (
+            <motion.div key="moon" {...animationProps}>
+              <Moon className="w-5 h-5" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </button>
 
       {/* Language Toggle Button */}
@@ -84,23 +98,32 @@ export default function ThemeToggle() {
         disabled={isServiceOrder}
         onClick={toggleLanguage}
         className={`
-      ${isServiceOrder ? "cursor-not-allowed opacity-50" : ""}
-      p-2 rounded-lg
-      bg-transparent
-      text-gray-400 dark:text-white
-      flex items-center justify-center space-x-2
-      transition duration-300 ease-in-out
-      hover:text-green-600 dark:hover:text-green-400
-      hover:shadow-md hover:scale-105
-      active:scale-105 active:shadow-md
-      cursor-pointer
-      lg:hover:outline-none lg:hover:border-none lg:hover:ring-2 lg:hover:ring-green-800
-    `}
+          relative h-9 px-3 flex items-center justify-center rounded-full
+          text-gray-500 dark:text-gray-400
+          hover:bg-gray-200 dark:hover:bg-gray-700
+          hover:text-blue-500 dark:hover:text-blue-400
+          transition-colors duration-200
+          cursor-pointer
+          disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent
+        `}
         title={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
         aria-label={language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
       >
-        <Globe className="w-5 h-5" />
-        <span className="text-sm font-semibold">{language === "vi" ? "EN" : "VI"}</span>
+        <Globe className="w-5 h-5 mr-1.5" />
+        <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={language}
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 10, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute text-xs font-bold"
+            >
+              {language === "vi" ? "EN" : "VI"}
+            </motion.span>
+          </AnimatePresence>
+        </div>
       </button>
     </div>
 

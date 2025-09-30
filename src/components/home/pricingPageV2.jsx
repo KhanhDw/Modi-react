@@ -19,7 +19,7 @@ export default function PricingPageV2() {
                     {/* Decorative background gradient */}
 
                     <header className="text-center mb-16">
-                        <h1 className="mask-linear-to-24 text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
+                        <h1 className=" text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
                             {t("home.PricingPage.title")}
                         </h1>
 

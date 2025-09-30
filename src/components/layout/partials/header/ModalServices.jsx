@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ModalServices = forwardRef((props, ref) => {
 
@@ -120,141 +121,122 @@ const ModalServices = forwardRef((props, ref) => {
 
 
   return (
-    <div
-      className="w-fit backdrop-blur-xl animate-in slide-in-from-top-2 duration-200 relative rounded-sm"
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="w-fit relative"
       onMouseLeave={handleMouseLeaveContainer}
     >
       <div
-        className="rounded-sm bg-gray-700/60 border border-gray-200/50 dark:border-gray-700/50 
-                dark:bg-gray-800/70 dark:from-gray-800 dark:to-gray-900 
-               shadow-2xl overflow-hidden transition-all duration-300"
+        className="rounded-xl bg-gray-800/80 backdrop-blur-lg border border-gray-700/60 shadow-2xl overflow-hidden"
       >
-        <div className="flex bg-gray-700/60">
+        <div className="flex">
           {/* Cột 1: Menu cấp 1 */}
           <div
             className={`
-          flex-shrink-0 w-60 transition-all duration-300 bg-gray-700/60
-          ${memoizedServices.length > 9 ? "h-120 overflow-y-auto scrollbar-hide" : "h-fit"}
+          flex-shrink-0 w-64 p-2
+          ${memoizedServices.length > 10 ? "h-[480px] overflow-y-auto" : "h-fit"}
         `}
             onWheel={(e) => e.stopPropagation()}
           >
-            <div className="space-y-1 bg-gray-700/60">
+            <div className="space-y-1">
               {memoizedServices.map((service) => {
                 const isActive = hoveredItem === service.id;
                 const hasSubItems =
                   Array.isArray(childrenMap[service.id]) && childrenMap[service.id].length > 0;
 
                 return (
-                  <div
+                  <Link
                     key={service.id}
+                    to={`/services/${service.type}`}
                     className={`
-                  group cursor-pointer transition-all duration-100 transform
-                  px-4 py-3 rounded-lg relative
-                  ${isActive && hasSubItems
-                        ? "text-white"
-                        : "hover:bg-slate-900 text-gray-300 dark:text-gray-200 hover:text-white"}
-                `}
+                      group cursor-pointer transition-all duration-200
+                      px-3 py-2.5 rounded-lg relative flex items-center justify-between
+                      ${isActive && hasSubItems
+                        ? "bg-gray-900 text-white"
+                        : "text-gray-300 hover:bg-gray-700/50 hover:text-white"
+                      }
+                    `}
                     onMouseEnter={() => handleMouseEnterItem(service.id)}
                   >
-                    {/* Background highlight */}
-                    <div
+                    <p
                       className={`
-                    absolute inset-0 rounded-lg transition-opacity duration-100
-                    ${isActive && hasSubItems ? "bg-gray-900" : ""}
-                  `}
-                    />
+    flex-1 text-sm transition-all duration-100
+    min-w-0 break-words break-all whitespace-normal
+    ${isActive && hasSubItems ? "font-semibold" : "font-medium"}
+  `}
+                    >
+                      {service.title}
+                    </p>
 
-                    {/* Nội dung item */}
-                    <div className="flex items-center justify-between relative z-10">
-                      <Link
-                        to={{
-                          // pathname: "/services",
-                          pathname: `/services/${service.type}`,
-                          // search: `?q=${service.type}`
-                        }}
+                    {hasSubItems && (
+                      <ChevronRight
                         className={`
-                      flex-1 text-sm transition-all duration-100
-                      ${isActive && hasSubItems ? "font-semibold" : "font-medium group-hover:font-semibold"}
-                    `}
-                      >
-                        {service.title}
-                      </Link>
-                      {hasSubItems && (
-                        <ChevronDown
-                          className={`
-                        ml-2 w-4 h-4 transition-transform duration-100
-                        ${isActive ? "rotate-90" : "group-hover:rotate-90"}
-                      `}
-                        />
-                      )}
-                    </div>
-                  </div>
+                          ml-2 w-4 h-4 text-gray-500 transition-transform duration-200
+                          ${isActive ? "translate-x-1" : "group-hover:translate-x-1"}
+                        `}
+                      />
+                    )}
+                  </Link>
                 );
               })}
             </div>
           </div>
 
           {/* Cột 2: Menu cấp 2 */}
-          <div
-            className={`
-          transition-all duration-140 ease-in-out transform
-          ${hasActiveSubmenu
-                ? activeChildren.length > 10
-                  ? "w-72 opacity-100 h-100 overflow-y-auto scale-100"
-                  : "w-72 opacity-100 h-auto scale-100"
-                : "w-0 opacity-0 scale-95"}
-        `}
-          >
-            <div
-              className="
-                p-4 min-h-full 
-              bg-emerald-50/10 
-                dark:from-gray-900/80 dark:to-emerald-900/30 
-                backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/50 
-                shadow-xl shadow-emerald-500/10 
-                h-auto  overflow-y-auto transition-opacity duration-300
-              "
-              onWheel={(e) => e.stopPropagation()}
-            >
-              {hasActiveSubmenu ? (
-                <>
+          <AnimatePresence>
+            {hasActiveSubmenu && (
+              <motion.div
+                initial={{ opacity: 0, x: -20, width: 0 }}
+                animate={{ opacity: 1, x: 0, width: 288 }} // w-72
+                exit={{ opacity: 0, x: -20, width: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="border-l border-gray-700 overflow-hidden"
+                onWheel={(e) => e.stopPropagation()}
+              >
+                {/* Nội dung cột 2 luôn full w-72, không bị co chữ */}
+                <div className="p-4 min-h-full bg-gray-900/30 w-72">
                   <div className="mb-4">
-                    <h3 className="text-sm font-bold text-gray-200 dark:text-gray-100 mb-2">
+                    <h3
+                      className={`
+    flex-1 text-sm text-white font-medium
+    ${hasActiveSubmenu ? "whitespace-normal break-words" : "truncate"}
+  `}
+                    >
                       {activeService?.title}
                     </h3>
                     <div className="h-0.5 w-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" />
                   </div>
 
-                  <ul className="space-y-2">
+                  <ul className="space-y-1">
                     {activeChildren.map((sub) => (
-                      <li key={sub.id} className="group">
+                      <li key={sub.id}>
                         <Link
-                          to={{
-                            pathname: `/services/${sub.section_type}/${sub.description?.en}`,
-                            // search: `?q=${sub.section_type}&i=${sub.id}&sub=${sub.description?.en}`
-                            // search: `?q=${sub.section_type}&sub=${sub.description?.en}`
-                          }}
-                          className="
-                        flex items-center px-3 py-2.5 
-                        text-gray-200 dark:text-gray-300 
-                        hover:bg-slate-800 hover:text-white 
-                        transition-all duration-300 
-                        cursor-pointer rounded-lg text-sm font-medium 
-                        hover:font-semibold hover:translate-x-1
-                      "
+                          to={`/services/${sub.section_type}/${sub.description?.en}`}
+                          className="group flex items-center px-3 py-2.5 
+                       text-gray-300 hover:text-white 
+                       transition-all duration-200 
+                       cursor-pointer rounded-lg text-sm font-medium 
+                       hover:bg-gray-700/50"
                         >
-                          {sub.title}
+                          <span className="w-1.5 h-1.5 bg-gray-500 rounded-full mr-3 
+                             transition-all duration-200 
+                             group-hover:bg-emerald-400 group-hover:scale-125"></span>
+                          <span className="truncate">{sub.title}</span>
                         </Link>
                       </li>
                     ))}
                   </ul>
-                </>
-              ) : null}
-            </div>
-          </div>
+                </div>
+              </motion.div>
+
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 })
 

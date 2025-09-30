@@ -49,26 +49,24 @@ export default function ServicePage() {
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
     const [services, setServices] = useState([]);
     const [servicesItemBySlug, setServicesItemBySlug] = useState(null);
-    const [servicesMenu2, setServicesMenu2] = useState([]);
-    const [servicesFromGroup, setServicesFromGroup] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const { parentSlug } = useParams();
-
-    const [groupServices, setGroupServices] = useState([]);
+    const [listLoading, setListLoading] = useState(false); // State loading riêng cho danh sách
 
 
     const queryParams = new URLSearchParams(location.search);
 
     // const queryParams_q = queryParams.get("q");
-    const queryParams_q = parentSlug
+    const { parentSlug: queryParams_q } = useParams();
     const queryParams_sub = queryParams.get("sub");
+
+
 
 
     const FetchDataServicesALL = async (lang = "vi") => {
         try {
             const lang_api = lang === "vi" ? "" : "/en";
             const res = await fetch(`${API_BASE_URL}${lang_api}/api/services`);
+            if (!res.ok) throw new Error("Không thể tải tất cả dịch vụ");
             const data = await res.json();
             if (data.success) {
                 setServices(data.data);
@@ -80,35 +78,15 @@ export default function ServicePage() {
         }
     };
 
-    const FetchAllServiceMenu2 = async (lang = "vi") => {
-        try {
-            const lang_api = lang === "vi" ? "" : "/en";
-            const res = await fetch(`${API_BASE_URL}${lang_api}/api/section-items/type/${queryParams_q}?slug=header`);
-            if (!res.ok) throw new Error("Không thể tải mục con");
-
-            const data = await res.json();
-
-            const servicesArray = Array.isArray(data) ? data : [];
-
-            // gom groupServices về 1 mảng
-            const allSlugs = servicesArray[0].section_title.groupServices.split(",").filter(Boolean)
-
-            setGroupServices(allSlugs);
-            setServicesMenu2(servicesArray);
-
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     // ServicePage.jsx
     const FetchDataServicesBySlug = async (slug = "", lang = "vi") => {
         if (!slug) {
-            console.warn("Không có slug → clear service chi tiết");
             setServicesItemBySlug(null);
             return;
         }
 
+        setListLoading(true);
         try {
             const lang_api = lang === "vi" ? "" : "/en";
             const res = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}`);
@@ -120,53 +98,71 @@ export default function ServicePage() {
         } catch (err) {
             console.error(err);
         } finally {
-            setLoading(false);
+            setListLoading(false);
+            setLoading(false); // Dừng loading chung khi đã có dữ liệu chi tiết
         }
     };
 
 
-    const FetchDataFollowSlugMenu2 = async (lang = "vi") => {
-        const allSlugs = groupServices;
-        const results = [];
+    useEffect(() => {
+        const processDataFetching = async () => {
+            setLoading(true);
+            setListLoading(true);
+            setServices([]);
+            setServicesItemBySlug(null);
 
-        for (const slug of allSlugs) {
-            try {
-                const lang_api = lang === "vi" ? "" : "/en";
-                const tailLang = lang === "vi" ? "" : `-en`;
-                const res = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}${tailLang}`);
-                const data = await res.json();
-                if (data.success) {
-                    results.push(data.data);
-                }
-            } catch (err) {
-                console.error(err);
+            // 1. Ưu tiên cao nhất: Fetch chi tiết dịch vụ nếu có `sub`
+            if (queryParams_sub) {
+                FetchDataServicesBySlug(queryParams_sub, lang);
+                // setLoading và listLoading sẽ được xử lý trong FetchDataServicesBySlug
+                return;
             }
-        }
 
-        setServicesFromGroup(results);
-    };
+            // 2. Nếu không có `sub` nhưng có `q` (danh mục cha)
+            if (queryParams_q) {
+                try {
+                    // Lấy slug của các dịch vụ con trong nhóm
+                    const lang_api = lang === "vi" ? "" : "/en";
+                    const menuRes = await fetch(`${API_BASE_URL}${lang_api}/api/section-items/type/${queryParams_q}?slug=header`);
+                    if (!menuRes.ok) throw new Error("Không thể tải mục con");
 
-
-
-    useEffect(() => {
-        FetchDataServicesALL(lang);
-
-        if (queryParams_q) {
-            FetchAllServiceMenu2(lang);
-        }
-
-        // khi có slug=sub cụ thể trên url mới thực hiện cái này.
-        if (queryParams_sub) {
-            FetchDataServicesBySlug(queryParams_sub, lang);
-        }
-    }, [location.search, lang]);
+                    // trường hợp không có set menu2 cho menu1 mà có set nhóm dịch vụ thì lấy nhóm đó ra
 
 
-    useEffect(() => {
-        if (groupServices.length > 0 && queryParams_q && !queryParams_sub) {
-            FetchDataFollowSlugMenu2(lang);
-        }
-    }, [groupServices, queryParams_q, queryParams_sub, parentSlug, lang]);
+                    const menuData = await menuRes.json();
+                    const servicesArray = Array.isArray(menuData) ? menuData : [];
+                    const allSlugs = servicesArray[0]?.section_title?.groupServices?.split(",").filter(Boolean) || [];
+
+                    // Nếu có slug con, fetch từng dịch vụ
+                    if (allSlugs.length > 0) {
+                        const servicePromises = allSlugs.map(async (slug) => {
+                            const tailLang = lang === "vi" ? "" : `-en`;
+                            const serviceRes = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}${tailLang}`);
+                            if (!serviceRes.ok) return null;
+                            const serviceData = await serviceRes.json();
+                            return serviceData.success ? serviceData.data : null;
+                        });
+                        const results = (await Promise.all(servicePromises)).filter(Boolean);
+                        setServices(results);
+                    } else {
+                        // Nếu không có slug con, danh sách dịch vụ là rỗng
+                        setServices([]);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setServices([]); // Đảm bảo services rỗng khi có lỗi
+                }
+            } else {
+                // 3. Trường hợp mặc định: không có `q` và `sub`, fetch tất cả dịch vụ
+                await FetchDataServicesALL(lang);
+            }
+
+            setListLoading(false);
+            setLoading(false);
+        };
+
+        processDataFetching();
+    }, [lang, queryParams_q, queryParams_sub]);
 
 
 
@@ -257,8 +253,12 @@ export default function ServicePage() {
             {/* Service list */}
             <div className=" mx-auto px-4 pb-10 relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-[#111] -z-10 rounded-t-3xl"></div>
-
-                {!queryParams_q && !queryParams_sub && services.length > 0 && (
+                {/* Hiển thị ALL SERVICES */}
+                {listLoading ? (
+                    <div className="text-center py-10 text-lg font-medium text-gray-500 dark:text-gray-300">
+                        Đang tải danh sách dịch vụ...
+                    </div>
+                ) : !queryParams_sub && services.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7 lg:gap-7 xl:gap-8">
 
                         {services.map((srv, i) => {
@@ -283,33 +283,15 @@ export default function ServicePage() {
                             );
                         })}
                     </div>
-                )}
-                {queryParams_q && !queryParams_sub && servicesFromGroup.length > 0 && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7 lg:gap-7 xl:gap-8">
-                        {servicesFromGroup.map((srv, i) => {
-                            const isFirst = i === 0;
-                            const isOdd = servicesFromGroup.length % 2 !== 0;
-
-                            return (
-                                <motion.div
-                                    key={srv.service_id || srv.slug || i}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.15, duration: 0.6, ease: "easeOut" }}
-                                    viewport={{ once: true }}
-                                    className={isFirst && isOdd ? "sm:col-span-2 flex justify-center" : ""}
-                                >
-                                    <div className={isFirst && isOdd ? "w-full sm:max-w-5xl" : "w-full"}>
-                                        <ServiceCard service={srv} onFetchService={FetchDataServicesBySlug} />
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
+                ) : !queryParams_sub && !listLoading && (
+                    <div className="text-center py-10 text-lg font-medium text-gray-500 dark:text-gray-300">
+                        {queryParams_q
+                            ? "Không có dịch vụ nào trong danh mục này."
+                            : "Hiện chưa có dịch vụ nào."}
                     </div>
                 )}
 
             </div>
-
 
             {/* Final CTA */}
             <div
