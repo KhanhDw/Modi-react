@@ -8,8 +8,8 @@ export default function ChildList({ selectedCategory, lang, onAdd, onDelete, onE
     useLenisLocal(".lenis-local");
     return (
         <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader className="pb-4 flex justify-between items-center">
-                <CardTitle className="flex items-center gap-2 text-gray-800 admin-dark:text-gray-100 font-semibold">
+            <CardHeader className="pb-4 flex flex-col sm:flex-row md:flex-col justify-between items-center">
+                <CardTitle className="flex items-center gap-2 text-gray-800 admin-dark:text-gray-100 font-semibold text-sm md:text-base">
                     <FileText className="h-5 w-5 text-gray-700 admin-dark:text-gray-300" />
                     {selectedCategory
                         ? `Mục con của "${selectedCategory.name?.[lang] || selectedCategory.name}"`

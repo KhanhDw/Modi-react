@@ -70,9 +70,6 @@ export default function DialogForm({
         }
     }, [open, dialog?.target]);
 
-
-
-
     // fetch services một lần
     useEffect(() => {
         const fetchServices = async () => {
@@ -101,12 +98,9 @@ export default function DialogForm({
         setOpen(false);
     };
 
-
-
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="max-w-lg w-lg bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
+            <DialogContent className="w-75 sm:w-100 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
                 <DialogHeader>
                     <DialogTitle className="text-gray-900 admin-dark:text-gray-100">
                         {title}
@@ -124,7 +118,7 @@ export default function DialogForm({
                             value={valueVi}
                             onChange={(e) => setValueVi(e.target.value)}
                             placeholder="Nhập tên tiếng Việt..."
-                            className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100"
+                            className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100 placeholder:text-sm placeholder:sm:text-base"
                         />
                     </div>
 
@@ -150,7 +144,7 @@ export default function DialogForm({
                             }}
                             onChange={(e) => setValueEn(e.target.value)}
                             placeholder="Enter English name..."
-                            className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100"
+                            className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100 placeholder:text-sm placeholder:sm:text-base"
                         />
                     </div>
 
@@ -180,14 +174,14 @@ export default function DialogForm({
                         <Button
                             disabled={!canSave}
                             onClick={handleSave}
-                            className="bg-primary text-primary-foreground hover:bg-primary/80 disabled:opacity-50 cursor-pointer"
+                            className="bg-blue-500 admin-dark:hover:bg-blue-600 text-white hover:bg-blue-600 disabled:opacity-50 cursor-pointer"
                         >
                             Lưu
                         </Button>
                         <Button
                             variant="outline"
                             onClick={() => setOpen(false)}
-                            className="border-gray-300 text-gray-700 hover:bg-gray-100
+                            className="border-gray-300 text-white
                                 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800 cursor-pointer"
                         >
                             Hủy

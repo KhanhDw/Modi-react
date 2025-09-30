@@ -5,13 +5,13 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "re
 function BannerPreview({ banner, lang }) {
     return (
         <motion.div
-            className="relative h-48 sm:h-56 md:h-64 flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg sm:rounded-2xl shadow-xl"
+            className="relative p-1 sm:p-2 h-full flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg sm:rounded-2xl shadow-xl"
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold drop-shadow-lg text-center px-2">{banner?.title?.[lang] || "Chưa có tiêu đề"}</h1>
-            <p className="mt-1 sm:mt-2 p-1 sm:p-2 text-sm sm:text-base md:text-lg italic opacity-90 text-center">{banner?.slogan?.[lang] || "Chưa có slogan"}</p>
+            <h1 className="text-base sm:text-xl font-bold drop-shadow-lg text-center">{banner?.title?.[lang] || "Chưa có tiêu đề"}</h1>
+            <p className="text-sm sm:text-base italic opacity-90 text-center">{banner?.slogan?.[lang] || "Chưa có slogan"}</p>
         </motion.div>
     );
 }
@@ -19,12 +19,12 @@ function BannerPreview({ banner, lang }) {
 function AboutPreview({ about, lang }) {
     return (
         <motion.div
-            className="p-4 sm:p-6 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-3 sm:space-y-4"
+            className="p-1 sm:p-2 bg-white h-full admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-3 sm:space-y-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-indigo-600 admin-dark:text-white">{about?.title?.[lang] || "Chưa có tiêu đề"}</h2>
+            <h2 className="text-center text-base sm:text-xl font-bold text-indigo-600 admin-dark:text-white">{about?.title?.[lang] || "Chưa có tiêu đề"}</h2>
             <p className="text-gray-600 admin-dark:text-gray-300 text-sm sm:text-base">{about?.description?.[lang] || "Chưa có mô tả"}</p>
         </motion.div>
     );
@@ -33,19 +33,19 @@ function AboutPreview({ about, lang }) {
 function VisionMissionPreview({ visionMission, lang }) {
     return (
         <motion.div
-            className="p-4 sm:p-6 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-4 sm:space-y-6"
+            className="p-1 sm:p-2 h-full bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-4 sm:space-y-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-600 text-center admin-dark:text-white">
+            <h2 className="text-base sm:text-xl font-bold text-indigo-600 text-center admin-dark:text-white">
                 {lang === "vi" ? "Tầm nhìn & Sứ mệnh" : "Vision & Mission"}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 gap-2 sm:gap-3">
                 {(visionMission || []).map((item, index) => (
                     <motion.div
                         key={index}
-                        className="flex flex-col items-center text-center p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-900 rounded-lg sm:rounded-xl shadow hover:shadow-xl transition"
+                        className="flex flex-col items-center text-center p-1 sm:p-2 bg-gray-50 admin-dark:bg-gray-900 rounded-lg sm:rounded-xl shadow hover:shadow-xl transition"
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.2 }}
@@ -57,7 +57,7 @@ function VisionMissionPreview({ visionMission, lang }) {
                                 className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-cover rounded-full mb-3 sm:mb-4 shadow-lg"
                             />
                         )}
-                        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-indigo-600 admin-dark:text-white">{item.title?.[lang]}</h3>
+                        <h3 className="text-sm sm:text-base font-semibold text-indigo-600 admin-dark:text-white">{item.title?.[lang]}</h3>
                         <p className="mt-1 sm:mt-2 text-gray-600 admin-dark:text-gray-300 text-sm sm:text-base">{item.description?.[lang]}</p>
                     </motion.div>
                 ))}
@@ -174,12 +174,12 @@ const TextEditor = forwardRef(
         };
 
         return (
-            <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3">
-                <h3 className="font-bold text-base sm:text-lg">{label}</h3>
+            <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3 w-full">
+                <h3 className="font-semibold text-base sm:text-lg">{label}</h3>
 
                 {fields.map((field) =>
                     field.name === "image_url" ? (
-                        <div key={field.name} className="space-y-2">
+                        <div key={field.name} className="space-y-2 w-full">
                             <input
                                 type="file"
                                 accept="image/*"
@@ -240,10 +240,10 @@ function ListEditor({ section, data, onChange, lang }) {
     };
 
     return (
-        <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-3 sm:space-y-4">
+        <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-3 sm:space-y-4 w-full">
             <h3 className="font-bold text-base sm:text-lg">{section}</h3>
             {data.map((item, index) => (
-                <div key={index} className="p-2 sm:p-3 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3">
+                <div key={index} className="bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3 w-full">
                     <input
                         type="text"
                         placeholder="Tiêu đề..."
@@ -371,24 +371,21 @@ export default function AboutConfig() {
     };
 
     return (
-        <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-2 sm:p-4 md:p-6 items-start">
+        <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-3 items-start mt-5">
             <div className="flex flex-col space-y-4 sm:space-y-6">
                 <div className="flex items-center justify-between">
-                    <div>
-
-                    </div>
-                    <div className="rounded-2xl bg-slate-700 flex flex-col sm:flex-row justify-end md:gap-5 sm:gap-3 border border-gray-800 px-2 py-3 w-fit">
+                    <div className="rounded-xl bg-slate-700 gap-4 flex mx-auto flex-col sm:flex-col xl:flex-row justify-center md:gap-4 border border-gray-800 px-2 py-3 w-full md:w-full sm:w-fit xl:w-fit">
                         <button
                             onClick={() => setLang(lang === "vi" ? "en" : "vi")}
-                            className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-gray-900 admin-dark:bg-gray-900 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition text-xs sm:text-sm cursor-pointer"
+                            className="w-full sm:w-auto py-1 sm:py-2 sm:px-2 bg-gray-900 admin-dark:bg-gray-900 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition cursor-pointer"
                         >
-                            {lang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
+                            <span className='text-xs sm:text-sm px-4 text-center font-semibold'>{lang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}</span>
                         </button>
                         <button
                             onClick={handleSave}
                             className="w-full sm:w-auto py-1 sm:py-2 px-2 sm:px-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl shadow hover:bg-indigo-700 transition text-xs sm:text-sm cursor-pointer"
                         >
-                            Lưu cấu hình
+                            <span className="font-semibold text-sm sm:text-base">Lưu Cấu hình</span>
                         </button>
                     </div>
                 </div>

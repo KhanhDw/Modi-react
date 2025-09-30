@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
     Select,
     SelectContent,
@@ -6,6 +5,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useEffect, useState } from "react";
 
 export default function ChildServiceSelector({ services, valueSlug, setValueSlug, listServiceOfParent }) {
 
@@ -27,13 +27,13 @@ export default function ChildServiceSelector({ services, valueSlug, setValueSlug
             value={valueSlug || ""}
             onValueChange={(val) => setValueSlug(val)}
         >
-            <SelectTrigger className="w-full bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100">
+            <SelectTrigger className="w-full sm:w-90 bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100">
                 <SelectValue placeholder="Chọn một service..." />
             </SelectTrigger>
             <SelectContent>
                 {filteredServices.map((s) => (
                     <SelectItem key={s.id} value={s.translation.slug}>
-                        {s.translation.ten_dich_vu}
+                        <span className="w-50 sm:w-full">{s.translation.ten_dich_vu}</span>
                     </SelectItem>
                 ))}
             </SelectContent>

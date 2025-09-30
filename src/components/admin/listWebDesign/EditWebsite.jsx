@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useOutletContext, useNavigate, useParams } from "react-router-dom";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 import { NumericFormat } from 'react-number-format';
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 const categories = ["E-commerce", "Portfolio", "Business", "Blog", "Landing Page", "Corporate", "Creative"];
 
@@ -323,9 +323,9 @@ export default function WebsiteTemplateEdit() {
   };
 
   return (
-    <div className="mx-auto max-w-full p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
-        <div className="flex items-center gap-2">
+    <div className="mx-auto max-w-full md:p-2">
+      <div className="flex flex-col sm:flex-col md:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-2">
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
@@ -350,8 +350,8 @@ export default function WebsiteTemplateEdit() {
               onClick={() => handleActiveLangbtn(lang.key)}
               className={`flex px-2 sm:px-3 py-1 sm:py-1.5 rounded-md font-semibold text-sm sm:text-xl transition-colors
                 ${activeLang === lang.key
-                  ? "bg-blue-600 text-white admin-dark:bg-blue-500 admin-dark:text-white"
-                  : "bg-blue-100 text-blue-800 hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
+                  ? "bg-blue-600 text-white cursor-pointer admin-dark:bg-blue-500 admin-dark:text-white"
+                  : "bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
                 }`}
             >
               {lang.label}
@@ -360,8 +360,8 @@ export default function WebsiteTemplateEdit() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-        <Card className="w-full lg:w-120 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+      <div className="flex flex-col lg:flex-row gap-3 sm:gap-6">
+        <Card className="w-full bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
           <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-gray-900 admin-dark:text-gray-100 text-lg sm:text-xl">Thông tin mẫu</CardTitle>
             <Button
@@ -577,7 +577,7 @@ export default function WebsiteTemplateEdit() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-500 cursor-pointer text-sm sm:text-xl"
+                className="w-full flex bg-primary text-primary-foreground hover:bg-primary/90 admin-dark:bg-blue-600 sm:w-60 sm:mx-auto admin-dark:hover:bg-blue-500 cursor-pointer text-sm sm:text-xl"
               >
                 <Save className="h-4 w-4 mr-2" />
                 <span className="font-semibold">{isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"} {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</span>

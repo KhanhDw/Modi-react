@@ -233,10 +233,10 @@ export default function HomeConfigMultiLang() {
     };
 
     return (
-        <div className="p-2 sm:p-4 md:p-6 max-w-6xl mx-auto ">
+        <div className="md:p-2 max-w-6xl mx-auto ">
             {/* SECTION TABS */}
-            <div className={`${activeSection === "vitri" ? "pb-3" : "pb-0"} flex flex-wrap gap-3 items-center justify-between`}>
-                <div className="flex flex-wrap gap-3 items-center">
+            <div className={`${activeSection === "vitri" ? "pb-3" : "pb-0"} gap-5 flex flex-col`}>
+                <div className="gap-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:flex xl:justify-center">
                     {sectionsConfig.map((sec) => (
                         <motion.button
                             key={sec.key}
@@ -253,11 +253,12 @@ export default function HomeConfigMultiLang() {
                         </motion.button>
                     ))}
                 </div>
+
                 {/* LANG TABS */}
                 {activeSection !== "vitri" &&
                     (
                         <div className="relative flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
-                            <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2 mb-5">
+                            <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2 mt-2">
                                 {/* Hiển thị ở md+ */}
                                 <span className="hidden md:inline">
                                     {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}

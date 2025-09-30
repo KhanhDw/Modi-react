@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogOverlay } from "@/components/ui/dialog";
-import useLenisLocal from "@/hook/useLenisLocal";
-import React, { useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Filter } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function FilterModalListTemplateWebAdmin({
   filters,
@@ -73,9 +71,9 @@ export default function FilterModalListTemplateWebAdmin({
         <Button
           theme="admin"
           variant="outline"
-          className="w-20 gap-2 relative cursor-pointer 
+          className="w-20 gap-2 relative cursor-pointer
              border-gray-300 bg-black
-             admin-dark:bg-gray-800 admin-dark:border-gray-600 
+             admin-dark:bg-gray-800 admin-dark:border-gray-600
              admin-dark:text-gray-100 admin-dark:hover:bg-gray-700 transition text-black"
         >
           <Filter className="h-4 w-4 text-white transition-colors" />
@@ -83,7 +81,7 @@ export default function FilterModalListTemplateWebAdmin({
           {getActiveFiltersCount() > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs 
+              className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs
              bg-red-500 text-white shadow-md rounded-full ring-2 ring-white admin-dark:ring-gray-900"
             >
               {getActiveFiltersCount()}
@@ -95,13 +93,13 @@ export default function FilterModalListTemplateWebAdmin({
       <DialogOverlay className="bg-black/50 backdrop-blur-sm fixed inset-0 z-40" />
 
       <DialogContent
-        className="lenis-local w-fit flex flex-col items-start max-w-none max-h-[80vh] 
-                   overflow-hidden rounded-xl shadow-lg 
+        className="lenis-local w-fit flex flex-col items-start max-w-none max-h-[80vh]
+                   overflow-hidden rounded-xl shadow-lg
                    bg-white text-gray-900 border border-gray-200
                    admin-dark:bg-gray-900 admin-dark:text-gray-100 admin-dark:border-gray-700"
         data-lenis-prevent
       >
-        <DialogHeader className="h-fit w-full flex items-center justify-between border-b border-gray-200 admin-dark:border-gray-700">
+        <DialogHeader className="h-fit w-60 sm:w-90 md:w-full flex items-center justify-between border-b border-gray-200 admin-dark:border-gray-700">
           <DialogTitle className="flex flex-wrap items-center justify-between pb-3 w-full text-lg font-semibold">
             <p>Bộ lọc</p>
             <Button

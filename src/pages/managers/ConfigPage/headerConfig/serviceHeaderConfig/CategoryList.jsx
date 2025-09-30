@@ -18,7 +18,7 @@ export default function CategoryList({
 
     return (
         <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader className="pb-4 flex justify-between items-center">
+            <CardHeader className="flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div className="flex items-center gap-2">
                     <Folder className="h-5 w-5 text-gray-700 admin-dark:text-gray-300" />
                     <CardTitle className="text-gray-800 admin-dark:text-gray-100 font-semibold">
@@ -36,21 +36,21 @@ export default function CategoryList({
 
             <CardContent
                 data-lenis-prevent
-                className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-1"
+                className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-3"
             >
                 {categories?.length > 0 ? (
                     categories.map((cat) => (
                         <div
                             key={cat.id}
                             className={cn(
-                                "p-3 rounded-lg text-gray-900 admin-dark:text-white font-semibold border flex items-center justify-between cursor-pointer transition-colors",
+                                "p-2 rounded-lg text-gray-900 admin-dark:text-white font-semibold border flex items-center justify-between cursor-pointer transition-colors",
                                 selectedCategory?.id === cat.id
                                     ? "bg-primary border-primary"
                                     : "bg-gray-50 hover:bg-gray-100 border-gray-200 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:border-gray-600"
                             )}
                             onClick={() => onSelect(cat)}
                         >
-                            <span className="truncate">{cat.name?.[lang] || cat.name}</span>
+                            <span className="truncate text-sm sm:text-base">{cat.name?.[lang] || cat.name}</span>
                             <div className="flex gap-2">
                                 <Button
                                     size="sm"
@@ -72,7 +72,7 @@ export default function CategoryList({
                                     }}
                                     className="cursor-pointer"
                                 >
-                                    Xóa
+                                    <span className="text-xs sm:text-base">Xóa</span>
                                 </Button>
                             </div>
                         </div>

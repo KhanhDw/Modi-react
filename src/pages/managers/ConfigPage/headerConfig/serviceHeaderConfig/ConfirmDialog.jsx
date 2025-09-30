@@ -7,14 +7,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDelete }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className=" sm:max-w-md bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
+            <DialogContent className="w-75 sm:w-100 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-gray-900 admin-dark:text-gray-100">
+                    <DialogTitle className="text-gray-900 font-semibold admin-dark:text-gray-100">
                         Xác nhận xóa
                     </DialogTitle>
                 </DialogHeader>
 
-                <p className="text-gray-700 admin-dark:text-gray-300 mt-2">
+                <p className="text-gray-800 admin-dark:text-gray-300 mt-2">
                     Bạn có chắc chắn muốn xóa{" "}
                     {type === "category" ? "Danh mục dịch vụ này" : "dịch vụ"} này không?
                 </p>

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import CategoryList from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/CategoryList";
+import ChildList from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/ChildList";
 import ConfirmDialog from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/ConfirmDialog";
 import DialogForm from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/DialogForm";
-import ChildList from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/ChildList";
-import CategoryList from "@/pages/managers/ConfigPage/headerConfig/serviceHeaderConfig/CategoryList";
 import slugify from "@/utils/slug";
+import { useEffect, useState } from "react";
 
 export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     const [menuData, setMenuData] = useState([]);
@@ -481,7 +481,7 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px]">
             {/* Parent Categories */}
             <CategoryList
                 categories={menuData}

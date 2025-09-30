@@ -1,10 +1,4 @@
-import { useState, useEffect } from "react";
-import { useOutletContext, useNavigate } from "react-router-dom";
-import { Search, Plus, Trash2, SquarePen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import FilterModalListTemplateWebAdmin from "@/components/admin/templateWebsite/filterModalListTemplateWeb";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,8 +10,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import FilterModalListTemplateWebAdmin from "@/components/admin/templateWebsite/filterModalListTemplateWeb";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useLenisToggle } from "@/contexts/LenisContext";
+import { Plus, Search, SquarePen, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 export default function WebsiteTemplateList() {
   const { templates, handleDelete } = useOutletContext();
@@ -103,8 +103,8 @@ export default function WebsiteTemplateList() {
   return (
     <div className="mx-auto p-4">
       <div className="flex flex-col gap-6 mb-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold xs:text-sm sm:text-xl">Quản lý mẫu Website</h1>
+        <div className="flex flex-col gap-4 sm:flex-row items-center justify-between">
+          <h1 className="text-2xl font-bold xs:text-xl sm:text-xl">Quản lý mẫu Website</h1>
           <Button
             onClick={() => navigate("new")}
             className="flex items-center gap-2 cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black hover:text-white"
@@ -134,7 +134,7 @@ export default function WebsiteTemplateList() {
               />
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 text-gray-600 admin-dark:text-white font-semibold">
+          <div className="flex items-center gap-1 text-gray-600 admin-dark:text-white font-semibold">
             <p>Hiện có {templates.length} website mẫu</p>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function WebsiteTemplateList() {
               className="group border-2 border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800"
             >
               <CardContent className="px-4">
-                <div className="flex flex-col md:flex-row min-h-[200px] gap-4 sm:gap-0 sm:gap-2">
+                <div className="flex flex-col md:flex-row min-h-[200px] gap-4 sm:gap-2">
                   {/* Hình ảnh */}
                   <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-50 ">
                     {t.image_url ? (
@@ -188,7 +188,7 @@ export default function WebsiteTemplateList() {
                       <p className="text-sm font-medium text-gray-900 admin-dark:text-gray-100 ">Công nghệ:</p>
                       <div className="flex flex-wrap gap-1">
                         {t.tech?.map((item) => (
-                          <Badge key={item} variant="outline" className="text-xs  text-gray-900 admin-dark:text-gray-100 ">{item}</Badge>
+                          <Badge key={item} variant="outline" className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5">{item}</Badge>
                         ))}
                       </div>
                     </div>
@@ -197,10 +197,10 @@ export default function WebsiteTemplateList() {
                       <p className="text-sm font-medium text-gray-900 admin-dark:text-gray-100 ">Các loại File:</p>
                       <div className="flex flex-wrap gap-2">
                         {t.tags?.slice(0, 6).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs  text-gray-900 admin-dark:text-gray-100 ">{tag}</Badge>
+                          <Badge key={tag} variant="outline" className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5">{tag}</Badge>
                         ))}
                         {t.tags?.length > 6 && (
-                          <Badge variant="outline" className="text-xs text-gray-500">
+                          <Badge variant="outline" className="text-xs text-gray-500 mt-0.5">
                             +{t.tags.length - 6} more
                           </Badge>
                         )}
@@ -221,14 +221,14 @@ export default function WebsiteTemplateList() {
                         size="sm"
                         variant="outline"
                         onClick={() => navigate(`${t.id}/edit`)}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 cursor-pointer"
                       >
                         <SquarePen className="h-4 w-4" />
                       </Button>
 
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button size="sm" variant="outline" className="h-8 w-8 p-0 text-red-500">
+                          <Button size="sm" variant="outline" className="h-8 w-8 p-0 text-red-500 cursor-pointer">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
@@ -248,9 +248,9 @@ export default function WebsiteTemplateList() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-3xl font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">
+                      <div className="text-xl font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">
                         {t.price ? <ProductPrice price={t.price} /> : 0}
-                        <span className="text-xs ml-1">Vnđ</span>
+                        <span className="text-xs ml-1">VND</span>
                       </div>
                       <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Lượt xem:
                         <span className="font-semibold text-gray-900 admin-dark:text-gray-100 ">{t.views}</span>
@@ -258,7 +258,7 @@ export default function WebsiteTemplateList() {
                       <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
                     </div>
 
-                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white gap mt-2">
+                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white gap mt-2 cursor-pointer">
                       Xem mẫu
                     </Button>
                   </div>

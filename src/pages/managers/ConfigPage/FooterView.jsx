@@ -1,13 +1,16 @@
-import { MapPin, Phone, Mail } from "lucide-react";
+import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Mail, MapPin, Phone } from "lucide-react";
 import {
-    FaLinkedin, FaFacebookSquare, FaYoutube,
-    FaTiktok, FaInstagram, FaTwitter
+    FaFacebookSquare,
+    FaInstagram,
+    FaLinkedin,
+    FaTiktok,
+    FaTwitter,
+    FaYoutube
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
-import React from "react";
 import zaloPng from "/icon-zalo.png";
-import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
 
 // Map tên mạng xã hội -> icon
 const socialIcons = {
@@ -39,7 +42,7 @@ export default function FooterView({ data, services = [], socials = [], privacy 
     ];
 
     return (
-        <footer className="md:mb-4 md:p-8 xs:p-4 xs:m-0 text-white bg-gray-900 admin-dark:bg-gray-800 md:rounded-2xl border-1 dark:border-slate-700 border-slate-300">
+        <footer className="md:mb-4 md:p-8 sm:p-4 xs:p-3 text-white bg-gray-900 admin-dark:bg-gray-800 md:rounded-2xl border-1 dark:border-slate-700 border-slate-300 rounded-md">
             <div className="3xl:max-w-full 3xl:w-full md:max-w-6xl mx-auto 3xl:px-20">
                 <div className="grid grid-cols-1 gap-8 mb-8 md:grid-cols-2 lg::grid-cols-3 xl:grid-cols-3">
                     {/* Left Section */}
