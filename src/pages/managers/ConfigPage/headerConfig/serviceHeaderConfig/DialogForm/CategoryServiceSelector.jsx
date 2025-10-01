@@ -5,7 +5,52 @@ export default function CategoryServiceSelector({
     listIdServices,
     setListIdServices,
     disableItemSelectedbyName_groupServices,
+    dialog,
 }) {
+
+
+    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
+    const fetchGroupServiceByType = async (type) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/service-header-config/group-service/${type}`);
+            if (!res.ok) throw new Error("Không thể tải danh sách group service");
+            const data = await res.json();
+            if (!data.success) throw new Error(data.error || "Không thể tải group service");
+            return data.data;
+        } catch (err) {
+            console.error(err);
+            return [];
+        }
+    };
+
+
+    const [groupServices, setGroupServices] = useState([]);
+    const [dialogChildren, setDialogChildren] = useState([]);
+
+
+    useEffect(() => {
+        if (dialog && dialog.target && dialog.target.type) {
+
+            setDialogChildren(dialog.target.children || []);
+
+
+            fetchGroupServiceByType(dialog.target.type).then(data => {
+                setGroupServices(data.map(item => item.groupServices));
+            }).catch(err => {
+                console.error("Error fetching group service data:", err)
+            })
+        }
+    }, [dialog]);
+
+
+    useEffect(() => {
+        if (groupServices.length > 0 && dialogChildren.length > 0) {
+            console.log("groupServices:", groupServices);
+            console.log("dialogChildren:", dialogChildren);
+        }
+    }, [groupServices, dialogChildren]);
+
+
 
 
     const [localList, setLocalList] = useState(listIdServices || []);
@@ -47,6 +92,7 @@ export default function CategoryServiceSelector({
                 const slug = s.translation.slug;
                 const checked = localList.includes(slug);
                 const disabled = disabledSlugs.includes(slug);
+                const isUsedByChild = dialogChildren.some(child => child.description.en === slug);
 
                 return (
                     <div
@@ -65,11 +111,12 @@ export default function CategoryServiceSelector({
                                 id={`service-${s.id}`}
                                 value={slug}
                                 checked={checked}
-                                disabled={disabled} // 🔥 disable khi slug trùng
+                                disabled={disabled || isUsedByChild}
                                 onChange={(e) => toggleService(slug, e.target.checked)}
                                 className="checkbox w-5 h-5 rounded border border-gray-400 bg-gray-100 accent-blue-600 checked:bg-blue-600"
                             />
                             <span> {s.translation.ten_dich_vu}</span>
+                            {isUsedByChild && <span className="text-red-500 text-xs ml-2">(mục con đang dùng)</span>}
                         </label>
                     </div>
                 );

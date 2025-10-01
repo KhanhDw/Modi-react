@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Folder, Plus, Pencil, GripVertical } from "lucide-react";
+import { Folder, Plus, Pencil, GripVertical, CloudCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import EmptyState from "./EmptyState";
 import useLenisLocal from "@/hook/useLenisLocal";
@@ -29,6 +29,7 @@ function SortableCategoryItem({ cat, selectedCategory, lang, onSelect, onEdit, o
         transition,
     };
 
+
     return (
         <div
             ref={setNodeRef}
@@ -39,7 +40,7 @@ function SortableCategoryItem({ cat, selectedCategory, lang, onSelect, onEdit, o
                     ? "bg-primary border-primary"
                     : "bg-gray-50 hover:bg-gray-100 border-gray-200 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:border-gray-600"
             )}
-            onClick={() => onSelect(cat)}
+            onClick={() => { onSelect(cat); }}
         >
             <div className="flex items-center gap-2 flex-1 min-w-0">
                 <span
@@ -83,6 +84,7 @@ function SortableCategoryItem({ cat, selectedCategory, lang, onSelect, onEdit, o
 }
 
 export default function CategoryList({
+    dialog,
     categories = [],
     selectedCategory,
     lang,
@@ -93,12 +95,20 @@ export default function CategoryList({
     onReorder, // callback khi lưu thay đổi
 }) {
     useLenisLocal(".lenis-local");
-
     const [items, setItems] = useState(categories);
 
     useEffect(() => {
         setItems(categories);
-    }, [categories]);
+        console.log(dialog);
+
+    }, [categories, dialog]);
+
+    // ✅ Chọn mặc định item đầu tiên khi chưa có selectedCategory
+    useEffect(() => {
+        if (!selectedCategory && categories.length > 0) {
+            onSelect(categories[0]);
+        }
+    }, [categories, selectedCategory, onSelect]);
 
     const sensors = useSensors(useSensor(PointerSensor));
 

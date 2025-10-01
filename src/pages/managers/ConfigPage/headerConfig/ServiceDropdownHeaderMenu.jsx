@@ -85,8 +85,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 postion: child.position,
             }));
 
-            console.log(updatedChildren);
-
             setMenuData(prev =>
                 prev.map(cat => cat.id === category.id ? { ...cat, children: updatedChildren } : cat)
             );
@@ -104,6 +102,12 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     useEffect(() => {
         fetchAllServicesMenu();
     }, []);
+
+    useEffect(() => {
+        if (menuData.length > 0 && !selectedCategory) {
+            selectSubItemSection(menuData[0]);
+        }
+    }, [menuData, selectedCategory]);
 
     const addCategory = async (nameEn, nameVi, listIdServices) => {
         try {
@@ -395,7 +399,8 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
     const selectSubItemSection = (cat) => {
         setSelectedCategory(cat);
-        setListServiceOfParent(cat.name.groupServices.split(",").map(s => s.trim()).filter(Boolean))
+        const groupServices = cat?.name?.groupServices || "";
+        setListServiceOfParent(groupServices.split(",").map(s => s.trim()).filter(Boolean))
         fetchChildren(cat);
     };
 
@@ -454,6 +459,10 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             valueVi: cat.name?.vi || "",
             valueSlug: cat.description?.vi || "",
             listIdServices: groupServices,
+            children: cat.children || [],
+            type_slug: cat.type,
+            // fulldata: cat,
+
         });
 
     };
