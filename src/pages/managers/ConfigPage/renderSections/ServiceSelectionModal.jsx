@@ -171,8 +171,8 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
                             </Badge>
                         </div>
                         <div className="flex gap-2">
-                            <DialogClose asChild>
-                                <Button variant="outline">Đóng</Button>
+                            <DialogClose >
+                                <span className="border-2 admin-dark:border-gray-700 border-gray-400 rounded-lg px-3 py-2">Đóng</span>
                             </DialogClose>
                             <Button onClick={handleSave} disabled={isSaving}>
                                 {isSaving ? "Đang lưu..." : "Lưu"}
