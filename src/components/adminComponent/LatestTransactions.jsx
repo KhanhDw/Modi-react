@@ -50,7 +50,7 @@ export default function LatestTransactions() {
                     Latest Transactions
                 </h2>
                 <div className="relative w-full sm:w-64">
-                    <input
+                    <input autoComplete="off"
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -134,8 +134,8 @@ export default function LatestTransactions() {
                     onClick={handlePrev}
                     disabled={currentPage === 1}
                     className={`px-3 py-1 rounded text-sm transition ${currentPage === 1
-                            ? "text-gray-300 admin-dark:text-gray-600 cursor-not-allowed"
-                            : "text-orange-500 hover:bg-orange-100 admin-dark:hover:bg-orange-900 cursor-pointer"
+                        ? "text-gray-300 admin-dark:text-gray-600 cursor-not-allowed"
+                        : "text-orange-500 hover:bg-orange-100 admin-dark:hover:bg-orange-900 cursor-pointer"
                         }`}
                 >
                     Prev
@@ -147,8 +147,8 @@ export default function LatestTransactions() {
                         key={page}
                         onClick={() => handlePageClick(page)}
                         className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold transition ${currentPage === page
-                                ? "bg-orange-500 text-white"
-                                : "text-orange-500 hover:bg-orange-100 admin-dark:hover:bg-orange-900 cursor-pointer"
+                            ? "bg-orange-500 text-white"
+                            : "text-orange-500 hover:bg-orange-100 admin-dark:hover:bg-orange-900 cursor-pointer"
                             }`}
                     >
                         {page}
@@ -160,8 +160,8 @@ export default function LatestTransactions() {
                     onClick={handleNext}
                     disabled={currentPage === totalPages || totalPages === 0}
                     className={`px-3 py-1 rounded text-sm transition ${currentPage === totalPages || totalPages === 0
-                            ? "text-gray-300 admin-dark:text-gray-600 cursor-not-allowed"
-                            : "text-orange-500 hover:bg-orange-100 admin-dark:hover:bg-orange-900 cursor-pointer"
+                        ? "text-gray-300 admin-dark:text-gray-600 cursor-not-allowed"
+                        : "text-orange-500 hover:bg-orange-100 admin-dark:hover:bg-orange-900 cursor-pointer"
                         }`}
                 >
                     Next

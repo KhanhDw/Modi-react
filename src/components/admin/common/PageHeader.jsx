@@ -44,7 +44,7 @@ export default function PageHeader({
                 }}
                 className="flex flex-1"
               >
-                <input
+                <input autoComplete="off"
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}

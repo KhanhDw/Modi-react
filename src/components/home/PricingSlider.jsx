@@ -1,269 +1,264 @@
+import React, { useEffect, useState } from 'react';
+import { getAllServices, getAllServiceStages } from "@/pages/managers/ConfigPage/renderSections/hook/use_services_stage.jsx";
+import { getAllBridge } from "@/pages/managers/ConfigPage/renderSections/hook/use_bridge_services_stage_and_list_mini_service.jsx";
+import { CheckCircle } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
-import { Check, X } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../../contexts/LanguageContext";
+const SkeletonLoader = () => (
+  <div className="overflow-x-auto w-full p-2 sm:p-4 bg-background dark:bg-slate-950 admin-dark:bg-slate-950 rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-black/20 admin-dark:shadow-black/20 border border-slate-200 dark:border-slate-800 admin-dark:border-slate-800">
+    <div className="max-h-[70vh] overflow-auto rounded-lg border border-slate-200 dark:border-slate-800 admin-dark:border-slate-800">
+      <div className="w-full border-collapse min-w-[1200px] animate-pulse">
+        {/* Skeleton Header */}
+        <div className="sticky top-0 z-20">
+          <div className="border-b-2 border-slate-300 dark:border-slate-700 flex">
+            <div className="py-4 px-4 bg-slate-100 dark:bg-slate-900 sticky left-0 z-30 w-[250px]">
+              <div className="h-7 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+            </div>
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="py-4 px-4 border-l border-slate-200 dark:border-slate-800 admin-dark:border-slate-800 bg-slate-100 dark:bg-slate-900 admin-dark:bg-slate-900" style={{ flex: `0 0 ${300 + i * 50}px` }}>
+                <div className="h-7 bg-slate-200 dark:bg-slate-700 rounded w-1/2 mx-auto"></div>
+              </div>
+            ))}
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800/50 admin-dark:bg-slate-800/50 flex">
+            <div className="py-3 px-4 border-b border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 sticky left-0 z-30 w-[250px]">
+              <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            </div>
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="py-3 px-4 border-b border-l border-slate-200 dark:border-slate-700 admin-dark:border-slate-700" style={{ flex: `0 0 150px` }}>
+                <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mx-auto"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Skeleton Body */}
+        <div>
+          {[...Array(5)].map((_, rowIndex) => (
+            <div key={rowIndex} className="flex">
+              <div className="py-3 px-4 border-b border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 sticky left-0 z-10 bg-white dark:bg-slate-800/50 admin-dark:bg-slate-800/50 w-[250px]"><div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-full"></div></div>
+              {[...Array(6)].map((_, cellIndex) => (
+                <div key={cellIndex} className="py-3 px-4 border-b border-l border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 flex justify-center items-center" style={{ flex: `0 0 150px` }}><div className="w-5 h-5 bg-slate-200 dark:bg-slate-700 rounded-full"></div></div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
-const PricingSlider = ({ data }) => {
-  const { t } = useLanguage();
-  const navigate = useNavigate();
+const ServiceTable = () => {
+  const [servicesData, setServicesData] = useState([]);
+  const [serviceDetailsData, setServiceDetailsData] = useState([]);
+  const [stageData, setStageData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
 
-  const plansWrapperRef = useRef(null);
-  const dragStartX = useRef(0);
-  const dragEndX = useRef(0);
-  const isDragging = useRef(false);
+  const fetchDataServiceStage = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const interactionTimeoutRef = useRef(null);
-  const autoSlideIntervalRef = useRef(null);
+      const [stageResult, serviceResult, bridgeResult] = await Promise.all([
+        getAllServiceStages(), // stageData
+        getAllServices(),      // serviceDetailsData
+        getAllBridge(),        // servicesData
+      ]);
 
-  const handleInteractionStart = () => {
-    setIsUserInteracting(true);
-    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-  };
+      // Log dữ liệu để debug
+      console.log('stageResult:', stageResult);
+      console.log('serviceResult:', serviceResult);
+      console.log('bridgeResult:', bridgeResult);
 
-  const handleInteractionEnd = () => {
-    interactionTimeoutRef.current = setTimeout(() => {
-      setIsUserInteracting(false);
-    }, 3000);
-  };
+      // Kiểm tra dữ liệu
+      if (!Array.isArray(stageResult) || !Array.isArray(serviceResult) || !Array.isArray(bridgeResult)) {
+        throw new Error('Dữ liệu từ BE không đúng định dạng mảng');
+      }
 
-  const handleMouseDown = (e) => {
-    isDragging.current = true;
-    dragStartX.current = e.clientX;
-    dragEndX.current = e.clientX; // Đảm bảo giá trị dragEndX ban đầu
-    handleInteractionStart();
-  };
+      // Kiểm tra các trường cần thiết
+      if (bridgeResult.length > 0 && !bridgeResult[0].title_vi) {
+        console.warn('bridgeResult thiếu trường title_vi ở một số bản ghi');
+      }
+      if (serviceResult.length > 0 && !serviceResult[0].translation?.ten_dich_vu) {
+        console.warn('serviceResult thiếu trường translation.ten_dich_vu ở một số bản ghi');
+      }
+      if (stageResult.length > 0 && !stageResult[0].stage_id) {
+        console.warn('stageResult thiếu trường stage ở một số bản ghi');
+      }
 
-  const handleMouseMove = (e) => {
-    if (!isDragging.current) return;
-    dragEndX.current = e.clientX;
-  };
-
-  const handleMouseUp = () => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-    handleInteractionEnd();
-
-    const deltaX = dragEndX.current - dragStartX.current;
-    const threshold = 50;
-
-    const wrapper = plansWrapperRef.current;
-    if (!wrapper) return;
-
-    const scrollFactor = 3;
-
-    if (deltaX > threshold) {
-      // Kéo sang phải, scroll sang trái
-      wrapper.scrollBy({ left: -scrollFactor * deltaX, behavior: "smooth" });
-    } else if (deltaX < -threshold) {
-      // Kéo sang trái, scroll sang phải
-      wrapper.scrollBy({ left: scrollFactor * Math.abs(deltaX), behavior: "smooth" });
-    }
-  };
-
-  // Thêm hàm xử lý khi chuột rời khỏi vùng kéo
-  const handleMouseLeave = () => {
-    if (isDragging.current) {
-      handleMouseUp();
-    }
-  };
-
-  const handleTouchStart = (e) => {
-    isDragging.current = true;
-    dragStartX.current = e.touches[0].clientX;
-    dragEndX.current = e.touches[0].clientX;
-    handleInteractionStart();
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging.current) return;
-    dragEndX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    handleMouseUp();
-    handleInteractionEnd();
-  };
-
-  const scrollDirectionRef = useRef('right');
-
-  const startAutoSlide = () => {
-    stopAutoSlide();
-
-    const columnWidth = 400;
-    const columnsPerSlide = 3;
-    const scrollAmount = columnWidth * columnsPerSlide; // 1200px
-
-    autoSlideIntervalRef.current = setInterval(() => {
-      const wrapper = plansWrapperRef.current;
-      if (!wrapper) return;
-
-      const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
-      const currentScroll = wrapper.scrollLeft;
-
-      if (scrollDirectionRef.current === 'right') {
-        if (currentScroll + scrollAmount >= maxScrollLeft) {
-          scrollDirectionRef.current = 'left';
-          wrapper.scrollTo({ left: maxScrollLeft, behavior: "smooth" });
-        } else {
-          wrapper.scrollBy({ left: scrollAmount, behavior: "smooth" });
-        }
+      // Gán đúng dữ liệu
+      setServicesData(bridgeResult);        // Chứa title_vi
+      setServiceDetailsData(serviceResult); // Chứa translation.ten_dich_vu
+      setStageData(stageResult);            // Chứa stage
+    } catch (err) {
+      console.error("Lỗi khi fetch dữ liệu:", err);
+      if (retryCount < maxRetries) {
+        setRetryCount(retryCount + 1);
+        setTimeout(fetchDataServiceStage, 2000); // Thử lại sau 2 giây
       } else {
-        if (currentScroll - scrollAmount <= 0) {
-          scrollDirectionRef.current = 'right';
-          wrapper.scrollTo({ left: 0, behavior: "smooth" });
-        } else {
-          wrapper.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-        }
+        setError("Không thể tải dữ liệu sau nhiều lần thử. Vui lòng kiểm tra kết nối hoặc liên hệ quản trị viên.");
       }
-    }, 4000); // every 4 seconds
-  };
-
-
-  const stopAutoSlide = () => {
-    if (autoSlideIntervalRef.current) {
-      clearInterval(autoSlideIntervalRef.current);
-      autoSlideIntervalRef.current = null;
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!isUserInteracting) startAutoSlide();
-    else stopAutoSlide();
+    fetchDataServiceStage();
+  }, [retryCount]);
 
-    return () => {
-      stopAutoSlide();
-      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    };
-  }, [isUserInteracting]);
+  // Lấy danh sách title_vi duy nhất
+  const uniqueTitles = [...new Set(servicesData.map(item => item?.title_vi).filter(Boolean))];
+  console.log('uniqueTitles:', uniqueTitles);
 
-  useEffect(() => {
-    return () => {
-      stopAutoSlide();
-      if (interactionTimeoutRef.current) {
-        clearTimeout(interactionTimeoutRef.current);
-      }
-    };
-  }, []);
+  // Lấy danh sách dịch vụ (translation.ten_dich_vu) duy nhất
+  const uniqueServices = serviceDetailsData
+    .filter(item => item?.id && item?.translation?.ten_dich_vu)
+    .map(item => {
+      const stageInfo = stageData.find(s => Number(s?.service_id) === Number(item.id));
+      if (!stageInfo) return null; // nếu service không có stage thì bỏ qua
+      return {
+        id: Number(item.id),
+        ten_dich_vu: item.translation.ten_dich_vu,
+        stage_id: stageInfo.stage_id,
+        stage: stageInfo.stage_title_vi,
+      };
+    })
+    .filter(Boolean); // bỏ null
 
-  // Kiểm tra dữ liệu tồn tại, tránh lỗi khi data rỗng
-  const services = data?.data || [];
 
-  // Memoize allFeatures để tránh tính toán lại không cần thiết
-  const allFeatures = useMemo(() => {
-    const allFeaturesSet = new Set();
-    services.forEach(service => {
-      service.translation.features
-        .split('#')
-        .filter(f => f.trim() !== '')
-        .forEach(f => allFeaturesSet.add(f.trim()));
-    });
-    return Array.from(allFeaturesSet);
-  }, [services]);
+  console.log('uniqueServices:', uniqueServices);
 
-  const defineButtonOrderActive = (slug) => {
-    navigate(`/contact?service-order=${slug}`);
+  // Nhóm dịch vụ theo stage
+  const stages = [...new Set(stageData.map(item => item?.stage_title_vi).filter(Boolean))];
+
+  const servicesByStage = stages.map(stage => ({
+    stage,
+    services: uniqueServices.filter(service => service.stage === stage),
+  }));
+
+  console.log('servicesByStage:', servicesByStage);
+
+  // Hàm kiểm tra xem dịch vụ có cung cấp title_vi không
+  const isServiceProvided = (serviceId, titleVi) => {
+    return servicesData.some(
+      item => Number(item?.service_id) === Number(serviceId) && item?.title_vi === titleVi
+    );
   };
+
+  if (loading) {
+    return <SkeletonLoader />;
+  }
+
+  if (error) {
+    return <div className="text-center py-4 text-red-500">{error}</div>;
+  }
+
+  if (!servicesData.length || !serviceDetailsData.length || !stageData.length) {
+    return (
+      <div className="text-center py-4">
+        Không có dữ liệu để hiển thị. Vui lòng kiểm tra:
+        <ul className="list-disc list-inside text-left max-w-md mx-auto">
+          {!servicesData.length && <li>Dữ liệu bridge rỗng</li>}
+          {!serviceDetailsData.length && <li>Dữ liệu services rỗng</li>}
+          {!stageData.length && <li>Dữ liệu service_stages rỗng</li>}
+        </ul>
+      </div>
+    );
+  }
+
+  if (!uniqueTitles.length || !uniqueServices.length) {
+    return (
+      <div className="text-center py-4">
+        Dữ liệu không hợp lệ. Vui lòng kiểm tra:
+        <ul className="list-disc list-inside text-left max-w-md mx-auto">
+          {!uniqueTitles.length && <li>Không tìm thấy title_vi trong bridge</li>}
+          {!uniqueServices.length && <li>Không tìm thấy translation.ten_dich_vu trong services</li>}
+        </ul>
+      </div>
+    );
+  }
 
   return (
-    <div className="transition-all duration-700 relative select-none">
-      <div className="text-center mb-8 sm:p-6 transition-all duration-500">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white">
-          BẢNG GIÁ DỊCH VỤ
-        </h2>
-        <p className="text-sm sm:text-[18px] md:text-xl lg:text-xl text-center text-slate-600 dark:text-slate-400 mt-2 max-w-3xl mx-auto">
-          Lựa chọn dịch vụ phù hợp với nhu cầu của bạn
-        </p>
-      </div>
+    <div className={cn("overflow-x-auto w-full p-2 sm:p-4 bg-background dark:bg-slate-950 admin-dark:bg-slate-950 rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-black/20 admin-dark:shadow-black/20 border border-slate-200 dark:border-slate-800 admin-dark:border-slate-800", !loading && "animate-fade-in")}>
+      <div className="max-h-[70vh] overflow-auto rounded-lg border border-slate-200 dark:border-slate-800 admin-dark:border-slate-800">
+        <table className="w-full border-collapse table-fixed">
+          <thead className="text-sm sticky top-0 z-20">
+            <tr className="border-b-2 border-slate-300 dark:border-slate-700 admin-dark:border-slate-700">
+              <th className="py-2 px-3 sm:py-3 sm:px-4 text-left font-bold text-sm md:text-base text-slate-500 dark:text-slate-400 admin-dark:text-slate-400 bg-slate-100 dark:bg-slate-900 admin-dark:bg-slate-900 sticky left-0 z-40 w-[150px] sm:w-[200px] min-w-[150px] sm:min-w-[200px]">Giai đoạn</th>
+              {servicesByStage.map(({ stage, services }, index) => {
+                const stageColors = [
+                  "border-b-blue-500 text-blue-600 dark:border-b-blue-400 dark:text-blue-400 admin-dark:border-b-blue-400 admin-dark:text-blue-400",
+                  "border-b-green-500 text-green-600 dark:border-b-green-400 dark:text-green-400 admin-dark:border-b-green-400 admin-dark:text-green-400",
+                  "border-b-purple-500 text-purple-600 dark:border-b-purple-400 dark:text-purple-400 admin-dark:border-b-purple-400 admin-dark:text-purple-400",
+                  "border-b-orange-500 text-orange-600 dark:border-b-orange-400 dark:text-orange-400 admin-dark:border-b-orange-400 admin-dark:text-orange-400",
+                ];
+                const colorClass = stageColors[index % stageColors.length];
 
-      <div className="w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-        <div
-          className="overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
-          ref={plansWrapperRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          style={{ userSelect: 'none' }}
-          tabIndex={0} // Thêm để hỗ trợ keyboard focus (Accessibility)
-        >
-          <table className="min-w-full table-auto border-collapse">
-            <thead className="bg-slate-50 dark:bg-slate-800">
-              <tr>
-                <th className="sticky top-0 bottom-0 left-0 z-10 bg-white dark:bg-slate-800 border border-slate-300 uppercase dark:border-slate-600 w-80 min-w-xs text-left p-4 text-xl font-bold text-slate-900 dark:text-white">
-                  Chức năng
-                </th>
-                {services.map((service) => (
+                return (
                   <th
-                    key={service.id}
-                    className="border border-slate-300 dark:border-slate-600 max-w-[400px] text-center p-4 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold"
+                    key={stage}
+                    colSpan={services.length || 1}
+                    className={cn(
+                      "border-b-2 py-2 px-3 sm:py-3 sm:px-4 border-l border-slate-200 dark:border-slate-800 admin-dark:border-slate-800 text-center font-bold text-sm md:text-base bg-slate-100 dark:bg-slate-900 admin-dark:bg-slate-900",
+                      colorClass, "border-b-4"
+                    )}
                   >
-                    <div className="mb-2 text-xl uppercase font-bold">
-                      {service.translation.ten_dich_vu}
-                    </div>
-                    <div className="text-base text-slate-700 dark:text-slate-400">
-                      Giá từ: {Number(service.floor_price).toLocaleString('vi-VN')} VNĐ
-                    </div>
+                    {stage}
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {allFeatures.map((feature, idx) => (
-                <tr key={idx} className="bg-white dark:bg-slate-800">
-                  <td className="sticky left-0 z-10 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 w-80 min-w-xs font-medium border border-slate-200 dark:border-slate-700 p-4 align-top">
-                    {feature}
-                  </td>
-                  {services.map((service) => {
-                    const featuresArr = service.translation.features
-                      .split('#')
-                      .map(f => f.trim())
-                      .filter(f => f !== '');
-                    const hasFeature = featuresArr.includes(feature);
-
-                    return (
-                      <td
-                        key={service.id}
-                        className="text-center p-4 border border-slate-200 dark:border-slate-700 max-w-[400px]"
-                      >
-                        {hasFeature ? (
-                          <Check className="inline-block w-5 h-5 text-green-600 dark:text-green-400" strokeWidth={3} />
-                        ) : (
-                          <X className="inline-block w-5 h-5 text-red-600 dark:text-red-500" strokeWidth={3} />
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-
-              <tr className="bg-white dark:bg-slate-800">
-                <td className="sticky left-0 z-10 bg-white dark:bg-slate-800 w-80 min-w-xs border border-slate-200 dark:border-slate-700 p-4"></td>
-                {services.map((service) => (
-                  <td
-                    key={service.id}
-                    className="text-center p-4 border border-slate-200 dark:border-slate-700 min-w-[400px]"
-                  >
-                    <button
-                      onClick={() => defineButtonOrderActive(service.translation.slug)}
-                      className="py-1 px-3 rounded-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition duration-300 cursor-pointer"
-                      aria-label={`Đặt hàng dịch vụ ${service.translation.ten_dich_vu}`}
+                )
+              })}
+            </tr>
+            <tr className="bg-slate-50 dark:bg-slate-800/50 admin-dark:bg-slate-800/50">
+              <th className="py-2 px-3 sm:px-4 border-b border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 text-left font-semibold text-xs sm:text-sm text-slate-600 dark:text-slate-400 admin-dark:text-slate-400 sticky left-0 z-30 bg-slate-50 admin-dark:bg-slate-800 dark:bg-slate-800 w-[150px] sm:w-[200px] min-w-[150px] sm:min-w-[200px]">Danh mục</th>
+              {servicesByStage.map(({ stage, services }) =>
+                services.length > 0 ? (
+                  services.map(service => (
+                    <th
+                      key={service.id}
+                      className="py-2 px-2 sm:px-4 border-b border-l border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 text-center font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-300 admin-dark:text-slate-300 min-w-[120px] sm:min-w-[150px]"
                     >
-                      <span className="text-[18px] font-semibold">Đặt Hàng Ngay</span>
-                    </button>
-                  </td>
-                ))}
+                      {service.ten_dich_vu}
+                    </th>
+                  ))
+                ) : (
+                  // Render một ô trống nếu không có dịch vụ
+                  <th key={`${stage}-empty`} className="py-3 px-4 border-b border-l border-slate-200 dark:border-slate-700 admin-dark:border-slate-700"></th>
+                )
+              )}
+            </tr>
+          </thead>
+          <tbody className="text-sm">
+            {uniqueTitles.map(title => (
+              <tr key={title} className="hover:bg-slate-50 dark:hover:bg-gray-700/30 admin-dark:hover:bg-gray-700/30 transition-colors duration-150">
+                <td className="py-2 px-3 sm:py-3 sm:px-4 border-b border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 text-left font-semibold text-xs sm:text-sm text-slate-800 dark:text-slate-200 admin-dark:text-slate-200 sticky left-0 z-10 bg-white/80 dark:bg-slate-800/80 admin-dark:bg-slate-800/80 backdrop-blur-sm w-[150px] sm:w-[200px] min-w-[150px] sm:min-w-[200px]">
+                  {title}
+                </td>
+                {servicesByStage.map(({ stage, services }) =>
+                  services.length > 0 ? (
+                    services.map(service => (
+                      <td key={service.id} className="py-2 px-3 sm:py-3 sm:px-4 border-b border-l border-slate-200 dark:border-slate-700 admin-dark:border-slate-700 text-center">
+                        {isServiceProvided(service.id, title) ? (
+                          <div className="flex justify-center">
+                            <CheckCircle className="w-5 h-5 text-primary dark:text-indigo-400 admin-dark:text-indigo-400" />
+                          </div>
+                        ) : ''}
+                      </td>
+                    ))
+                  ) : (
+                    // Render một ô trống nếu không có dịch vụ
+                    <td key={`${stage}-empty`} className="py-3 px-4 border-b border-l border-slate-200 dark:border-slate-700 admin-dark:border-slate-700"></td>
+                  )
+                )}
               </tr>
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 };
 
-export default PricingSlider;
+export default ServiceTable;

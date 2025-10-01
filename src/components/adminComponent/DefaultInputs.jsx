@@ -33,7 +33,7 @@ export default function DefaultInputs() {
                 >
                     Input
                 </label>
-                <input
+                <input autoComplete="off"
                     id="input"
                     type="text"
                     className="w-full rounded-md border border-gray-300 admin-dark:border-gray-600 px-4 py-2 placeholder-gray-400 text-gray-900 admin-dark:text-gray-100 admin-dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
@@ -49,7 +49,7 @@ export default function DefaultInputs() {
                 >
                     Input with Placeholder
                 </label>
-                <input
+                <input autoComplete="off"
                     id="inputTwo"
                     type="text"
                     placeholder="info@gmail.com"
@@ -83,7 +83,7 @@ export default function DefaultInputs() {
                     Password Input
                 </label>
                 <div className="relative">
-                    <input
+                    <input autoComplete="off"
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         className="w-full rounded-md border border-gray-300 admin-dark:border-gray-600 px-4 py-2 placeholder-gray-400 text-gray-900 admin-dark:text-gray-100 admin-dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"

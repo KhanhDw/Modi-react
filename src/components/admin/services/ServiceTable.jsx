@@ -235,8 +235,16 @@ export default function ServiceTable() {
                   </TableRow>
                 )
               }
-
               )}
+              {
+                currentData.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center text-muted-foreground py-4">
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )
+              }
             </TableBody>
           </Table>
         </div>

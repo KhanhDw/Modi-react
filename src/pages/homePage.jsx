@@ -66,7 +66,7 @@ function HomePage({ activeSidebarHeader }) {
             }
             const clonedData = JSON.parse(JSON.stringify(data.data));
             setVitri(clonedData);
-            console.log(clonedData); // type and position
+            // console.log(clonedData); // type and position
         } catch (err) {
             console.error('Fetch vitri error:', err);
             setError(err.message);
@@ -262,7 +262,7 @@ function HomePage({ activeSidebarHeader }) {
         <div
             className={`${activeSidebarHeader ? "overflow-hidden" : ""} 
                 w-full h-full md:p-4 mx-auto flex flex-col 
-                items-center justify-center bg-slate-50 dark:bg-slate-900`}
+                items-center justify-center bg-slate-50 dark:bg-slate-950`}
         >
             {vitri
                 .sort((a, b) => a.position - b.position)

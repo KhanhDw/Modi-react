@@ -28,7 +28,7 @@ const ResetPassword = () => {
                                 Password
                             </label>
                             <div className="flex items-center bg-gray-100 admin-dark:bg-gray-700 px-4 py-3 rounded-full">
-                                <input
+                                <input autoComplete="off"
                                     id="new-password"
                                     type={showPassword1 ? "text" : "password"}
                                     placeholder="Enter new password"
@@ -51,7 +51,7 @@ const ResetPassword = () => {
                                 Confirm Password
                             </label>
                             <div className="flex items-center bg-gray-100 admin-dark:bg-gray-700 px-4 py-3 rounded-full">
-                                <input
+                                <input autoComplete="off"
                                     id="confirm-password"
                                     type={showPassword2 ? "text" : "password"}
                                     placeholder="Confirm password"

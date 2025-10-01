@@ -166,13 +166,13 @@ export default function SocialNetworkManager({
                                 <h2 className="text-lg font-medium mb-2">Điều chỉnh thông tin mạng xã hội</h2>
                                 <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
-                                        <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
+                                        <input autoComplete="off" value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
                                     </div>
 
                                     <div className="flex items-center justify-between gap-2">
                                         <label htmlFor="color-picker-update" className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">Chọn màu:</label>
-                                        <input
+                                        <input autoComplete="off"
                                             value={color}
                                             onChange={(e) => setColor(e.target.value)}
                                             type="color"
@@ -206,12 +206,12 @@ export default function SocialNetworkManager({
                                 <h2 className="text-lg font-medium mb-2">Thêm mạng xã hội mới</h2>
                                 <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
-                                        <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
+                                        <input autoComplete="off" value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
                                     </div>
                                     <div className="flex flex-col  gap-3">
                                         <label htmlFor="color-picker-add" className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">Chọn màu:</label>
-                                        <input
+                                        <input autoComplete="off"
                                             value={color}
                                             onChange={(e) => setColor(e.target.value)}
                                             type="color"

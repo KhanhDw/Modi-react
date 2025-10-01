@@ -8,7 +8,7 @@ function FileInput({ label, onChange }) {
         <div className="flex flex-col gap-2">
             <label className="font-semibold text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">{label}</label>
             <div className="relative">
-                <input
+                <input autoComplete="off"
                     type="file"
                     accept="image/*"
                     onChange={onChange}
@@ -136,7 +136,7 @@ export default function HeaderConfigLogo() {
         <div className="md:p-2 max-w-4xl mx-auto space-y-6 sm:space-y-8">
             {/* Header Preview */}
             <motion.div
-                className="flex flex-col items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg p-4 sm:p-6 md:p-8 gap-4 sm:gap-6"
+                className="max-w-3xl  flex flex-col items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg p-2 sm:p-6 md:p-8 gap-4 sm:gap-6"
                 initial={{ opacity: 0, y: -40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
@@ -173,6 +173,16 @@ export default function HeaderConfigLogo() {
                         </motion.button>
                     </div>
                 </div>
+            </motion.div>
+
+            {/* Config Form */}
+            <motion.div
+                className="w-full bg-white admin-dark:bg-gray-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-md border border-gray-200 admin-dark:border-gray-700 space-y-4 sm:space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+            >
+
 
                 <div className="w-full flex flex-col space-y-3 sm:space-y-4">
                     <span className="font-semibold text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">Cấu hình danh sách dịch vụ</span>

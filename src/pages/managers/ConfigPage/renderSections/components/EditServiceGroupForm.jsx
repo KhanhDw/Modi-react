@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Save, X } from "lucide-react";
+import { updateMiniService } from "@/pages/managers/ConfigPage/renderSections/hook/use_list_mini_service.jsx"
 
-
-export default function EditServiceGroupForm({ item, onSave, onCancel }) {
-    const [nameEn, setNameEn] = useState(item.nameEn);
-    const [nameVi, setNameVi] = useState(item.nameVi);
+export default function EditServiceGroupForm({ item, onCancel, onReload }) {
+    const [nameEn, setNameEn] = useState(item.title_en);
+    const [nameVi, setNameVi] = useState(item.title_vi);
 
     const handleSave = () => {
         if (nameEn.trim() && nameVi.trim()) {
-            onSave({ ...item, nameEn: nameEn.trim(), nameVi: nameVi.trim() });
+            updateMiniService(item.id, { title_en: nameEn, title_vi: nameVi })
+                .then(() => {
+                    onReload();
+                    onCancel();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     };
 

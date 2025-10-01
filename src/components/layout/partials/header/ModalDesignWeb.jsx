@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { motion } from "framer-motion";
 
 const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
 function ModalDesignWeb() {
-  const { t } = useLanguage();
-  const [hoveredItem, setHoveredItem] = useState(null);
   const [categories, setCategories] = useState([]); // State cho danh mục động
 
   // Gọi API để lấy danh mục
@@ -44,70 +42,39 @@ function ModalDesignWeb() {
     fetchCategories();
   }, []);
 
-  const handleMouseEnterItem = (index) => {
-    setHoveredItem(index);
-  };
-
-  const handleMouseLeaveContainer = () => {
-    setHoveredItem(null);
-  };
-
   if (!categories.length) {
-    return null; // không render gì cả
-  }
-
-
-  return (
-    <div
-      className="w-fit animate-in slide-in-from-top-2 backdrop-blur-xl duration-200 relative rounded-md bg-gray-700 dark:bg-gray-700/70"
-      onMouseLeave={handleMouseLeaveContainer}
-    >
-      <div className="rounded-md overflow-hidden bg-gray-700/60 dark:bg-gray-700/70 shadow-2xl border border-gray-200/40 dark:border-gray-700/40  relative">
-        <div className="w-50 lg:min-w-[400px] xl:min-w-[200px] relative bg-gray-700/60 dark:bg-gray-700/70">
-          <div className="space-y-1">
-            {categories.map((item, index) => {
-              const isActive = hoveredItem === index;
-
-              return (
-                <div
-                  key={item.id + index}
-                  className={` bg-gray-700/60 dark:bg-gray-700/70
-                group cursor-pointer transition-all duration-200 ease-in-out transform
-                px-3 py-2 rounded-lg relative 
-                ${isActive
-                      ? "text-white"
-                      : "hover:bg-slate-900 bg-gray-700/60 dark:bg-gray-700/70  text-gray-300 dark:text-gray-200 hover:text-white"}
-              `}
-                  onMouseEnter={() => handleMouseEnterItem(index)}
-                >
-                  {/* Overlay effect */}
-                  <div
-                    className={`
-                  absolute inset-0 rounded-lg bg-gray-700/60 dark:bg-gray-700/70 transition-opacity duration-100
-                  ${isActive
-                        ? "bg-gray-900 dark:bg-gray-900"
-                        : "bg-gray-700/60 dark:bg-gray-600/70"}
-                `}
-                  ></div>
-
-                  <div className="flex items-center justify-between relative z-10 ">
-                    <Link
-                      to={`/Products?category=${encodeURIComponent(item.title)}`}
-                      className={`
-                    flex-1 text-xs lg:text-sm transition-all duration-100
-                    ${isActive ? "font-semibold" : "font-medium group-hover:font-semibold"}
-                  `}
-                    >
-                      {item.title}
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+    // Hiển thị skeleton loading trong khi chờ dữ liệu
+    return (
+      <div className="w-60 rounded-xl bg-gray-800/80 backdrop-blur-lg border border-gray-700/60 shadow-2xl p-2">
+        <div className="space-y-2">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-9 bg-gray-700/50 rounded-lg animate-pulse" />
+          ))}
         </div>
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="w-60 rounded-xl bg-gray-800/80 backdrop-blur-lg border border-gray-700/60 shadow-2xl overflow-hidden p-2"
+    >
+      <div className="space-y-1">
+        {categories.map((item, index) => (
+          <Link
+            key={item.slug + index}
+            to={`/Products?category=${encodeURIComponent(item.title)}`}
+            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-700/50 hover:text-white transition-colors duration-200"
+          >
+            {item.title}
+          </Link>
+        ))}
+      </div>
+    </motion.div>
 
   );
 }

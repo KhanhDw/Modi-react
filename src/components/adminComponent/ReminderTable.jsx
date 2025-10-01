@@ -42,7 +42,7 @@ export default function ReminderTable() {
                         className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 admin-dark:text-gray-500 pointer-events-none"
                         size={20}
                     />
-                    <input
+                    <input autoComplete="off"
                         type="search"
                         placeholder="Search..."
                         value={search}

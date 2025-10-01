@@ -43,7 +43,7 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Vị trí</label>
-            <input
+            <input autoComplete="off"
               type="text"
               value={formData.vi_tri}
               onChange={(e) => setFormData({ ...formData, vi_tri: e.target.value })}
@@ -53,7 +53,7 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Số lượng</label>
-            <input
+            <input autoComplete="off"
               type="number"
               value={formData.so_luong}
               onChange={(e) => setFormData({ ...formData, so_luong: e.target.value })}
@@ -62,7 +62,7 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Địa điểm</label>
-            <input
+            <input autoComplete="off"
               type="text"
               value={formData.dia_diem}
               onChange={(e) => setFormData({ ...formData, dia_diem: e.target.value })}
@@ -71,7 +71,7 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Mức lương</label>
-            <input
+            <input autoComplete="off"
               type="text"
               value={formData.muc_luong}
               onChange={(e) => setFormData({ ...formData, muc_luong: e.target.value })}
@@ -80,7 +80,7 @@ export default function RecruitmentForm({ job, onSubmit, onCancel }) {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Hạn nộp hồ sơ</label>
-            <input
+            <input autoComplete="off"
               type="date"
               value={formData.han_nop_ho_so}
               onChange={(e) => setFormData({ ...formData, han_nop_ho_so: e.target.value })}

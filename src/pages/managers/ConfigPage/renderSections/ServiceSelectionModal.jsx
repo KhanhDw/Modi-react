@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -8,142 +8,152 @@ import {
     DialogOverlay,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import useLenisLocal from "@/hook/useLenisLocal";
+import React, { useEffect, useState } from "react";
+import { getAllServices, createServiceStage, getAllServiceStages, deleteServiceStage } from "./hook/use_services_stage.jsx"
 
-export default function ServiceSelectionModal({
-    isOpen,
-    onClose,
-    onServiceToggle,
-    currentStage,
-    serviceOfStage1,
-    serviceOfStage2,
-    serviceOfStage3,
-}) {
+export default function ServiceSelectionModal({ isOpen, onClose, currentStage, onSaved }) {
     useLenisLocal(".lenis-local");
-    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
-    const [services, setServices] = useState([]);
-    const [tempSelectedServices, setTempSelectedServices] = useState([]);
+    const [serviceFetch, setServiceFetch] = useState([]);
+    const [serviceStageFetch, setServiceStageFetch] = useState([]);
+    const [selectedServices, setSelectedServices] = useState([]);
 
-    // Fetch all services
-    const FetchDataServicesALL = async (lang = "vi") => {
+    const fetchDataService = async () => {
         try {
-            const lang_api = lang === "vi" ? "" : "/en";
-            const res = await fetch(`${API_BASE_URL}${lang_api}/api/services`);
-            const data = await res.json();
-            if (data.success) {
-                setServices(data.data);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
+            const serviceResult = await getAllServices();
+            const serviceStageResult = await getAllServiceStages();
+            setServiceFetch(serviceResult)
+            setServiceStageFetch(serviceStageResult)
 
-    useEffect(() => {
-        FetchDataServicesALL();
-    }, []);
-
-    // Lấy service của stage hiện tại (props từ cha)
-    const getCurrentStageServices = () => {
-        if (currentStage === 1) return serviceOfStage1;
-        if (currentStage === 2) return serviceOfStage2;
-        if (currentStage === 3) return serviceOfStage3;
-        return [];
-    };
-
-    // Khi mở modal → copy service từ cha vào state tạm
-    useEffect(() => {
-        if (isOpen) {
-            setTempSelectedServices(getCurrentStageServices());
-        }
-    }, [isOpen, currentStage]);
-
-    // Check nếu service đã được chọn trong state tạm
-    const isServiceSelected = (service) => {
-        return tempSelectedServices.some(
-            (s) => s.translation.slug === service.translation.slug
-        );
-    };
-
-    // Check nếu service đang nằm ở stage khác
-    const isServiceInOtherStage = (service) => {
-        const allStages = [
-            { stage: 1, services: serviceOfStage1 },
-            { stage: 2, services: serviceOfStage2 },
-            { stage: 3, services: serviceOfStage3 },
-        ];
-
-        return allStages.some(
-            (stageData) =>
-                stageData.stage !== currentStage &&
-                stageData.services.some(
-                    (s) => s.translation.slug === service.translation.slug
+            // lọc ra danh sách service nào đã có trong stage hiện tại
+            const preSelected = serviceResult.filter((s) =>
+                serviceStageResult.some(
+                    (st) => st.service_id === s.id && String(st.stage_id) === String(currentStage)
                 )
-        );
-    };
-
-    // Toggle chọn/bỏ chọn trong state tạm
-    const handleServiceClick = (service) => {
-        if (isServiceInOtherStage(service) && !isServiceSelected(service)) {
-            return; // Không cho chọn nếu service đã ở stage khác
-        }
-
-        if (isServiceSelected(service)) {
-            // Bỏ chọn
-            setTempSelectedServices((prev) =>
-                prev.filter((s) => s.translation.slug !== service.translation.slug)
             );
-        } else {
-            // Thêm chọn
-            setTempSelectedServices((prev) => [...prev, service]);
+
+            // đánh dấu service nào đã nằm trong stage khác
+            const withOtherStageFlag = serviceResult.map((s) => ({
+                ...s,
+                inOtherStage: serviceStageResult.some(
+                    (st) => st.service_id === s.id && String(st.stage_id) !== String(currentStage)
+                ),
+            }));
+
+
+            setServiceFetch(withOtherStageFlag);
+            setSelectedServices(preSelected);
+        } catch (err) {
+            console.error("Lỗi load service stages:", err);
         }
     };
+
+
+
+    useEffect(() => {
+        fetchDataService();
+    }, [currentStage]);
+
+
+    const handleSelectService = (serviceId) => {
+        // tìm service theo id trong serviceFetch
+        const service = serviceFetch.find(s => s.id === serviceId);
+        if (!service) return;
+
+        setSelectedServices(prev => {
+            // nếu service đã có trong danh sách => bỏ ra
+            const exists = prev.some(s => s.id === serviceId);
+            if (exists) {
+                return prev.filter(s => s.id !== serviceId);
+            } else {
+                return [...prev, service];
+            }
+        });
+    };
+
+    const [isSaving, setIsSaving] = useState(false);
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            const existingStageServices = serviceStageFetch.filter(
+                (st) => String(st.stage_id) === String(currentStage)
+            );
+
+            const existingIds = existingStageServices.map((st) => st.service_id);
+            const selectedIds = selectedServices.map((s) => s.id);
+
+            // thêm mới
+            const toAdd = selectedIds.filter((id) => !existingIds.includes(id));
+            for (const service_id of toAdd) {
+                await createServiceStage({ service_id, stage_id: currentStage });
+            }
+
+            // xóa bỏ
+            const toRemove = existingStageServices.filter(
+                (st) => !selectedIds.includes(st.service_id)
+            );
+            for (const item of toRemove) {
+                await deleteServiceStage(item.id);
+            }
+
+
+            await fetchDataService(); // ✅ load lại state sau khi lưu
+            onSaved();
+            onClose();
+        } catch (err) {
+            console.error("Lỗi khi lưu dịch vụ:", err);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogOverlay className="bg-black/60 backdrop-blur-sm" />
-            <DialogContent className="admin-dark:bg-gray-800 admin-dark:text-white w-4xl">
-                <DialogHeader>
-                    <div className="flex items-center justify-between">
-                        <DialogTitle>Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
-                        <button
-                            type="button"
-                            className="mr-10 border px-2 py-1 rounded-lg hover:bg-muted admin-dark:hover:bg-muted">
-                            <span className="text-sm text-foreground">Cập nhật dữ liệu dịch vụ</span>
-                        </button>
-                    </div>
+            <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
+            <DialogContent className="admin-dark:bg-gray-900/95 admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-2xl">
+                <DialogHeader className="pr-6">
+                    <DialogTitle className="text-xl text-foreground">Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
                 </DialogHeader>
+
                 <div className="py-4">
                     <div
                         data-lenis-prevent
-                        className="lenis-local grid grid-cols-1 gap-3 max-h-96 overflow-y-auto scrollbar-hide"
+                        className="lenis-local grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2"
                     >
-                        {/* Hiển thị tất cả services active */}
-                        {services
+                        {serviceFetch
                             .filter((service) => service.status === "Active")
                             .map((service) => {
-                                const isSelected = isServiceSelected(service);
-                                const inOtherStage = isServiceInOtherStage(service);
+                                // kiểm tra service có nằm trong selectedServices không
+                                const isSelected = selectedServices.some((s) => s.id === service.id);
+                                const inOtherStage = service.inOtherStage; // giả định backend trả về
                                 const isDisabled = inOtherStage && !isSelected;
 
                                 return (
                                     <div
                                         key={service.id}
+                                        onClick={() => !isDisabled && handleSelectService(service.id)}
                                         className={cn(
-                                            "p-3 border rounded-lg cursor-pointer transition-colors text-center relative",
+                                            "p-3 border rounded-lg text-center relative transition-colors cursor-pointer",
                                             isSelected
-                                                ? "bg-primary text-primary-foreground border-primary admin-dark:bg-primary admin-dark:text-primary-foreground admin-dark:border-primary"
+                                                ? "bg-primary/5 border-primary/40 ring-2 ring-primary/20 text-primary font-semibold"
                                                 : isDisabled
-                                                    ? "bg-muted/50 text-muted-foreground border-muted cursor-not-allowed admin-dark:bg-muted/30 admin-dark:text-muted-foreground"
-                                                    : "bg-card hover:bg-muted admin-dark:bg-card admin-dark:hover:bg-muted"
+                                                    ? "bg-gray-100 text-gray-400 border-dashed cursor-not-allowed admin-dark:bg-muted/50 admin-dark:text-muted-foreground/50"
+                                                    : "bg-background hover:bg-gray-50 hover:border-primary/30 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50"
                                         )}
-                                        onClick={() => handleServiceClick(service)}
                                     >
-                                        <div className="text-sm font-medium">
-                                            {service.translation.ten_dich_vu}
-                                        </div>
+                                        <button
+                                            type="button"
+                                            disabled={isDisabled}
+                                            className="text-sm font-medium"
+                                        >
+                                            <p>{service.translation.ten_dich_vu}</p>
+                                        </button>
                                         {inOtherStage && !isSelected && (
-                                            <div className="text-xs text-muted-foreground mt-1">
+                                            <div className="text-xs text-muted-foreground/60 mt-1">
                                                 Đã được chọn ở stage khác
                                             </div>
                                         )}
@@ -152,35 +162,26 @@ export default function ServiceSelectionModal({
                             })}
                     </div>
                 </div>
-                <DialogFooter>
+
+                <DialogFooter className="pt-4 border-t admin-dark:border-gray-700">
                     <div className="flex items-center justify-between w-full">
                         <div>
-                            {tempSelectedServices.length > 0 && (
-                                <div className="text-sm text-muted-foreground mt-4">
-                                    Đã chọn: {tempSelectedServices.length} dịch vụ
-                                </div>
-                            )}
-                            {services.length === 0 && (
-                                <p className="text-center text-muted-foreground py-4">
-                                    Đang tải dịch vụ...
-                                </p>
-                            )}
+                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                                Đã chọn: {selectedServices.length} dịch vụ
+                            </Badge>
                         </div>
                         <div className="flex gap-2">
-                            <Button onClick={onClose} variant="outline">
-                                Đóng
+                            <DialogClose >
+                                <span className="border-2 admin-dark:border-gray-700 border-gray-400 rounded-lg px-3 py-2">Đóng</span>
+                            </DialogClose>
+                            <Button onClick={handleSave} disabled={isSaving}>
+                                {isSaving ? "Đang lưu..." : "Lưu"}
                             </Button>
-                            <Button
-                                onClick={() => {
-                                    onServiceToggle(tempSelectedServices, currentStage);
-                                    onClose();
-                                }}
-                            >
-                                Lưu
-                            </Button>
+
                         </div>
                     </div>
                 </DialogFooter>
+
             </DialogContent>
         </Dialog>
     );

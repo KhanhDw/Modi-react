@@ -31,7 +31,7 @@ function DefaultLayout({ children }) {
                     flex flex-col items-start justify-center
                     md:px-4 
                     mx-auto
-                    bg-slate-50 dark:bg-slate-900
+                    bg-slate-50 dark:bg-slate-950
                 `}>
             <div className={`flex w-full  ${location.pathname === '/' ? 'z-50' : ''} transition-all duration-200`}>
                 <AnimatedHeader ActiveSideBarHeader={setActiveSidebarHeader} />

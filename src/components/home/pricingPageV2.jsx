@@ -14,23 +14,26 @@ export default function PricingPageV2() {
     }, []);
 
     return (
-        <div className="bg-gray-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 w-full">
-            <div className="container mx-auto py-10 md:py-18">
-                <header className="text-center mb-10 p-3">
-                    <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-extrabold bg-gradient-to-r from-purple-700 to-blue-600 dark:from-purple-500 dark:to-sky-500 bg-clip-text text-transparent mb-6">
-                        {t("home.PricingPage.title")}
-                    </h1>
-                    <p className="max-w-3xl mx-auto text-base sm:text-[18px] md:text-xl lg:text-xl text-slate-600 dark:text-slate-400">
-                        {t("home.PricingPage.description")}
-                    </p>
-                </header>
+        <div className="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 w-full">
+            <div className="container mx-auto py-16 md:py-24 px-4">
+                <div className="relative">
+                    {/* Decorative background gradient */}
 
-                <main>
-                    {/* <PricingSlider stages={pricingData} /> */}
-                    <PricingSlider data={PricingData} />
+                    <header className="text-center mb-16">
+                        <h1 className=" text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
+                            {t("home.PricingPage.title")}
+                        </h1>
+
+                        <p className="max-w-4xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-400">
+                            {t("home.PricingPage.description")}
+                        </p>
+                    </header>
+                </div>
+
+                <main className="space-y-16">
+                    <PricingSlider />
+                    {!isAdmin && <PricingFooterPage />}
                 </main>
-
-                {!isAdmin && <PricingFooterPage />}
             </div>
         </div>
     );

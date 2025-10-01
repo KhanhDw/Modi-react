@@ -26,7 +26,7 @@ const ForgotPassword = () => {
                                 Email
                             </label>
                             <div className="flex items-center bg-gray-100 admin-dark:bg-gray-700 px-4 py-3 rounded-full">
-                                <input
+                                <input autoComplete="off"
                                     id="email"
                                     type="email"
                                     placeholder="Enter your email"

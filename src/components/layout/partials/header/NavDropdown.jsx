@@ -1,10 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { motion, AnimatePresence } from "framer-motion";
 
-function NavDropdown({ to, label, isHover, setIsHover, children, scrolled }) {
-  const location = useLocation();
-  const active = location.pathname.startsWith(to);
-
+function NavDropdown({ to, label, isHover, setIsHover, children, isActive = false }) {
   return (
     <div
       onMouseEnter={() => setIsHover(true)}
@@ -13,7 +11,7 @@ function NavDropdown({ to, label, isHover, setIsHover, children, scrolled }) {
     >
       <Link
         to={to}
-        className={`flex justify-center items-center text-lg h-full ${active ? "text-green-400" : "text-white"
+        className={`flex justify-center items-center text-lg h-full ${isActive ? "text-green-400" : "text-white hover:text-green-300"
           }`}
       >
         {label}
@@ -22,12 +20,19 @@ function NavDropdown({ to, label, isHover, setIsHover, children, scrolled }) {
         />
       </Link>
 
-      {isHover && (
-        <div className="absolute top-full left-0 z-50 min-w-max pt-2 pointer-events-auto">
-          {children}
-        </div>
-      )}
-
+      <AnimatePresence>
+        {isHover && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute top-full left-0 -translate-x-0 z-50 min-w-max pt-4 pointer-events-auto"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

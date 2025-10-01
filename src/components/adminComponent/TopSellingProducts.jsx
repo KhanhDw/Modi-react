@@ -25,7 +25,7 @@ export default function TopSellingProducts() {
                 <div className="flex flex-col md:flex-row justify-between items-center px-4 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Top Selling Product</h2>
                     <div className="relative w-full sm:w-64 mt-3 md:mt-0">
-                        <input
+                        <input autoComplete="off"
                             type="text"
                             placeholder="Search..."
                             value={search}

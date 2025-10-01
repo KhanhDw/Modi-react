@@ -298,7 +298,7 @@ const ProfilePage = () => {
                                 title="Thay đổi ảnh đại diện"
                             >
                                 <FiCamera className="text-white text-3xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110" />
-                                <input
+                                <input autoComplete="off"
                                     type="file"
                                     id="avatarUpload"
                                     accept="image/jpeg,image/png,image/gif"
@@ -337,7 +337,7 @@ const ProfilePage = () => {
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Username
                                 </label>
-                                <input
+                                <input autoComplete="off"
                                     type="text"
                                     value={user.username}
                                     readOnly
@@ -349,7 +349,7 @@ const ProfilePage = () => {
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Họ và tên
                                 </label>
-                                <input
+                                <input autoComplete="off"
                                     type="text"
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
@@ -363,7 +363,7 @@ const ProfilePage = () => {
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Email
                                 </label>
-                                <input
+                                <input autoComplete="off"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -377,7 +377,7 @@ const ProfilePage = () => {
                                 <label className="block text-sm text-gray-500 admin-dark:text-gray-400 font-medium mb-1">
                                     Số điện thoại
                                 </label>
-                                <input
+                                <input autoComplete="off"
                                     type="text"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
@@ -443,7 +443,7 @@ const ProfilePage = () => {
                                     Mật khẩu hiện tại
                                 </label>
                                 <div className="relative">
-                                    <input
+                                    <input autoComplete="off"
                                         type={showPasswords.old ? "text" : "password"}
                                         placeholder="Mật khẩu hiện tại"
                                         readOnly={!isEditPassword}
@@ -470,7 +470,7 @@ const ProfilePage = () => {
                                     Mật khẩu mới
                                 </label>
                                 <div className="relative">
-                                    <input
+                                    <input autoComplete="off"
                                         type={showPasswords.new ? "text" : "password"}
                                         placeholder="••••••••"
                                         readOnly={!isEditPassword}
@@ -497,7 +497,7 @@ const ProfilePage = () => {
                                     Nhập lại mật khẩu mới
                                 </label>
                                 <div className="relative">
-                                    <input
+                                    <input autoComplete="off"
                                         type={showPasswords.confirm ? "text" : "password"}
                                         placeholder="••••••••"
                                         readOnly={!isEditPassword}

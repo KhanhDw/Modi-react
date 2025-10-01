@@ -134,7 +134,7 @@ export default function ContactConfig() {
                                 </span>
 
                                 <div className="relative inline-block w-12 h-6 align-middle select-none transition duration-200 cursor-pointer">
-                                    <input
+                                    <input autoComplete="off"
                                         type="checkbox"
                                         id="language-switch"
                                         className="peer sr-only "
@@ -154,7 +154,8 @@ export default function ContactConfig() {
                         <div className="text-start mb-3">
                             <p className="text-xs sm:text-sm md:text-base font-medium">Thiết lập Tên công ty {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</p>
                         </div>
-                        <input
+
+                        <input autoComplete="off"
                             type="text"
                             placeholder={activeLang === "vi" ? "Nhập tên công ty..." : "Enter company name..."}
                             className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"

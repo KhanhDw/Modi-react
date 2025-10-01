@@ -1,486 +1,533 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Slider } from "@/components/ui/slider"
-import { Plus, Edit2, Trash2, Save, X } from "lucide-react"
-import { cn } from "@/lib/utils"
-import ServiceSelectionModal from "./ServiceSelectionModal"
-import useLenisLocal from '@/hook/useLenisLocal'
-import { Crosshair } from 'lucide-react';
-// import EditServiceGroupForm from "./components/EditServiceGroupForm"
-import ServiceSelectionForGroupServiceModal from "./ServiceSelectionForGroupServiceModal"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
+import { Plus, Edit2, Trash2, Save, X, Crosshair, GripVertical } from "lucide-react";
+import { cn } from "@/lib/utils";
+import EditServiceGroupForm from "./components/EditServiceGroupForm.jsx"
+import ServiceSelectionModal from "./ServiceSelectionModal.jsx"
+import { getAllMiniServices, createMiniService, deleteMiniService } from "./hook/use_list_mini_service.jsx"
+import ServiceSelectionForGroupServiceModal from "./ServiceSelectionForGroupServiceModal.jsx"
+import { getAllServices, getAllServiceStages, } from "./hook/use_services_stage.jsx"
+import { getAllBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
+import { getAllStages, createStage, updateStage, deleteStage, bulkUpdateStageCodes } from "./hook/use_stage_master.jsx";
+import { PencilLine, LogOut } from 'lucide-react';
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core";
+import {
+    arrayMove,
+    SortableContext,
+    useSortable,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-export default function ChitietdichvuSection({ DataFeaturesOfGroupService }) {
-    useLenisLocal(".lenis-local")
-    const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
-    const [currentStage, setCurrentStage] = useState(1)
-    const [editingItem, setEditingItem] = useState(null)
-    const [isServiceModalOpen, setIsServiceModalOpen] = useState(false)
-    const [isServiceSelectionForGroupServiceModal, setServiceSelectionForGroupServiceModal] = useState(false)
+const SortableStageItem = ({ stage, onEdit, onDelete, isEditing, onUpdate, onCancelEdit }) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: stage.id });
 
-    // Thêm state để track line đang được chọn
-    const [selectedLineItem, setSelectedLineItem] = useState(null)
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 10 : 'auto',
+    };
 
-    const [servicesFetch, setServicesFetch] = useState([]);
-    const [serviceOfStage1, setServiceOfStage1] = useState([]);
-    const [serviceOfStage2, setServiceOfStage2] = useState([]);
-    const [serviceOfStage3, setServiceOfStage3] = useState([]);
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={cn(
+                "flex items-center justify-between border rounded-lg p-3 transition-shadow border-gray-200 admin-dark:border-gray-700",
+                isDragging ? "shadow-xl bg-gray-50 z-10 admin-dark:bg-gray-800" : "bg-white admin-dark:bg-gray-800/50",
+                isEditing ? "ring-2 ring-blue-500/50" : ""
+            )}
+        >
+            {isEditing ? (
+                <div className="flex gap-2 w-full items-center">
+                    <Input defaultValue={stage.code} onChange={(e) => (stage.code = e.target.value)} className="w-20" placeholder="Code" />
+                    <Input defaultValue={stage.title_vi} onChange={(e) => (stage.title_vi = e.target.value)} placeholder="Tiếng Việt" />
+                    <Input defaultValue={stage.title_en} onChange={(e) => (stage.title_en = e.target.value)} placeholder="English" />
+                    <Button theme="admin" size="sm" onClick={() => onUpdate(stage.id, stage)}><Save className="w-4 h-4" /></Button>
+                    <Button theme="admin" size="sm" variant="outline" onClick={onCancelEdit}><X className="w-4 h-4" /></Button>
+                </div>
+            ) : (
+                <>
+                    <div className="flex items-center gap-3">
+                        <div {...attributes} {...listeners} className="cursor-grab p-1 text-gray-400 hover:text-gray-800 admin-dark:text-gray-500 admin-dark:hover:text-gray-200">
+                            <GripVertical className="w-5 h-5" />
+                        </div>
+                        <Badge variant="secondary" className="font-mono text-xs">{stage.code}</Badge>
+                        <div>
+                            <span className="font-medium text-sm text-gray-900 admin-dark:text-white">{stage.title_vi}</span>
+                            <span className="text-sm text-gray-500 ml-2 admin-dark:text-gray-400">/ {stage.title_en}</span>
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button theme="admin" size="icon" variant="ghost" onClick={() => onEdit(stage.id)}><Edit2 className="w-4 h-4" /></Button>
+                        <Button theme="admin" size="icon" variant="ghost" className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400" onClick={() => onDelete(stage.id)}><Trash2 className="w-4 h-4" /></Button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
 
-    const FetchDataServicesALL = async (lang = "vi") => {
+export default function ChitietdichvuSection() {
+    const [listServiceMini, setListServiceMini] = useState([]);
+    const [isGroupServiceModalOpen, setIsGroupServiceModalOpen] = useState(false);
+    const [selectedServiceMini, setSelectedServiceMini] = useState(null);
+
+    const [stageMaster, setStageMaster] = useState([]);
+    const [newStageVi, setNewStageVi] = useState("");
+    const [newStageEn, setNewStageEn] = useState("");
+    const [newStageCode, setNewStageCode] = useState("");
+    const [editingStage, setEditingStage] = useState(null);
+    const [isOrderChanged, setIsOrderChanged] = useState(false);
+
+
+
+    const fetchDataServiceStage = async () => {
         try {
-            const lang_api = lang === "vi" ? "" : "/en";
-            const res = await fetch(`${API_BASE_URL}${lang_api}/api/services`);
-            const data = await res.json();
-            if (data.success) {
-                setServicesFetch(data.data);
-                // console.log("Services loaded:", data.data);
-            }
+            const [stageResult, serviceResult, bridgeResult] = await Promise.all([
+                getAllServiceStages(),
+                getAllServices(),
+                getAllBridge(),
+            ]);
+
+            // Gom service theo stage
+            const grouped = {};
+            stageResult.forEach((st) => {
+                const service = serviceResult.find((s) => Number(s.id) === Number(st.service_id));
+                if (service) {
+                    grouped[st.stage_id] = [
+                        ...(grouped[st.stage_id] || []),
+                        {
+                            services_stage_id: st.id,
+                            stage_id: st.stage_id,
+                            ...service,
+                            minis: bridgeResult.filter(
+                                (br) =>
+                                    Number(br.service_id) === Number(service.id) &&
+                                    Number(br.stage_id) === Number(st.stage_id)
+                            ),
+                        },
+                    ];
+
+                }
+            });
+
+            setServicesStage(grouped);
+        } catch (err) {
+            console.error("Lỗi load service stages:", err);
+        }
+    };
+
+
+    const FetchListMiniService = async () => {
+        try {
+            const stageResult = await getAllMiniServices();
+            setListServiceMini(stageResult);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        fetchDataServiceStage();
+        FetchListMiniService();
+    }, []);
+
+    const HandlePostSelectMiniServiceForServiceStage = async () => {
+        try {
+            await createMiniService({ title_vi: newLineVi, title_en: newLineEn });
+            await FetchListMiniService();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
+    const HandleDeteletMiniService = async (id) => {
+        try {
+            await deleteMiniService(id);
+            await FetchListMiniService();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    // fetch stage_master
+    const fetchStages = async () => {
+        try {
+            const data = await getAllStages();
+            setStageMaster(data);
+            setIsOrderChanged(false); // Reset khi fetch lại
+        } catch (err) {
+            console.error("Lỗi load stage_master:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchStages();
+    }, []);
+
+    // handle thêm
+    const handleAddStage = async () => {
+        try {
+            await createStage({ code: newStageCode, title_vi: newStageVi, title_en: newStageEn });
+            setNewStageCode("");
+            setNewStageVi("");
+            setNewStageEn("");
+            await fetchStages();
         } catch (err) {
             console.error(err);
         }
     };
 
-    const getAllStageTitles = (data, lang = "en") => {
-        console.log(data);
-        const titles = data?.title?.[lang]?.title;
-        if (!titles) return {};
-
-        // chỉ lấy 3 stage cố định
-        return {
-            stage1: titles.stage1 || [],
-            stage2: titles.stage2 || [],
-            stage3: titles.stage3 || []
-        };
+    // handle update
+    const handleUpdateStage = async (id, stageData) => {
+        try {
+            await updateStage(id, stageData);
+            setEditingStage(null);
+            await fetchStages();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    function transformServiceGroup(id, serviceGroupEn, serviceGroupVi) {
-        return Object.keys(serviceGroupEn).map((key, idx) => ({
-            id: `sg-${key}`,
-            idUseUpdate: id,
-            nameEn: serviceGroupEn[key],
-            nameVi: serviceGroupVi[key],
-        }));
+    // handle delete
+    const handleDeleteStage = async (id) => {
+        try {
+            await deleteStage(id);
+            await fetchStages();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    // ===== DND LOGIC =====
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        })
+    );
+
+    function handleDragEnd(event) {
+        const { active, over } = event;
+        if (active.id !== over.id) {
+            setStageMaster((items) => {
+                const oldIndex = items.findIndex((item) => item.id === active.id);
+                const newIndex = items.findIndex((item) => item.id === over.id);
+                const newOrder = arrayMove(items, oldIndex, newIndex);
+
+                // Cập nhật lại 'code' (vị trí)
+                return newOrder.map((item, index) => ({ ...item, code: String(index + 1) }));
+            });
+            setIsOrderChanged(true);
+        }
     }
 
-    const [serviceGroupItems, setServiceGroupItems] = useState([]);
+    const handleSaveOrder = async () => {
+        try {
+            // Chuẩn bị dữ liệu để gửi đi: một mảng các object {id, code}
+            const stagesToUpdate = stageMaster.map(({ id, code }) => ({ id, code }));
 
-    useEffect(() => {
-        FetchDataServicesALL();
+            // Gọi API cập nhật hàng loạt
+            await bulkUpdateStageCodes(stagesToUpdate);
 
-        const id = DataFeaturesOfGroupService?.id;
-        const en = DataFeaturesOfGroupService?.title?.en?.serviceGroup;
-        const vi = DataFeaturesOfGroupService?.title?.vi?.serviceGroup;
-
-        if (en && vi) {
-            setServiceGroupItems(transformServiceGroup(id, en, vi));
-        } else {
-            setServiceGroupItems([]);
+            await fetchStages(); // Fetch lại để đảm bảo dữ liệu đồng bộ và reset isOrderChanged
+        } catch (err) {
+            console.error("Lỗi khi lưu thứ tự:", err);
         }
-    }, [DataFeaturesOfGroupService]);
-
-    useEffect(() => {
-        const allTitles = getAllStageTitles(DataFeaturesOfGroupService, "en");
-        console.log("Stage titles:", allTitles);
-
-        // lọc stage1
-        const stage1Services = servicesFetch.filter(service =>
-            allTitles.stage1.includes(service.translation.slug)
-        );
-        // lọc stage2
-        const stage2Services = servicesFetch.filter(service =>
-            allTitles.stage2.includes(service.translation.slug)
-        );
-        // lọc stage3
-        const stage3Services = servicesFetch.filter(service =>
-            allTitles.stage3.includes(service.translation.slug)
-        );
-
-        setServiceOfStage1(stage1Services);
-        setServiceOfStage2(stage2Services);
-        setServiceOfStage3(stage3Services);
-
-        console.log("Services by stage:", { stage1Services, stage2Services, stage3Services });
-    }, [servicesFetch, DataFeaturesOfGroupService]);
-
-    // Handle service selection from modal
-    const handleServiceToggle = (updatedServices, stage) => {
-        console.log("Service toggle:", updatedServices, stage);
-
-        if (stage === 1) {
-            setServiceOfStage1(updatedServices);
-        } else if (stage === 2) {
-            setServiceOfStage2(updatedServices);
-        } else if (stage === 3) {
-            setServiceOfStage3(updatedServices);
-        }
-
-        // Optionally save to backend here
-        // saveStageServices(updatedServices, stage);
-        // Gọi API lưu backend
-        saveStageServices(updatedServices, stage);
     };
 
-    // Get current stage services for display
-    const getCurrentStageServices = () => {
-        if (currentStage === 1) return serviceOfStage1;
-        if (currentStage === 2) return serviceOfStage2;
-        if (currentStage === 3) return serviceOfStage3;
-        return [];
-    };
+    const handleCancelOrder = () => fetchStages(); // Chỉ cần fetch lại là được
 
-    // Hàm để handle click vào button Crosshair
-    const handleLineSelection = (item) => {
-        setSelectedLineItem(item);
-        setServiceSelectionForGroupServiceModal(true);
-        console.log("Selected line item:", item);
-    };
 
-    // Hàm để đóng modal và reset selected line
-    const handleCloseServiceSelectionModal = () => {
-        setServiceSelectionForGroupServiceModal(false);
-        setSelectedLineItem(null);
-    };
+    const stageDescriptions = stageMaster.reduce((acc, s) => {
+        acc[s.id] = `${s.title_vi} / ${s.title_en}`;
+        return acc;
+    }, {});
 
-    const [newLineKey, setNewLineKey] = useState("");
+
+
+    const [currentStage, setCurrentStage] = useState(1);
+    const [editingItem, setEditingItem] = useState(null);
+
+    const [servicesStage, setServicesStage] = useState({});
     const [newLineEn, setNewLineEn] = useState("");
     const [newLineVi, setNewLineVi] = useState("");
-
-    // thêm mới
-    const addServiceGroupItem = async () => {
-        try {
-            const sectionId = DataFeaturesOfGroupService?.id;
-            if (!sectionId || !newLineEn.trim() || !newLineVi.trim()) return;
-
-            const newLineKey = `Line${serviceGroupItems.length + 1}`;
-
-            const res = await fetch(
-                `${API_BASE_URL}/api/section-items-chi-tiet-dich-vu/${sectionId}`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        lineKey: newLineKey,
-                        valueEn: newLineEn,
-                        valueVi: newLineVi,
-                    }),
-                }
-            );
-
-            const data = await res.json();
-            if (res.ok) {
-                setServiceGroupItems((prev) => [
-                    ...prev,
-                    {
-                        id: `sg-${newLineKey}`,
-                        idUseUpdate: sectionId,
-                        lineKey: newLineKey,
-                        nameEn: newLineEn,
-                        nameVi: newLineVi,
-                    },
-                ]);
-                setNewLineEn("");
-                setNewLineVi("");
-                console.log("✅ Added:", data);
-            } else {
-                console.error("❌ Add failed:", data.error);
-            }
-        } catch (err) {
-            console.error("❌ Error adding serviceGroup line:", err);
-        }
-    };
-
-    const updateServiceGroupItem = async (updatedItem) => {
-        try {
-            const lineKey = updatedItem.id.replace("sg-", "");
-            const key = updatedItem.idUseUpdate
-
-            const res = await fetch(`${API_BASE_URL}/api/section-items-chi-tiet-dich-vu/${key}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    key,
-                    lineKey,
-                    values: {
-                        en: updatedItem.nameEn,
-                        vi: updatedItem.nameVi,
-                    },
-                }),
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                setServiceGroupItems((prev) =>
-                    prev.map((it) => (it.id === updatedItem.id ? updatedItem : it))
-                );
-                setEditingItem(null);
-                console.log("✅ Update success:", data);
-            } else {
-                console.error("❌ Update failed:", data.error);
-            }
-        } catch (err) {
-            console.error("❌ Error updating serviceGroup line:", err);
-        }
-    };
-
-    const deleteServiceGroupItem = async (item) => {
-        try {
-            const lineKey = item.id.replace("sg-", "");
-            const key = item.idUseUpdate;
-
-            const res = await fetch(`${API_BASE_URL}/api/section-items-chi-tiet-dich-vu/${key}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ lineKey }),
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                setServiceGroupItems((prev) => prev.filter((it) => it.id !== item.id));
-                console.log("✅ Delete success:", data);
-            } else {
-                console.error("❌ Delete failed:", data.error);
-            }
-        } catch (err) {
-            console.error("❌ Error deleting serviceGroup line:", err);
-        }
-    };
-
-    // Hàm gọi API update stage
-    const saveStageServices = async (updatedServices, stage) => {
-        try {
-            const sectionId = DataFeaturesOfGroupService?.id;
-            if (!sectionId) return;
-
-            const newStageKey = `stage${stage}`;
-
-            for (const service of servicesFetch) {
-                const serviceSlug = service.translation.slug;
-
-                const wasInStage = [serviceOfStage1, serviceOfStage2, serviceOfStage3]
-                    .some((stageServices, idx) =>
-                        stageServices.some(s => s.translation.slug === serviceSlug && idx + 1 === stage)
-                    );
-
-                const isNowSelected = updatedServices.some(
-                    s => s.translation.slug === serviceSlug
-                );
-
-                let bodyData = null;
-
-                if (!wasInStage && isNowSelected) {
-                    // ➕ Add service to current stage
-                    bodyData = {
-                        serviceSlug,
-                        oldStage: "stage0",
-                        newStage: newStageKey,
-                    };
-                } else if (wasInStage && !isNowSelected) {
-                    // ➖ Remove service from current stage
-                    bodyData = {
-                        serviceSlug,
-                        oldStage: newStageKey,
-                        newStage: "stage0",
-                    };
-                }
-
-                if (bodyData) {
-                    const res = await fetch(
-                        `${API_BASE_URL}/api/section-items-chi-tiet-dich-vu/${sectionId}/stage`,
-                        {
-                            method: "PUT",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(bodyData),
-                        }
-                    );
-
-                    const data = await res.json();
-                    if (res.ok) {
-                        console.log(`✅ ${serviceSlug}: ${bodyData.oldStage} → ${bodyData.newStage}`);
-                    } else {
-                        console.error(`❌ Failed to update ${serviceSlug}:`, data.message);
-                    }
-                }
-            }
-        } catch (error) {
-            console.error("❌ Error saving stage services:", error);
-        }
-    };
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditStage, setIsEditStage] = useState(false);
 
 
 
 
+    const getCurrentStageServices = () => servicesStage[currentStage] || [];
 
-    const stageDescriptions = {
-        1: "Giai đoạn 1: Nhóm dịch vụ 1, 2",
-        2: "Giai đoạn 2: Bao gồm tất cả mục từ giai đoạn 1 + Nhóm dịch vụ 3, 4, 5",
-        3: "Giai đoạn 3: Bao gồm tất cả mục từ giai đoạn 1, 2 + Nhóm dịch vụ 6, 7, 8",
-    }
+
 
     return (
-        <div className="space-y-6 ">
-            {/* Stage Slider */}
-            <Card theme="admin">
-                <CardHeader theme="admin">
-                    <CardTitle theme="admin">Chọn Giai Đoạn</CardTitle>
-                    <CardDescription theme="admin">Sử dụng thanh trượt để chuyển đổi giữa các giai đoạn</CardDescription>
+        <div className="space-y-6">
+            <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
+                <CardHeader>
+                    <CardTitle className="text-gray-900 admin-dark:text-white">
+                        <div className="flex items-center justify-between w-full">
+                            <span className="">Chọn Giai Đoạn</span>
+                            <Button theme="admin"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setIsEditStage(!isEditStage)}
+                                className="font-medium text-gray-700 admin-dark:text-gray-300 admin-dark:hover:text-white"
+                            >
+                                {isEditStage ? (
+                                    <span className="flex items-center gap-2 text-red-600">Hủy thay đổi <LogOut className="w-4 h-4" /></span>
+                                ) : (
+                                    <span className="flex items-center gap-2"><PencilLine className="w-4 h-4" /> Điều chỉnh giai đoạn </span>
+                                )}
+                            </Button>
+                        </div>
+                    </CardTitle>
+                    <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+                        Sử dụng thanh trượt để chuyển đổi giữa các giai đoạn
+                    </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4" theme="admin">
+                <CardContent className="space-y-4">
                     <div className="px-4">
                         <Slider
-                            theme="admin"
                             value={[currentStage]}
                             onValueChange={(value) => setCurrentStage(value[0])}
-                            max={3}
+                            max={stageMaster.length}
                             min={1}
                             step={1}
                             className="w-full"
                         />
-                        <div className="flex justify-between text-sm admin-dark:text-muted-foreground mt-2">
-                            <span>Giai đoạn 1</span>
-                            <span>Giai đoạn 2</span>
-                            <span>Giai đoạn 3</span>
+
+                        <div className="flex justify-between text-sm text-gray-600 admin-dark:text-gray-300 mt-2">
+                            {stageMaster.map((st) => (
+                                <span key={st.id}>{st.title_vi}</span>
+                            ))}
                         </div>
                     </div>
-                    <div className="text-center">
-                        <Badge variant="outline" className="text-lg px-4 py-2">
-                            {stageDescriptions[currentStage]}
-                        </Badge>
+                    <div className="text-center pt-2">
+                        {stageMaster[currentStage - 1] && (
+                            <div className="inline-flex flex-col justify-center items-center gap-2 rounded-lg bg-gray-100 admin-dark:bg-gray-800 px-4 py-2 border border-gray-200 admin-dark:border-gray-700">
+                                <span className="text-xl font-bold text-blue-600 admin-dark:text-sky-400">
+                                    {stageMaster[currentStage - 1].title_vi}
+                                </span>
+                                <span className="text-base text-gray-500 admin-dark:text-gray-400">
+                                    {stageMaster[currentStage - 1].title_en}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </CardContent>
             </Card>
 
+            {isEditStage && <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
+                <CardHeader>
+                    <CardTitle className="text-gray-900 admin-dark:text-white">Quản lý giai đoạn</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex gap-2 items-end">
+                        <Input placeholder="Vị trí giai đoạn" value={newStageCode} onChange={(e) => setNewStageCode(e.target.value)} />
+                        <Input placeholder="Tiếng Việt" value={newStageVi} onChange={(e) => setNewStageVi(e.target.value)} />
+                        <Input placeholder="English" value={newStageEn} onChange={(e) => setNewStageEn(e.target.value)} />
+                        <Button theme="admin" onClick={handleAddStage}><Plus className="w-4 h-4 mr-1" /> Thêm</Button>
+                    </div>
+
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={stageMaster.map(s => s.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <div className="space-y-2">
+                                {stageMaster.map((st) => (
+                                    <SortableStageItem
+                                        key={st.id}
+                                        stage={st}
+                                        isEditing={editingStage === st.id}
+                                        onEdit={setEditingStage}
+                                        onDelete={handleDeleteStage}
+                                        onUpdate={handleUpdateStage}
+                                        onCancelEdit={() => setEditingStage(null)}
+                                    />
+                                ))}
+                            </div>
+                        </SortableContext>
+                    </DndContext>
+
+                    {isOrderChanged && (
+                        <div className="flex justify-end gap-2 pt-4">
+                            <Button theme="admin" variant="ghost" onClick={handleCancelOrder}>Hủy sắp xếp</Button>
+                            <Button theme="admin" onClick={handleSaveOrder}>
+                                <Save className="w-4 h-4 mr-2" /> Lưu thứ tự
+                            </Button>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>}
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Services Selection */}
-                <Card theme="admin" className={cn("admin-dark:bg-card admin-dark:text-card-foreground admin-dark:border-border/60")}>
-                    <div className="flex items-center justify-between">
-                        <CardHeader theme="admin" className="w-3/4">
-                            <CardTitle theme="admin">Dịch Vụ</CardTitle>
-                            <CardDescription theme="admin">Chọn dịch vụ cho giai đoạn {currentStage}</CardDescription>
-                        </CardHeader>
-                        <div className="w-1/4 px-4">
-                            <button
-                                onClick={() => setIsServiceModalOpen(true)}
-                                className="border border-gray-500 px-3 py-2 rounded-2xl admin-dark:hover:bg-gray-800 admin-dark:hover:text-white duration-300 transition-all text-sm"
-                            >
-                                Chọn dịch vụ
-                            </button>
+                <Card
+                    className="bg-white admin-dark:bg-gray-900 text-gray-900 admin-dark:text-gray-200 border-gray-200 admin-dark:border-gray-700"
+                >
+                    <CardHeader className="w-full flex flex-row items-center justify-between">
+                        <div className="flex flex-col items-start">
+                            <CardTitle className="text-gray-900 admin-dark:text-white">Dịch Vụ</CardTitle>
+                            <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm font-normal mt-1">
+                                Chọn dịch vụ cho giai đoạn <span className="font-semibold">{stageMaster[currentStage - 1]?.title_vi}</span>
+                            </CardDescription>
                         </div>
-                    </div>
-                    <CardContent className="space-y-6" theme="admin">
-                        {/* Services Display */}
+                        <div className="flex-shrink-0">
+                            <Button theme="admin"
+                                onClick={() => setIsModalOpen(true)}
+                                variant="outline"
+                                size="default"
+                            >
+                                <Plus className="w-4 h-4 mr-2" /> Chọn dịch vụ
+                            </Button>
+                        </div>
+                    </CardHeader>
+
+                    <CardContent className="space-y-6">
                         <div className="space-y-3">
-                            <Label>Dịch vụ đã chọn cho giai đoạn {currentStage}</Label>
-                            <div className="space-y-2 p-3 admin-dark:bg-muted/50 rounded-lg min-h-[100px]">
+                            <Label className="text-base text-gray-800 admin-dark:text-gray-200">Dịch vụ đã chọn cho giai đoạn <span className="font-semibold text-blue-600 admin-dark:text-sky-400">{stageMaster[currentStage - 1]?.title_vi}</span></Label>
+                            <div className="space-y-2 p-3 bg-gray-50 admin-dark:bg-gray-800 rounded-lg min-h-[100px] border border-gray-200 admin-dark:border-gray-700">
                                 {getCurrentStageServices().length === 0 ? (
-                                    <p className="text-center text-muted-foreground py-4">
+                                    <p className="text-center text-gray-500 admin-dark:text-gray-500 py-4">
                                         Chưa có dịch vụ nào được chọn cho giai đoạn này
                                     </p>
                                 ) : (
-                                    getCurrentStageServices().map((service) => (
+                                    getCurrentStageServices().map((service, index) => (
                                         <div
-                                            key={service.id}
-                                            className="flex items-center p-2 border rounded admin-dark:bg-slate-900/50"
+                                            key={index}
+                                            className="flex items-center p-2 border border-gray-200 rounded bg-white admin-dark:bg-slate-900/50 admin-dark:border-gray-600"
                                         >
-                                            <div className="text-sm font-medium text-primary">
-                                                {service.translation.ten_dich_vu}
+                                            <div className="text-sm font-medium text-blue-700 admin-dark:text-sky-400">
+                                                {service.translation?.ten_dich_vu}
                                             </div>
                                         </div>
                                     ))
                                 )}
 
-                                {getCurrentStageServices().length > 0 && (
-                                    <div className="text-sm admin-dark:text-muted-foreground mt-2">
-                                        Đã chọn: {getCurrentStageServices().length} dịch vụ
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Items Management */}
-                <Card theme="admin" className={cn("duration-300 transition-all admin-dark:bg-card admin-dark:text-card-foreground admin-dark:border-border/60")}>
-                    <CardHeader theme="admin">
-                        <CardTitle theme="admin">Quản Lý Mục</CardTitle>
-                        <CardDescription theme="admin">Thêm và chỉnh sửa các mục cho giai đoạn {currentStage}</CardDescription>
+                <Card
+                    className="bg-white admin-dark:bg-gray-900 duration-300 transition-all text-gray-900 admin-dark:text-gray-200 border-gray-200 admin-dark:border-gray-700"
+                >
+                    <CardHeader>
+                        <CardTitle className="text-gray-900 admin-dark:text-white">
+                            Quản Lý Mục
+                        </CardTitle>
+                        <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+                            Thêm và chỉnh sửa các hạng mục cho các gói dịch vụ
+                        </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4" theme="admin">
+                    <CardContent className="space-y-4">
                         {/* Add new ServiceGroup Line */}
-                        <div className="space-y-3 p-4 border rounded-lg admin-dark:bg-muted/50 mt-4">
-                            <h4 className="font-medium">Thêm ServiceGroup Line</h4>
+                        <div className="space-y-3 p-4 border border-gray-200 rounded-lg bg-gray-50 admin-dark:bg-gray-800/50 admin-dark:border-gray-700">
+                            <h4 className="font-medium text-gray-900 admin-dark:text-white">Thêm hạng mục cho các gói dịch vụ</h4>
                             <div className="flex flex-col w-full space-y-3">
                                 <Input
-                                    placeholder="English value"
-                                    value={newLineEn}
-                                    onChange={(e) => setNewLineEn(e.target.value)}
-                                />
-                                <Input
-                                    placeholder="Tiếng Việt value"
+                                    placeholder="Tên hạng mục (Việt)"
                                     value={newLineVi}
                                     onChange={(e) => setNewLineVi(e.target.value)}
                                 />
+                                <Input
+                                    placeholder="Tên hạng mục (English)"
+                                    value={newLineEn}
+                                    onChange={(e) => setNewLineEn(e.target.value)}
+                                />
                             </div>
-                            <Button onClick={addServiceGroupItem} className="w-full">
-                                <Plus className="w-4 h-4 mr-2" /> Thêm Line
+                            <Button theme="admin" onClick={HandlePostSelectMiniServiceForServiceStage} className="w-full">
+                                <Plus className="w-4 h-4 mr-2" /> Thêm hạng mục mới
                             </Button>
                         </div>
 
                         {/* Items List */}
-                        <div className="space-y-2">
-                            <h4 className="font-medium">Danh Sách Hạng Mục</h4>
-                            {serviceGroupItems.length === 0 ? (
-                                <p className="admin-dark:text-muted-foreground text-center py-4">
+                        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                            <h4 className="font-medium text-gray-900 admin-dark:text-white">Danh Sách Hạng Mục</h4>
+                            {listServiceMini.length === 0 ? (
+                                <p className="text-gray-500 admin-dark:text-gray-500 text-center py-4">
                                     Chưa có mục nào. Hãy thêm mục đầu tiên!
                                 </p>
                             ) : (
-                                serviceGroupItems.map((item) => (
+                                listServiceMini.map((item) => (
                                     <div
                                         key={item.id}
                                         className={cn(
-                                            "flex items-center justify-between p-3 border rounded-lg",
-                                            "admin-dark:bg-primary/5 admin-dark:border-primary/20"
+                                            "flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-white",
+                                            "admin-dark:bg-gray-800 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700/50"
                                         )}
                                     >
                                         {editingItem === item.id ? (
                                             <EditServiceGroupForm
                                                 item={item}
-                                                onSave={updateServiceGroupItem}
                                                 onCancel={() => setEditingItem(null)}
+                                                onReload={FetchListMiniService}
                                             />
                                         ) : (
                                             <>
                                                 <div className="flex-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="font-medium">{item.nameVi}</span>
+                                                    <div className="flex items-center gap-2 text-blue-600 admin-dark:text-sky-400">
+                                                        <span className="font-medium">{item.title_vi}</span>
                                                     </div>
-                                                    <p className="text-sm admin-dark:text-muted-foreground">
-                                                        {item.nameEn}
+                                                    <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                                                        {item.title_en}
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-2">
-                                                    {/* Updated button với function để track line được chọn */}
-                                                    <Button
+                                                    <Button theme="admin"
                                                         size="sm"
-                                                        variant="outline"
-                                                        onClick={() => handleLineSelection(item)}
+                                                        variant="ghost"
+                                                        onClick={() => {
+                                                            setSelectedServiceMini(item);
+                                                            setIsGroupServiceModalOpen(true);
+                                                        }}
                                                     >
                                                         <Crosshair className="w-4 h-4" />
                                                     </Button>
-                                                    <Button size="sm" variant="outline" onClick={() => setEditingItem(item.id)}>
-                                                        <Edit2 className="w-4 h-4" />
-                                                    </Button>
-                                                    <Button
+
+                                                    <Button theme="admin"
                                                         size="sm"
                                                         variant="outline"
-                                                        onClick={() => deleteServiceGroupItem(item)}
+                                                        onClick={() => setEditingItem(item.id)}
+                                                    >
+                                                        <Edit2 className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button theme="admin"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => HandleDeteletMiniService(item.id)}
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </Button>
@@ -495,69 +542,25 @@ export default function ChitietdichvuSection({ DataFeaturesOfGroupService }) {
                 </Card>
             </div>
 
-            {/* Service Selection Modal */}
-            <ServiceSelectionModal
-                isOpen={isServiceModalOpen}
-                onClose={() => setIsServiceModalOpen(false)}
-                onServiceToggle={handleServiceToggle}
-                currentStage={currentStage}
-                serviceOfStage1={serviceOfStage1}
-                serviceOfStage2={serviceOfStage2}
-                serviceOfStage3={serviceOfStage3}
-            />
-
-            {/* Service Selection For Group Service Modal - Updated với selectedLineItem */}
-            <ServiceSelectionForGroupServiceModal
-                isOpen={isServiceSelectionForGroupServiceModal}
-                onClose={handleCloseServiceSelectionModal}
-                onServiceToggle={handleServiceToggle}
-                currentStage={currentStage}
-                serviceOfStage1={serviceOfStage1}
-                serviceOfStage2={serviceOfStage2}
-                serviceOfStage3={serviceOfStage3}
-                lineActive={selectedLineItem} // Truyền line đang được chọn
-                serviceSelectedByServiceGroup={DataFeaturesOfGroupService?.description}
-            />
-        </div>
-    )
-}
-
-function EditServiceGroupForm({ item, onSave, onCancel }) {
-    const [nameEn, setNameEn] = useState(item.nameEn);
-    const [nameVi, setNameVi] = useState(item.nameVi);
-
-    const handleSave = () => {
-        if (nameEn.trim() && nameVi.trim()) {
-            onSave({ ...item, nameEn: nameEn.trim(), nameVi: nameVi.trim() });
-        }
-    };
-
-    return (
-        <div className="flex-1 space-y-2">
-            <div className="grid grid-cols-1 gap-2">
-                <Input
-                    value={nameEn}
-                    onChange={(e) => setNameEn(e.target.value)}
-                    placeholder="English name"
-                    className="text-sm"
+            {isModalOpen &&
+                <ServiceSelectionModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    currentStage={currentStage}
+                    onSaved={fetchDataServiceStage}
                 />
-                <Input
-                    value={nameVi}
-                    onChange={(e) => setNameVi(e.target.value)}
-                    placeholder="Tên tiếng Việt"
-                    className="text-sm"
+            }
+
+            {isGroupServiceModalOpen && (
+                <ServiceSelectionForGroupServiceModal
+                    isOpen={isGroupServiceModalOpen}
+                    onClose={() => setIsGroupServiceModalOpen(false)}
+                    currentStage={currentStage}
+                    lineActive={selectedServiceMini}
+                    serviceGroupCurrentStage={servicesStage}
+                    stageMaster={stageMaster}
                 />
-            </div>
-            <div className="flex gap-2">
-                <Button size="sm" onClick={handleSave}>
-                    <Save className="w-3 h-3 mr-1" />
-                    Lưu
-                </Button>
-                <Button size="sm" variant="outline" onClick={onCancel}>
-                    <X className="w-3 h-3 mr-1" />
-                    Hủy
-                </Button>
-            </div>
+            )}
         </div>
     );
 }

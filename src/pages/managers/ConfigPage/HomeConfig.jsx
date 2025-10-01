@@ -56,8 +56,8 @@ export default function HomeConfigMultiLang() {
     const [toast, setToast] = useState(null);
 
     const [homeData, setHomeData] = useState({
-        vi: { banner: [], nenTang: [], cards: [], dichVu: [], chitietdichvu: [], loiIch: [], khauHieu: [], khachHang: [] },
-        en: { banner: [], nenTang: [], cards: [], dichVu: [], chitietdichvu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        vi: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
+        en: { banner: [], nenTang: [], cards: [], dichVu: [], loiIch: [], khauHieu: [], khachHang: [] },
     });
 
     const currentData = homeData[activeLang];
@@ -255,7 +255,7 @@ export default function HomeConfigMultiLang() {
                 </div>
 
                 {/* LANG TABS */}
-                {activeSection !== "vitri" &&
+                {activeSection !== "vitri" && activeSection !== "chitietdichvu" ?
                     (
                         <div className="relative flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
                             <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2 mt-2">
@@ -269,14 +269,10 @@ export default function HomeConfigMultiLang() {
                                 </span>
                                 <Switch checked={activeLang === "en"} onClick={() => setActiveLang((pre) => pre === "vi" ? "en" : "vi")} />
                             </div>
-                            <div className=" absolute top-[70%] left-0 bg-gray-800 w-full h-6"></div>
                         </div>
-                    )
+                    ) : null
                 }
-            </div>
 
-            {/* SECTION CONTENT */}
-            <div className="bg-white p-3 sm:p-4 admin-dark:bg-gray-800 admin-dark:text-gray-100 rounded-lg shadow-md transition">
                 <RenderHomeConfig
                     activeSection={activeSection}
                     currentData={currentData}

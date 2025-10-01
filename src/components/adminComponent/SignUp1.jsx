@@ -27,7 +27,7 @@ const SignUp = () => {
                 <form>
                     {/* Name */}
                     <div className="mb-4 relative">
-                        <input
+                        <input autoComplete="off"
                             type="text"
                             placeholder="Enter your full name"
                             className="w-full pr-10 pl-4 py-3 border border-gray-300 admin-dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#5d5fef] focus:border-transparent transition bg-transparent text-gray-800 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400"
@@ -38,7 +38,7 @@ const SignUp = () => {
 
                     {/* Email */}
                     <div className="mb-4 relative">
-                        <input
+                        <input autoComplete="off"
                             type="email"
                             placeholder="Enter your email"
                             className="w-full pr-10 pl-4 py-3 border border-gray-300 admin-dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#5d5fef] focus:border-transparent transition bg-transparent text-gray-800 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400"
@@ -49,7 +49,7 @@ const SignUp = () => {
 
                     {/* Password */}
                     <div className="mb-4 relative">
-                        <input
+                        <input autoComplete="off"
                             type={showPassword ? "text" : "password"}
                             placeholder="Create a password"
                             className="w-full px-4 py-3 pr-10 border border-gray-300 admin-dark:border-gray-600 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#5d5fef] focus:border-transparent transition bg-transparent text-gray-800 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400"

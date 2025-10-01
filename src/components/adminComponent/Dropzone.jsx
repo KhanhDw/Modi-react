@@ -41,7 +41,7 @@ const Dropzone = () => {
                     }
         `}
             >
-                <input {...getInputProps()} />
+                <input autoComplete="off" {...getInputProps()} />
 
                 <div className="flex flex-col items-center">
                     <div className="h-16 w-16 rounded-full bg-gray-200 admin-dark:bg-gray-600 flex items-center justify-center mb-4">

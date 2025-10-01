@@ -172,7 +172,7 @@ export default function ContactPage() {
           <div className="bg-white dark:bg-slate-800/50 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 sm:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input
+                <input autoComplete="off"
                   type="text"
                   name="ho_ten"
                   placeholder={t("contactPage.inputName") + `(*)`}
@@ -181,7 +181,7 @@ export default function ContactPage() {
                   required
                   className="w-full h-12 px-4 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition dark:focus:border-none focus:border-none"
                 />
-                <input
+                <input autoComplete="off"
                   type="tel"
                   name="so_dien_thoai"
                   placeholder={t("contactPage.inputPhoneNumber") + `(*)`}
@@ -199,7 +199,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <input
+                <input autoComplete="off"
                   type="email"
                   name="email"
                   placeholder="Email (*)"
@@ -216,7 +216,7 @@ export default function ContactPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 items-center">
-                <input
+                <input autoComplete="off"
                   type="text"
                   name="securityCode"
                   placeholder={t("contactPage.inputPin") + `(*)`}

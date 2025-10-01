@@ -130,12 +130,11 @@ function AdminLoginPage() {
                                     Mật khẩu
                                 </label>
                                 <div className="flex items-center bg-gray-100 admin-dark:bg-gray-700 px-4 py-3 rounded-full">
-                                    <input
+                                    <input autoComplete="off"
                                         id="password"
                                         type={isShowPassword ? "text" : "password"}
                                         name="password"
                                         placeholder="Nhập mật khẩu (111111) (6 số 1)"
-                                        autoComplete="off"
                                         value={form.password}
                                         onChange={handleChange}
                                         className="bg-transparent flex-1 outline-none text-sm text-gray-700 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400"

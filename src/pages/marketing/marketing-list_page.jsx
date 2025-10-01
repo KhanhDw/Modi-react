@@ -109,7 +109,7 @@ export default function MarketingPage() {
 
                         {/* Ô tìm kiếm ngay dưới title */}
                         <div className="relative flex items-center w-full md:w-96 md:self-end lg:self-end">
-                            <input
+                            <input autoComplete="off"
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}

@@ -1,9 +1,9 @@
 import NotificationToast from "@/components/feature/notification-toast.jsx";
-import PricingPageV1 from "@/components/home/pricingPageV1.jsx";
-import PricingPageV2 from "@/components/home/pricingPageV2.jsx";
+import PricingPage from "@/components/home/PricingSlider.jsx";
 import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
 import ChitietdichvuSection from "@/pages/managers/ConfigPage/renderSections/chitietdichvuSection.jsx";
 import { motion } from "framer-motion";
+import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { InputField, SafeImage, TextareaField } from "./componentHomeConfig";
@@ -151,51 +151,7 @@ export default function RenderHomeConfig({
 
     // ========== chi tiết dịch vụ ===================
 
-    const [uiActive, setUiActive] = useState("V2") // V1 or V2
-    const [showUI, setShowUI] = useState(false)
-    const [dataServiceV2, setDataServiceV2] = useState([])
-
-    useEffect(() => {
-        // console.log("9000:", currentData.chitietdichvu);
-        setUiActive(currentData.chitietdichvu[0]?.title?.en);
-    }, [currentData.chitietdichvu])
-
-
-    async function transformPricingData(data, lang = "en") {
-        if (!data) return;
-
-        const titles = data.title?.[lang]?.title; // object stage
-        const serviceGroup = data.title?.[lang]?.serviceGroup;
-        const descriptions = data.description?.en; // mặc định là en
-
-        // 1. Tạo features list
-        const features = Object.entries(serviceGroup).map(([key, label]) => ({
-            key,
-            label
-        }));
-
-        // 2. Tạo packages list (chuyển object stage -> array)
-        const packages = Object.entries(titles).map(([stage, arr]) => {
-            const title = arr[0]; // mỗi stage chỉ có 1 phần tử trong mảng
-            return {
-                stage,
-                title,
-                availability: descriptions?.[title] || {}
-            };
-        });
-
-        return { features, packages };
-    }
-
-
-    useEffect(() => {
-        async function loadData() {
-            if (!currentData?.chitietdichvu?.[1]) return;
-            const { stage, features, packages } = await transformPricingData(currentData.chitietdichvu[1], activeLang);
-        }
-        loadData();
-    }, [currentData.chitietdichvu])
-
+    const [isViewTable, setIsViewTable] = useState(false);
 
 
     // ========== kết thúc chi tiết dịch vụ ===================
@@ -295,8 +251,7 @@ export default function RenderHomeConfig({
             case "banner":
                 return (
                     <div className="space-y-6">
-                        <div>
-                            <h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin và ảnh banner</h1>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin và biểu ngữ</h1>
                         </div>
                         {(currentData.banner || []).map((b, i) => (
                             <div
@@ -510,85 +465,26 @@ export default function RenderHomeConfig({
             case "chitietdichvu":
                 return (
                     <div className="space-y-6">
-                        {/* header */}
-                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1></div>
-                        <div className="flex items-center justify-between">
-                            <div hidden={true}>
-                                <button
-                                    onClick={() => setShowUI((pre) => !pre)}
-                                    className="hover:bg-indigo-800 admin-dark:hover:bg-indigo-600 hover:text-gray-50 admin-dark:text-gray-200 text-gray-900 duration-400 transition-all border border-gray-600 px-2 py-1 rounded-md  ">
-                                    <span className="font-semibold ">
-                                        {showUI ? "Ẩn giao diện" : "Xem giao diện"}
-                                    </span>
-                                </button>
-                            </div>
-                            <div hidden={true} className="flex items-center gap-2">
-                                <span>Giao diện:</span>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setUiActive("V1")}
-                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all
-                                                 ${uiActive === "V1"
-                                                ? "bg-green-700 text-white"
-                                                : "border-gray-500 hover:bg-gray-100/20"}`}
-                                    >
-                                        <p className="font-bold">1</p>
-                                    </button>
+                        {/* header className="flex items-center justify-between border-b-2 pb-2" */}
 
-                                    <button
-                                        onClick={() => setUiActive("V2")}
-                                        className={`border-2 px-2 py-1 rounded-md duration-300 transition-all
-                                                 ${uiActive === "V2"
-                                                ? "border-blue-500 bg-blue-500 text-white"
-                                                : "border-gray-500 hover:bg-gray-100/20"}`}
-                                    >
-                                        <p className="font-bold">2</p>
-                                    </button>
-                                </div>
+                        <div>
+                            <h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
+                            <div>
+                                <button onClick={() => setIsViewTable((pre) => !pre)} className="flex items-center gap-2 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300">
+
+                                    {!isViewTable && <div className="flex items-center gap-2"><Eye className="w-5 h-5" /><span>Xem thử giao diện</span></div>}
+                                    {isViewTable && <span>Quay lại</span>}
+                                </button>
                             </div>
                         </div>
                         {/* body */}
                         <div className="">
-                            {/* hiện tại do có 2 tiền tố nên dùng chung sẽ bị lỗi theme phía admin */}
-                            {/* sau khi hoàn thành cần thêm props để chọn theme phía admin hay client */}
-                            {showUI &&
-                                (
-                                    <div className="rounded-2xl overflow-hidden">
-                                        {uiActive === "V1" && <PricingPageV1 />}
-                                        {uiActive === "V2" && <PricingPageV2 />}
-                                    </div>
-                                )
-                            }
-
-                            {/* {!showUI && ( */}
-                            <div>
-                                <ChitietdichvuSection DataFeaturesOfGroupService={currentData.chitietdichvu[1]} />
-                            </div>
-                            {/* )} */}
-
-                        </div>
-
-                        {/* footer */}
-                        <div className="flex flex-col w-full sm:w-90 sm:mx-auto md:w-full md:flex-row items-center justify-center gap-2 md:gap-8 px-4">
-                            <button
-                                className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50 w-full md:w-100 cursor-pointer"
-                            >
-                                <span
-                                    className="hover:font-bold w-full relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-purple-800"
-                                >
-                                    Lưu lựa chọn giao diện
-                                </span>
-                            </button>
-                            <button
-                                className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 hover:text-white dark:text-white focus:ring-0 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 active:ring-0 active:ring-opacity-50 w-full md:w-100 cursor-pointer"
-                            >
-                                <span
-                                    className="hover:font-bold relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0 group-hover:bg-pink-700 w-full"
-                                >
-                                    Lưu thông tin vừa cập nhật
-                                </span>
-                            </button>
-
+                            {!isViewTable && <div>
+                                <ChitietdichvuSection />
+                            </div>}
+                            {isViewTable && <div>
+                                <PricingPage />
+                            </div>}
                         </div>
                     </div>
                 );

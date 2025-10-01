@@ -180,7 +180,7 @@ const TextEditor = forwardRef(
                 {fields.map((field) =>
                     field.name === "image_url" ? (
                         <div key={field.name} className="space-y-2 w-full">
-                            <input
+                            <input autoComplete="off"
                                 type="file"
                                 accept="image/*"
                                 onChange={(e) =>
@@ -243,8 +243,8 @@ function ListEditor({ section, data, onChange, lang }) {
         <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-3 sm:space-y-4 w-full">
             <h3 className="font-bold text-base sm:text-lg">{section}</h3>
             {data.map((item, index) => (
-                <div key={index} className="bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3 w-full">
-                    <input
+                <div key={index} className="p-2 sm:p-3 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3 w-full">
+                    <input autoComplete="off"
                         type="text"
                         placeholder="Tiêu đề..."
                         value={item.title?.[lang] || ""}
