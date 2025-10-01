@@ -1,5 +1,5 @@
-import { DialogOverlay, Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 
 
@@ -26,6 +26,7 @@ export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDe
                             onConfirmDelete(type, target);
                             setOpen(false);
                         }}
+                        className="cursor-pointer"
                     >
                         Xóa
                     </Button>
@@ -33,7 +34,7 @@ export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDe
                         variant="outline"
                         onClick={() => setOpen(false)}
                         className="border-gray-300 text-gray-200 hover:bg-gray-600
-                       admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800"
+                       admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800 cursor-pointer"
                     >
                         Hủy
                     </Button>

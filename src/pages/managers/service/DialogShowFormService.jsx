@@ -1,8 +1,8 @@
-import { useOutletContext } from "react-router-dom";
-import ServiceForm from "@/components/admin/services/service-form";
 import BookingForm from "@/components/admin/services/booking/booking-form";
 import CustomerForm from "@/components/admin/services/customers/customer-form";
+import ServiceForm from "@/components/admin/services/service-form";
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
+import { useOutletContext } from "react-router-dom";
 
 export default function DialogShowForm_Service() {
   const { showForm, typeForm, editingBooking, editingCustomer, handleClose } =
@@ -19,7 +19,7 @@ export default function DialogShowForm_Service() {
       <DialogOverlay className="fixed inset-0 bg-black/50 z-50" />
       <DialogContent showCloseButton={false}
         className={`${typeForm === "service" ? "min-w-[70vw]" : ""
-          } min-h-[60vh] bg-white p-0 m-0 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
+          } min-h-[60vh] p-0 m-0 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
       >
         {typeForm === "service" ? (
           <ServiceForm />

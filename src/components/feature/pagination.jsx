@@ -2,7 +2,7 @@
 
 // cách import file:  import PageList from "@/components/feature/pagination.jsx";
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function PageList({ data, pageSize = 6, onPageChange, onPageNumberChange }) {
     const [page, setPage] = useState(1);
@@ -81,7 +81,7 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
     return (
         <div className="w-full p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             {/* Thông tin hiển thị */}
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
                 Hiển thị{" "}
                 <span className="font-medium">{startIndex + 1}</span> –{" "}
                 <span className="font-medium">{endIndex}</span> trong{" "}
@@ -94,10 +94,10 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
                     onClick={() => setPage((p) => Math.max(p - 1, 1))}
                     disabled={page === 1}
                     className="px-3 py-1 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed
-                   text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600
-                   hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                   text-gray-700 admin-dark:text-gray-200 border-gray-300 admin-dark:border-gray-600
+                   hover:bg-gray-100 admin-dark:hover:bg-gray-700 transition cursor-pointer"
                 >
-                    ←
+                    <span className="text-gray-900 admin-dark:text-white">←</span>
                 </button>
 
                 {renderPageNumbers()}
@@ -106,10 +106,10 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
                     onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                     disabled={page === totalPages}
                     className="px-3 py-1 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed
-                   text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600
-                   hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                   text-gray-700 admin-dark:text-gray-200 border-gray-300 admin-dark:border-gray-600
+                   hover:bg-gray-100 admin-dark:hover:bg-gray-700 transition cursor-pointer"
                 >
-                    →
+                    <span className="text-gray-900 admin-dark:text-white">→</span>
                 </button>
             </div>
         </div>

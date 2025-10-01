@@ -1,8 +1,7 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import ServiceTable from "@/components/admin/services/ServiceTable";
-import { useOutletContext } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Outlet, useOutletContext } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
 
 export default function ServiceList() {
@@ -10,17 +9,17 @@ export default function ServiceList() {
 
   return (
     <div className="space-y-4 xs:space-y-6">
-      <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 xs:gap-3 sm:gap-4">
+      <div className="flex flex-col xs:flex-col sm:flex-row items-start xs:items-center justify-between gap-2 xs:gap-3 sm:gap-4">
         <div>
-          <h2 className="text-base xs:text-lg sm:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
+          <h2 className="text-base text-center md:text-[22px] sm:text-start xs:text-lg sm:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
             Quản lý dịch vụ
           </h2>
-          <p className="text-xs xs:text-sm text-muted-foreground mt-0.5 xs:mt-1">
+          <p className="text-xs text-center md:text-base sm:text-start xs:text-sm text-muted-foreground mt-0.5 xs:mt-1">
             Theo dõi và quản lý các dịch vụ
           </p>
         </div>
         <Button
-          className="bg-primary hover:bg-gray-500/90 text-xs xs:text-sm px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 w-full xs:w-auto"
+          className="admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 hover:bg-gray-300 text-xs xs:text-sm px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 w-full xs:w-auto cursor-pointer"
           onClick={() => {
             handleOpen("service");
           }}

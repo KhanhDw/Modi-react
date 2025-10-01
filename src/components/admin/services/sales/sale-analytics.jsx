@@ -3,19 +3,19 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { useOutletContext } from "react-router-dom";
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
 } from "recharts";
 
 
@@ -62,11 +62,11 @@ export default function SaleAnalytics() {
 
   return (
     <>
-      <Card className="bg-white admin-dark:bg-gray-800 rounded-xl p-2 shadow-md shadow-gray-300/50 admin-dark:shadow-gray-700/50 border border-[#e5e7eb] admin-dark:border-gray-700">
+      <Card className="bg-white admin-dark:bg-gray-800 rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-700/50 border border-[#e5e7eb] admin-dark:border-gray-700">
         <CardHeader>
           <CardTitle className="text-gray-900 admin-dark:text-white">Doanh thu</CardTitle>
           <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
-            Biểu đồ hiển thị doanh thu tổng hợp theo tháng từ tất cả dịch vụ,
+            Biểu đồ hiển thị doanh thu tổng hợp theo tháng từ tất cả dịch vụ
           </CardDescription>
         </CardHeader>
         <CardContent>

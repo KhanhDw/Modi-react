@@ -1,21 +1,20 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Settings, UserCircle, LogOut, SunMedium, Moon } from "lucide-react";
-import { CgWebsite } from "react-icons/cg";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   CustomDropdown,
   CustomDropdownItem,
-  CustomDropdownSeparator,
-  CustomDropdownLabel,
+  CustomDropdownSeparator
 } from "@/components/adminComponent/CustomDropdown";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import axios from "axios";
+import { LogOut, Moon, Settings, SunMedium } from "lucide-react";
+import { CgWebsite } from "react-icons/cg";
+import { NavLink, useNavigate } from "react-router-dom";
 
-const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url}) => {
+const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url }) => {
   const { isDark, toggleTheme } = useAdminTheme();
   const navigate = useNavigate();
 
@@ -45,7 +44,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
           <Button
             variant="ghost"
             size="icon"
-            className="text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150 cursor-pointer"
+            className="text-gray-600 hover:bg-gray-100 dark:text-gray-300 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-150 cursor-pointer"
             aria-label="Cài đặt"
           >
             <Settings color={isDark ? '#ffffff' : '#000000'} className="h-5 w-5" />
@@ -53,8 +52,6 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
         }
         align="end"
       >
-        
-        
 
         {/* Profile Link - chỉ hiển thị trên mobile */}
         <CustomDropdownItem asChild className="md:hidden">
@@ -70,19 +67,19 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
           </NavLink>
         </CustomDropdownItem>
         {/* Notification Link - chỉ hiển thị trên mobile */}
-          <CustomDropdownItem asChild className="md:hidden">
-            <div 
-               className="flex items-center justify-start w-full font-medium gap-2 hover:underline underline-offset-4 px-4 py-2 pl-1.5"
-              onClick={(e) => {
-                // tìm button trong NotificationBell và trigger click
-                const btn = e.currentTarget.querySelector("button");
-                if (btn) btn.click();
-              }}
-            >
-              <NotificationBell className="h-4 w-4 text-gray-500 dark:text-gray-400 "/>
-              <span className="font-medium -ml-3">Thông báo</span>
-            </div>
-          </CustomDropdownItem>
+        <CustomDropdownItem asChild className="md:hidden">
+          <div
+            className="flex items-center justify-start w-full font-medium gap-2 hover:underline underline-offset-4 px-4 py-2 pl-1.5"
+            onClick={(e) => {
+              // tìm button trong NotificationBell và trigger click
+              const btn = e.currentTarget.querySelector("button");
+              if (btn) btn.click();
+            }}
+          >
+            <NotificationBell className="h-4 w-4 text-gray-500 admin-dark:text-gray-400 " />
+            <span className="font-medium -ml-3">Thông báo</span>
+          </div>
+        </CustomDropdownItem>
 
         {/* Website Link - chỉ hiển thị trên mobile */}
         <CustomDropdownItem asChild className="md:hidden">
@@ -92,7 +89,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
             rel="noopener noreferrer"
             className="flex items-center font-medium gap-2 hover:underline underline-offset-4 px-4 py-2"
           >
-            <CgWebsite className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <CgWebsite className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
             Xem Website
           </NavLink>
         </CustomDropdownItem>
@@ -104,7 +101,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
               htmlFor="sticky-header"
               className="flex items-center gap-2 cursor-pointer text-sm"
             >
-              <Settings className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <Settings className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
               Giữ header cố định
             </Label>
             <Switch
@@ -121,9 +118,9 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
           <div className="flex items-center justify-between w-full px-4 py-2">
             <Label className="flex items-center gap-2 cursor-pointer text-sm">
               {isDark ? (
-                <Moon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                <Moon className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
               ) : (
-                <SunMedium className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                <SunMedium className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
               )}
               Giao diện {isDark ? "tối" : "sáng"}
             </Label>
@@ -140,7 +137,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
 
         {/* Logout */}
         <CustomDropdownItem
-          className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50 active:scale-[0.98] transition-all px-4 py-2"
+          className="text-red-600 admin-dark:text-red-400 hover:bg-red-50 admin-dark:hover:bg-red-900/50 active:scale-[0.98] transition-all px-4 py-2"
           onClick={handleLogout}
         >
           <LogOut className="h-4 w-4 mr-2" />

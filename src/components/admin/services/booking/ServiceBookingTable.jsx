@@ -1,4 +1,6 @@
-import { useState } from "react";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,8 +8,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -16,23 +30,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, MoreHorizontal, Filter, Edit, Trash2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Edit, Filter, MoreHorizontal, Search, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import Pagination from "@/components/admin/services/utils/Pagination.jsx"
 
 
 
@@ -74,23 +74,23 @@ export default function ServiceBookingTable() {
 
   return (
     <Card
-      className="bg-gray-100 rounded-xl border border-gray-300 shadow-sm 
+      className="bg-gray-100 rounded-xl border border-gray-300 shadow-sm
         admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
     >
-      <CardHeader className="px-4 sm:px-6">
-        <div className="flex flex-col md:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+      <CardHeader className="px-2 sm:px-3">
+        <div className="flex flex-col sm:flex-col md:flex-col lg:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div className="">
-            <CardTitle className="text-lg sm:text-lg  md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
+            <CardTitle className="text-lg sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
               Danh sách đơn đặt dịch vụ
             </CardTitle>
-            <CardDescription className="text-xs sm:text-center md:text-left sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
+            <CardDescription className="text-xs sm:text-center md:text-center lg:text-start sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
               Quản lý tất cả đơn đặt dịch vụ
             </CardDescription>
           </div>
-          <div className="flex flex-col md:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
             <div className="relative w-full sm:w-48 md:w-64">
               <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500
                   admin-dark:text-gray-400"
               />
               <Input
@@ -100,15 +100,14 @@ export default function ServiceBookingTable() {
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm kiếm đơn đặt..."
-                className="pl-10 text-xs sm:text-sm bg-white border-gray-300 
-                  admin-dark:bg-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 
+                className="pl-10 text-xs sm:text-sm bg-white border-gray-300
+                  admin-dark:bg-gray-700 admin-dark:border-gray-600 text-gray-800 admin-dark:text-gray-200
                   admin-dark:placeholder-gray-400 rounded-md shadow-sm w-full"
               />
             </div>
             <Select value={statusFilter} onValueChange={changeStatus}>
               <SelectTrigger
-                className="w-full sm:w-40 text-xs sm:text-sm bg-white text-black border border-gray-300 rounded 
-                  admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                className="w-full sm:w-40 text-xs sm:text-sm bg-white text-black border border-gray-300 rounded cursor-pointer admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
               >
                 <Filter
                   className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2 text-black admin-dark:text-gray-200"
@@ -116,28 +115,28 @@ export default function ServiceBookingTable() {
                 <SelectValue placeholder="Trạng thái" />
               </SelectTrigger>
               <SelectContent
-                className="bg-white text-black border-gray-300 
+                className="bg-white text-black border-gray-300
                   admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 text-xs sm:text-sm"
               >
-                <SelectItem value="all">Tất cả</SelectItem>
-                <SelectItem value="completed">Hoàn thành</SelectItem>
-                <SelectItem value="pending">Chưa hoàn thành</SelectItem>
-                <SelectItem value="destroy">Hủy</SelectItem>
+                <SelectItem className={'cursor-pointer'} value="all">Tất cả</SelectItem>
+                <SelectItem className={'cursor-pointer'} value="completed">Hoàn thành</SelectItem>
+                <SelectItem className={'cursor-pointer'} value="pending">Chưa hoàn thành</SelectItem>
+                <SelectItem className={'cursor-pointer'} value="destroy">Hủy</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-4 sm:px-6 text-black admin-dark:text-gray-200">
+      <CardContent className="px-2 sm:px-3 text-black admin-dark:text-gray-200">
         <div
-          className="rounded-md border border-gray-300 bg-white shadow-sm 
+          className="rounded-md border border-gray-300 bg-white shadow-sm
     admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50
     w-full overflow-x-auto"
         >
           <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow
-                className="bg-gray-50 admin-dark:bg-gray-900 
+                className="bg-gray-50 admin-dark:bg-gray-900
                   hover:bg-gray-100 admin-dark:hover:bg-gray-800"
               >
                 <TableHead className="text-black admin-dark:text-gray-200">
@@ -214,20 +213,20 @@ export default function ServiceBookingTable() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-gray-600 hover:bg-gray-200 
-                admin-dark:text-gray-300 admin-dark:hover:bg-gray-700"
+                          className="text-gray-600 hover:bg-gray-200
+                admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 cursor-pointer"
                         >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="bg-white text-black border-gray-300 
+                        className="bg-white text-black border-gray-300
               admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
                       >
                         <DropdownMenuItem
                           onClick={() => openEditBookingForm(item)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
                         >
                           <Edit className="mr-2 h-4 w-4" />
                           Chỉnh sửa
@@ -235,7 +234,7 @@ export default function ServiceBookingTable() {
                         <DropdownMenuItem
                           key={item.id}
                           onClick={() => handleDeleteBooking(item.id)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600"
+                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Xóa

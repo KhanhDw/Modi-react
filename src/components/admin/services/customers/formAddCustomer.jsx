@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import { useState } from "react";
 
 
 function FormAddCustomer({ onSuccess }) {
@@ -79,8 +79,8 @@ function FormAddCustomer({ onSuccess }) {
     };
 
     return (
-        <div className="flex justify-center items-center bg-gray-100 admin-dark:bg-gray-900">
-            <div className="bg-white admin-dark:bg-gray-800 w-full max-w-3xl rounded-lg shadow-xl p-8">
+        <div className="flex justify-center items-center">
+            <div className=" admin-dark:bg-gray-800 w-full max-w-3xl rounded-lg p-5">
                 <h2 className="text-3xl font-extrabold text-center mb-6 text-gray-800 admin-dark:text-gray-100">
                     Thêm Khách Hàng Mới
                 </h2>
@@ -102,7 +102,7 @@ function FormAddCustomer({ onSuccess }) {
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none"
                             />
                         </div>
 
@@ -120,7 +120,7 @@ function FormAddCustomer({ onSuccess }) {
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none"
                             />
                         </div>
 
@@ -138,7 +138,7 @@ function FormAddCustomer({ onSuccess }) {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none"
                             />
                         </div>
 
@@ -156,7 +156,7 @@ function FormAddCustomer({ onSuccess }) {
                                 value={formData.address}
                                 onChange={handleChange}
                                 rows="2"
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none"
                             ></textarea>
                         </div>
 
@@ -173,7 +173,7 @@ function FormAddCustomer({ onSuccess }) {
                                 name="type"
                                 value={formData.type}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none cursor-pointer"
                             >
                                 <option value="new">Mới</option>
                                 <option value="regular">Thường xuyên</option>
@@ -195,7 +195,7 @@ function FormAddCustomer({ onSuccess }) {
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none cursor-pointer"
                             >
                                 <option value="active">Hoạt động</option>
                                 <option value="inactive">Không hoạt động</option>
@@ -216,7 +216,7 @@ function FormAddCustomer({ onSuccess }) {
                                 name="total_spent"
                                 value={formData.total_spent}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none"
                             />
                         </div>
 
@@ -234,7 +234,7 @@ function FormAddCustomer({ onSuccess }) {
                                 name="booking_count"
                                 value={formData.booking_count}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                                className="mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors focus:border-none"
                             />
                         </div>
                     </div>
@@ -251,7 +251,7 @@ function FormAddCustomer({ onSuccess }) {
                         <button
                             type="submit"
                             disabled={loading} // Vô hiệu hóa nút khi đang gửi dữ liệu
-                            className="px-6 py-2 text-sm font-medium rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 admin-dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-6 py-2 text-sm font-medium rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 admin-dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         >
                             {loading ? "Đang lưu..." : "Lưu Khách Hàng"}
                         </button>

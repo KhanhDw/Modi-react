@@ -207,7 +207,7 @@ export default function RenderHomeConfig({
                                     <button
                                         onClick={() => setVitri(defaultVitri)} // khôi phục lại vitri gốc từ DB
                                         disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        className={`font-bold py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
                                                 ? "bg-gray-400 cursor-not-allowed"
                                                 : "bg-blue-500 hover:bg-blue-700 text-white"
@@ -220,7 +220,7 @@ export default function RenderHomeConfig({
                                     <button
                                         onClick={handleResetDefault}
                                         disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        className={`font-bold cursor-pointer py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${isVitriSameAsDefault(defaultVitri)
                                                 ? "bg-gray-400 cursor-not-allowed"
                                                 : "bg-blue-500 hover:bg-blue-700 text-white"
@@ -232,7 +232,7 @@ export default function RenderHomeConfig({
                                     <button
                                         onClick={() => savePositions(vitri)}
                                         disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 
+                                        className={`font-bold py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
                                                 ? "bg-gray-400 cursor-not-allowed"
                                                 : "bg-green-500 hover:bg-green-700 text-white"

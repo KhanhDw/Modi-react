@@ -3,9 +3,9 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 
 export default function OrderNeedToDone({ bookings }) {
@@ -75,18 +75,18 @@ export default function OrderNeedToDone({ bookings }) {
   });
 
   return (
-    <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+    <Card className="bg-white text-gray-900 border border-gray-200 admin-dark:border-gray-700 admin-dark:bg-gray-900 admin-dark:text-gray-100">
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-gray-800 admin-dark:text-gray-100">
+        <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-800 admin-dark:text-gray-100">
           Đơn hàng cần hoàn thành
         </CardTitle>
-        <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+        <CardDescription>
           Danh sách đơn hàng cần hoàn thành trong hệ thống
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table className="w-full text-sm text-left border border-gray-200 admin-dark:border-gray-700">
             <thead>
               <tr className="border-b border-gray-200 admin-dark:border-gray-700">
                 <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300">

@@ -1,7 +1,7 @@
+import PageList from "@/components/feature/pagination.jsx";
+import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/admin/common/Table";
 import ContactDetail from "../../components/admin/contact/ContactDetail";
-import { useState, useEffect, useCallback } from "react";
-import PageList from "@/components/feature/pagination.jsx";
 
 export default function ContactPage() {
   const [contacts, setContacts] = useState([]);
@@ -240,7 +240,7 @@ export default function ContactPage() {
   return (
     <div className="admin-dark:bg-gray-900 bg-white min-h-screen">
       <div className="mx-auto max-w-[100%] px-2 sm:px-4 md:px-6">
-        <div className="flex sm:flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-4">
+        <div className="flex xs:flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-4">
           <h1 className="text-lg sm:text-xl font-bold admin-dark:text-gray-100 text-gray-900">
             Quản lý liên hệ
           </h1>
@@ -250,12 +250,12 @@ export default function ContactPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm theo tên, số điện thoại, email..."
-              className="px-3 sm:px-1 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-60"
+              className="px-3 sm:px-1 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-60 focus:border-none"
             />
             <select
               value={dateFilter}
               onChange={(e) => handleFilterChange(e.target.value)}
-              className="px-3 sm:px-3 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-40"
+              className="px-3 sm:px-3 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-40 focus:border-none cursor-pointer"
             >
               <option value="all">Tất cả thời gian</option>
               <option value="today">Hôm nay</option>

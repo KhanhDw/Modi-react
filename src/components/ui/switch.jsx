@@ -1,8 +1,7 @@
 
 
-import * as React from "react"
-import * as SwitchPrimitive from "@radix-ui/react-switch"
 import { cn } from "@/lib/utils"
+import * as SwitchPrimitive from "@radix-ui/react-switch"
 
 function Switch({ className, ...props }) {
   return (
@@ -10,7 +9,7 @@ function Switch({ className, ...props }) {
       data-slot="switch"
       className={cn(
         // Base style
-        "peer inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "peer inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
 
         // Unchecked state (light & admin-dark)
         "data-[state=unchecked]:bg-gray-300 admin-dark:data-[state=unchecked]:bg-gray-600",

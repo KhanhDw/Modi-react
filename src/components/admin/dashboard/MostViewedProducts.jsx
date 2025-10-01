@@ -1,10 +1,10 @@
 // =============================
 // Sản phẩm được xem nhiều nhất
 // =============================
-import { useEffect, useState } from "react"
 import {
     Card, CardContent, CardDescription, CardHeader, CardTitle
 } from "@/components/ui/card"
+import { useEffect, useState } from "react"
 
 import { Link } from "react-router-dom"
 
@@ -30,9 +30,9 @@ export default function MostViewedProducts() {
 
     if (!topSamples || topSamples.length === 0) {
         return (
-            <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+            <Card className="bg-white text-gray-900 border border-gray-200 admin-dark:border-gray-700 admin-dark:bg-gray-900 admin-dark:text-gray-100">
                 <CardHeader>
-                    <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
+                    <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
                     <CardDescription>Danh sách Top sản phẩm theo lượt xem</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
@@ -45,9 +45,9 @@ export default function MostViewedProducts() {
     }
 
     return (
-        <Card className="bg-white text-gray-900 admin-dark:bg-gray-900 admin-dark:text-gray-100">
+        <Card className="bg-white text-gray-900 border border-gray-200 admin-dark:border-gray-700 admin-dark:bg-gray-900 admin-dark:text-gray-100">
             <CardHeader>
-                <CardTitle className="text-lg font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
+                <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
                 <CardDescription>Danh sách Top sản phẩm theo lượt xem</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import NotificationToast from "@/components/feature/notification-toast.jsx";
 import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
+import NotificationToast from "@/components/feature/notification-toast.jsx";
+import { useEffect, useState } from "react";
 
 // Hàm tiện ích: định dạng tiền
 const formatCurrency = (value) => {
@@ -55,7 +55,7 @@ function ConfigCustomerVIP({ setOpenConfigCustomerVIP }) {
                     </h2>
                     <button
                         onClick={() => setOpenConfigCustomerVIP(false)}
-                        className="text-gray-500 hover:text-gray-800 transition p-1 rounded-full hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
+                        className="text-gray-500 cursor-pointer hover:text-gray-800 transition p-1 rounded-full hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
                     >
                         ✖
                     </button>
@@ -93,14 +93,14 @@ function ConfigCustomerVIP({ setOpenConfigCustomerVIP }) {
                 <div className="p-5 border-t border-gray-200 flex justify-end space-x-3 bg-gray-50 rounded-b-xl dark:border-gray-700 dark:bg-gray-800">
                     <button
                         onClick={() => setOpenConfigCustomerVIP(false)}
-                        className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
+                        className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 cursor-pointer rounded-lg hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
                         disabled={isSaving}
                     >
                         Hủy Bỏ
                     </button>
                     <button
                         onClick={handleSave}
-                        className={`px-5 py-2 text-sm font-medium text-white rounded-lg shadow-md ${isSaving ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                        className={`px-5 py-2 cursor-pointer text-sm font-medium text-white rounded-lg shadow-md ${isSaving ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
                             }`}
                         disabled={isSaving}
                     >

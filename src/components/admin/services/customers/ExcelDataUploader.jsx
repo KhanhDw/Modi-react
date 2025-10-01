@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import * as XLSX from "xlsx";
 import useLenisLocal from '@/hook/useLenisLocal';
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import * as XLSX from "xlsx";
 
 
 function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustomer }) {
@@ -160,16 +160,16 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
 
 
     return (
-        <div className="container mx-auto p-4 md:p-8 bg-gray-50 admin-dark:bg-black min-h-screen">
-            <div className="bg-white admin-dark:bg-gray-800 p-6 rounded-2xl shadow-xl max-w-7xl mx-auto">
+        <div className="container mx-auto p-2 md:p-2 max-h-screen">
+            <div className="admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 p-6 sm:p-3 md:p-4 rounded-2xl shadow-xl max-w-7xl mx-auto">
                 {/* Header with Close Button */}
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800 admin-dark:text-gray-100">
+                <div className="flex xs:flex-col-reverse items-end sm:flex-row sm:items-center justify-between mb-6">
+                    <h2 className="text-base sm:text-base md:text-xl font-bold text-gray-800 admin-dark:text-gray-100">
                         Nhập dữ liệu khách hàng từ Excel
                     </h2>
                     <button
                         onClick={() => setOpenDialogImportCustomer(false)}
-                        className="p-2 text-gray-400 admin-dark:text-gray-500 hover:text-gray-600 admin-dark:hover:text-gray-300 hover:bg-gray-100 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                        className="p-2 text-gray-400 admin-dark:text-gray-500 hover:text-gray-600 admin-dark:hover:text-gray-300 hover:bg-gray-100 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 cursor-pointer"
                         title="Đóng"
                     >
                         <svg
@@ -190,7 +190,7 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
                 </div>
 
                 {/* Main Upload Section */}
-                <div className="flex flex-col lg:flex-row gap-6 items-start">
+                <div className="flex flex-col justify-center md:flex-row lg:flex-row gap-6 items-center">
                     {/* Upload Zone */}
                     <div className="flex-1">
                         <div className="border-2 border-dashed border-gray-300 admin-dark:border-gray-600 rounded-lg p-6 hover:border-blue-500 admin-dark:hover:border-blue-400 transition-colors duration-300">
@@ -232,19 +232,19 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-col gap-3 w-full lg:w-auto lg:min-w-[200px]">
+                    <div className="flex flex-col md:w-auto gap-3 w-full lg:w-auto lg:min-w-[200px]">
                         <button
                             onClick={handleDownloadTemplate}
-                            className="px-6 py-3 border border-blue-600 admin-dark:border-blue-400 text-blue-600 admin-dark:text-blue-400 font-medium rounded-lg hover:bg-blue-50 admin-dark:hover:bg-gray-700 transition-colors duration-300"
+                            className="px-6 py-3 border border-blue-600 admin-dark:border-blue-400 text-blue-600 admin-dark:text-blue-400 font-medium rounded-lg hover:bg-blue-50 admin-dark:hover:bg-gray-700 transition-colors duration-300 cursor-pointer"
                         >
-                            Tải File Excel Mẫu
+                            <span className='text-base sm:text-base'>Tải File Excel Mẫu</span>
                         </button>
                         <button
                             onClick={handleImportData}
                             disabled={!excelData}
-                            className="px-6 py-3 bg-blue-600 admin-dark:bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 admin-dark:hover:bg-blue-500 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+                            className="px-6 py-3 bg-blue-600 admin-dark:bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 admin-dark:hover:bg-blue-500 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600 cursor-pointer"
                         >
-                            Nhập dữ liệu vào hệ thống
+                            <span className='text-base sm:text-base'>Nhập dữ liệu vào hệ thống</span>
                         </button>
                     </div>
                 </div>
@@ -252,26 +252,26 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
                 {/* Preview Table */}
                 {excelData && excelData.length > 0 && (
                     <div className="mt-8 border border-gray-200 admin-dark:border-gray-600 rounded-lg shadow-sm overflow-hidden">
-                        <div className="p-4 flex items-center justify-between bg-gray-50 admin-dark:bg-gray-700 border-b border-gray-200 admin-dark:border-gray-600">
-                            <h3 className="text-lg font-semibold text-gray-800 admin-dark:text-gray-100">
+                        <div className="p-4 flex flex-col gap-4 md:flex-row items-center justify-between bg-gray-50 admin-dark:bg-gray-800 border-b border-gray-200 admin-dark:border-gray-600">
+                            <h3 className="text-sm sm:text-base md:text-[18px] font-semibold text-gray-800 admin-dark:text-gray-100">
                                 Xem trước dữ liệu ({excelData.length} dòng)
                             </h3>
                             <button
                                 onClick={handleClearData}
-                                className="px-4 py-2 text-sm bg-red-500 admin-dark:bg-red-600 text-white rounded-md hover:bg-red-600 admin-dark:hover:bg-red-700 transition-colors duration-200"
+                                className="px-4 py-2 text-sm bg-red-500 admin-dark:bg-red-600 text-white rounded-md hover:bg-red-600 admin-dark:hover:bg-red-700 transition-colors duration-200 cursor-pointer"
                             >
-                                Hủy xem / Xóa file
+                                <span className='text-sm sm:text-base'>Hủy xem / Xóa file</span>
                             </button>
                         </div>
 
-                        <div className="max-h-96 overflow-auto">
-                            <table className="min-w-full divide-y divide-gray-200 admin-dark:divide-gray-600">
+                        <div className="max-h-96 overflow-auto w-full overflow-x-auto">
+                            <table className="min-w-[600px] md:min-w-full lg:min-w-full divide-y divide-gray-200 admin-dark:divide-gray-600">
                                 <thead className="bg-gray-100 admin-dark:bg-gray-700 sticky top-0 z-10">
                                     <tr>
                                         {Object.keys(columnHeaders).map((header) => (
                                             <th
                                                 key={header}
-                                                className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-700 admin-dark:text-gray-300"
+                                                className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-700 admin-dark:text-gray-300"
                                             >
                                                 {columnHeaders[header]}
                                             </th>
@@ -284,18 +284,10 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
                                             key={rowIndex}
                                             className="hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors duration-150"
                                         >
-                                            <td className="px-6 py-4 text-sm text-gray-900 admin-dark:text-gray-100">
-                                                {row.name}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900 admin-dark:text-gray-100">
-                                                {row.phone}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900 admin-dark:text-gray-100">
-                                                {row.email}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900 admin-dark:text-gray-100">
-                                                {row.address}
-                                            </td>
+                                            <td className="px-3 py-3 text-sm text-gray-900 admin-dark:text-gray-100">{row.name}</td>
+                                            <td className="px-3 py-3 text-sm text-gray-900 admin-dark:text-gray-100">{row.phone}</td>
+                                            <td className="px-3 py-3 text-sm text-gray-900 admin-dark:text-gray-100">{row.email}</td>
+                                            <td className="px-3 py-3 text-sm text-gray-900 admin-dark:text-gray-100">{row.address}</td>
                                         </tr>
                                     ))}
                                 </tbody>

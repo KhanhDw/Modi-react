@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import NotificationToast from "@/components/feature/notification-toast.jsx";
-import FooterView from "@/pages/managers/ConfigPage/FooterView";
-import { Button } from "@/components/ui/button";
 import boCongThuongBanner from "@/assets/images/boCongThuong/bocongthuong.png";
-import useLenisLocal from '@/hook/useLenisLocal'
+import NotificationToast from "@/components/feature/notification-toast.jsx";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch.jsx";
+import useLenisLocal from '@/hook/useLenisLocal';
+import FooterView from "@/pages/managers/ConfigPage/FooterView";
+import { useEffect, useState } from "react";
 
 
 export default function FooterConfigMultiLang() {
@@ -285,8 +285,6 @@ export default function FooterConfigMultiLang() {
             <div className="space-y-6 sm:space-y-8 max-w-5xl w-full mx-auto px-2 sm:px-4">
                 <div className="flex w-full xs:flex-col md:flex-row md:justify-between items-center gap-3 sm:gap-4">
                     <div className=" flex items-center justify-center  gap-2 xs:gap-3 ">
-
-
                         <div className="border border-gray-500 flex flex-col z-2 rounded-lg p-3 xs:w-full xs:flex-row items-center justify-end gap-2">
                             {/* Hiển thị ở md+ */}
                             <span >
@@ -307,7 +305,7 @@ export default function FooterConfigMultiLang() {
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className={`px-2 xs:text-xs sm:px-3 py-1 xs:py-2 rounded-lg font-medium transition sm:flex-none text-center
+                                className={`px-2 xs:text-xs cursor-pointer sm:px-3 py-1 xs:py-2 rounded-lg font-medium transition sm:flex-none text-center
                                     ${activeTab === tab.key
                                         ? "bg-indigo-500 text-white"
                                         : "bg-gray-200 admin-dark:bg-gray-700 admin-dark:text-gray-200 hover:bg-gray-300 admin-dark:hover:bg-gray-600"
@@ -321,7 +319,7 @@ export default function FooterConfigMultiLang() {
                     <Button
                         type="button"
                         onClick={handleSave}
-                        className="w-full sm:w-auto px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+                        className="w-full sm:w-auto px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer"
                     >
                         Lưu Cập Nhật
                     </Button>

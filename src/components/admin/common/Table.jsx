@@ -94,8 +94,8 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
                           {column.render
                             ? column.render(value, item)
                             : isDate(value)
-                            ? formatDate(value)
-                            : value || '-'}
+                              ? formatDate(value)
+                              : value || '-'}
                         </td>
                       );
                     })}
@@ -104,7 +104,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
                       {onView && (
                         <button
                           onClick={() => onView(item)}
-                          className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-blue-600 admin-dark:text-blue-400 hover:text-blue-700 admin-dark:hover:text-blue-300 hover:bg-blue-50 admin-dark:hover:bg-blue-900/50 rounded-lg transition-all duration-200 group/btn shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-blue-600 admin-dark:text-blue-400 hover:text-blue-700 admin-dark:hover:text-blue-300 hover:bg-blue-50 admin-dark:hover:bg-blue-900/50 rounded-lg transition-all duration-200 group/btn shadow-sm hover:shadow-md cursor-pointer"
                           title="Xem chi tiết"
                         >
                           <svg
@@ -131,7 +131,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
                       {onEdit && (
                         <button
                           onClick={() => onEdit(item)}
-                          className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-emerald-600 admin-dark:text-emerald-400 hover:text-emerald-700 admin-dark:hover:text-emerald-300 hover:bg-emerald-50 admin-dark:hover:bg-emerald-900/50 rounded-lg transition-all duration-200 group/btn shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-emerald-600 admin-dark:text-emerald-400 hover:text-emerald-700 admin-dark:hover:text-emerald-300 hover:bg-emerald-50 admin-dark:hover:bg-emerald-900/50 rounded-lg transition-all duration-200 group/btn shadow-sm hover:shadow-md cursor-pointer"
                           title="Chỉnh sửa"
                         >
                           <svg
@@ -152,7 +152,7 @@ export default function Table({ columns, data, onEdit, onDelete, onView }) {
                       {onDelete && (
                         <button
                           onClick={() => onDelete(item.id)}
-                          className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-red-600 admin-dark:text-red-400 hover:text-red-700 admin-dark:hover:text-red-300 hover:bg-red-50 admin-dark:hover:bg-red-900/50 rounded-lg transition-all duration-200 group/btn shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 text-red-600 admin-dark:text-red-400 hover:text-red-700 admin-dark:hover:text-red-300 hover:bg-red-50 admin-dark:hover:bg-red-900/50 rounded-lg transition-all duration-200 group/btn shadow-sm hover:shadow-md cursor-pointer"
                           title="Xóa"
                         >
                           <svg

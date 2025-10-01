@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -5,22 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from "recharts";
-import { Car } from "lucide-react";
+import useLenisLocal from '@/hook/useLenisLocal';
 import { useOutletContext } from "react-router-dom";
-import useLenisLocal from '@/hook/useLenisLocal'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 
 
 export default function ServiceCustomerAnalytics() {
@@ -156,7 +152,7 @@ export default function ServiceCustomerAnalytics() {
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-6">
         <Card
-          className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb] 
+          className="bg-white rounded-xl shadow-md shadow-gray-300/50 border border-[#e5e7eb]
             admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
         >
           <CardHeader>
@@ -174,7 +170,7 @@ export default function ServiceCustomerAnalytics() {
                 .map((customer, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 border rounded-lg bg-gray-100 
+                    className="flex items-center justify-between p-3 border rounded-lg bg-gray-100
                       admin-dark:bg-gray-700 admin-dark:border-gray-600"
                   >
                     <div>
@@ -218,7 +214,7 @@ export default function ServiceCustomerAnalytics() {
         </Card>
 
         <Card
-          className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb] 
+          className="bg-white rounded-xl shadow-md shadow-gray-300/50 border border-[#e5e7eb]
             admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
         >
           <CardHeader>
