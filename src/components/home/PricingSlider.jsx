@@ -156,30 +156,63 @@ const ServiceTable = () => {
     return <div className="text-center py-4 text-red-500">{error}</div>;
   }
 
+  // Trường hợp: Không có dữ liệu để hiển thị (Thiếu các thành phần cốt lõi)
   if (!servicesData.length || !serviceDetailsData.length || !stageData.length) {
     return (
-      <div className="text-center py-4">
-        Không có dữ liệu để hiển thị. Vui lòng kiểm tra:
-        <ul className="list-disc list-inside text-left max-w-md mx-auto">
-          {!servicesData.length && <li>Dữ liệu bridge rỗng</li>}
-          {!serviceDetailsData.length && <li>Dữ liệu services rỗng</li>}
-          {!stageData.length && <li>Dữ liệu service_stages rỗng</li>}
+      <div className="flex flex-col items-center justify-center p-8 bg-white rounded-xl shadow-lg border-2 border-red-300 max-w-lg mx-auto my-10
+                    admin-dark:bg-gray-800 admin-dark:border-red-900 admin-dark:shadow-2xl admin-dark:shadow-black/50">
+
+        {/* Icon: Biểu tượng cảnh báo lớn */}
+        <svg
+          className="w-12 h-12 text-red-500 mb-4 admin-dark:text-red-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          ></path>
+        </svg>
+
+        <h3 className="text-xl font-semibold text-gray-800 mb-2 admin-dark:text-white">
+          Không tìm thấy dữ liệu dịch vụ
+        </h3>
+        <p className="text-gray-600 mb-6 text-center admin-dark:text-gray-400">
+          Trang này cần có đầy đủ dữ liệu cấu hình để hiển thị. Vui lòng kiểm tra các mục dưới đây:
+        </p>
+
+        {/* Danh sách các lỗi chi tiết */}
+        <ul className="space-y-3 w-full px-4">
+          {!stageData.length && (
+            <li className="flex items-center text-sm text-gray-700 bg-yellow-50 p-3 rounded-lg border border-yellow-400 shadow-sm
+                       admin-dark:text-yellow-200 admin-dark:bg-gray-700 admin-dark:border-yellow-600">
+              <span className="text-yellow-500 font-bold mr-3 text-lg admin-dark:text-yellow-400">⚠️</span>
+              Chưa cấu hình **Giai đoạn Dịch vụ** (Stage Data).
+            </li>
+          )}
+          {!servicesData.length && (
+            <li className="flex items-center text-sm text-gray-700 bg-red-50 p-3 rounded-lg border border-red-400 shadow-sm
+                       admin-dark:text-red-200 admin-dark:bg-gray-700 admin-dark:border-red-600">
+              <span className="text-red-500 font-bold mr-3 text-lg admin-dark:text-red-400">❌</span>
+              Danh sách **Hạng mục được dịch vụ chọn** (Services Data) hiện đang trống.
+            </li>
+          )}
+          {!serviceDetailsData.length && (
+            <li className="flex items-center text-sm text-gray-700 bg-red-50 p-3 rounded-lg border border-red-400 shadow-sm
+                       admin-dark:text-red-200 admin-dark:bg-gray-700 admin-dark:border-red-600">
+              <span className="text-red-500 font-bold mr-3 text-lg admin-dark:text-red-400">❌</span>
+              Không tìm thấy **Dịch vụ** nào (Service Details).
+            </li>
+          )}
         </ul>
       </div>
     );
   }
 
-  if (!uniqueTitles.length || !uniqueServices.length) {
-    return (
-      <div className="text-center py-4">
-        Dữ liệu không hợp lệ. Vui lòng kiểm tra:
-        <ul className="list-disc list-inside text-left max-w-md mx-auto">
-          {!uniqueTitles.length && <li>Không tìm thấy title_vi trong bridge</li>}
-          {!uniqueServices.length && <li>Không tìm thấy translation.ten_dich_vu trong services</li>}
-        </ul>
-      </div>
-    );
-  }
 
   return (
     <div className={cn("overflow-x-auto w-full p-2 sm:p-4 bg-background dark:bg-slate-950 admin-dark:bg-slate-950 rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-black/20 admin-dark:shadow-black/20 border border-slate-200 dark:border-slate-800 admin-dark:border-slate-800", !loading && "animate-fade-in")}>
