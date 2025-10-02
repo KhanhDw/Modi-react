@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import PricingSlider from "./PricingSlider";
+import PricingSliderMobi from "./PricingSliderMobi";
 // import pricingData from "./pricingData";
 import PricingData from './pricingData';
 import PricingFooterPage from "./pricingFooterPage";
@@ -15,12 +16,10 @@ export default function PricingPageV2() {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 w-full">
-            <div className="container mx-auto py-16 md:py-24 px-4">
+            <div className="container mx-auto py-16 md:py-24 ">
                 <div className="relative">
-                    {/* Decorative background gradient */}
-
-                    <header className="text-center mb-16">
-                        <h1 className=" text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
+                    <header className="text-center mb-16 px-4">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
                             {t("home.PricingPage.title")}
                         </h1>
 
@@ -31,7 +30,8 @@ export default function PricingPageV2() {
                 </div>
 
                 <main className="space-y-16">
-                    <PricingSlider />
+                    <div className="xs:hidden md:block"> <PricingSlider /></div>
+                    <div className="xs:block md:hidden"> <PricingSliderMobi /></div>
                     {!isAdmin && <PricingFooterPage />}
                 </main>
             </div>
