@@ -11,7 +11,7 @@ export default function useSocket() {
         });
 
         socketRef.current.on("connect", () => {
-            console.log("✅ Socket connected:", socketRef.current.id);
+            // console.log("✅ Socket connected:", socketRef.current.id);
         });
 
         return () => {
