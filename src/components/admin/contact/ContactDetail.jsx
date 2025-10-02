@@ -8,7 +8,7 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
     <Modal isOpen={isOpen} onClose={onClose} title="Chi tiết liên hệ">
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-black">Họ tên</label>
+          <label className="block text-sm font-medium text-black admin-dark:text-gray-100">Họ tên</label>
           <p className="text-black">{contact.ho_ten}</p>
         </div>
         <div>
@@ -21,7 +21,7 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
         </div>
         <div>
           <label className="block text-sm font-medium text-black">Nội dung</label>
-          <p className="text-black bg-gray-50 p-3 rounded">{contact.noi_dung}</p>
+          <p className="text-black rounded">{contact.noi_dung}</p>
         </div>
         <div>
           <label className="block text-sm font-medium text-black">Ngày gửi</label>

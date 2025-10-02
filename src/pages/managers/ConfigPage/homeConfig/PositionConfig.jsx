@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
 import {
-    DndContext,
     closestCenter,
+    DndContext,
     KeyboardSensor,
     PointerSensor,
     useSensor,
@@ -14,6 +13,7 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useEffect, useState } from "react";
 import { sectionsConfig } from "../HomeConfig.jsx";
 
 

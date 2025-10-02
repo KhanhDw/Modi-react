@@ -329,12 +329,12 @@ export default function WebsiteTemplateEdit() {
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="flex items-center hover:text-gray-800 gap-2 text-gray-700 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800 cursor-pointer"
+            className="flex items-center justify-center hover:text-gray-800 gap-2 text-gray-700 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800 cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 text-gray-900 admin-dark:text-gray-100" />
-            Quay lại
+            <span className="text-sm sm:text-base">Quay lại</span>
           </Button>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
+          <h1 className="text-xl font-bold text-gray-900 admin-dark:text-gray-100">
             {template ? "Chỉnh sửa mẫu" : "Thêm mẫu mới"}
           </h1>
         </div>
@@ -379,7 +379,7 @@ export default function WebsiteTemplateEdit() {
                 <Label htmlFor="name" className="text-gray-800 admin-dark:text-gray-200">Tên mẫu *</Label>
                 <Input
                   id="name"
-                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
+                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 text-sm sm:text-base"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="Nhập tên mẫu website"
@@ -391,7 +391,7 @@ export default function WebsiteTemplateEdit() {
                 <Label htmlFor="description" className="text-gray-800 admin-dark:text-gray-200">Mô tả *</Label>
                 <Textarea
                   id="description"
-                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
+                  className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 text-sm sm:text-base focus:border-none"
                   value={formData.description}
                   onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                   placeholder="Mô tả chi tiết về mẫu website"
@@ -433,7 +433,7 @@ export default function WebsiteTemplateEdit() {
                     decimalScale={0}
                     allowNegative={false}
                     prefix="đ "
-                    className="bg-white admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-300 text-gray-900 admin-dark:text-gray-100 rounded-md px-3 py-2 text-sm sm:text-base"
+                    className="bg-white admin-dark:bg-gray-800 focus:outline-none border admin-dark:border-gray-700 border-gray-300 text-gray-900 admin-dark:text-gray-100 rounded-md px-3 py-2 text-sm sm:text-base"
                     placeholder="Nhập giá tiền"
                   />
                 </div>
@@ -458,7 +458,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="urlGitHub"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 text-sm sm:text-base"
                     value={formData.url_github}
                     onChange={(e) => setFormData((prev) => ({ ...prev, url_github: e.target.value }))}
                     placeholder="https://github.com/<userName>/<Repo>"
@@ -471,7 +471,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="tech"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 text-sm sm:text-base"
                     value={newTech}
                     onChange={(e) => setNewTech(e.target.value)}
                     onKeyPress={handleKeyPressTech}
@@ -507,7 +507,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="top_features"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 text-sm sm:text-base"
                     value={newTopFeature}
                     onChange={(e) => setNewTopFeature(e.target.value)}
                     onKeyPress={handleKeyPressTopFeature}
@@ -543,7 +543,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="flex gap-2">
                   <Input
                     id="tags"
-                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 focus:border-none text-sm sm:text-base"
+                    className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 placeholder-gray-400 admin-dark:placeholder-gray-500 text-sm sm:text-base"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
                     onKeyPress={handleKeyPress}

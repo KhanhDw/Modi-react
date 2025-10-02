@@ -1,5 +1,3 @@
-
-
 import { cn } from "@/lib/utils"
 import * as SwitchPrimitive from "@radix-ui/react-switch"
 
@@ -8,17 +6,16 @@ function Switch({ className, ...props }) {
     <SwitchPrimitive.Root
       data-slot="switch"
       className={cn(
-        // Base style
-        "peer inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
+        "peer inline-flex h-[1.25rem] w-9 shrink-0 items-center rounded-full border border-transparent shadow transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
 
-        // Unchecked state (light & admin-dark)
-        "data-[state=unchecked]:bg-gray-300 admin-dark:data-[state=unchecked]:bg-gray-600",
+        // Unchecked background
+        "data-[state=unchecked]:bg-gray-300 dark:data-[state=unchecked]:bg-gray-600",
 
-        // Checked state default color (có thể override bằng className)
-        "data-[state=checked]:bg-primary",
+        // Checked background color (customizable by className or use bg-primary here)
+        "data-[state=checked]:bg-blue-500 dark:data-[state=checked]:bg-blue-400",
 
         // Focus ring
-        "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring",
+        "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400",
 
         className
       )}
@@ -27,11 +24,13 @@ function Switch({ className, ...props }) {
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={cn(
-          "pointer-events-none block size-4 rounded-full ring-0 transition-transform",
-          // Thumb color
-          "bg-white border border-gray-400 admin-dark:bg-gray-200 admin-dark:border-gray-500",
-          // Position
-          "data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0"
+          "pointer-events-none block size-4 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ease-in-out",
+
+          // Thumb border for visibility in both themes
+          "border border-gray-400 dark:border-gray-300",
+
+          // Move the thumb when checked
+          "data-[state=checked]:translate-x-[1.1rem] data-[state=unchecked]:translate-x-[2px]"
         )}
       />
     </SwitchPrimitive.Root>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import PageHeader from "@/components/admin/common/PageHeader";
+import PageList from "@/components/feature/pagination.jsx"; // giả sử bạn có sẵn
+import useBlogs from "@/hook/useBlogsAdmin";
 import { isAfter, parseISO } from "date-fns";
 import { Clock, Edit, Trash2 } from "lucide-react";
-import PageHeader from "@/components/admin/common/PageHeader";
-import useBlogs from "@/hook/useBlogsAdmin";
-import PageList from "@/components/feature/pagination.jsx"; // giả sử bạn có sẵn
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // ========================== Helpers ==========================
 export const isFuture = (dt) => {
@@ -273,9 +273,9 @@ export default function BlogsListPage() {
                                         <div className="flex justify-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(blog)}
-                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600 
+                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600
                           text-gray-700 hover:bg-blue-600 hover:text-white
-                          admin-dark:text-gray-200 admin-dark:hover:bg-blue-700/80 
+                          admin-dark:text-gray-200 admin-dark:hover:bg-blue-700/80
                           rounded-lg text-xs transition cursor-pointer"
                                             >
                                                 <Edit size={14} />
@@ -283,7 +283,7 @@ export default function BlogsListPage() {
 
                                             <button
                                                 onClick={() => handleDelete(blog.id)}
-                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600 
+                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600
                           text-gray-700 hover:bg-red-600 hover:text-white
                           admin-dark:text-gray-200 admin-dark:hover:bg-red-700/80
                           rounded-lg text-xs transition cursor-pointer"
@@ -307,13 +307,14 @@ export default function BlogsListPage() {
                     </tbody>
 
                 </table>
-                <PageList
-                    data={filteredBlogs}
-                    pageSize={PAGE_SIZE}
-                    onPageChange={setPaginatedBlogs}
-                    onPageNumberChange={setCurrentPage}
-                />
+
             </div>
+            <PageList
+                data={filteredBlogs}
+                pageSize={PAGE_SIZE}
+                onPageChange={setPaginatedBlogs}
+                onPageNumberChange={setCurrentPage}
+            />
         </div>
     );
 }

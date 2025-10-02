@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -245,8 +245,8 @@ export default function BookingForm() {
 
 
   return (
-    <div className="">
-      <Card className="w-full mx-auto bg-white admin-dark:bg-gray-800 admin-dark:border-gray-700 border border-gray-300 rounded-lg">
+    <ScrollArea className="lenis-local overflow-auto" data-lenis-prevent>
+      <div className="w-full mx-auto bg-white admin-dark:bg-gray-800 admin-dark:border-gray-700 border border-gray-300 rounded-lg">
 
         <CardHeader className="px-2 sm:px-4">
           <CardTitle className="flex flex-col sm:flex-row gap-2 items-start sm:items-center text-base sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
@@ -523,7 +523,7 @@ export default function BookingForm() {
             </div>
           </form>
         </CardContent>
-      </Card>
-    </div>
+      </div>
+    </ScrollArea>
   );
 }

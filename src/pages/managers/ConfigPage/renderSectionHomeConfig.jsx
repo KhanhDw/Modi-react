@@ -251,12 +251,11 @@ export default function RenderHomeConfig({
             case "banner":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin và biểu ngữ</h1>
-                        </div>
+                        <h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin và biểu ngữ</h1>
                         {(currentData.banner || []).map((b, i) => (
                             <div
                                 key={b.id ?? `banner-${i}`}
-                                className="grid md:grid-cols-2 gap-6 items-center"
+                                className="grid md:grid-cols-2 gap-6 items-start"
                             >
                                 <div className="space-y-4">
                                     <InputField
@@ -354,7 +353,7 @@ export default function RenderHomeConfig({
                             {(currentData.cards || []).map((c, i) => (
                                 <div
                                     key={c.id ?? `card-${i}`}
-                                    className="p-2 sm:p-3 rounded-lg border shadow space-y-2"
+                                    className="p-2 sm:p-3 rounded-lg border border-gray-200 admin-dark:border-gray-600 shadow space-y-2"
                                 >
                                     <InputField
                                         label="Tiêu đề"
@@ -411,7 +410,7 @@ export default function RenderHomeConfig({
                             {(currentData.dichVu || []).map((d, i) => (
                                 <div
                                     key={d.id ?? `dv-${i}`}
-                                    className="border rounded-xl p-4 shadow space-y-2"
+                                    className="border border-gray-200 admin-dark:border-gray-600 rounded-xl p-4 shadow space-y-2"
                                 >
                                     <InputField
                                         label="Tiêu đề"
@@ -469,16 +468,16 @@ export default function RenderHomeConfig({
 
                         <div>
                             <h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
-                            <div>
-                                <button onClick={() => setIsViewTable((pre) => !pre)} className="flex items-center gap-2 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300">
+                            <div className="w-full flex justify-start">
+                                <button onClick={() => setIsViewTable((pre) => !pre)} className="flex items-center gap-2 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300 cursor-pointer mt-5">
 
-                                    {!isViewTable && <div className="flex items-center gap-2"><Eye className="w-5 h-5" /><span>Xem thử giao diện</span></div>}
-                                    {isViewTable && <span>Quay lại</span>}
+                                    {!isViewTable && <div className="flex items-center gap-2"><Eye className="w-5 h-5" /><span className="text-xs sm:text-sm font-semibold">Xem thử giao diện</span></div>}
+                                    {isViewTable && <span className="text-xs sm:text-sm font-semibold">Quay lại</span>}
                                 </button>
                             </div>
                         </div>
                         {/* body */}
-                        <div className="">
+                        <div className="w-full">
                             {!isViewTable && <div>
                                 <ChitietdichvuSection />
                             </div>}
@@ -498,7 +497,7 @@ export default function RenderHomeConfig({
                         {(currentData?.loiIch || []).map((item, i) => (
                             <div
                                 key={item.id ?? `li-${i}`}
-                                className="rounded-xl shadow space-y-2"
+                                className="rounded-xl space-y-2"
                             >
                                 <InputField
                                     label="Tiêu đề"
@@ -531,7 +530,9 @@ export default function RenderHomeConfig({
             case "khauHieu":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG khẩu hiệu của công ty</h1></div>
+                        <div>
+                            <h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG khẩu hiệu của công ty</h1>
+                        </div>
 
                         {(currentData?.khauHieu || []).map((k, i) => (
                             <div key={k.id ?? `kh-${i}`} className="space-y-4">
@@ -574,7 +575,7 @@ export default function RenderHomeConfig({
                         <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG cam kết với khách hàng</h1></div>
 
                         {(currentData?.khachHang || []).map((k, i) => (
-                            <div key={k.id ?? `kh-${i}`} className="space-y-4 rounded-lg shadow-sm">
+                            <div key={k.id ?? `kh-${i}`} className="space-y-4 rounded-lg">
                                 <TextareaField
                                     label="Mô tả"
                                     value={k?.description?.[activeLang] || ""}

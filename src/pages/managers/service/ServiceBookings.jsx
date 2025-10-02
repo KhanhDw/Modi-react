@@ -7,6 +7,8 @@ import { useOutletContext } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
 
 export default function ServiceBooking() {
+
+
   const { initDataService, initDataBooking, handleOpen } = useOutletContext();
 
   const completedCount = initDataBooking.filter(b => b.status === "completed").length;
@@ -62,6 +64,7 @@ export default function ServiceBooking() {
   ];
 
   return (
+
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
