@@ -124,7 +124,7 @@ export default function ContactConfig() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-4 md:p-3 lg:p-2 items-start min-h-screen">
             {/* Left: thông tin và lưu địa chỉ map */}
             <div className="lg:col-span-2 col-span-1 space-y-4">
-                <div className="p-3 border admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
+                <div className="p-3 border border-gray-300 admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
                     {/* Tên công ty */}
                     <div className="w-full">
                         <label className="w-full admin-dark:text-white text-gray-900">
@@ -158,7 +158,7 @@ export default function ContactConfig() {
                         <input autoComplete="off"
                             type="text"
                             placeholder={activeLang === "vi" ? "Nhập tên công ty..." : "Enter company name..."}
-                            className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"
+                            className="admin-dark:bg-gray-700 w-full border border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"
                             value={companyName}
                             onChange={(e) => setCompanyName(e.target.value)}
                         />
@@ -177,7 +177,7 @@ export default function ContactConfig() {
                 </div>
 
                 {/* URL Google Map */}
-                <div className="p-3 border admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
+                <div className="p-3 border border-gray-300 admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
                     <div>
                         <label className="block text-xs sm:text-sm md:text-base font-medium mb-3 admin-dark:text-white text-gray-900">
                             Thiết lập địa chỉ Google Map
@@ -188,7 +188,7 @@ export default function ContactConfig() {
                                     ? "Nhập URL Google Maps vào đây..."
                                     : "Enter Google Maps URL..."
                             }
-                            className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"
+                            className="admin-dark:bg-gray-700 w-full border border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"
                             value={mapUrl}
                             onChange={(e) => setMapUrl(e.target.value)}
                             rows={8}

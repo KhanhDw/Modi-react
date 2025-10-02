@@ -192,7 +192,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
           />
 
           <div className="flex justify-center gap-3 pt-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 border rounded cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800">
+            <button type="button" onClick={onClose} className="px-4 py-2 border border-gray-300 admin-dark:border-gray-700 rounded cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800">
               <span className="text-sm sm:text-base font-semibold">Hủy</span>
             </button>
             <button type="submit" className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">

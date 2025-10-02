@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, useOutletContext } from "react-router-dom";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import SocialNetworkManager from "./SocialNetworkManager";
-import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 
 export default function EditPage() {
     const editorRef = useRef(null);
@@ -158,7 +157,7 @@ export default function EditPage() {
         <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-2 md:p-2">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-                <h2 className="text-2xl text-center lg:text-2xl xl:text-3xl font-bold text-gray-900 admin-dark:text-white sm:text-xl">
+                <h2 className="text-xl md:text-2xl text-center font-bold text-gray-900 admin-dark:text-white sm:text-xl">
                     Chỉnh sửa bài viết
                 </h2>
 
@@ -219,7 +218,7 @@ export default function EditPage() {
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     placeholder="Nhập tiêu đề bài viết"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base"
                                 />
                             </div>
                             <div hidden>
@@ -228,7 +227,7 @@ export default function EditPage() {
                                     value={formData.author || ""}
                                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                                     placeholder="Nhập tên tác giả"
-                                    className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                 />
                             </div>
 
@@ -290,7 +289,7 @@ export default function EditPage() {
                                     value={formData.tags || ""}
                                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                     placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none"
                                 />
                             </div>
 
@@ -302,7 +301,7 @@ export default function EditPage() {
                                         value={formData.image || ""}
                                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                                         placeholder="Nhập URL hình ảnh"
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none flex-1 focus:border-none"
+                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none flex-1"
                                     />
                                     <Button
                                         type="button"

@@ -285,7 +285,7 @@ export default function FooterConfigMultiLang() {
             <div className="space-y-6 sm:space-y-8 max-w-6xl w-full mx-auto">
                 <div className="flex w-full xs:flex-col md:flex-col xl:flex-row xl:justify-between items-center gap-3 sm:gap-4">
                     <div className="flex items-center justify-center gap-2 xs:gap-3 ">
-                        <div className="border border-gray-500 flex flex-col z-2 rounded-lg p-3 xs:w-full xs:flex-row items-center justify-end gap-2">
+                        <div className="border border-gray-300 flex flex-col z-2 rounded-lg p-3 xs:w-full xs:flex-row items-center justify-end gap-2">
                             {/* Hiển thị ở md+ */}
                             <span className="text-xs sm:text-sm">
                                 {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
@@ -295,7 +295,7 @@ export default function FooterConfigMultiLang() {
                         </div>
                     </div>
 
-                    <div className="flex items-center flex-wrap justify-center gap-2 xs:gap-3 border p-2  rounded-lg xs:rounded-xl bg-gray-100 shadow admin-dark:bg-slate-900 ">
+                    <div className="flex items-center flex-wrap justify-center gap-2 xs:gap-3 border border-gray-300 p-2  rounded-lg xs:rounded-xl bg-gray-100 shadow admin-dark:bg-slate-900 ">
                         {[
                             { key: "company", label: "Thông tin công ty" },
                             { key: "services", label: "Dịch vụ" },

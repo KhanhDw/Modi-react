@@ -130,7 +130,7 @@ export default function WebsiteTemplateList() {
                 placeholder="Tìm kiếm mẫu website..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-2 focus:border-none border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
+                className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
               />
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function WebsiteTemplateList() {
                       <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
                     </div>
 
-                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-600 text-white gap mt-2 cursor-pointer">
+                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-500 text-white gap mt-2 cursor-pointer hover:bg-blue-600">
                       Xem mẫu
                     </Button>
                   </div>

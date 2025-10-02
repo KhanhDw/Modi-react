@@ -1,15 +1,14 @@
 // AddPage.jsx (component tổng đã được cập nhật)
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator"
-import SocialNetworkManager from "./SocialNetworkManager";
-import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import SocialNetworkManager from "./SocialNetworkManager";
 
 
 export default function AddPage() {
@@ -154,7 +153,7 @@ export default function AddPage() {
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     placeholder="Nhập tiêu đề bài viết"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base"
                                 />
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-3">
@@ -214,7 +213,7 @@ export default function AddPage() {
                                     value={formData.tags || ""}
                                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                     placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base"
                                 />
                             </div>
 
@@ -228,7 +227,7 @@ export default function AddPage() {
                                         setError("");
                                     }}
                                     placeholder="Nhập URL hình ảnh"
-                                    className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                 />
                                 <Button
                                     className="cursor-pointer bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white"
