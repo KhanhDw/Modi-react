@@ -1,11 +1,11 @@
-import React, { useEffect, useState, } from "react";
 import { motion } from "framer-motion";
+import { useEffect, useState, } from "react";
 
 // =============== INPUT FIELD ===============
 export function InputField({ label, value, onChange, type = "text", accept = "image/*" }) {
     return (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <label className="block font-semibold mb-2">{label}</label>
+            <label className="block font-semibold mb-2 text-sm md:text-base">{label}</label>
             <input
                 type={type}
                 {...(type === "file" ? { accept } : { value })}
@@ -21,10 +21,10 @@ export function InputField({ label, value, onChange, type = "text", accept = "im
 export function TextareaField({ label, value, onChange, rows = 6 }) {
     return (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <label className="block font-semibold mb-2">{label}</label>
+            <label className="block font-semibold mb-2 text-sm md:text-base">{label}</label>
             <textarea
                 rows={rows}
-                className="w-full p-3 border border-gray-300 rounded-lg 
+                className="w-full p-3 border border-gray-300 rounded-lg
         focus:outline-none focus:ring-2 focus:ring-indigo-400 transition focus:border-none admin-dark:border-gray-400"
                 value={value}
                 onChange={onChange}

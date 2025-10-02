@@ -12,9 +12,9 @@ function FileInput({ label, onChange }) {
                     type="file"
                     accept="image/*"
                     onChange={onChange}
-                    className="w-full p-2 sm:p-3 rounded-lg bg-gray-50 admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-600 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400 transition text-xs sm:text-sm"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-gray-50 admin-dark:bg-gray-800 border border-gray-300 admin-dark:border-gray-600 shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
                 />
-                <span className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 admin-dark:text-gray-400 font-semibold text-xs sm:text-sm">
+                <span className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 admin-dark:text-gray-400 font-semibold text-xs sm:text-base md:text-xl">
                     📁
                 </span>
             </div>
@@ -133,7 +133,7 @@ export default function HeaderConfigLogo() {
     if (loading) return <p className="text-center text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm py-6">⏳ Đang tải...</p>;
 
     return (
-        <div className="p-2 sm:p-4 md:p-6 max-w-8xl mx-auto space-y-6 sm:space-y-8 flex items-center flex-col justify-center">
+        <div className="md:p-2 max-w-8xl mx-auto space-y-6 sm:space-y-8 flex items-center flex-col justify-center">
             {/* Header Preview */}
             <motion.div
                 className="max-w-3xl  flex flex-col items-center justify-center bg-indigo-50 admin-dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-lg p-2 sm:p-6 md:p-8 gap-4 sm:gap-6"
@@ -148,7 +148,16 @@ export default function HeaderConfigLogo() {
                     whileHover={{ scale: 1.05 }}
                     onError={(e) => (e.currentTarget.src = "/logoModi.png")}
                 />
-                <div className=" mt-10 border border-gray-700 px-4 py-3 rounded-2xl flex flex-col sm:flex-row md:items-end sm:items-center justify-between gap-3 sm:gap-4">
+            </motion.div>
+
+            {/* Config Form */}
+            <motion.div
+                className="bg-white admin-dark:bg-gray-900 px-2 py-3 sm:p-4 rounded-xl sm:rounded-xl shadow-md border border-gray-200 admin-dark:border-gray-700 space-y-4 sm:space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+            >
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
                     <div className="w-full">
                         <FileInput label="Cập nhật Logo Website" onChange={handleLogoChange} />
                     </div>
@@ -156,11 +165,11 @@ export default function HeaderConfigLogo() {
                         <motion.button
                             onClick={handleSave}
                             disabled={loading}
-                            className="whitespace-nowrap w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 text-xs sm:text-sm cursor-pointer"
+                            className="whitespace-nowrap w-full sm:w-auto py-2 sm:py-3 px-3 sm:px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md transition-all flex justify-center items-center gap-1 sm:gap-2 cursor-pointer"
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                         >
-                            {loading ? "Đang lưu..." : "Lưu Logo"}
+                            <span className="text-xs sm:text-sm font-semibold">{loading ? "Đang lưu..." : "Lưu Logo"}</span>
                         </motion.button>
                     </div>
                 </div>
@@ -176,7 +185,7 @@ export default function HeaderConfigLogo() {
 
 
                 <div className="w-full flex flex-col space-y-3 sm:space-y-4">
-                    <label className="font-semibold text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">Cấu hình danh sách dịch vụ</label>
+                    <span className="font-semibold text-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">Cấu hình danh sách dịch vụ</span>
                     <ServiceDropdownHeaderMenu lang={lang} />
                 </div>
             </motion.div>

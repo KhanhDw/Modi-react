@@ -87,7 +87,7 @@ export default function CategoryServiceSelector({
     };
 
     return (
-        <div className="border admin-dark:bg-gray-800 bg-gray-200 py-2 rounded-md ">
+        <div className="border admin-dark:bg-gray-800 bg-gray-100 py-2 rounded-md">
             {services.map((s) => {
                 const slug = s.translation.slug;
                 const checked = localList.includes(slug);

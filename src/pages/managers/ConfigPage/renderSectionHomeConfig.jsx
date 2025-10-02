@@ -165,7 +165,7 @@ export default function RenderHomeConfig({
                 return (
                     <div className="space-y-4">
                         <div>
-                            <h1 className="font-bold text-2xl mb-4 text-center uppercase">
+                            <h1 className="font-bold text-base md:text-xl mb-4 text-center uppercase">
                                 Cấu hình vị trí cho các mục tại trang chủ
                             </h1>
                         </div>
@@ -188,8 +188,8 @@ export default function RenderHomeConfig({
                         </div>
 
                         {!loading && (
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center justify-between gap-2 text-gray-500">
+                            <div className="flex flex-col md:flex-col xl:flex-row justify-between items-center">
+                                <div className="flex items-center w-full justify-center xl:w-100 xl:justify-start gap-2 text-gray-500">
                                     <IoMdInformationCircleOutline />
                                     <span>Kéo thả để thay đổi vị trí</span>
                                 </div>
@@ -202,44 +202,44 @@ export default function RenderHomeConfig({
                                         />
                                     )
                                 }
-                                <div className="flex space-x-4 mt-5">
+                                <div className="flex flex-col items-center md:flex-row justify-end gap-3 w-full mt-5">
                                     {/* Nút khôi phục (chỉ restore lại vitri chưa lưu) */}
                                     <button
                                         onClick={() => setVitri(defaultVitri)} // khôi phục lại vitri gốc từ DB
                                         disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
+                                        className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
-                                                ? "bg-gray-400 cursor-not-allowed"
+                                                ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
                                                 : "bg-blue-500 hover:bg-blue-700 text-white"
                                             }`}
                                     >
-                                        Khôi phục
+                                        <span className="text-sm sm:text-base font-semibold">Khôi phục</span>
                                     </button>
 
                                     {/* Nút khôi phục mặc định (reset DB về positionsDefault) */}
                                     <button
                                         onClick={handleResetDefault}
                                         disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
-                                        className={`font-bold cursor-pointer py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
+                                        className={`font-bold w-full sm:w-60 md:w-full xl:w-60 cursor-pointer py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${isVitriSameAsDefault(defaultVitri)
-                                                ? "bg-gray-400 cursor-not-allowed"
+                                                ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
                                                 : "bg-blue-500 hover:bg-blue-700 text-white"
                                             }`}
                                     >
-                                        Khôi phục lại mặc định
+                                        <span className="text-sm sm:text-base font-semibold">Khôi phục lại mặc định</span>
                                     </button>
 
                                     <button
                                         onClick={() => savePositions(vitri)}
                                         disabled={JSON.stringify(vitri) === JSON.stringify(defaultVitri)}
-                                        className={`font-bold py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
+                                        className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${JSON.stringify(vitri) === JSON.stringify(defaultVitri)
-                                                ? "bg-gray-400 cursor-not-allowed"
+                                                ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
                                                 : "bg-green-500 hover:bg-green-700 text-white"
                                             }`}
 
                                     >
-                                        Lưu vị trí
+                                        <span className="text-sm sm:text-base font-semibold">Lưu vị trí</span>
                                     </button>
                                 </div>
                             </div>
@@ -251,7 +251,9 @@ export default function RenderHomeConfig({
             case "banner":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin và biểu ngữ</h1></div>
+                        <div>
+                            <h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin và ảnh banner</h1>
+                        </div>
                         {(currentData.banner || []).map((b, i) => (
                             <div
                                 key={b.id ?? `banner-${i}`}
@@ -292,12 +294,12 @@ export default function RenderHomeConfig({
                             </div>
                         ))}
 
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("banner")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Banner
+                                <span className="font-semibold text-sm sm:text-base">Lưu Banner</span>
                             </button>
                         </div>
                     </div>
@@ -307,7 +309,7 @@ export default function RenderHomeConfig({
             case "nenTang":
                 return (
                     <div className="space-y-4">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin nền tảng</h1></div>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin nền tảng</h1></div>
                         {(currentData.nenTang || []).map((n, i) => {
                             return <div key={n.id ?? `nenTang-${i}`}>
                                 <InputField
@@ -333,12 +335,12 @@ export default function RenderHomeConfig({
                                 )}
                             </div>
                         })}
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("nenTang")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Nền tảng
+                                <span className="font-semibold text-sm sm:text-base">Lưu Nền tảng</span>
                             </button>
                         </div>
                     </div>
@@ -348,12 +350,12 @@ export default function RenderHomeConfig({
             case "cards":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin cho 3 thẻ nội dung</h1></div>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl text-center border-b-2 pb-6">Cấu hình thông tin cho 3 thẻ nội dung</h1></div>
                         <div className="grid md:grid-cols-3 gap-6">
                             {(currentData.cards || []).map((c, i) => (
                                 <div
                                     key={c.id ?? `card-${i}`}
-                                    className="p-4 rounded-xl border shadow space-y-2"
+                                    className="p-2 sm:p-3 rounded-lg border shadow space-y-2"
                                 >
                                     <InputField
                                         label="Tiêu đề"
@@ -369,8 +371,8 @@ export default function RenderHomeConfig({
                                             handleChange("cards", c.id, "description", e.target.value)
                                         }
                                     />
-                                    <div className="flex w-full items-center justify-center">
-                                        <div>
+                                    <div className="flex w-full items-center justify-start">
+                                        <div className="w-full">
                                             <InputField
                                                 label="Chọn ảnh"
                                                 type="file"
@@ -390,12 +392,12 @@ export default function RenderHomeConfig({
                                 </div>
                             ))}
                         </div>
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("cards")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Cards
+                                <span className="font-semibold text-sm sm:text-base">Lưu Cards</span>
                             </button>
                         </div>
                     </div>
@@ -405,7 +407,7 @@ export default function RenderHomeConfig({
             case "dichVu":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">Cấu hình thông tin cho 6 nhóm dịch vụ chính</h1></div>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">Cấu hình thông tin cho 6 nhóm dịch vụ chính</h1></div>
                         <div className="grid md:grid-cols-2 gap-6">
                             {(currentData.dichVu || []).map((d, i) => (
                                 <div
@@ -449,12 +451,12 @@ export default function RenderHomeConfig({
                                 </div>
                             ))}
                         </div>
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("dichVu")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Dịch vụ
+                                <span className="font-semibold text-sm sm:text-base">Lưu Dịch vụ</span>
                             </button>
                         </div>
                     </div>
@@ -463,7 +465,7 @@ export default function RenderHomeConfig({
             // ========================= CHI TIẾT DỊCH VỤ =========================
             case "chitietdichvu":
                 return (
-                    <div className="space-y-6 ">
+                    <div className="space-y-6">
                         {/* header */}
                         <div className="flex items-center justify-between border-b-2 pb-2">
                             <h1 className="uppercase font-bold text-2xl mb-4 text-center ">CẤU HÌNH NỘI DUNG CHI TIẾT DỊCH VỤ</h1>
@@ -491,12 +493,12 @@ export default function RenderHomeConfig({
             case "loiIch":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG lợi ích của công ty mang đến cho khách hàng</h1></div>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG lợi ích của công ty mang đến cho khách hàng</h1></div>
 
                         {(currentData?.loiIch || []).map((item, i) => (
                             <div
                                 key={item.id ?? `li-${i}`}
-                                className="rounded-xl shadow space-y-2 p-3"
+                                className="rounded-xl shadow space-y-2"
                             >
                                 <InputField
                                     label="Tiêu đề"
@@ -514,12 +516,12 @@ export default function RenderHomeConfig({
                                 />
                             </div>
                         ))}
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("loiIch")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Lợi ích
+                                <span className="font-semibold text-sm sm:text-base">Lưu Lợi ích</span>
                             </button>
                         </div>
                     </div>
@@ -529,7 +531,7 @@ export default function RenderHomeConfig({
             case "khauHieu":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG khẩu hiệu của công ty</h1></div>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG khẩu hiệu của công ty</h1></div>
 
                         {(currentData?.khauHieu || []).map((k, i) => (
                             <div key={k.id ?? `kh-${i}`} className="space-y-4">
@@ -553,12 +555,12 @@ export default function RenderHomeConfig({
                             </div>
                         ))}
 
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("khauHieu")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Khẩu hiệu
+                                <span className="font-semibold text-sm sm:text-base">Lưu Khẩu hiệu</span>
                             </button>
                         </div>
                     </div>
@@ -569,10 +571,10 @@ export default function RenderHomeConfig({
             case "khachHang":
                 return (
                     <div className="space-y-6">
-                        <div><h1 className="uppercase font-bold text-2xl mb-4 text-center border-b-2 pb-2">CẤU HÌNH NỘI DUNG cam kết với khách hàng</h1></div>
+                        <div><h1 className="uppercase font-bold text-base md:text-xl pb-6 text-center border-b-2">CẤU HÌNH NỘI DUNG cam kết với khách hàng</h1></div>
 
                         {(currentData?.khachHang || []).map((k, i) => (
-                            <div key={k.id ?? `kh-${i}`} className="space-y-4 p-3 rounded-lg shadow-sm">
+                            <div key={k.id ?? `kh-${i}`} className="space-y-4 rounded-lg shadow-sm">
                                 <TextareaField
                                     label="Mô tả"
                                     value={k?.description?.[activeLang] || ""}
@@ -603,17 +605,16 @@ export default function RenderHomeConfig({
                             </div>
                         ))}
 
-                        <div className="text-right">
+                        <div className="text-center md:text-right">
                             <button
                                 onClick={() => handleSave("khachHang")}
                                 className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
                             >
-                                Lưu Khách hàng
+                                <span className="font-semibold text-sm sm:text-base">Lưu Khách hàng</span>
                             </button>
                         </div>
                     </div>
                 );
-
 
             default:
                 return null;
