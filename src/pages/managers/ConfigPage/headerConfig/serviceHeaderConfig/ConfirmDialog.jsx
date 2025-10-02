@@ -9,34 +9,34 @@ export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDe
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="w-75 sm:w-100 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-gray-900 font-semibold admin-dark:text-gray-100">
+                    <DialogTitle className="text-gray-900 font-semibold admin-dark:text-gray-100 text-base sm:text-lg text-center">
                         Xác nhận xóa
                     </DialogTitle>
                 </DialogHeader>
 
-                <p className="text-gray-800 admin-dark:text-gray-300 mt-2">
+                <p className="text-gray-800 admin-dark:text-gray-300 text-sm sm:text-base">
                     Bạn có chắc chắn muốn xóa{" "}
                     {type === "category" ? "Danh mục dịch vụ này" : "dịch vụ"} này không?
                 </p>
 
-                <div className="flex gap-2 mt-6 justify-end items-center">
+                <div className="flex gap-2 mt-2 justify-end items-center">
                     <Button
                         variant="destructive"
                         onClick={() => {
                             onConfirmDelete(type, target);
                             setOpen(false);
                         }}
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-red-500 hover:bg-red-600"
                     >
-                        Xóa
+                        <span className="font-semibold text-sm sm:text-base">Xóa</span>
                     </Button>
                     <Button
                         variant="outline"
                         onClick={() => setOpen(false)}
-                        className="border-gray-300 text-gray-200 hover:bg-gray-600
-                       admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800 cursor-pointer"
+                        className="border-gray-300 text-gray-200 hover:bg-gray-700
+                       admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-900 cursor-pointer"
                     >
-                        Hủy
+                        <span className="font-semibold text-sm sm:text-base">Hủy</span>
                     </Button>
                 </div>
             </DialogContent>

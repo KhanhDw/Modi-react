@@ -47,7 +47,7 @@ const Button = ({
   disabled,
 }) => {
   let baseStyles =
-    "px-4 py-2 text-sm rounded-lg transition-colors duration-150 font-semibold shadow-sm";
+    "px-2 py-2 text-sm rounded-md transition-colors duration-150 font-semibold shadow-sm";
   let variantStyles = "";
 
   switch (variant) {
@@ -124,9 +124,9 @@ const SortableChildItem = ({ child, lang, onEdit, onDelete }) => {
       ref={setNodeRef}
       style={style}
       // 2. Tăng cường className để tạo hiệu ứng "nhấc lên"
-      className={`flex items-center justify-between admin-dark:text-white text-gray-900 gap-4 p-3 pr-4 rounded-xl border transition-all duration-200
+      className={`flex items-center justify-between admin-dark:text-white text-gray-900 gap-4 p-2 pr-2 rounded-xl border transition-all duration-200
                 ${isDragging
-          ? "ring-2 ring-blue-500 bg-white admin-dark:bg-gray-800 shadow-xl scale-[1.01] z-50" // Thêm shadow-xl, scale nhẹ, z-index cao
+          ? "ring-2 ring-blue-500 border-none bg-white admin-dark:bg-gray-800 shadow-xl scale-[1.01] z-50" // Thêm shadow-xl, scale nhẹ, z-index cao
           : "bg-white hover:bg-gray-50 border-gray-200 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800 admin-dark:border-gray-700"
         }
                 ${isDragging ? "cursor-grabbing" : "cursor-default"}
@@ -134,7 +134,7 @@ const SortableChildItem = ({ child, lang, onEdit, onDelete }) => {
     >
       {/* Vùng kéo (Drag Handle) */}
       <div
-        className="p-1 -ml-1 mr-3 shrink-0 cursor-grab text-gray-400 hover:text-gray-600 admin-dark:hover:text-gray-300 transition-colors"
+        className="ml-1 shrink-0 cursor-grab focus:cursor-grabbing text-gray-400 hover:text-gray-600 admin-dark:hover:text-gray-300 transition-colors"
         // Gán listeners và attributes vào icon kéo thả
         {...attributes}
         {...listeners}
@@ -144,7 +144,7 @@ const SortableChildItem = ({ child, lang, onEdit, onDelete }) => {
       </div>
 
       {/* Tiêu đề mục */}
-      <span className="font-medium truncate flex-grow text-base">
+      <span className="font-medium truncate flex-grow text-xs lg:text-sm">
         {child.title?.[lang] || "Không có tên"}
       </span>
 
@@ -153,16 +153,16 @@ const SortableChildItem = ({ child, lang, onEdit, onDelete }) => {
         <Button
           size="icon"
           variant="outline"
-          className="p-0 " // Nút nhỏ hơn, chỉ có icon
+          className="p-0 cursor-pointer" // Nút nhỏ hơn, chỉ có icon
           onClick={() => onEdit(child)}
           aria-label="Sửa mục con"
         >
-          <Pencil className="h-4 w-4" />
+          <Pencil className="h-4 w-4 text-xs" />
         </Button>
         <Button
           size="icon"
           variant="destructive"
-          className="p-0" // Nút nhỏ hơn, chỉ có icon
+          className="p-0 cursor-pointer" // Nút nhỏ hơn, chỉ có icon
           onClick={() => onDelete(child)}
           aria-label="Xóa mục con"
         >
@@ -270,14 +270,14 @@ export default function ChildList({
   const hasChildren = childrenItems.length > 0;
 
   return (
-    <Card className="bg-white admin-dark:bg-gray-900">
+    <Card className="bg-white admin-dark:bg-gray-900 h-full">
       {/* Bắt đầu CardHeader: Bao bọc tiêu đề và các nút điều khiển */}
-      <CardHeader className="pb-4 flex flex-col sm:flex-row md:flex-col justify-between items-center">
+      <CardHeader className="pb-4 w-full flex flex-col sm:flex-col xl:flex-row xl:gap-2 justify-between items-center">
         {/* CardTitle đã được thêm 'min-w-0' để đảm bảo co lại bên trong flex container */}
-        <CardTitle className="flex items-center gap-2 text-gray-800 admin-dark:text-gray-100 font-semibold text-sm md:text-base">
+        <CardTitle className="flex w-full justify-center xl:justify-start items-center gap-2 text-gray-800 admin-dark:text-gray-100 font-semibold text-sm md:text-base">
           <FileText className="text-blue-500" /> {/* Icon nổi bật hơn */}
           {/* Thẻ p được thêm 'truncate' và 'min-w-0' để xử lý nội dung quá dài */}
-          <p className="text-sm font-medium text-gray-800 admin-dark:text-gray-100 truncate min-w-0">
+          <p className="text-sm xl:text-base font-medium text-gray-800 admin-dark:text-gray-100 truncate min-w-0">
             {selectedCategory
               ? `Mục con của "${selectedCategory.name?.[lang] || selectedCategory.name
               }"`
@@ -292,39 +292,37 @@ export default function ChildList({
                 {/* Nút Hủy (Outline) */}
                 <button
                   onClick={handleCancelSort}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700
+                  className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700
 hover:bg-gray-100 admin-dark:border-gray-600 admin-dark:text-gray-100 admin-dark:hover:bg-gray-800
-text-sm font-medium transition-colors cursor-pointer"
+text-sm font-medium transition-colors cursor-pointer mt-2"
                 >
-                  <span className="text-xs sm:text-sm font-medium">Hủy</span>
+                  <span className="text-xs xl:text-sm font-medium">Hủy</span>
                 </button>
 
                 {/* Nút Lưu (Primary Green) */}
                 <button
                   onClick={handleSaveSort}
-                  className="px-4 py-2 rounded-lg bg-green-600 text-white
-hover:bg-green-700 active:scale-95
-text-sm font-medium shadow-md transition-transform cursor-pointer"
+                  className="px-3 py-2 rounded-lg bg-green-600 text-white
+hover:bg-green-700 active:scale-95 text-sm font-medium shadow-md transition-transform cursor-pointer mt-2"
                 >
-                  <span className="text-xs sm:text-sm font-medium">Lưu</span>
+                  <span className="text-xs xl:text-sm font-medium">Lưu</span>
                 </button>
               </>
             ) : (
               <button
                 onClick={onAdd}
                 className="whitespace-nowrap flex items-center px-3 py-2 rounded-lg
-bg-blue-600 text-white text-sm font-medium
-hover:bg-blue-700 active:scale-95 transition-transform shadow-md cursor-pointer mt-2"
+bg-blue-600 text-white hover:bg-blue-700 active:scale-95 transition-transform shadow-md cursor-pointer mt-2"
               >
                 <Plus className="h-4 w-4 mr-1" />
-                <span className="text-xs sm:text-sm font-medium">Thêm</span>
+                <span className="text-xs xl:text-sm font-medium">Thêm</span>
               </button>
             )}
           </div>
         )}
       </CardHeader>{" "}
       {/* Kết thúc CardHeader */}
-      <CardContent className="space-y-3 max-h-[480px] overflow-y-auto pr-2">
+      <CardContent className="space-y-3 max-h-[480px] overflow-y-auto">
         {hasSelectedCategory ? (
           hasChildren ? (
             <DndContext

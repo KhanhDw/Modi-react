@@ -109,7 +109,7 @@ export default function DialogForm({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-75 sm:w-100 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 admin-dark:text-gray-100">
+          <DialogTitle className="text-gray-900 admin-dark:text-gray-100 text-lg text-center">
             {title}
           </DialogTitle>
         </DialogHeader>

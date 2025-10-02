@@ -53,12 +53,12 @@ function SortableCategoryItem({
         <span
           {...attributes}
           {...listeners}
-          className="cursor-grab text-gray-400 hover:text-gray-600 admin-dark:hover:text-gray-200"
+          className="cursor-grab focus:cursor-grabbing text-gray-400 admin-dark:text-gray-300 hover:text-gray-500 admin-dark:hover:text-gray-400"
         >
           <GripVertical className="h-4 w-4" />
         </span>
         {/* <span className="truncate">{cat.name?.[lang] || cat.name}</span> */}
-        <span className="">{cat.name?.[lang] || cat.name}</span>
+        <span className="text-xs lg:text-sm">{cat.name?.[lang] || cat.name}</span>
       </div>
 
       <div className="flex gap-2">
@@ -69,9 +69,9 @@ function SortableCategoryItem({
             e.stopPropagation();
             onEdit(cat);
           }}
-          className="cursor-pointer"
+          className="cursor-pointer bg-gray-900 hover:bg-gray-800"
         >
-          <Pencil className="h-4 w-4 text-xs sm:text-sm" />
+          <Pencil className="h-4 w-4 text-xs" />
         </Button>
         <Button
           size="sm"
@@ -80,9 +80,9 @@ function SortableCategoryItem({
             e.stopPropagation();
             onDelete(cat);
           }}
-          className="cursor-pointer"
+          className="cursor-pointer bg-red-500 hover:bg-red-600"
         >
-          <span className="text-xs sm:text-sm font-semibold">Xóa</span>
+          <span className="text-xs font-semibold">Xóa</span>
         </Button>
       </div>
     </div>
@@ -156,7 +156,7 @@ export default function CategoryList({
   }
 
   return (
-    <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700">
+    <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700 h-full">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-center gap-3">
         <div className="flex items-center gap-2">
           <Folder className="h-5 w-5 text-gray-700 admin-dark:text-gray-300" />
@@ -166,31 +166,34 @@ export default function CategoryList({
         </div>
         {isChanged ? (
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={handleCancel}>
-              Hủy
+            <Button size="sm" variant="outline" onClick={handleCancel}
+              className="cursor-pointer hover:text-gray-900 shadow"
+            >
+              <span className="font-semibold text-xs xl:text-sm text-white">Hủy</span>
             </Button>
             <Button
               size="sm"
-              className="bg-primary text-black/80 admin-dark:text-white hover:bg-primary/90 cursor-pointer"
+              className="bg-primary shadow text-black/80 admin-dark:text-white hover:bg-primary/90 cursor-pointer"
               onClick={handleSave}
             >
-              Lưu
+              <span className="font-semibold text-xs xl:text-sm">Lưu</span>
             </Button>
           </div>
         ) : (
           <Button
             size="sm"
-            className="bg-primary shadow text-black/80 admin-dark:text-white hover:bg-primary/90 transition-colors cursor-pointer"
+            className="bg-primary shadow hover:bg-primary/90 transition-colors cursor-pointer"
             onClick={onAdd}
           >
-            <Plus className="h-4 w-4 mr-1" /> Thêm
+            <Plus className="h-4 w-4" />
+            <span className="font-semibold text-xs xl:text-sm text-black/70 admin-dark:text-white">Thêm</span>
           </Button>
         )}
       </CardHeader>
 
       <CardContent
         data-lenis-prevent
-        className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-3"
+        className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-2"
       >
         {items?.length > 0 ? (
           <DndContext

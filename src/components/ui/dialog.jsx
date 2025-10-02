@@ -1,7 +1,7 @@
-import React, { useState, useContext, createContext, forwardRef } from "react";
+import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot"; // Thêm Slot
 import { XIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { createContext, forwardRef, useContext, useState } from "react";
 
 const DialogContext = createContext(null);
 
@@ -89,9 +89,9 @@ function DialogContent({
         {showCloseButton && (
           <button
             onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:outline-none cursor-pointer"
           >
-            <XIcon className="size-4" />
+            <XIcon className="size-5" />
             <span className="sr-only">Close</span>
           </button>
         )}
@@ -137,13 +137,5 @@ function DialogDescription({ className, ...props }) {
 }
 
 export {
-  Dialog,
-  DialogTrigger,
-  DialogClose,
-  DialogOverlay,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
+  Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger
 };
