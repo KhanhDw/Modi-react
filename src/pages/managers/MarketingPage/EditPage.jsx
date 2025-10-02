@@ -8,10 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SocialNetworkManager from "./SocialNetworkManager";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 
 export default function EditPage() {
     const editorRef = useRef(null);
-    const { formData, setFormData, handleEditPost, reloadPostsAndSocialNetWorks } = useOutletContext();
+    const { formData, setFormData, handleEditPost, reloadPostsAndSocialNetWorks } = useMarketing();
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -54,7 +55,14 @@ export default function EditPage() {
                 const data = await res.json();
 
                 setFormData(data);
-                setPreview(data.image ?? "");
+                setPreview(
+                    data.image
+                        ? data.image.startsWith("http")
+                            ? data.image
+                            : `${import.meta.env.VITE_MAIN_BE_URL}${data.image}`
+                        : ""
+                );
+
                 setActiveLang(data.lang ?? "vi");
             } catch (err) {
                 console.error("Lỗi khi tải:", err);
@@ -111,14 +119,38 @@ export default function EditPage() {
     const onSubmit = async () => {
         try {
             const content = editorRef.current?.getHTML();
-            formData.content = content
-            await handleEditPost();
+
+            const data = new FormData();
+            data.append("author_id", formData.author_id || 1);
+            data.append("platform_id", formData.platform_id);
+            data.append("tags", formData.tags || "");
+            data.append("status", formData.status || "draft");
+
+            // translations
+            data.append(
+                "translations",
+                JSON.stringify([
+                    {
+                        lang: formData.lang || "vi",
+                        title: formData.title,
+                        content: content,
+                    },
+                ])
+            );
+
+            // nếu có file mới
+            if (formData.image instanceof File) {
+                data.append("image", formData.image);
+            }
+
+            await handleEditPost(id, data); // truyền id + FormData
             navigate(-1);
         } catch (err) {
             console.error("Lỗi cập nhật:", err);
             setError("Không thể cập nhật bài viết");
         }
     };
+
 
 
     if (loading) {
@@ -296,34 +328,39 @@ export default function EditPage() {
 
                             {/* Hình ảnh */}
                             <div className="space-y-3">
-                                <Label>URL Hình ảnh</Label>
-                                <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-2">
-                                    <Input
-                                        value={formData.image || ""}
-                                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                        placeholder="Nhập URL hình ảnh"
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none flex-1 focus:border-none"
-                                    />
-                                    <Button
-                                        type="button"
-                                        onClick={() => setPreview(formData.image)}
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer"
-                                    >
-                                        Xem ảnh
-                                    </Button>
-                                </div>
+                                <Label>Ảnh bài viết</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            setFormData({ ...formData, image: file });
+                                            setPreview(URL.createObjectURL(file));
+                                        }
+                                    }}
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none focus:border-none"
+                                />
+
+                                {/* Preview */}
                                 <div className="text-sm text-gray-500 mt-3 border-2 border-slate-300 admin-dark:border-slate-600 p-2 rounded-xl space-y-3">
-                                    {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
+                                    {!preview && formData.image && typeof formData.image === "string" && (
+                                        <img
+                                            src={`${import.meta.env.VITE_MAIN_BE_URL}${formData.image}`}
+                                            alt="Preview"
+                                            className="object-cover w-full rounded max-h-60 mx-auto"
+                                        />
+                                    )}
                                     {preview && (
                                         <img
                                             src={preview}
                                             alt="Preview"
                                             className="object-cover w-full rounded max-h-60 mx-auto"
-                                            onError={() => setPreview("")}
                                         />
                                     )}
                                 </div>
                             </div>
+
                         </div>
                     ) : (
                         <SocialNetworkManager

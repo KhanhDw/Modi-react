@@ -10,12 +10,13 @@ import { Separator } from "@/components/ui/separator"
 import SocialNetworkManager from "./SocialNetworkManager";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import axios from "axios";
+import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 
 
 export default function AddPage() {
     const editorRef = useRef(null);
     const navigate = useNavigate();
-    const { formData, setFormData, handleAddPost, reloadPostsAndSocialNetWorks } = useOutletContext();
+    const { formData, setFormData, handleAddPost, reloadPostsAndSocialNetWorks } = useMarketing();
     const [socialNetworks, setSocialNetworks] = useState([]);
     const [preview, setPreview] = useState("");
     const [error, setError] = useState("");
@@ -80,10 +81,8 @@ export default function AddPage() {
     }, [setFormData]);
 
     const onSubmit = () => {
-
         const content = editorRef.current?.getHTML();
 
-        // if (!formData.title || !formData.content || !formData.platform_id || !formData.image) {
         if (!formData.title || !content || !formData.platform_id || !formData.image) {
             setError("Vui lòng điền đầy đủ thông tin");
             return;
@@ -91,25 +90,33 @@ export default function AddPage() {
 
         setError("");
 
-        formData.content = content
-        // const payload = {
-        //     author_id: formData.author_id || 1,
-        //     platform_id: formData.platform_id,
-        //     image: formData.image,
-        //     tags: formData.tags,
-        //     status: formData.status || "draft",
-        //     translations: [
-        //         {
-        //             lang: formData.lang || "vi",
-        //             title: formData.title,
-        //             content: formData.content,
-        //         },
-        //     ],
-        // };
-        // console.log("Payload gửi:", payload);
-        handleAddPost();
+        const data = new FormData();
+        data.append("author_id", formData.author_id || 1);
+        data.append("platform_id", formData.platform_id);
+        data.append("tags", formData.tags || "");
+        data.append("status", formData.status || "draft");
+
+        // translations (mảng) -> stringify
+        data.append(
+            "translations",
+            JSON.stringify([
+                {
+                    lang: formData.lang || "vi",
+                    title: formData.title,
+                    content: content,
+                },
+            ])
+        );
+
+        // file ảnh
+        if (formData.image instanceof File) {
+            data.append("image", formData.image);
+        }
+
+        handleAddPost(data); // gọi hàm cha với FormData
         navigate(-1);
     };
+
 
     return (
         <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-4 lg:p-4">
@@ -218,42 +225,29 @@ export default function AddPage() {
                                 />
                             </div>
 
-                            {/* Ảnh */}
-                            <Label>URL Hình ảnh</Label>
-                            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-2">
-                                <Input
-                                    value={formData.image || ""}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, image: e.target.value });
+                            <Label>Ảnh bài viết</Label>
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        setFormData({ ...formData, image: file });
+                                        setPreview(URL.createObjectURL(file)); // tạo preview tạm
                                         setError("");
-                                    }}
-                                    placeholder="Nhập URL hình ảnh"
-                                    className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                    }
+                                }}
+                                className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                            />
+
+                            {preview && (
+                                <img
+                                    src={preview}
+                                    alt="Preview"
+                                    className="object-cover rounded-xl max-h-60 w-full mx-auto mt-2"
                                 />
-                                <Button
-                                    className="cursor-pointer bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white"
-                                    type="button"
-                                    onClick={() => setPreview(formData.image)}
-                                >
-                                    Xem ảnh
-                                </Button>
-                            </div>
-                            <div className="text-sm text-gray-500 space-y-2">
-                                {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
-                                {error && <p className="text-red-500 font-medium">{error}</p>}
-                                {preview && (
-                                    <img
-                                        key={preview}
-                                        src={preview}
-                                        alt="Preview"
-                                        className="object-cover rounded-xl max-h-60 w-full mx-auto"
-                                        onError={() => {
-                                            setError("Không tìm thấy hình ảnh từ URL đã nhập");
-                                            setPreview("");
-                                        }}
-                                    />
-                                )}
-                            </div>
+                            )}
+
                         </div>
 
                     </div>

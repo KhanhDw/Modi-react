@@ -223,7 +223,7 @@ export default function ViewPage() {
                     <div className="mb-8">
                         {post.image && !imageError ? ( // Chỉ hiển thị img nếu có post.image và không có lỗi
                             <img
-                                src={post.image}
+                                src={`${import.meta.env.VITE_MAIN_BE_URL}/${post.image}`}
                                 alt={post.title}
                                 className="w-full max-h-96 object-cover rounded-lg shadow-md mx-auto"
                                 onError={handleImageError} // Gọi hàm handleImageError khi có lỗi

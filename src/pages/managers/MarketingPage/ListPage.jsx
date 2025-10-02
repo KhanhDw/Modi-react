@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import FilterCard from "./FilterCard";
 import PostsTable from "./PostTable";
 import { Plus } from "lucide-react";
+import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 
 export default function ListPage() {
     const location = useLocation();
@@ -14,7 +15,7 @@ export default function ListPage() {
         selectedStatus,
         setSelectedStatus,
         handleDeletePost, // Thêm handleDeletePost vào destructuring
-    } = useOutletContext();
+    } = useMarketing();
 
     const filteredPosts = posts.filter((post) => {
         const lowerSearch = (searchTerm || "").toLowerCase();
