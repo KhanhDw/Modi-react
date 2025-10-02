@@ -12,6 +12,7 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
 
     const [excelData, setExcelData] = useState(null);
     const [fileName, setFileName] = useState("");
+    const [error, setError] = useState(null);
 
     const columnHeaders = {
         name: "Họ và tên",
@@ -30,22 +31,34 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
         reader.onload = (event) => {
             try {
                 const text = event.target.result;
-                // Read file with string type and UTF-8 encoding
-                const workbook = XLSX.read(text, { type: "string", codepage: 65001, raw: false });
+                const workbook = XLSX.read(text, { type: "string", codepage: 65001 });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
 
-                // Ensure phone numbers are treated as strings
+                // Get headers from the first row
+                const headerRow = XLSX.utils.sheet_to_json(worksheet, { header: 1 })[0] || [];
+                const headers = headerRow.map(h => String(h).trim());
+
+                const expectedHeaders = Object.keys(columnHeaders); // ["name", "phone", "email", "address"]
+
+                // Check for missing headers
+                const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+
+                if (missingHeaders.length > 0) {
+                    setError(`Tệp không hợp lệ. Thiếu các cột bắt buộc: ${missingHeaders.map(h => columnHeaders[h]).join(", ")}. Vui lòng tải file mẫu để xem định dạng đúng.`);
+                    handleClearData();
+                    return;
+                }
+
+                // If headers are valid, proceed to read data
                 const json = XLSX.utils.sheet_to_json(worksheet, {
                     defval: "",
-                    raw: false, // Ensure formatted values are used (not raw numbers)
-                    cellText: true, // Preserve text formatting
+                    raw: false,
+                    cellText: true,
                 });
 
                 const normalized = json.map((row) => {
-                    // Convert phone number to string and ensure leading zero
                     let phone = row.phone ? String(row.phone).trim() : "";
-                    // Add leading zero if missing (assuming 10-digit Vietnamese numbers)
                     if (phone && !phone.startsWith("0") && phone.length === 9) {
                         phone = "0" + phone;
                     } else if (!phone) {
@@ -66,9 +79,10 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
 
                 setExcelData(normalized);
             } catch (error) {
-                console.error("Error reading CSV file:", error);
+                console.error("Error reading file:", error);
                 setExcelData(null);
-                alert("Lỗi khi đọc file CSV. Vui lòng kiểm tra lại định dạng hoặc mã hóa.");
+                setError("Lỗi khi đọc file. Vui lòng kiểm tra lại định dạng file hoặc mã hóa UTF-8.");
+                handleClearData();
             }
         };
 
@@ -296,6 +310,24 @@ function ExcelDataUploader({ openDialogImportCustomer, setOpenDialogImportCustom
                     </div>
                 )}
             </div>
+            {error && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100]">
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4">
+                        <h3 className="text-2xl font-bold text-red-600 dark:text-red-500 mb-4">
+                            Lỗi Nhập Dữ Liệu
+                        </h3>
+                        <p className="text-gray-700 dark:text-gray-300 mb-6">
+                            {error}
+                        </p>
+                        <button
+                            onClick={() => setError(null)}
+                            className="w-full px-4 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-300"
+                        >
+                            Đã hiểu
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

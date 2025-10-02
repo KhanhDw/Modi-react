@@ -38,16 +38,20 @@ export default function DialogForm({
     setListIdServices,
     listServiceOfParent,
     disableItemSelectedbyName_groupServices,
+    usedServiceSlugs,
     onSubmit,
 }) {
 
     const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
     const [services, setServices] = useState([]);
+    const [loadingServices, setLoadingServices] = useState(false);
 
     const isCategory = dialog?.type === "category";
     const isChild = dialog?.type === "child";
     const isEditing = !!dialog?.target;
     const isAdding = !dialog?.target;
+
+
 
     useEffect(() => {
         if (!open) return;
@@ -74,6 +78,7 @@ export default function DialogForm({
     // fetch services một lần
     useEffect(() => {
         const fetchServices = async () => {
+            setLoadingServices(true);
             try {
                 const res = await fetch(`${API_BASE_URL}/api/services`);
                 if (!res.ok) throw new Error("Không thể tải danh sách dịch vụ");
@@ -82,6 +87,8 @@ export default function DialogForm({
                 setServices(data.data);
             } catch (err) {
                 console.error(err);
+            } finally {
+                setLoadingServices(false);
             }
         };
         fetchServices();
@@ -155,18 +162,25 @@ export default function DialogForm({
                             {isTitleGroupService}
                         </Label>
                         {isCategory ? (
-                            <CategoryServiceSelector
-                                services={services}
-                                listIdServices={listIdServices}
-                                setListIdServices={setListIdServices}
-                                disableItemSelectedbyName_groupServices={disableItemSelectedbyName_groupServices}
-                            />
+                            loadingServices ? (
+                                <div>Loading...</div>
+                            ) : (
+                                <CategoryServiceSelector
+                                    services={services}
+                                    listIdServices={listIdServices}
+                                    setListIdServices={setListIdServices}
+                                    disableItemSelectedbyName_groupServices={disableItemSelectedbyName_groupServices}
+                                    dialog={dialog} // mặc dù hơi thừa dữ liệu nhưng không sao, sẽ fix lại
+
+                                />
+                            )
                         ) : (
                             <ChildServiceSelector
                                 listServiceOfParent={listServiceOfParent}
                                 services={services}
                                 valueSlug={valueSlug}
                                 setValueSlug={setValueSlug}
+                                usedServiceSlugs={usedServiceSlugs}
                             />
                         )}
                     </div>

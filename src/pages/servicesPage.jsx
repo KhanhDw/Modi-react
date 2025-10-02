@@ -126,28 +126,48 @@ export default function ServicePage() {
                     const menuRes = await fetch(`${API_BASE_URL}${lang_api}/api/section-items/type/${queryParams_q}?slug=header`);
                     if (!menuRes.ok) throw new Error("Không thể tải mục con");
 
-                    // trường hợp không có set menu2 cho menu1 mà có set nhóm dịch vụ thì lấy nhóm đó ra
-
-
                     const menuData = await menuRes.json();
                     const servicesArray = Array.isArray(menuData) ? menuData : [];
-                    const allSlugs = servicesArray[0]?.section_title?.groupServices?.split(",").filter(Boolean) || [];
-
-                    // Nếu có slug con, fetch từng dịch vụ
-                    if (allSlugs.length > 0) {
-                        const servicePromises = allSlugs.map(async (slug) => {
-                            const tailLang = lang === "vi" ? "" : `-en`;
-                            const serviceRes = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}${tailLang}`);
-                            if (!serviceRes.ok) return null;
-                            const serviceData = await serviceRes.json();
-                            return serviceData.success ? serviceData.data : null;
-                        });
-                        const results = (await Promise.all(servicePromises)).filter(Boolean);
-                        setServices(results);
-                    } else {
-                        // Nếu không có slug con, danh sách dịch vụ là rỗng
-                        setServices([]);
+                    if (servicesArray.length === 0) {
+                        const getTypeDataGroupService = await fetch(`${API_BASE_URL}/api/service-header-config/group-service/${queryParams_q}`)
+                        const resultDataGroupService = await getTypeDataGroupService.json();
+                        const allSlugs = resultDataGroupService.data[0]?.groupServices || [];
+                        // Nếu có slug con, fetch từng dịch vụs
+                        if (allSlugs.length > 0) {
+                            const servicePromises = allSlugs.map(async (slug) => {
+                                const tailLang = lang === "vi" ? "" : `-en`;
+                                const serviceRes = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}${tailLang}`);
+                                if (!serviceRes.ok) return null;
+                                const serviceData = await serviceRes.json();
+                                return serviceData.success ? serviceData.data : null;
+                            });
+                            const results = (await Promise.all(servicePromises)).filter(Boolean);
+                            setServices(results);
+                        } else {
+                            // Nếu không có slug con, danh sách dịch vụ là rỗng
+                            setServices([]);
+                        }
                     }
+                    else {
+                        const allSlugs = servicesArray[0]?.section_title?.groupServices?.split(",").filter(Boolean) || [];
+
+                        // Nếu có slug con, fetch từng dịch vụ
+                        if (allSlugs.length > 0) {
+                            const servicePromises = allSlugs.map(async (slug) => {
+                                const tailLang = lang === "vi" ? "" : `-en`;
+                                const serviceRes = await fetch(`${API_BASE_URL}${lang_api}/api/services/${slug}${tailLang}`);
+                                if (!serviceRes.ok) return null;
+                                const serviceData = await serviceRes.json();
+                                return serviceData.success ? serviceData.data : null;
+                            });
+                            const results = (await Promise.all(servicePromises)).filter(Boolean);
+                            setServices(results);
+                        } else {
+                            // Nếu không có slug con, danh sách dịch vụ là rỗng
+                            setServices([]);
+                        }
+                    }
+
                 } catch (err) {
                     console.error(err);
                     setServices([]); // Đảm bảo services rỗng khi có lỗi

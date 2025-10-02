@@ -1,31 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, useOutletContext } from "react-router-dom";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SocialNetworkManager from "./SocialNetworkManager";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 
 export default function EditPage() {
     const editorRef = useRef(null);
-    const { formData, setFormData, handleEditPost, reloadPostsAndSocialNetWorks } = useOutletContext();
+    const { formData, setFormData, handleEditPost, reloadPostsAndSocialNetWorks } = useMarketing();
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [preview, setPreview] = useState("");
     const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [isOpenEditNetwork, setIsOpenEditNetwork] = useState(false);
     const [socialNetworks, setSocialNetworks] = useState([]);
     const [activeLang, setActiveLang] = useState("vi");
 
-    const handleOpenEditNetwork = () => {
-        setIsOpenEditNetwork(true);
-    };
+    // preview ảnh (tự động generate từ formData.image)
+    const previewUrl = useMemo(() => {
+        if (formData.image instanceof File) return URL.createObjectURL(formData.image);
+        if (typeof formData.image === "string") return `${import.meta.env.VITE_MAIN_BE_URL}${formData.image}`;
+        return "";
+    }, [formData.image]);
 
+    // Fetch danh sách social networks
     const fetchSocialNetworks = async () => {
         try {
             const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/social-networks`);
@@ -36,9 +40,6 @@ export default function EditPage() {
             console.error("Lỗi mạng xã hội:", err);
         }
     };
-
-
-
 
     // Fetch dữ liệu bài viết theo id
     useEffect(() => {
@@ -54,7 +55,6 @@ export default function EditPage() {
                 const data = await res.json();
 
                 setFormData(data);
-                setPreview(data.image ?? "");
                 setActiveLang(data.lang ?? "vi");
             } catch (err) {
                 console.error("Lỗi khi tải:", err);
@@ -64,27 +64,22 @@ export default function EditPage() {
             }
         };
 
-
         fetchSocialNetworks();
         fetchData();
     }, [id, setFormData]);
 
+    // Fetch bài viết theo ngôn ngữ
+    const fetchByLang = async (lang) => {
+        const langPath = lang ? `/${lang}` : "";
+        const url = `${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/marketing/id/${id}`;
+        const res = await fetch(url);
+        return res.ok ? res.json() : null;
+    };
 
-    // params: lang = "" | "en"
     const handleChangeLang = async (lang = "") => {
         if (!id) return;
-
-
         try {
-            // thêm "/" nếu có lang
-            const langPath = lang === 'en' ? `/${lang}` : "";
-            const url = `${import.meta.env.VITE_MAIN_BE_URL}${langPath}/api/marketing/id/${id}`;
-            const res = await fetch(url);
-
-            let marketingData = {};
-            if (res.ok) {
-                marketingData = await res.json();
-            }
+            const marketingData = await fetchByLang(lang);
 
             if (!marketingData || Object.keys(marketingData).length === 0) {
                 setFormData((prev) => ({
@@ -94,7 +89,6 @@ export default function EditPage() {
                     content: "<p></p>",
                 }));
             } else {
-                // ✅ Có dữ liệu -> hiển thị bình thường
                 setFormData(marketingData);
             }
 
@@ -103,23 +97,56 @@ export default function EditPage() {
             console.error("Lỗi khi lấy dữ liệu:", err);
             setError("Không thể tải dữ liệu. Vui lòng thử lại.");
         }
-
-        console.log("Đang load lang:", lang);
     };
 
-
     const onSubmit = async () => {
+        if (submitting) return;
+        setSubmitting(true);
+
         try {
             const content = editorRef.current?.getHTML();
-            formData.content = content
-            await handleEditPost();
+            const data = new FormData();
+
+            data.append("author_id", formData.author_id || 1);
+            data.append("platform_id", formData.platform_id);
+            data.append("tags", formData.tags || "");
+            data.append("status", formData.status || "draft");
+            data.append(
+                "translations",
+                JSON.stringify([
+                    {
+                        lang: formData.lang || "vi",
+                        title: formData.title,
+                        content,
+                    },
+                ])
+            );
+
+            if (formData.image instanceof File) {
+                data.append("image", formData.image);
+            }
+
+            await handleEditPost(id, data);
             navigate(-1);
         } catch (err) {
             console.error("Lỗi cập nhật:", err);
             setError("Không thể cập nhật bài viết");
+        } finally {
+            setSubmitting(false);
         }
     };
 
+    const handleActiveLangbtn = (lang) => {
+        if (lang !== activeLang) {
+            const confirmMsg =
+                lang === "en"
+                    ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
+                    : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
+
+            if (!window.confirm(confirmMsg)) return;
+        }
+        handleChangeLang(lang);
+    };
 
     if (loading) {
         return <p className="text-center py-6 admin-dark:text-white">Đang tải dữ liệu...</p>;
@@ -138,22 +165,6 @@ export default function EditPage() {
         );
     }
 
-    const handleActiveLangbtn = (lang) => {
-        if (lang !== activeLang) {
-            // cảnh báo nếu chuyển từ vi sang en
-            const confirmMsg =
-                lang === "en"
-                    ? "Bạn đang chuyển sang Tiếng Anh. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Anh."
-                    : "Bạn đang chuyển về Tiếng Việt. Khi cập nhật, dữ liệu sẽ được lưu ở Tiếng Việt.";
-
-            const proceed = window.confirm(confirmMsg);
-            if (!proceed) return; // nếu user nhấn Hủy thì không chuyển
-        }
-
-        setActiveLang(lang);
-        handleChangeLang(lang);
-    };
-
     return (
         <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-2 md:p-2">
             {/* Header */}
@@ -164,28 +175,21 @@ export default function EditPage() {
 
                 {/* Ngôn ngữ */}
                 <div className="flex flex-wrap sm:flex-nowrap justify-center gap-2 sm:gap-4">
-                    <button
-                        type="button"
-                        name="vi"
-                        onClick={() => handleActiveLangbtn("vi")}
-                        className={`${activeLang === "vi"
-                            ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
-                            : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                            } cursor-pointer flex px-2 py-1 rounded-md`}
-                    >
-                        <span className="font-semibold text-sm sm:text-base lg:text-lg">Tiếng Việt</span>
-                    </button>
-                    <button
-                        type="button"
-                        name="en"
-                        onClick={() => handleActiveLangbtn("en")}
-                        className={`${activeLang === "en"
-                            ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
-                            : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                            } cursor-pointer flex px-2 py-1 rounded-md`}
-                    >
-                        <span className="font-semibold text-sm sm:text-base lg:text-lg">Tiếng Anh</span>
-                    </button>
+                    {["vi", "en"].map((lang) => (
+                        <button
+                            key={lang}
+                            type="button"
+                            onClick={() => handleActiveLangbtn(lang)}
+                            className={`${activeLang === lang
+                                ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
+                                : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
+                                } cursor-pointer flex px-2 py-1 rounded-md`}
+                        >
+                            <span className="font-semibold text-sm sm:text-base lg:text-lg">
+                                {lang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}
+                            </span>
+                        </button>
+                    ))}
                 </div>
 
                 {/* Nút hành động */}
@@ -193,15 +197,17 @@ export default function EditPage() {
                     <Button
                         variant="outline"
                         onClick={() => navigate(-1)}
-                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 sm:px-4 py-2 rounded-md cursor-pointer"
+                        disabled={submitting}
+                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer"
                     >
                         Hủy
                     </Button>
                     <Button
                         onClick={onSubmit}
-                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-sm sm:text-base px-4 sm:px-4 py-2 rounded-md cursor-pointer"
+                        disabled={submitting}
+                        className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer"
                     >
-                        Cập nhật
+                        {submitting ? "Đang lưu..." : "Cập nhật"}
                     </Button>
                 </div>
             </div>
@@ -212,36 +218,24 @@ export default function EditPage() {
                 <div className="lg:w-1/3">
                     {!isOpenEditNetwork ? (
                         <div className="flex flex-col gap-4 p-3 border-2 border-slate-300 admin-dark:border-slate-600 rounded-2xl bg-gray-50 admin-dark:bg-gray-900">
-                            {/* Tiêu đề & tác giả */}
+                            {/* Tiêu đề */}
                             <div className="space-y-3">
                                 <Label>Tiêu đề</Label>
                                 <Input
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     placeholder="Nhập tiêu đề bài viết"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
-                                />
-                            </div>
-                            <div hidden>
-                                <Label>Tác giả</Label>
-                                <Input
-                                    value={formData.author || ""}
-                                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                    placeholder="Nhập tên tác giả"
-                                    className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg text-sm sm:text-base"
                                 />
                             </div>
 
                             {/* Mạng xã hội + Trạng thái */}
-                            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                                 <div className="space-y-3">
                                     <Label>Mạng xã hội</Label>
                                     <Select
                                         value={String(formData.platform_id || "")}
-                                        onValueChange={(value) =>
-                                            setFormData({ ...formData, platform_id: Number(value) })
-                                        }
-                                        className="w-full border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                        onValueChange={(value) => setFormData({ ...formData, platform_id: Number(value) })}
                                     >
                                         <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
                                             <SelectValue placeholder="Chọn mạng xã hội" />
@@ -253,11 +247,7 @@ export default function EditPage() {
                                                 </SelectItem>
                                             ))}
                                             <Separator className="mt-2" />
-                                            <Button
-                                                onClick={handleOpenEditNetwork}
-                                                theme="admin"
-                                                className="w-full mt-2 cursor-pointer"
-                                            >
+                                            <Button onClick={() => setIsOpenEditNetwork(true)} theme="admin" className="w-full mt-2">
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
@@ -269,7 +259,6 @@ export default function EditPage() {
                                     <Select
                                         value={formData.status || ""}
                                         onValueChange={(value) => setFormData({ ...formData, status: value })}
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                     >
                                         <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
                                             <SelectValue placeholder="Chọn trạng thái" />
@@ -290,39 +279,38 @@ export default function EditPage() {
                                     value={formData.tags || ""}
                                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                     placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                 />
                             </div>
 
                             {/* Hình ảnh */}
                             <div className="space-y-3">
-                                <Label>URL Hình ảnh</Label>
-                                <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-2">
-                                    <Input
-                                        value={formData.image || ""}
-                                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                        placeholder="Nhập URL hình ảnh"
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none flex-1 focus:border-none"
-                                    />
-                                    <Button
-                                        type="button"
-                                        onClick={() => setPreview(formData.image)}
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer"
-                                    >
-                                        Xem ảnh
-                                    </Button>
-                                </div>
-                                <div className="text-sm text-gray-500 mt-3 border-2 border-slate-300 admin-dark:border-slate-600 p-2 rounded-xl space-y-3">
-                                    {!preview && <p>Hình ảnh sẽ hiển thị nếu URL hợp lệ</p>}
-                                    {preview && (
-                                        <img
-                                            src={preview}
-                                            alt="Preview"
-                                            className="object-cover w-full rounded max-h-60 mx-auto"
-                                            onError={() => setPreview("")}
-                                        />
-                                    )}
-                                </div>
+                                <Label>Ảnh bài viết</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            if (!file.type.startsWith("image/")) {
+                                                alert("Vui lòng chọn đúng định dạng ảnh");
+                                                return;
+                                            }
+                                            if (file.size > 2 * 1024 * 1024) {
+                                                alert("Ảnh quá lớn, vui lòng chọn ảnh dưới 2MB");
+                                                return;
+                                            }
+                                            setFormData({ ...formData, image: file });
+                                        }
+                                    }}
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                />
+
+                                {previewUrl && (
+                                    <div className="mt-3 border-2 border-slate-300 admin-dark:border-slate-600 p-2 rounded-xl">
+                                        <img src={previewUrl} alt="Preview" className="object-cover w-full rounded max-h-60 mx-auto" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -344,5 +332,4 @@ export default function EditPage() {
             </div>
         </div>
     );
-
 }

@@ -85,8 +85,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 postion: child.position,
             }));
 
-            console.log(updatedChildren);
-
             setMenuData(prev =>
                 prev.map(cat => cat.id === category.id ? { ...cat, children: updatedChildren } : cat)
             );
@@ -104,6 +102,12 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     useEffect(() => {
         fetchAllServicesMenu();
     }, []);
+
+    useEffect(() => {
+        if (menuData.length > 0 && !selectedCategory) {
+            selectSubItemSection(menuData[0]);
+        }
+    }, [menuData, selectedCategory]);
 
     const addCategory = async (nameEn, nameVi, listIdServices) => {
         try {
@@ -395,7 +399,8 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
 
     const selectSubItemSection = (cat) => {
         setSelectedCategory(cat);
-        setListServiceOfParent(cat.name.groupServices.split(",").map(s => s.trim()).filter(Boolean))
+        const groupServices = cat?.name?.groupServices || "";
+        setListServiceOfParent(groupServices.split(",").map(s => s.trim()).filter(Boolean))
         fetchChildren(cat);
     };
 
@@ -426,7 +431,15 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     };
 
     const openAddChild = (parentCategory) => {
-        setSelectedCategory(parentCategory || selectedCategory);
+        const currentParent = parentCategory || selectedCategory;
+        if (!currentParent) return;
+
+        setSelectedCategory(currentParent);
+
+        const groupServices = currentParent?.name?.groupServices || "";
+        const servicesForParent = groupServices.split(",").map(s => s.trim()).filter(Boolean);
+        setListServiceOfParent(servicesForParent);
+
         setDialog({
             open: true,
             type: "child",
@@ -454,6 +467,10 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             valueVi: cat.name?.vi || "",
             valueSlug: cat.description?.vi || "",
             listIdServices: groupServices,
+            children: cat.children || [],
+            type_slug: cat.type,
+            // fulldata: cat,
+
         });
 
     };
@@ -533,8 +550,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 await addChild(dialog.valueEn, dialog.valueVi, dialog.valueSlug);
             }
         }
-        // chỉ reset dialog ở đây, sau khi submit xong
-        resetDialog();
     };
 
 
@@ -565,43 +580,43 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             {/* Dialog */}
             {dialog.open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 ">
-                    <DialogForm
-                        open={dialog.open}
-                        dialog={dialog}
-                        setOpen={setDialogOpen}
-                        isAdd={dialog.target === null}
-                        title={
-                            dialog.target
-                                ? dialog.type === "category"
-                                    ? "Sửa danh mục"
-                                    : "Sửa mục con"
-                                : dialog.type === "category"
-                                    ? "Thêm danh mục"
-                                    : "Thêm mục con"
-                        }
-                        isTitleGroupService={
-                            dialog.target
-                                ? dialog.type === "category"
-                                    ? "Sửa nhóm dịch vụ"
-                                    : "Sửa dịch vụ"
-                                : dialog.type === "category"
-                                    ? "Thêm nhóm dịch vụ"
-                                    : "Thêm dịch vụ"
-                        }
-
-                        valueSlug={dialog.valueSlug}
-                        setValueSlug={setDialogValueSlug}
-                        valueEn={dialog.valueEn}
-                        setValueEn={setDialogValueEn}
-                        valueVi={dialog.valueVi}
-                        setValueVi={setDialogValueVi}
-                        listIdServices={dialog.listIdServices}
-                        setListIdServices={setDialogListIdServices}
-                        listServiceOfParent={listServiceOfParent}
-                        disableItemSelectedbyName_groupServices={menuData}
-                        onSubmit={handleSubmitDialog}
-                    />
-                </div>
+                                            <DialogForm
+                                                open={dialog.open}
+                                                dialog={dialog}
+                                                setOpen={setDialogOpen}
+                                                isAdd={dialog.target === null}
+                                                title={
+                                                    dialog.target
+                                                        ? dialog.type === "category"
+                                                            ? "Sửa danh mục"
+                                                            : "Sửa mục con"
+                                                        : dialog.type === "category"
+                                                            ? "Thêm danh mục"
+                                                            : "Thêm mục con"
+                                                }
+                                                isTitleGroupService={
+                                                    dialog.target
+                                                        ? dialog.type === "category"
+                                                            ? "Sửa nhóm dịch vụ"
+                                                            : "Sửa dịch vụ"
+                                                        : dialog.type === "category"
+                                                            ? "Thêm nhóm dịch vụ"
+                                                            : "Thêm dịch vụ"
+                                                }
+                    
+                                                valueSlug={dialog.valueSlug}
+                                                setValueSlug={setDialogValueSlug}
+                                                valueEn={dialog.valueEn}
+                                                setValueEn={setDialogValueEn}
+                                                valueVi={dialog.valueVi}
+                                                setValueVi={setDialogValueVi}
+                                                listIdServices={dialog.listIdServices}
+                                                setListIdServices={setDialogListIdServices}
+                                                listServiceOfParent={listServiceOfParent}
+                                                disableItemSelectedbyName_groupServices={menuData}
+                                                usedServiceSlugs={selectedCategory?.children?.map(child => child.description?.en).filter(Boolean) || []}
+                                                onSubmit={handleSubmitDialog}
+                                            />                </div>
             )}
 
             {/* confirmdialog xóa */}

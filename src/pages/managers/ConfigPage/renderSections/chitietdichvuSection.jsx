@@ -29,6 +29,8 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import ConfirmationModal from "./components/ConfirmationModal.jsx";
+import NotificationToast from "@/components/feature/notification-toast.jsx";
 
 
 const SortableStageItem = ({ stage, onEdit, onDelete, isEditing, onUpdate, onCancelEdit }) => {
@@ -79,7 +81,7 @@ const SortableStageItem = ({ stage, onEdit, onDelete, isEditing, onUpdate, onCan
                     </div>
                     <div className="flex gap-2">
                         <Button theme="admin" size="icon" variant="ghost" onClick={() => onEdit(stage.id)}><Edit2 className="w-4 h-4" /></Button>
-                        <Button theme="admin" size="icon" variant="ghost" className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400" onClick={() => onDelete(stage.id)}><Trash2 className="w-4 h-4" /></Button>
+                        <Button theme="admin" size="icon" variant="ghost" className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400" onClick={() => onDelete(stage)}><Trash2 className="w-4 h-4" /></Button>
                     </div>
                 </>
             )}
@@ -99,6 +101,23 @@ export default function ChitietdichvuSection() {
     const [editingStage, setEditingStage] = useState(null);
     const [isOrderChanged, setIsOrderChanged] = useState(false);
 
+    // State for confirmation modal and toast
+    const [confirmModalState, setConfirmModalState] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: () => { },
+    });
+    const [toastState, setToastState] = useState({
+        isVisible: false,
+        message: '',
+        type: 'success',
+    });
+
+    // Helper to show toast
+    const showToast = (message, type = 'success') => {
+        setToastState({ isVisible: true, message, type });
+    };
 
 
     const fetchDataServiceStage = async () => {
@@ -156,19 +175,30 @@ export default function ChitietdichvuSection() {
         try {
             await createMiniService({ title_vi: newLineVi, title_en: newLineEn });
             await FetchListMiniService();
+            showToast("Thêm hạng mục thành công!");
         } catch (error) {
             console.log(error);
+            showToast("Thêm hạng mục thất bại.", "error");
         }
     }
 
+    const triggerDeleteMiniService = (item) => {
+        setConfirmModalState({
+            isOpen: true,
+            title: 'Xác nhận xóa hạng mục',
+            message: `Bạn có chắc chắn muốn xóa hạng mục "${item.title_vi}"? Hành động này không thể hoàn tác.`,
+            onConfirm: () => handleDeleteMiniService(item.id),
+        });
+    };
 
-
-    const HandleDeteletMiniService = async (id) => {
+    const handleDeleteMiniService = async (id) => {
         try {
             await deleteMiniService(id);
             await FetchListMiniService();
+            showToast("Đã xóa hạng mục thành công.");
         } catch (error) {
             console.log(error);
+            showToast("Xóa hạng mục thất bại.", "error");
         }
     }
 
@@ -177,7 +207,9 @@ export default function ChitietdichvuSection() {
     const fetchStages = async () => {
         try {
             const data = await getAllStages();
-            setStageMaster(data);
+            // Sắp xếp dữ liệu theo 'code' trước khi set state
+            const sortedData = data.sort((a, b) => Number(a.code) - Number(b.code));
+            setStageMaster(sortedData);
             setIsOrderChanged(false); // Reset khi fetch lại
         } catch (err) {
             console.error("Lỗi load stage_master:", err);
@@ -196,8 +228,10 @@ export default function ChitietdichvuSection() {
             setNewStageVi("");
             setNewStageEn("");
             await fetchStages();
+            showToast("Thêm giai đoạn thành công!");
         } catch (err) {
             console.error(err);
+            showToast("Thêm giai đoạn thất bại.", "error");
         }
     };
 
@@ -207,18 +241,31 @@ export default function ChitietdichvuSection() {
             await updateStage(id, stageData);
             setEditingStage(null);
             await fetchStages();
+            showToast("Cập nhật giai đoạn thành công!");
         } catch (err) {
             console.error(err);
+            showToast("Cập nhật giai đoạn thất bại.", "error");
         }
     };
 
     // handle delete
+    const triggerDeleteStage = (stage) => {
+        setConfirmModalState({
+            isOpen: true,
+            title: 'Xác nhận xóa giai đoạn',
+            message: `Bạn có chắc chắn muốn xóa giai đoạn "${stage.title_vi}"? Tất cả dịch vụ và hạng mục con liên quan cũng sẽ bị ảnh hưởng.`,
+            onConfirm: () => handleDeleteStage(stage.id),
+        });
+    };
+
     const handleDeleteStage = async (id) => {
         try {
             await deleteStage(id);
             await fetchStages();
+            showToast("Đã xóa giai đoạn thành công.");
         } catch (err) {
             console.error(err);
+            showToast("Xóa giai đoạn thất bại.", "error");
         }
     };
 
@@ -255,8 +302,10 @@ export default function ChitietdichvuSection() {
             await bulkUpdateStageCodes(stagesToUpdate);
 
             await fetchStages(); // Fetch lại để đảm bảo dữ liệu đồng bộ và reset isOrderChanged
+            showToast("Đã lưu thứ tự giai đoạn.");
         } catch (err) {
             console.error("Lỗi khi lưu thứ tự:", err);
+            showToast("Lưu thứ tự thất bại.", "error");
         }
     };
 
@@ -288,6 +337,21 @@ export default function ChitietdichvuSection() {
 
     return (
         <div className="space-y-6">
+            {toastState.isVisible && (
+                <NotificationToast
+                    message={toastState.message}
+                    type={toastState.type}
+                    onClose={() => setToastState({ ...toastState, isVisible: false })}
+                />
+            )}
+            <ConfirmationModal
+                isOpen={confirmModalState.isOpen}
+                onClose={() => setConfirmModalState({ ...confirmModalState, isOpen: false })}
+                onConfirm={confirmModalState.onConfirm}
+                title={confirmModalState.title}
+                message={confirmModalState.message}
+            />
+
             <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
                 <CardHeader>
                     <CardTitle className="text-gray-900 admin-dark:text-white">
@@ -371,7 +435,7 @@ export default function ChitietdichvuSection() {
                                         stage={st}
                                         isEditing={editingStage === st.id}
                                         onEdit={setEditingStage}
-                                        onDelete={handleDeleteStage}
+                                        onDelete={triggerDeleteStage}
                                         onUpdate={handleUpdateStage}
                                         onCancelEdit={() => setEditingStage(null)}
                                     />
@@ -527,7 +591,7 @@ export default function ChitietdichvuSection() {
                                                     <Button theme="admin"
                                                         size="sm"
                                                         variant="outline"
-                                                        onClick={() => HandleDeteletMiniService(item.id)}
+                                                        onClick={() => triggerDeleteMiniService(item)}
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </Button>

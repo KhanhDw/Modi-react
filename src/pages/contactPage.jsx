@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, use } from "react"
 import CaptchaImage from '../components/feature/CaptchaImage';
 import { useSearchParams } from 'react-router-dom';
 import getServiceBySlug from '../utils/slugData.jsx';
 import { useLanguage } from "../contexts/LanguageContext.jsx";
 import useSocket from "@/hook/useSocket";
+import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
 // Trạng thái ban đầu của form
 const initialFormState = {
@@ -17,15 +18,19 @@ const initialFormState = {
 export default function ContactPage() {
   const { t } = useLanguage();
   const socket = useSocket();
+  const { lang, prefix } = useCurrentLanguage();
+
   const [searchParams] = useSearchParams();
   const serviceOrderURL = getServiceBySlug(searchParams.get('service-order')) ? getServiceBySlug(searchParams.get('service-order')).name : "";
   const [formData, setFormData] = useState(initialFormState)
   const [formSubmitted, setFormSubmitted] = useState(false)
-
+  const [mapUrl, setMapUrl] = useState("");
   const [captchaError, setCaptchaError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
-
+  const [companyInfo, setCompanyInfo] = useState([]);
+  const [companyName, setCompanyName] = useState("");
+  const [activeLang, setActiveLang] = useState(lang);
   //chuẩn hóa nhập email
   const validateEmail = (email) => {
     const trimmedEmail = email.trim();
@@ -40,13 +45,59 @@ export default function ContactPage() {
     return regex.test(trimmedPhone);
   }
 
+  const fetchUrlGoogleMapContact = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/type/urlgooglemap?slug=contact`
+      );
+      const data = await res.json();
+      setMapUrl(data[0]?.title?.en || "");
+      console.log(data);
+    } catch (err) {
+      console.error("Lỗi tải dữ liệu", err);
+    }
+  };
+
+
+  const fetchNameCompanyFooter = async () => {
+    try {
+      const infoRes = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/section-items/type/company_info?slug=footer`
+      );
+      const data = await infoRes.json();
+
+      // Tìm title tên công ty
+      const nameItem = data.find(item => item?.title?.vi === "Tên công ty");
+
+
+      if (nameItem) {
+        // Lấy tên theo ngôn ngữ activeLang, fallback về vi
+        // setCompanyName(nameItem.description?.[lang] || nameItem.description?.vi || "");
+        setCompanyInfo(nameItem.description);
+
+      }
+    } catch (err) {
+      console.error("Lỗi tải dữ liệu công ty", err);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchUrlGoogleMapContact();
+    fetchNameCompanyFooter()
+  }, []);
+
+
+
   useEffect(() => {
     if (!socket) return;
     socket.on("dataChanged", (data) => {
-      console.log("📩 Data changed:", data);
+      // console.log("📩 Data changed:", data);
     });
     return () => socket.off("dataChanged");
   }, [socket]);
+
+
 
 
 
@@ -105,10 +156,6 @@ export default function ContactPage() {
         body: JSON.stringify(formData) // gửi dữ liệu trước khi reset
       });
 
-      // const data = await response.json();
-      // console.log('Kết quả từ server:', data);
-      // alert(data.message);
-
       // Sau khi gửi thành công mới reset form
       setFormSubmitted(true);
       setFormData(initialFormState);
@@ -117,6 +164,9 @@ export default function ContactPage() {
       console.error('Lỗi khi gửi dữ liệu:', error);
     }
   };
+
+
+
 
   // Tự động đóng modal sau 3 giây
   useEffect(() => {
@@ -153,7 +203,8 @@ export default function ContactPage() {
           <div className="space-y-4">
             <p className="text-sm text-red-600 dark:text-red-400 uppercase tracking-wider font-semibold"> {t("contactPage.title")}</p>
             <h1 className="text-2xl sm:text-xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
-              {t("contactPage.nameCompany")}
+              {/* {t("contactPage.nameCompany")} */}
+              {companyInfo?.[lang]}
             </h1>
             <p className="text-gray-600 dark:text-slate-400  sm:text-sm leading-relaxed">
               {t("contactPage.description")}
@@ -261,14 +312,16 @@ export default function ContactPage() {
         {/* Cột phải: Bản đồ */}
         <div className="lg:sticky lg:top-8 self-start">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden h-[650px] xs:h-[320px] md:h-[400px] lg:h-[600px] xl:h-[650px] 2xl:h-[800px]  border border-gray-200 dark:border-slate-700">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7634.251582934594!2d105.40702300391352!3d10.387019187656323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310a0cec7943ea5d%3A0xc448a0419b717198!2zQ3R5IFROSEggxJDhuqd1IHTGsCAtIFRoxrDGoW5nIE3huqFpIE3hu5ljIMSQaeG7gW4!5e1!3m2!1sen!2s!4v1753229049435!5m2!1sen!2s"
-              allowFullScreen
-              loading="lazy"
-              className="w-full h-full border-0"
-              title="Bản đồ Công ty Ty Modi"
-              style={{ filter: 'grayscale(0) invert(0) contrast(1)' }} // Default style for light mode
-            ></iframe>
+            {mapUrl !== "" ?
+              <iframe
+                src={`${mapUrl}`}
+                allowFullScreen
+                loading="lazy"
+                className="w-full h-full border-0"
+                title="Bản đồ Công ty Ty Modi"
+                style={{ filter: 'grayscale(0) invert(0) contrast(1)' }} // Default style for light mode
+              ></iframe>
+              : <div className="flex items-center justify-center text-gray-400 italic h-full">Chưa có dữ liệu</div>}
             {/* Để kích hoạt style dark mode cho iframe, bạn cần dùng Javascript để thêm class,
                 vì Tailwind không thể trực tiếp style iframe từ CSS.
                 Hoặc bạn có thể dùng một bộ lọc CSS đơn giản như ví dụ dưới đây trong file CSS toàn cục:

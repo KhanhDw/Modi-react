@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 
-export default function ChildServiceSelector({ services, valueSlug, setValueSlug, listServiceOfParent }) {
+export default function ChildServiceSelector({ services, valueSlug, setValueSlug, listServiceOfParent, usedServiceSlugs }) {
 
 
     const [filteredServices, setFilteredServices] = useState([]);
@@ -19,7 +19,7 @@ export default function ChildServiceSelector({ services, valueSlug, setValueSlug
             );
             setFilteredServices(result);
         }
-    }, [services, listServiceOfParent, valueSlug]);
+    }, [services, listServiceOfParent]);
 
 
     return (
@@ -31,11 +31,15 @@ export default function ChildServiceSelector({ services, valueSlug, setValueSlug
                 <SelectValue placeholder="Chọn một service..." />
             </SelectTrigger>
             <SelectContent>
-                {filteredServices.map((s) => (
-                    <SelectItem key={s.id} value={s.translation.slug}>
-                        <span className="w-50 sm:w-full">{s.translation.ten_dich_vu}</span>
-                    </SelectItem>
-                ))}
+                {filteredServices.map((s) => {
+                    const slug = s.translation.slug;
+                    const isUsed = usedServiceSlugs?.includes(slug) && slug !== valueSlug;
+                    return (
+                        <SelectItem key={s.id} value={slug} disabled={isUsed}>
+                            {s.translation.ten_dich_vu}
+                        </SelectItem>
+                    )
+                })}
             </SelectContent>
         </Select>
     );
