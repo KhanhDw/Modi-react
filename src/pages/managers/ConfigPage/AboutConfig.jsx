@@ -243,7 +243,7 @@ function ListEditor({ section, data, onChange, lang }) {
         <div className="p-3 sm:p-4 bg-gray-50 admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-3 sm:space-y-4 w-full">
             <h3 className="font-bold text-base sm:text-lg">{section}</h3>
             {data.map((item, index) => (
-                <div key={index} className="bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3 w-full">
+                <div key={index} className="p-2 sm:p-3 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-xl shadow space-y-2 sm:space-y-3 w-full">
                     <input autoComplete="off"
                         type="text"
                         placeholder="Tiêu đề..."
@@ -374,10 +374,10 @@ export default function AboutConfig() {
         <div className="grid xs:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-3 items-start mt-5">
             <div className="flex flex-col space-y-4 sm:space-y-6">
                 <div className="flex items-center justify-between">
-                    <div className="rounded-xl bg-slate-700 gap-4 flex mx-auto flex-col sm:flex-col xl:flex-row justify-center md:gap-4 border border-gray-800 px-2 py-3 w-full md:w-full sm:w-fit xl:w-fit">
+                    <div className="rounded-xl bg-gray-100 admin-dark:bg-gray-800 shadow gap-4 flex mx-auto flex-col sm:flex-col xl:flex-row justify-center md:gap-4 border-gray-800 px-2 py-3 w-full md:w-full sm:w-fit xl:w-fit">
                         <button
                             onClick={() => setLang(lang === "vi" ? "en" : "vi")}
-                            className="w-full sm:w-auto py-1 sm:py-2 sm:px-2 bg-gray-900 admin-dark:bg-gray-900 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-700 transition cursor-pointer"
+                            className="w-full sm:w-auto py-1 sm:py-2 sm:px-2 bg-gray-900 admin-dark:bg-gray-800 admin-dark:border admin-dark:border-gray-400 text-white rounded-lg sm:rounded-xl shadow hover:bg-gray-800 transition cursor-pointer"
                         >
                             <span className='text-xs sm:text-sm px-4 text-center font-semibold'>{lang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}</span>
                         </button>

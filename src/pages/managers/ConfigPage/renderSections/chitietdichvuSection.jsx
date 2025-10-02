@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { Plus, Edit2, Trash2, Save, X, Crosshair, GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
-import EditServiceGroupForm from "./components/EditServiceGroupForm.jsx"
-import ServiceSelectionModal from "./ServiceSelectionModal.jsx"
-import { getAllMiniServices, createMiniService, deleteMiniService } from "./hook/use_list_mini_service.jsx"
-import ServiceSelectionForGroupServiceModal from "./ServiceSelectionForGroupServiceModal.jsx"
-import { getAllServices, getAllServiceStages, } from "./hook/use_services_stage.jsx"
-import { getAllBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
-import { getAllStages, createStage, updateStage, deleteStage, bulkUpdateStageCodes } from "./hook/use_stage_master.jsx";
-import { PencilLine, LogOut } from 'lucide-react';
 import {
-    DndContext,
     closestCenter,
+    DndContext,
     PointerSensor,
     useSensor,
     useSensors,
@@ -31,6 +21,15 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import ConfirmationModal from "./components/ConfirmationModal.jsx";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
+import { Crosshair, Edit2, GripVertical, LogOut, PencilLine, Plus, Save, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import EditServiceGroupForm from "./components/EditServiceGroupForm.jsx";
+import { getAllBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
+import { createMiniService, deleteMiniService, getAllMiniServices } from "./hook/use_list_mini_service.jsx";
+import { getAllServices, getAllServiceStages, } from "./hook/use_services_stage.jsx";
+import { bulkUpdateStageCodes, createStage, deleteStage, getAllStages, updateStage } from "./hook/use_stage_master.jsx";
+import ServiceSelectionForGroupServiceModal from "./ServiceSelectionForGroupServiceModal.jsx";
+import ServiceSelectionModal from "./ServiceSelectionModal.jsx";
 
 
 const SortableStageItem = ({ stage, onEdit, onDelete, isEditing, onUpdate, onCancelEdit }) => {
@@ -355,28 +354,28 @@ export default function ChitietdichvuSection() {
             <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
                 <CardHeader>
                     <CardTitle className="text-gray-900 admin-dark:text-white">
-                        <div className="flex items-center justify-between w-full">
-                            <span className="">Chọn Giai Đoạn</span>
+                        <div className="flex flex-col sm:flex-row gap-3 items-center justify-between w-full">
+                            <span className="text-sm sm:text-base">Chọn Giai Đoạn</span>
                             <Button theme="admin"
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setIsEditStage(!isEditStage)}
-                                className="font-medium text-gray-700 admin-dark:text-gray-300 admin-dark:hover:text-white"
+                                className="font-medium bg-gray-100 admin-dark:bg-gray-800 shadow text-gray-700 admin-dark:text-gray-300 admin-dark:hover:text-white cursor-pointer"
                             >
                                 {isEditStage ? (
-                                    <span className="flex items-center gap-2 text-red-600">Hủy thay đổi <LogOut className="w-4 h-4" /></span>
+                                    <span className="flex items-center gap-2 text-sm sm:text-base">Hủy thay đổi <LogOut className="w-4 h-4" /></span>
                                 ) : (
-                                    <span className="flex items-center gap-2"><PencilLine className="w-4 h-4" /> Điều chỉnh giai đoạn </span>
+                                    <span className="flex items-center gap-2 text-sm sm:text-base"><PencilLine className="w-4 h-4" /> Điều chỉnh giai đoạn </span>
                                 )}
                             </Button>
                         </div>
                     </CardTitle>
-                    <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+                    <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm sm:text-base">
                         Sử dụng thanh trượt để chuyển đổi giữa các giai đoạn
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="px-4">
+                    <div>
                         <Slider
                             value={[currentStage]}
                             onValueChange={(value) => setCurrentStage(value[0])}
@@ -407,16 +406,18 @@ export default function ChitietdichvuSection() {
                 </CardContent>
             </Card>
 
-            {isEditStage && <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
-                <CardHeader>
-                    <CardTitle className="text-gray-900 admin-dark:text-white">Quản lý giai đoạn</CardTitle>
+            {isEditStage && <Card className="bg-white admin-dark:bg-gray-900 border border-gray-300 admin-dark:border-gray-600">
+                <CardHeader className={'px-2 sm:px-4'}>
+                    <CardTitle className="text-gray-900 admin-dark:text-white text-sm sm:text-base">Quản lý giai đoạn</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="flex gap-2 items-end">
-                        <Input placeholder="Vị trí giai đoạn" value={newStageCode} onChange={(e) => setNewStageCode(e.target.value)} />
-                        <Input placeholder="Tiếng Việt" value={newStageVi} onChange={(e) => setNewStageVi(e.target.value)} />
-                        <Input placeholder="English" value={newStageEn} onChange={(e) => setNewStageEn(e.target.value)} />
-                        <Button theme="admin" onClick={handleAddStage}><Plus className="w-4 h-4 mr-1" /> Thêm</Button>
+                        <Input placeholder="Vị trí giai đoạn" value={newStageCode} onChange={(e) => setNewStageCode(e.target.value)} className={'text-gray-700 admin-dark:text-gray-100'} />
+                        <Input placeholder="Tiếng Việt" value={newStageVi} onChange={(e) => setNewStageVi(e.target.value)} className={'text-gray-700 admin-dark:text-gray-100'} />
+                        <Input placeholder="English" value={newStageEn} onChange={(e) => setNewStageEn(e.target.value)} className={'text-gray-700 admin-dark:text-gray-100'} />
+                        <Button theme="admin" onClick={handleAddStage} className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600">
+                            <Plus className="w-4 h-4 mr-1 cursor-pointer text-xs sm:text-base text-white" /> <span className="text-sm sm:text-base font-semibold text-white">Thêm</span>
+                        </Button>
                     </div>
 
                     <DndContext
@@ -446,9 +447,12 @@ export default function ChitietdichvuSection() {
 
                     {isOrderChanged && (
                         <div className="flex justify-end gap-2 pt-4">
-                            <Button theme="admin" variant="ghost" onClick={handleCancelOrder}>Hủy sắp xếp</Button>
-                            <Button theme="admin" onClick={handleSaveOrder}>
-                                <Save className="w-4 h-4 mr-2" /> Lưu thứ tự
+                            <Button theme="admin" variant="ghost" onClick={handleCancelOrder} className="cursor-pointer">
+                                <span className="text-sm sm:text-base font-semibold text-white">Hủy sắp xếp</span>
+                            </Button>
+                            <Button theme="admin" onClick={handleSaveOrder} className="cursor-pointer">
+                                <Save className="w-4 h-4 mr-2" />
+                                <span className="text-sm sm:text-base font-semibold text-white">Lưu thứ tự</span>
                             </Button>
                         </div>
                     )}
@@ -460,10 +464,10 @@ export default function ChitietdichvuSection() {
                 <Card
                     className="bg-white admin-dark:bg-gray-900 text-gray-900 admin-dark:text-gray-200 border-gray-200 admin-dark:border-gray-700"
                 >
-                    <CardHeader className="w-full flex flex-row items-center justify-between">
-                        <div className="flex flex-col items-start">
-                            <CardTitle className="text-gray-900 admin-dark:text-white">Dịch Vụ</CardTitle>
-                            <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm font-normal mt-1">
+                    <CardHeader className="w-full gap-2 flex flex-col sm:flex-row items-center justify-between px-2 sm:px-4">
+                        <div className="flex flex-col items-center sm:items-start">
+                            <CardTitle className="text-gray-900 admin-dark:text-white text-sm sm:text-base">Dịch Vụ</CardTitle>
+                            <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm font-normal mt-1 sm:text-base">
                                 Chọn dịch vụ cho giai đoạn <span className="font-semibold">{stageMaster[currentStage - 1]?.title_vi}</span>
                             </CardDescription>
                         </div>
@@ -472,18 +476,20 @@ export default function ChitietdichvuSection() {
                                 onClick={() => setIsModalOpen(true)}
                                 variant="outline"
                                 size="default"
+                                className="cursor-pointer"
                             >
-                                <Plus className="w-4 h-4 mr-2" /> Chọn dịch vụ
+                                <Plus className="w-4 h-4" />
+                                <span className="text-sm sm:text-base font-semibold text-white">Chọn dịch vụ</span>
                             </Button>
                         </div>
                     </CardHeader>
 
                     <CardContent className="space-y-6">
                         <div className="space-y-3">
-                            <Label className="text-base text-gray-800 admin-dark:text-gray-200">Dịch vụ đã chọn cho giai đoạn <span className="font-semibold text-blue-600 admin-dark:text-sky-400">{stageMaster[currentStage - 1]?.title_vi}</span></Label>
+                            <Label className="text-gray-800 admin-dark:text-gray-200 text-sm sm:text-base">Dịch vụ đã chọn cho giai đoạn <span className="font-semibold text-blue-600 admin-dark:text-sky-400 text-sm sm:text-base">{stageMaster[currentStage - 1]?.title_vi}</span></Label>
                             <div className="space-y-2 p-3 bg-gray-50 admin-dark:bg-gray-800 rounded-lg min-h-[100px] border border-gray-200 admin-dark:border-gray-700">
                                 {getCurrentStageServices().length === 0 ? (
-                                    <p className="text-center text-gray-500 admin-dark:text-gray-500 py-4">
+                                    <p className="text-center text-gray-500 admin-dark:text-gray-500 py-4 text-sm sm:text-base">
                                         Chưa có dịch vụ nào được chọn cho giai đoạn này
                                     </p>
                                 ) : (
@@ -508,19 +514,19 @@ export default function ChitietdichvuSection() {
                 <Card
                     className="bg-white admin-dark:bg-gray-900 duration-300 transition-all text-gray-900 admin-dark:text-gray-200 border-gray-200 admin-dark:border-gray-700"
                 >
-                    <CardHeader>
-                        <CardTitle className="text-gray-900 admin-dark:text-white">
+                    <CardHeader className={'px-2 sm:px-4'}>
+                        <CardTitle className="text-gray-900 admin-dark:text-white text-sm sm:text-base">
                             Quản Lý Mục
                         </CardTitle>
-                        <CardDescription className="text-gray-500 admin-dark:text-gray-400">
+                        <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm sm:text-base">
                             Thêm và chỉnh sửa các hạng mục cho các gói dịch vụ
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {/* Add new ServiceGroup Line */}
                         <div className="space-y-3 p-4 border border-gray-200 rounded-lg bg-gray-50 admin-dark:bg-gray-800/50 admin-dark:border-gray-700">
-                            <h4 className="font-medium text-gray-900 admin-dark:text-white">Thêm hạng mục cho các gói dịch vụ</h4>
-                            <div className="flex flex-col w-full space-y-3">
+                            <h4 className="font-medium text-gray-900 admin-dark:text-white text-sm sm:text-base">Thêm hạng mục cho các gói dịch vụ</h4>
+                            <div className="flex flex-col md:flex-row md:gap-2 w-full space-y-3">
                                 <Input
                                     placeholder="Tên hạng mục (Việt)"
                                     value={newLineVi}
@@ -532,16 +538,17 @@ export default function ChitietdichvuSection() {
                                     onChange={(e) => setNewLineEn(e.target.value)}
                                 />
                             </div>
-                            <Button theme="admin" onClick={HandlePostSelectMiniServiceForServiceStage} className="w-full">
-                                <Plus className="w-4 h-4 mr-2" /> Thêm hạng mục mới
+                            <Button theme="admin" onClick={HandlePostSelectMiniServiceForServiceStage} className="w-full md:w-50 flex md:mx-auto shadow bg-blue-500 hover:bg-blue-600 cursor-pointer">
+                                <Plus className="w-4 h-4 mr-2 text-white" />
+                                <span className="text-sm sm:text-base font-semibold text-white">Thêm hạng mục mới</span>
                             </Button>
                         </div>
 
                         {/* Items List */}
-                        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
-                            <h4 className="font-medium text-gray-900 admin-dark:text-white">Danh Sách Hạng Mục</h4>
+                        <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                            <h4 className="font-medium text-gray-900 admin-dark:text-white text-sm sm:text-base">Danh Sách Hạng Mục</h4>
                             {listServiceMini.length === 0 ? (
-                                <p className="text-gray-500 admin-dark:text-gray-500 text-center py-4">
+                                <p className="text-gray-500 admin-dark:text-gray-500 text-center py-4 text-sm sm:text-base">
                                     Chưa có mục nào. Hãy thêm mục đầu tiên!
                                 </p>
                             ) : (
@@ -563,9 +570,9 @@ export default function ChitietdichvuSection() {
                                             <>
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2 text-blue-600 admin-dark:text-sky-400">
-                                                        <span className="font-medium">{item.title_vi}</span>
+                                                        <span className="font-medium text-sm sm:text-base">{item.title_vi}</span>
                                                     </div>
-                                                    <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                                                    <p className="text-gray-500 admin-dark:text-gray-400 text-sm sm:text-base">
                                                         {item.title_en}
                                                     </p>
                                                 </div>

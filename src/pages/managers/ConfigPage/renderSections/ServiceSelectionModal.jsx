@@ -1,18 +1,18 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
     DialogFooter,
+    DialogHeader,
     DialogOverlay,
+    DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import useLenisLocal from "@/hook/useLenisLocal";
-import React, { useEffect, useState } from "react";
-import { getAllServices, createServiceStage, getAllServiceStages, deleteServiceStage } from "./hook/use_services_stage.jsx"
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { createServiceStage, deleteServiceStage, getAllServices, getAllServiceStages } from "./hook/use_services_stage.jsx";
 
 export default function ServiceSelectionModal({ isOpen, onClose, currentStage, onSaved }) {
     useLenisLocal(".lenis-local");
@@ -113,10 +113,10 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
-            <DialogContent className="admin-dark:bg-gray-900/95 admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-2xl">
+            <DialogOverlay className="bg-black/50 backdrop-blur-sm" />
+            <DialogContent className="admin-dark:bg-gray-900/95 bg-gray-100 border-none admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-2xl">
                 <DialogHeader className="pr-6">
-                    <DialogTitle className="text-xl text-foreground">Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
+                    <DialogTitle className="text-xl text-gray-900 admin-dark:text-white">Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
                 </DialogHeader>
 
                 <div className="py-4">
@@ -172,10 +172,10 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
                         </div>
                         <div className="flex gap-2">
                             <DialogClose >
-                                <span className="border-2 admin-dark:border-gray-700 border-gray-400 rounded-lg px-3 py-2">Đóng</span>
+                                <span className="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 cursor-pointer">Đóng</span>
                             </DialogClose>
-                            <Button onClick={handleSave} disabled={isSaving}>
-                                {isSaving ? "Đang lưu..." : "Lưu"}
+                            <Button onClick={handleSave} disabled={isSaving} className="cursor-pointer bg-blue-500 hover:bg-blue-600">
+                                <span className="text-sm sm:text-base font-semibold text-white">{isSaving ? "Đang lưu..." : "Lưu"}</span>
                             </Button>
 
                         </div>

@@ -255,23 +255,30 @@ export default function HomeConfigMultiLang() {
                 </div>
 
                 {/* LANG TABS */}
-                {activeSection !== "vitri" && activeSection !== "chitietdichvu" ?
-                    (
-                        <div className="relative flex flex-col gap-2 rounded-t-xl admin-dark:bg-gray-800 px-3 py-1 2xl:top-0 xs:w-full">
-                            <div className="flex flex-col z-2 rounded-t-3xl xs:w-full xs:flex-row items-center justify-end gap-2 mt-2">
+                {activeSection !== "vitri" && activeSection !== "chitietdichvu" ? (
+                    <div className="relative px-4 py-3 xs:w-full">
+                        <div className="flex justify-end">
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 admin-dark:bg-gray-700 shadow-sm">
                                 {/* Hiển thị ở md+ */}
-                                <span className="hidden md:inline">
-                                    {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
+                                <span className="hidden md:inline text-sm font-medium text-gray-700 admin-dark:text-gray-200">
+                                    {activeLang === "vi"
+                                        ? "Đang thiết lập nội dung cho tiếng Việt"
+                                        : "Đang thiết lập nội dung cho tiếng Anh"}
                                 </span>
+
                                 {/* Hiển thị ở xs */}
-                                <span className="inline md:hidden">
+                                <span className="inline md:hidden text-sm font-medium text-gray-700 admin-dark:text-gray-200">
                                     {activeLang === "vi" ? "Ngôn ngữ Việt" : "Ngôn ngữ Anh"}
                                 </span>
-                                <Switch checked={activeLang === "en"} onClick={() => setActiveLang((pre) => pre === "vi" ? "en" : "vi")} />
+
+                                <Switch
+                                    checked={activeLang === "en"}
+                                    onClick={() => setActiveLang((prev) => prev === "vi" ? "en" : "vi")}
+                                />
                             </div>
                         </div>
-                    ) : null
-                }
+                    </div>
+                ) : null}
 
                 <RenderHomeConfig
                     activeSection={activeSection}
