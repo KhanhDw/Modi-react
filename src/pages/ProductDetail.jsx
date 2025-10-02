@@ -124,7 +124,6 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4">🔍</div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Không tìm thấy sản phẩm</h2>
           <p className="text-muted-foreground mb-4">Sản phẩm bạn tìm kiếm không tồn tại</p>
           <Button asChild>

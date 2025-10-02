@@ -132,7 +132,6 @@ export default function MarketingPage() {
                         {!articles.length && (
                             <div className="mt-40 flex items-center justify-center">
                                 <div className="text-center flex items-center justify-center flex-col">
-                                    <div className="text-6xl mb-4">🔍</div>
                                     <h3 className="text-xl font-semibold text-foreground mb-2">
                                         {lang === "vi"
                                             ? isSearching
