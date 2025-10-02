@@ -137,22 +137,19 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   return (
     <aside
       className={`
-        fixed top-0 left-0 z-50 w-72 sm:w-80 h-screen p-0 overflow-y-auto 
-        bg-white dark:bg-gray-900 shadow-2xl border-r border-gray-200 dark:border-gray-700
-        transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}
+    fixed top-0 left-0 z-50 w-72 sm:w-80 h-screen p-0 
+    bg-white dark:bg-gray-900 shadow-2xl border-r border-gray-200 dark:border-gray-700
+    transform transition-transform duration-300 ease-in-out
+    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+  `}
     >
-      <div className='flex items-start justify-between flex-col w-full h-full'>
+      <div className="flex flex-col h-full">
+
         {/* Header */}
-        <div className='flex items-start justify-start flex-col w-full'>
-          <div className='flex items-center justify-between mb-4 sm:mb-6 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-800'>
-            <div className='flex items-center justify-start'>
-              <img
-                src={`${logoUrl}`}
-                className='h-6 sm:h-8 w-fit'
-                alt='logo'
-              />
+        <div className="shrink-0">
+          <div className="flex items-center justify-between mb-4 sm:mb-6 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-800">
+            <div className="flex items-center">
+              <img src={`${logoUrl}`} className="h-6 sm:h-8 w-fit" alt="logo" />
             </div>
             <button
               onClick={() => setIsSidebarOpen(false)}
@@ -162,95 +159,97 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
               <HiX className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
-
-          {/* Navigation Menu */}
-          <div className="px-3 sm:px-4 overflow-y-auto w-full flex-1">
-            <ul className="space-y-1 sm:space-y-2 font-medium w-full">
-              {MenuHeader.map((item) => (
-                <li key={item.id}>
-                  <div
-                    className="flex items-center p-2 sm:p-3 text-gray-900 dark:text-white rounded-lg hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all duration-300 cursor-pointer group"
-                    onClick={() => {
-                      if (item.subItems) {
-                        toggleItem(item.id);
-                      } else {
-                        setIsSidebarOpen(false);
-                      }
-                    }}
-                  >
-                    <Link
-                      to={item.link}
-                      onClick={(e) => { if (item.subItems) e.preventDefault(); }}
-                      className="flex-1 text-sm sm:text-base font-medium group-hover:font-semibold transition-all duration-300"
-                    >
-                      {item.name}
-                    </Link>
-                    {item.subItems && (
-                      <IoMdArrowDropdown className={`ml-auto transition-transform duration-300 ${openItems[item.id] ? 'rotate-180' : ''}`} />
-                    )}
-                  </div>
-
-                  {/* Sub Items */}
-                  {item.subItems && openItems[item.id] && (
-                    <ul className="ml-3 sm:ml-4 space-y-1 mt-2 animate-in slide-in-from-top-2 duration-200">
-                      {item.subItems.map((sub, subIndex) => (
-                        <li key={subIndex}>
-                          <div
-                            className="flex items-center p-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 cursor-pointer group"
-                            onClick={() => {
-                              if (sub.subSubItems) {
-                                toggleSubItem(item.id, subIndex);
-                              } else {
-                                setIsSidebarOpen(false);
-                              }
-                            }}
-                          >
-                            <Link
-                              to={sub.slug ? `${item.link}?category=${encodeURIComponent(sub.title)}` : sub.link} // Encode cho design web
-                              onClick={(e) => { if (sub.subSubItems) e.preventDefault(); }}
-                              className="flex-1 text-xs sm:text-sm group-hover:font-medium transition-all duration-300"
-                            >
-                              {sub.title}
-                            </Link>
-                            {sub.subSubItems && (
-                              <IoMdArrowDropdown className={`ml-auto transition-transform duration-300 ${openSubItems[`${item.id}-${subIndex}`] ? 'rotate-180' : ''}`} />
-                            )}
-                          </div>
-
-                          {/* Sub Sub Items */}
-                          {sub.subSubItems && openSubItems[`${item.id}-${subIndex}`] && (
-                            <ul className="ml-4 sm:ml-6 space-y-1 animate-in slide-in-from-top-2 duration-200">
-                              {sub.subSubItems.map((subSub, subSubIndex) => (
-                                <li
-                                  key={subSubIndex}
-                                  className="p-2 text-gray-600 dark:text-gray-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-700 dark:hover:text-teal-300 rounded-lg transition-all duration-300 cursor-pointer"
-                                >
-                                  <Link
-                                    to={`${item.link}/${sub.slug}/${subSub.slug}`}
-                                    onClick={() => setIsSidebarOpen(false)}
-                                    className="text-xs hover:font-medium transition-all duration-300"
-                                  >
-                                    {subSub.title}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
-        {/* Theme Toggle Footer */}
-        <div className='flex items-center justify-center w-full p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'>
+        {/* Navigation Menu (scrollable) */}
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4 pb-5">
+          <ul className="space-y-1 sm:space-y-2 font-medium w-full">
+            {MenuHeader.map((item) => (
+              <li key={item.id}>
+                <div
+                  className="flex items-center p-2 sm:p-3 text-gray-900 dark:text-white rounded-lg hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all duration-300 cursor-pointer group"
+                  onClick={() => {
+                    if (item.subItems) {
+                      toggleItem(item.id);
+                    } else {
+                      setIsSidebarOpen(false);
+                    }
+                  }}
+                >
+                  <Link
+                    to={item.link}
+                    onClick={(e) => { if (item.subItems) e.preventDefault(); }}
+                    className="flex-1 text-sm sm:text-base font-medium group-hover:font-semibold transition-all duration-300"
+                  >
+                    {item.name}
+                  </Link>
+                  {item.subItems && (
+                    <IoMdArrowDropdown className={`ml-auto transition-transform duration-300 ${openItems[item.id] ? 'rotate-180' : ''}`} />
+                  )}
+                </div>
+
+                {/* Sub Items */}
+                {item.subItems && openItems[item.id] && (
+                  <ul className="ml-3 sm:ml-4 space-y-1 mt-2 animate-in slide-in-from-top-2 duration-200">
+                    {item.subItems.map((sub, subIndex) => (
+                      <li key={subIndex}>
+                        <div
+                          className="flex items-center p-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 cursor-pointer group"
+                          onClick={() => {
+                            if (sub.subSubItems) {
+                              toggleSubItem(item.id, subIndex);
+                            } else {
+                              setIsSidebarOpen(false);
+                            }
+                          }}
+                        >
+                          <Link
+                            to={sub.slug ? `${item.link}?category=${encodeURIComponent(sub.title)}` : sub.link} // Encode cho design web
+                            onClick={(e) => { if (sub.subSubItems) e.preventDefault(); }}
+                            className="flex-1 text-xs sm:text-sm group-hover:font-medium transition-all duration-300"
+                          >
+                            {sub.title}
+                          </Link>
+                          {sub.subSubItems && (
+                            <IoMdArrowDropdown className={`ml-auto transition-transform duration-300 ${openSubItems[`${item.id}-${subIndex}`] ? 'rotate-180' : ''}`} />
+                          )}
+                        </div>
+
+                        {/* Sub Sub Items */}
+                        {sub.subSubItems && openSubItems[`${item.id}-${subIndex}`] && (
+                          <ul className="ml-4 sm:ml-6 space-y-1 animate-in slide-in-from-top-2 duration-200">
+                            {sub.subSubItems.map((subSub, subSubIndex) => (
+                              <li
+                                key={subSubIndex}
+                                className="p-2 text-gray-600 dark:text-gray-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-700 dark:hover:text-teal-300 rounded-lg transition-all duration-300 cursor-pointer"
+                              >
+                                <Link
+                                  to={`${item.link}/${sub.slug}/${subSub.slug}`}
+                                  onClick={() => setIsSidebarOpen(false)}
+                                  className="text-xs hover:font-medium transition-all duration-300"
+                                >
+                                  {subSub.title}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+
+        {/* Footer */}
+        <div className="shrink-0 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           <ThemeToggle />
         </div>
       </div>
+
     </aside>
   );
 }

@@ -112,7 +112,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="w-full fixed top-0 left-0 z-40"
       >
-        <div className="max-w-screen-2xl mx-auto grid grid-cols-3 items-center h-full px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto grid xs:grid-cols-2 md:grid-cols-3 items-center h-full px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <motion.div
             animate={{
