@@ -8,6 +8,21 @@ function ReadInforCustomer({ data }) {
 
     const customer = data;
 
+    const getCustomerTypeInVietnamese = (type) => {
+        switch (type) {
+            case "new":
+                return "Mới";
+            case "regular":
+                return "Thường xuyên";
+            case "old":
+                return "Cũ";
+            case "vip":
+                return "VIP";
+            default:
+                return type || "—";
+        }
+    };
+
     // Gom booking theo logic: nếu completed hết thì gộp, nếu có mix thì gộp completed riêng, trạng thái khác để riêng
     const bookingsSummary = [];
     (data.services_booked || []).forEach((service) => {
@@ -67,7 +82,7 @@ function ReadInforCustomer({ data }) {
                         {Number(customer.total_spent).toLocaleString("vi-VN")} ₫
                     </div>
                     <div><span className="font-medium">Số lần đặt: </span>{customer.booking_count || 0}</div>
-                    <div><span className="font-medium">Loại khách: </span>{customer.type || "—"}</div>
+                    <div><span className="font-medium">Loại khách: </span>{getCustomerTypeInVietnamese(customer.type)}</div>
                 </div>
             </div>
 
