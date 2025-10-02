@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Folder, Plus, Pencil, GripVertical, CloudCog } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Folder, GripVertical, Pencil, Plus } from "lucide-react";
+// import { Folder, GripVertical, Pencil, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import EmptyState from "./EmptyState";
 
