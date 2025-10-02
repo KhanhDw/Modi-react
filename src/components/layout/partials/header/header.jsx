@@ -19,8 +19,9 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
   const [isHoverServices, setIsHoverServices] = useState(false);
   const [isHoverDesignWeb, setIsHoverDesignWeb] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [logo, setLogo] = useState(null);
   const [cachedLogo, setCachedLogo] = useState(null);
+  const [logo, setLogo] = useState(() => localStorage.getItem("header_logo"));
+
 
   const [servicesPreloaded, setServicesPreloaded] = useState(false);
   const modalServicesRef = useRef(null);
@@ -59,13 +60,17 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
 
   // fetch logo
   useEffect(() => {
-    setCachedLogo(localStorage.getItem("header_logo"));
-    if (cachedLogo) {
-      setLogo(cachedLogo); // ✅ hiển thị tức thì logo cũ
+    const cached = localStorage.getItem("header_logo");
+
+    if (cached) {
+      setLogo(cached); // hiển thị ngay
     }
+
+    // fetch ngầm để cập nhật nếu có thay đổi
     fetchLogo();
-    preloadServicesData(); // gọi trước 1 lần
+    preloadServicesData();
   }, []);
+
 
   const toggleSidebar = () => {
     const next = !isSidebarOpen;
@@ -128,6 +133,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
                 <div className="h-8 w-24 bg-gray-700 animate-pulse rounded-md lg:h-10" />
               )}
             </Link>
+
           </motion.div>
 
           {/* Nav */}
