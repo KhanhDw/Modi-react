@@ -38,6 +38,7 @@ export default function DialogForm({
     setListIdServices,
     listServiceOfParent,
     disableItemSelectedbyName_groupServices,
+    usedServiceSlugs,
     onSubmit,
 }) {
 
@@ -185,6 +186,7 @@ export default function DialogForm({
                                 services={services}
                                 valueSlug={valueSlug}
                                 setValueSlug={setValueSlug}
+                                usedServiceSlugs={usedServiceSlugs}
                             />
                         )}
                     </div>

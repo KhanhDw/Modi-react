@@ -431,7 +431,15 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
     };
 
     const openAddChild = (parentCategory) => {
-        setSelectedCategory(parentCategory || selectedCategory);
+        const currentParent = parentCategory || selectedCategory;
+        if (!currentParent) return;
+
+        setSelectedCategory(currentParent);
+
+        const groupServices = currentParent?.name?.groupServices || "";
+        const servicesForParent = groupServices.split(",").map(s => s.trim()).filter(Boolean);
+        setListServiceOfParent(servicesForParent);
+
         setDialog({
             open: true,
             type: "child",
@@ -542,8 +550,6 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
                 await addChild(dialog.valueEn, dialog.valueVi, dialog.valueSlug);
             }
         }
-        // chỉ reset dialog ở đây, sau khi submit xong
-        resetDialog();
     };
 
 
@@ -574,43 +580,43 @@ export default function ServiceDropdownHeaderMenu({ lang = "vi" }) {
             {/* Dialog */}
             {dialog.open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 ">
-                    <DialogForm
-                        open={dialog.open}
-                        dialog={dialog}
-                        setOpen={setDialogOpen}
-                        isAdd={dialog.target === null}
-                        title={
-                            dialog.target
-                                ? dialog.type === "category"
-                                    ? "Sửa danh mục"
-                                    : "Sửa mục con"
-                                : dialog.type === "category"
-                                    ? "Thêm danh mục"
-                                    : "Thêm mục con"
-                        }
-                        isTitleGroupService={
-                            dialog.target
-                                ? dialog.type === "category"
-                                    ? "Sửa nhóm dịch vụ"
-                                    : "Sửa dịch vụ"
-                                : dialog.type === "category"
-                                    ? "Thêm nhóm dịch vụ"
-                                    : "Thêm dịch vụ"
-                        }
-
-                        valueSlug={dialog.valueSlug}
-                        setValueSlug={setDialogValueSlug}
-                        valueEn={dialog.valueEn}
-                        setValueEn={setDialogValueEn}
-                        valueVi={dialog.valueVi}
-                        setValueVi={setDialogValueVi}
-                        listIdServices={dialog.listIdServices}
-                        setListIdServices={setDialogListIdServices}
-                        listServiceOfParent={listServiceOfParent}
-                        disableItemSelectedbyName_groupServices={menuData}
-                        onSubmit={handleSubmitDialog}
-                    />
-                </div>
+                                            <DialogForm
+                                                open={dialog.open}
+                                                dialog={dialog}
+                                                setOpen={setDialogOpen}
+                                                isAdd={dialog.target === null}
+                                                title={
+                                                    dialog.target
+                                                        ? dialog.type === "category"
+                                                            ? "Sửa danh mục"
+                                                            : "Sửa mục con"
+                                                        : dialog.type === "category"
+                                                            ? "Thêm danh mục"
+                                                            : "Thêm mục con"
+                                                }
+                                                isTitleGroupService={
+                                                    dialog.target
+                                                        ? dialog.type === "category"
+                                                            ? "Sửa nhóm dịch vụ"
+                                                            : "Sửa dịch vụ"
+                                                        : dialog.type === "category"
+                                                            ? "Thêm nhóm dịch vụ"
+                                                            : "Thêm dịch vụ"
+                                                }
+                    
+                                                valueSlug={dialog.valueSlug}
+                                                setValueSlug={setDialogValueSlug}
+                                                valueEn={dialog.valueEn}
+                                                setValueEn={setDialogValueEn}
+                                                valueVi={dialog.valueVi}
+                                                setValueVi={setDialogValueVi}
+                                                listIdServices={dialog.listIdServices}
+                                                setListIdServices={setDialogListIdServices}
+                                                listServiceOfParent={listServiceOfParent}
+                                                disableItemSelectedbyName_groupServices={menuData}
+                                                usedServiceSlugs={selectedCategory?.children?.map(child => child.description?.en).filter(Boolean) || []}
+                                                onSubmit={handleSubmitDialog}
+                                            />                </div>
             )}
 
             {/* confirmdialog xóa */}
