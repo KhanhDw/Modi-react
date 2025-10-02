@@ -1,31 +1,36 @@
-// AddPage.jsx (component tổng đã được cập nhật)
+// AddPage.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
 import SocialNetworkManager from "./SocialNetworkManager";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import axios from "axios";
 import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 
-
 export default function AddPage() {
     const editorRef = useRef(null);
     const navigate = useNavigate();
-    const { formData, setFormData, handleAddPost, reloadPostsAndSocialNetWorks } = useMarketing();
+    const { handleAddPost, reloadPostsAndSocialNetWorks } = useMarketing();
+
+    // Local states
     const [socialNetworks, setSocialNetworks] = useState([]);
     const [preview, setPreview] = useState("");
     const [error, setError] = useState("");
     const [isOpenEditNetwork, setIsOpenEditNetwork] = useState(false);
     const [user, setUser] = useState(null);
 
-    const handleOpenEditNetwork = () => {
-        setIsOpenEditNetwork(true);
-    };
+    // Form fields (local state)
+    const [title, setTitle] = useState("");
+    const [tags, setTags] = useState("");
+    const [status, setStatus] = useState("draft");
+    const [platformId, setPlatformId] = useState("");
+    const [image, setImage] = useState(null);
+
+    const handleOpenEditNetwork = () => setIsOpenEditNetwork(true);
 
     // Fetch social networks
     const fetchSocialNetworks = async () => {
@@ -39,23 +44,15 @@ export default function AddPage() {
         }
     };
 
-    // Gọi API lấy dữ liệu user (giữ nguyên logic gốc)
+    // Fetch user
     const fetchUser = async () => {
         try {
             const token = localStorage.getItem("accessToken");
-            if (!token) {
-                console.error("Chưa có token, cần login trước");
-                return;
-            }
+            if (!token) return;
 
-            const res = await axios.get(
-                `${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await axios.get(`${import.meta.env.VITE_MAIN_BE_URL}/api/auth/me`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
 
             setUser(res.data.user);
         } catch (err) {
@@ -63,27 +60,16 @@ export default function AddPage() {
         }
     };
 
-    // Reset form
     useEffect(() => {
         fetchUser();
-        setFormData({
-            title: "",
-            content: "",
-            author_id: user?.id || null,
-            platform_id: null,
-            status: "draft",
-            tags: "",
-            image: "",
-            lang: "vi",
-        });
-
         fetchSocialNetworks();
-    }, [setFormData]);
+    }, []);
 
+    // Submit handler
     const onSubmit = () => {
         const content = editorRef.current?.getHTML();
 
-        if (!formData.title || !content || !formData.platform_id || !formData.image) {
+        if (!title || !content || !platformId || !image) {
             setError("Vui lòng điền đầy đủ thông tin");
             return;
         }
@@ -91,53 +77,50 @@ export default function AddPage() {
         setError("");
 
         const data = new FormData();
-        data.append("author_id", formData.author_id || 1);
-        data.append("platform_id", formData.platform_id);
-        data.append("tags", formData.tags || "");
-        data.append("status", formData.status || "draft");
+        data.append("author_id", user?.id || 1);
+        data.append("platform_id", platformId);
+        data.append("tags", tags);
+        data.append("status", status);
 
-        // translations (mảng) -> stringify
         data.append(
             "translations",
             JSON.stringify([
                 {
-                    lang: formData.lang || "vi",
-                    title: formData.title,
-                    content: content,
+                    lang: "vi",
+                    title,
+                    content,
                 },
             ])
         );
 
-        // file ảnh
-        if (formData.image instanceof File) {
-            data.append("image", formData.image);
+        if (image instanceof File) {
+            data.append("image", image);
         }
 
-        handleAddPost(data); // gọi hàm cha với FormData
+        handleAddPost(data);
         navigate(-1);
     };
-
 
     return (
         <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-4 lg:p-4">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 admin-dark:text-white">
                     Tạo bài viết mới
                 </h2>
 
-                <div className="w-full sm:w-auto flex justify-center sm:justify-center">
+                <div className="w-full sm:w-auto flex justify-center">
                     <div className="flex flex-wrap sm:flex-nowrap items-end gap-2 sm:gap-4">
                         <Button
                             variant="outline"
                             onClick={() => navigate(-1)}
-                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700 cursor-pointer"
+                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700"
                         >
                             Hủy
                         </Button>
                         <Button
                             onClick={onSubmit}
-                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white cursor-pointer"
+                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white"
                         >
                             Tạo mới
                         </Button>
@@ -145,35 +128,33 @@ export default function AddPage() {
                 </div>
             </div>
 
-
             {/* Content */}
             <div className="flex flex-col lg:flex-row gap-4">
-                {/* Cột trái */}
+                {/* Left column */}
                 {!isOpenEditNetwork ? (
-                    <div className="lg:w-1/3 flex flex-col gap-3  admin-dark:border-gray-700">
-
-                        {/* Mạng xã hội + Trạng thái + Tags */}
+                    <div className="lg:w-1/3 flex flex-col gap-3 admin-dark:border-gray-700">
                         <div className="p-3 border-2 border-slate-300 admin-dark:border-gray-700 rounded-2xl bg-gray-50 admin-dark:bg-gray-800 space-y-3">
-                            {/* Tiêu đề */}
-                            <div className="rounded-2xl bg-gray-50 admin-dark:bg-gray-800 space-y-3">
+                            {/* Title */}
+                            <div className="space-y-3">
                                 <Label>Tiêu đề</Label>
                                 <Input
-                                    value={formData.title || ""}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Nhập tiêu đề bài viết"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg text-sm sm:text-base"
                                 />
                             </div>
-                            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-3">
-                                {/* Mạng xã hội */}
+
+                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                                {/* Social network */}
                                 <div className="space-y-2">
                                     <Label>Mạng xã hội</Label>
                                     <Select
-                                        value={formData.platform_id || ""}
-                                        onValueChange={(value) => setFormData({ ...formData, platform_id: value })}
+                                        value={platformId || ""}
+                                        onValueChange={setPlatformId}
                                         className="w-full border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                     >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
+                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg">
                                             <SelectValue placeholder="Chọn mạng xã hội" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -183,26 +164,22 @@ export default function AddPage() {
                                                 </SelectItem>
                                             ))}
                                             <Separator className="mt-2" />
-                                            <Button
-                                                onClick={handleOpenEditNetwork}
-                                                theme="admin"
-                                                className="w-full mt-2 cursor-pointer"
-                                            >
+                                            <Button onClick={handleOpenEditNetwork} className="w-full mt-2">
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
-                                {/* Trạng thái */}
+                                {/* Status */}
                                 <div className="space-y-2">
                                     <Label>Trạng thái</Label>
                                     <Select
-                                        value={formData.status || ""}
-                                        onValueChange={(value) => setFormData({ ...formData, status: value })}
+                                        value={status}
+                                        onValueChange={setStatus}
                                         className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                     >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
+                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg">
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -218,13 +195,14 @@ export default function AddPage() {
                             <div className="space-y-2">
                                 <Label>Tags</Label>
                                 <Input
-                                    value={formData.tags || ""}
-                                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                    value={tags}
+                                    onChange={(e) => setTags(e.target.value)}
                                     placeholder="Nhập tags (cách nhau bằng dấu phẩy)"
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg focus:outline-none text-sm sm:text-base focus:border-none"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg text-sm sm:text-base"
                                 />
                             </div>
 
+                            {/* Image */}
                             <Label>Ảnh bài viết</Label>
                             <Input
                                 type="file"
@@ -232,12 +210,12 @@ export default function AddPage() {
                                 onChange={(e) => {
                                     const file = e.target.files[0];
                                     if (file) {
-                                        setFormData({ ...formData, image: file });
-                                        setPreview(URL.createObjectURL(file)); // tạo preview tạm
+                                        setImage(file);
+                                        setPreview(URL.createObjectURL(file));
                                         setError("");
                                     }
                                 }}
-                                className="border-2 focus:border-none border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                             />
 
                             {preview && (
@@ -247,9 +225,7 @@ export default function AddPage() {
                                     className="object-cover rounded-xl max-h-60 w-full mx-auto mt-2"
                                 />
                             )}
-
                         </div>
-
                     </div>
                 ) : (
                     <SocialNetworkManager
@@ -261,13 +237,14 @@ export default function AddPage() {
                     />
                 )}
 
-                {/* Cột phải */}
+                {/* Right column */}
                 <div className="lg:w-2/3 flex flex-col gap-3 p-3 border-2 border-slate-300 admin-dark:border-gray-700 rounded-2xl bg-gray-50 admin-dark:bg-gray-800 shadow-sm">
                     <Label>Nội dung bài viết</Label>
-                    <TextEditorWrapper ref={editorRef} value={formData.content} />
+                    <TextEditorWrapper ref={editorRef} />
                 </div>
             </div>
+
+            {error && <p className="text-red-500 mt-3">{error}</p>}
         </div>
     );
-
 }
