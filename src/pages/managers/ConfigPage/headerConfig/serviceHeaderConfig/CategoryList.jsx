@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CloudCog } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { cn } from "@/lib/utils";
 import { Folder, GripVertical, Pencil, Plus } from "lucide-react";
@@ -99,14 +99,6 @@ export default function CategoryList({
   onEdit,
   onReorder, // callback khi lưu thay đổi
   dialog,
-  categories = [],
-  selectedCategory,
-  lang,
-  onSelect,
-  onAdd,
-  onDelete,
-  onEdit,
-  onReorder, // callback khi lưu thay đổi
 }) {
   useLenisLocal(".lenis-local");
   const [items, setItems] = useState(categories);
