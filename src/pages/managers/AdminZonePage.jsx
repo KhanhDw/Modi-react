@@ -110,43 +110,47 @@ export default function AdminZonePage() {
   return (
     <div>
       <div className="mx-auto rounded-xl border-gray-200 admin-dark:border-gray-700 transition-all duration-500 ease-in-out">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 admin-dark:text-white mb-4 text-center">
-          Quản lý tài khoản nhân viên
-        </h2>
         {/* Header */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col gap-3 md:flex-row items-center justify-between mb-3">
 
-          <div className="relative w-full h-full max-w-xs flex-grow">
-            <FiSearch
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-              size={20}
-            />
-            <input autoComplete="off"
-              type="search"
-              placeholder="Tìm kiếm..."
-              value={search}
-              spellCheck={false}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
+          <h2 className="text-lg md:text-xl font-semibold text-gray-900 admin-dark:text-white text-center w-full lg:w-fit xl:w-full md:text-start md:items-center">
+            Quản lý tài khoản nhân viên
+          </h2>
+
+          <div className="flex justify-between md:flex-row md:justify-end gap-2 w-full lg:w-fit xl:w-full">
+            <div className="relative w-full h-full max-w-xs flex-grow">
+              <FiSearch
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                size={20}
+              />
+              <input autoComplete="off"
+                type="search"
+                placeholder="Tìm kiếm..."
+                value={search}
+                spellCheck={false}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-200 placeholder:text-sm placeholder:sm:text-base"
+              />
+            </div>
+
+            <button
+              onClick={() => {
+                setEditingUser(null);
+                setShowForm(true);
               }}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-200 placeholder:text-sm placeholder:sm:text-base"
-            />
-          </div>
-
-          <button
-            onClick={() => {
-              setEditingUser(null);
-              setShowForm(true);
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white border border-transparent
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg border border-transparent
               admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700
               admin-dark:text-gray-200 admin-dark:border-gray-600
               rounded-lg transition flex-shrink-0 cursor-pointer min-w-[90px] whitespace-nowrap p-2"
-            type="button"
-          >
-            <span className="text-sm sm:text-base font-semibold">+ Thêm mới</span>
-          </button>
+              type="button"
+            >
+              <span className="text-sm sm:text-base font-semibold">+ Thêm mới</span>
+            </button>
+          </div>
+
         </div>
 
         {/* Table */}
