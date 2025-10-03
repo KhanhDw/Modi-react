@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,8 +9,22 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import NotificationToast from "@/components/feature/notification-toast.jsx";
+import { X, Upload, Trash2 } from "lucide-react";
+
+const VIETNAMESE_BANKS = [
+  { code: "", name: "--- Chọn Ngân hàng ---" },
+  { code: "VCB", name: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)" },
+  { code: "TCB", name: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)" },
+  { code: "BIDV", name: "BIDV (Ngân hàng TMCP Đầu tư và Phát triển Việt Nam)" },
+  { code: "CTG", name: "VietinBank (Ngân hàng TMCP Công Thương Việt Nam)" },
+  { code: "ACB", name: "ACB (Ngân hàng TMCP Á Châu)" },
+  { code: "MB", name: "MBBank (Ngân hàng TMCP Quân đội)" },
+  { code: "VPB", name: "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)" },
+  { code: "STB", name: "Sacombank (Ngân hàng TMCP Sài Gòn Thương Tín)" },
+  { code: "TPB", name: "TPBank (Ngân hàng TMCP Tiên Phong)" },
+];
 
 export default function CustomerForm() {
   const {
@@ -19,176 +34,537 @@ export default function CustomerForm() {
     initDataCustomer,
   } = useOutletContext();
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    type: "new",
+    cccd: "",
+    img_cccd_top: null,
+    img_cccd_bottom: null,
+    img_cccd_top_file: null, // temp to save file image
+    img_cccd_bottom_file: null, // temp to save file image
+    number_bank: "",
+    name_bank: "",
+    status: "active",
+  });
   const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (editingCustomer) {
-      setFormData({
-        cusName: editingCustomer.name || "",
-        cusPhone: editingCustomer.phone || "",
-        cusEmail: editingCustomer.email || "",
-        cusAddress: editingCustomer.address || "",
-      });
+      setFormData((prev) => ({
+        ...prev,
+        name: editingCustomer.name ?? "",
+        phone: editingCustomer.phone ?? "",
+        email: editingCustomer.email ?? "",
+        address: editingCustomer.address ?? "",
+        cccd: editingCustomer.cccd ?? "",
+        img_cccd_top: editingCustomer.img_cccd_top ?? "",
+        img_cccd_bottom: editingCustomer.img_cccd_bottom ?? "",
+        number_bank: editingCustomer.number_bank ?? "",
+        name_bank: editingCustomer.name_bank ?? editingCustomer.bank_code ?? "",
+        type: editingCustomer.type ?? "new",
+        status: editingCustomer.status ?? "active",
+      }));
     }
   }, [editingCustomer]);
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const inputClass =
+    "mt-1 block w-full px-3 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-sm bg-white admin-dark:bg-gray-700 text-gray-900 admin-dark:text-gray-100 placeholder-gray-400 admin-dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors";
+  const labelClass =
+    "block text-sm font-medium text-gray-700 admin-dark:text-gray-300";
+
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        (type === "number" ||
+          ["total_spent", "booking_count"].includes(name)) &&
+        value !== ""
+          ? Number(value)
+          : value,
+    }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    const name = e.target.name;
+
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        setToast({
+          message: "File không hợp lệ. Vui lòng chọn file ảnh.",
+          type: "error",
+        });
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        setToast({ message: "Ảnh quá lớn (tối đa 10MB)", type: "error" });
+        return;
+      }
+
+      const previewUrl = URL.createObjectURL(file);
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: previewUrl, // dùng để preview UI
+        [`${name}_file`]: file, // dùng để gửi lên server
+      }));
+    }
+  };
+
+  const handleRemoveImage = (name) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: "",
+      [`${name}_file`]: null,
+    }));
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    // Tên bắt buộc
-    if (!formData.cusName?.trim()) {
-      newErrors.cusName = "Tên khách hàng là bắt buộc.";
-    }
+    if (!formData.name?.trim()) newErrors.name = "Tên khách hàng là bắt buộc.";
 
-    // Số điện thoại
-    if (!formData.cusPhone?.trim()) {
-      newErrors.cusPhone = "Số điện thoại là bắt buộc.";
-    } else if (!/^0\d{9}$/.test(formData.cusPhone.trim())) {
-      newErrors.cusPhone = "Số điện thoại phải bắt đầu bằng 0 và gồm 10 số.";
+    if (!formData.phone?.trim()) {
+      newErrors.phone = "Số điện thoại là bắt buộc.";
+    } else if (!/^0\d{9}$/.test(formData.phone.trim())) {
+      newErrors.phone = "Số điện thoại phải bắt đầu bằng 0 và gồm 10 số.";
     } else if (
       initDataCustomer?.some(
-        (c) =>
-          c.phone === formData.cusPhone.trim() && c.id !== editingCustomer?.id // bỏ qua chính khách hàng đang edit
+        (c) => c.phone === formData.phone.trim() && c.id !== editingCustomer?.id
       )
     ) {
-      newErrors.cusPhone = "Số điện thoại đã tồn tại.";
+      newErrors.phone = "Số điện thoại đã tồn tại.";
     }
 
-    // Email (nếu nhập thì validate + check trùng)
-    if (formData.cusEmail?.trim()) {
+    if (formData.email?.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.cusEmail.trim())) {
-        newErrors.cusEmail = "Email không hợp lệ.";
+      if (!emailRegex.test(formData.email.trim())) {
+        newErrors.email = "Email không hợp lệ.";
       } else if (
         initDataCustomer?.some(
           (c) =>
-            c.email === formData.cusEmail.trim() && c.id !== editingCustomer?.id
+            c.email === formData.email.trim() && c.id !== editingCustomer?.id
         )
       ) {
-        newErrors.cusEmail = "Email đã tồn tại.";
+        newErrors.email = "Email đã tồn tại.";
       }
     }
 
-    // Địa chỉ bắt buộc
-    if (!formData.cusAddress?.trim()) {
-      newErrors.cusAddress = "Địa chỉ là bắt buộc.";
-    }
+    if (!formData.address?.trim()) newErrors.address = "Địa chỉ là bắt buộc.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      if (editingCustomer) {
-        handleEditingCustomer(formData, editingCustomer.id);
+    setToast(null);
+    if (!validateForm()) return;
+
+    setLoading(true);
+    try {
+      const payload = new FormData();
+      payload.append("name", formData.name);
+      payload.append("phone", formData.phone);
+      payload.append("email", formData.email);
+      payload.append("address", formData.address);
+      payload.append("type", formData.type);
+      payload.append("cccd", formData.cccd);
+      payload.append("img_cccd_bottom", formData.img_cccd_bottom);
+      payload.append("number_bank", formData.number_bank);
+      payload.append("name_bank", formData.name_bank);
+      payload.append("status", formData.status);
+
+      // append file gốc, nếu có
+      if (formData.img_cccd_top_file) {
+        payload.append("img_cccd_top", formData.img_cccd_top_file);
       }
+      if (formData.img_cccd_bottom_file) {
+        payload.append("img_cccd_bottom", formData.img_cccd_bottom_file);
+      }
+
+      if (editingCustomer) {
+        await handleEditingCustomer(payload, editingCustomer?.id);
+      }
+
+      setToast({ message: "Cập nhật khách hàng thành công!", type: "success" });
+    } catch (err) {
+      console.error(err);
+      setToast({
+        message: err?.message ? `Lỗi: ${err.message}` : "Cập nhật thất bại.",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
+  const ImageUploadField = ({ name, label, imageUrl, onChange, onRemove }) => {
+    const getImageUrl = (url) => {
+      if (!url) return null;
+      if (
+        url.startsWith("blob:") ||
+        url.startsWith("http://") ||
+        url.startsWith("https://") ||
+        url.startsWith("data:image")
+      ) {
+        return url;
+      }
+      return `${import.meta.env.VITE_MAIN_BE_URL}${url}`;
+    };
+
+    const finalUrl = getImageUrl(imageUrl);
+
+    return (
+      <div className="space-y-2">
+        <Label
+          htmlFor={name}
+          className="block text-sm font-medium"
+        >
+          {label}
+        </Label>
+
+        {!finalUrl ? (
+          <label
+            htmlFor={name}
+            className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 admin-dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 admin-dark:bg-gray-700 hover:bg-gray-100 admin-dark:hover:bg-gray-600 transition-colors"
+          >
+            <Upload className="w-10 h-10 mb-3 text-gray-400" />
+            <p className="mb-2 text-sm text-gray-500 admin-dark:text-gray-400">
+              <span className="font-semibold">Click để tải ảnh</span> hoặc kéo
+              thả
+            </p>
+            <p className="text-xs text-gray-500 admin-dark:text-gray-400">
+              PNG, JPG (Tối đa 10MB)
+            </p>
+          </label>
+        ) : (
+          <div className="relative group">
+            <img
+              src={finalUrl}
+              alt={name}
+              className="w-full max-h-48 object-contain rounded-lg border border-gray-300 admin-dark:border-gray-600 bg-gray-50 admin-dark:bg-gray-700"
+              onError={(e) => {
+                console.error("Error loading image:", finalUrl);
+                e.currentTarget.src =
+                  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23ddd' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3ELỗi tải ảnh%3C/text%3E%3C/svg%3E";
+              }}
+            />
+            <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <label
+                htmlFor={name}
+                className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg cursor-pointer shadow-lg transition-colors"
+              >
+                <Upload className="w-4 h-4" />
+              </label>
+              <button
+                type="button"
+                onClick={() => onRemove(name)}
+                className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-lg transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* input file chung, trigger bằng label */}
+        <input
+          type="file"
+          id={name}
+          name={name}
+          accept="image/*"
+          onChange={onChange}
+          className="hidden"
+        />
+      </div>
+    );
+  };
+
   return (
-    <Card className="bg-white w-full mx-auto">
+    <Card className="bg-white w-full mx-auto admin-dark:bg-gray-800 admin-dark:text-gray-100">
       <CardHeader className="relative">
         <CardTitle className="flex gap-2 items-center">
           Chỉnh sửa người dùng
         </CardTitle>
-        <CardDescription className="text-black/50">
+        <CardDescription className="text-black/60 admin-dark:text-gray-300">
           Cập nhật thông tin người dùng
         </CardDescription>
+        <button
+          aria-label="Đóng"
+          onClick={handleClose}
+          className="absolute top-4 right-4 p-1 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 admin-dark:hover:bg-gray-700 admin-dark:text-gray-300 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </CardHeader>
+
       <CardContent>
-        <form onSubmit={handleSubmit}>
-          <div className="gap-4">
-            <div className="space-y-4">
-              {/* Tên */}
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusName">
-                  Tên khách hàng *
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusName"
-                  value={formData.cusName || ""}
-                  onChange={(e) => handleChange("cusName", e.target.value)}
-                  placeholder="Nhập Họ và Tên khách hàng... "
-                />
-                {errors.cusName && (
-                  <p className="text-red-500 text-sm">{errors.cusName}</p>
-                )}
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                  Thông Tin Liên Hệ
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label
+                      className={labelClass}
+                      htmlFor="name"
+                    >
+                      Tên khách hàng *
+                    </Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="Nguyễn Văn A"
+                    />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label
+                      className={labelClass}
+                      htmlFor="phone"
+                    >
+                      Số điện thoại *
+                    </Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="0901234567"
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <Label
+                      className={labelClass}
+                      htmlFor="email"
+                    >
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="tenkhach@email.com"
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <Label
+                      className={labelClass}
+                      htmlFor="address"
+                    >
+                      Địa chỉ *
+                    </Label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      rows={2}
+                      className={inputClass}
+                      placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố"
+                    />
+                    {errors.address && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.address}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* SĐT */}
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusPhone">
-                  Số điện thoại *
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusPhone"
-                  value={formData.cusPhone || ""}
-                  onChange={(e) => handleChange("cusPhone", e.target.value)}
-                  placeholder="Nhập số điện thoại của khách hàng... "
-                />
-                {errors.cusPhone && (
-                  <p className="text-red-500 text-sm">{errors.cusPhone}</p>
-                )}
+              <div className="space-y-4 pt-2">
+                <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                  Thông Tin Ngân Hàng
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <Label
+                      className={labelClass}
+                      htmlFor="number_bank"
+                    >
+                      Số tài khoản ngân hàng
+                    </Label>
+                    <Input
+                      id="number_bank"
+                      name="number_bank"
+                      value={formData.number_bank}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="101010xxxxxx"
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      className={labelClass}
+                      htmlFor="name_bank"
+                    >
+                      Tên ngân hàng
+                    </Label>
+                    <select
+                      id="name_bank"
+                      name="name_bank"
+                      value={formData.name_bank}
+                      onChange={handleChange}
+                      className={inputClass}
+                    >
+                      {VIETNAMESE_BANKS.map((b) => (
+                        <option
+                          key={b.code}
+                          value={b.code}
+                        >
+                          {b.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
-              {/* Email */}
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusEmail">
-                  Email
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusEmail"
-                  value={formData.cusEmail || ""}
-                  onChange={(e) => handleChange("cusEmail", e.target.value)}
-                  placeholder="Nhập email của khách hàng... "
-                />
-                {errors.cusEmail && (
-                  <p className="text-red-500 text-sm">{errors.cusEmail}</p>
-                )}
-              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label
+                    className={labelClass}
+                    htmlFor="type"
+                  >
+                    Loại khách hàng
+                  </Label>
+                  <select
+                    id="type"
+                    name="type"
+                    value={formData.type}
+                    onChange={handleChange}
+                    className={inputClass}
+                  >
+                    <option value="new">Khách mới</option>
+                    <option value="regular">Khách thường xuyên</option>
+                    <option value="vip">Khách VIP</option>
+                  </select>
+                </div>
 
-              {/* Địa chỉ */}
-              <div className="space-y-2">
-                <Label className="text-black" htmlFor="cusAddress">
-                  Địa chỉ *
-                </Label>
-                <Input
-                  className="text-black border border-black/30"
-                  id="cusAddress"
-                  value={formData.cusAddress || ""}
-                  onChange={(e) => handleChange("cusAddress", e.target.value)}
-                  placeholder="Nhập địa chỉ của khách hàng... "
+                <div>
+                  <Label
+                    className={labelClass}
+                    htmlFor="status"
+                  >
+                    Trạng thái
+                  </Label>
+                  <select
+                    id="status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    className={inputClass}
+                  >
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Ngừng hoạt động</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                  Thông Tin Định Danh & Ảnh
+                </h3>
+
+                <div>
+                  <Label
+                    className={labelClass}
+                    htmlFor="cccd"
+                  >
+                    Số CCCD/CMND
+                  </Label>
+                  <Input
+                    id="cccd"
+                    name="cccd"
+                    value={formData.cccd}
+                    onChange={handleChange}
+                    className={inputClass}
+                    placeholder="001200xxxxxx"
+                  />
+                </div>
+
+                <ImageUploadField
+                  name="img_cccd_top"
+                  label="Ảnh CCCD (Mặt trước)"
+                  imageUrl={formData.img_cccd_top}
+                  onChange={handleImageUpload}
+                  onRemove={handleRemoveImage}
                 />
-                {errors.cusAddress && (
-                  <p className="text-red-500 text-sm">{errors.cusAddress}</p>
-                )}
+
+                <ImageUploadField
+                  name="img_cccd_bottom"
+                  label="Ảnh CCCD (Mặt sau)"
+                  imageUrl={formData.img_cccd_bottom}
+                  onChange={handleImageUpload}
+                  onRemove={handleRemoveImage}
+                />
               </div>
             </div>
           </div>
-          <div className="flex gap-3 mt-6">
-            <Button type="submit" className="flex-1 hover:bg-gray-500/25 cursor-pointer">
-              Cập nhật người dùng
+
+          <div className="flex gap-3 mt-4">
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={loading}
+            >
+              {loading ? "Đang cập nhật..." : "Cập nhật người dùng"}
             </Button>
             <Button
               type="button"
               variant="outline"
+              className="flex-1"
               onClick={handleClose}
-              className="flex-1 cursor-pointer"
             >
               Thoát
             </Button>
           </div>
         </form>
+
+        {toast && (
+          <NotificationToast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
       </CardContent>
     </Card>
   );

@@ -322,19 +322,9 @@ export default function ServicesPage() {
 
   const handleEditingCustomer = async (formData, id) => {
     try {
-      const dataEditCustomer = {
-        name: formData.cusName,
-        phone: formData.cusPhone,
-        email: formData.cusEmail,
-        address: formData.cusAddress,
-      };
-
       const res = await fetch(CustomerAPI.edit(id), {
         method: "PUT",
-        body: JSON.stringify(dataEditCustomer),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: formData,
       });
 
       if (!res.ok) {
@@ -342,8 +332,8 @@ export default function ServicesPage() {
       }
       if (res.ok) {
         await fetchCustomer();
-        handleClose();
         await fetchBooking();
+        handleClose();
       }
     } catch (err) {
       console.error(err);
@@ -449,7 +439,7 @@ export default function ServicesPage() {
               }
             >
               <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
-              Đơn đặt
+              Danh sách đơn đặt hàng
             </NavLink>
             <NavLink
               to="service_customer"
@@ -462,7 +452,7 @@ export default function ServicesPage() {
               }
             >
               <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-              Khách hàng
+              Danh sách khách hàng
             </NavLink>
           </nav>
         </div>
