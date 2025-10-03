@@ -1,9 +1,3 @@
-import { Trash2, AppWindow, ArrowLeft, Calendar, Tag, Folder } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { useOutletContext, useNavigate, useParams, Link } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,8 +9,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { AppWindow, ArrowLeft, Calendar, Folder, Tag, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 export default function WebsiteTemplatesDetail() {
   const { id } = useParams();
@@ -88,49 +88,49 @@ export default function WebsiteTemplatesDetail() {
   if (!template) return <div className="text-center py-8 text-gray-900 admin-dark:text-gray-100">Không tìm thấy mẫu website</div>;
 
   return (
-    <div className="mx-auto px-2 sm:px-4 py-6 max-w-6xl">
+    <div className="mx-auto py-4 max-w-7xl">
       {/* header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+      <div className="flex flex-col xl:flex-row xl:items-end items-start justify-between gap-4 sm:gap-6 mb-6">
+        <div className="flex flex-col items-start gap-2 sm:gap-4 w-full">
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 hover:text-gray-900 admin-dark:hover:text-gray-100 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800"
+            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 hover:text-gray-900 admin-dark:hover:text-gray-100 admin-dark:text-gray-200 hover:bg-gray-100 admin-dark:hover:bg-gray-800 cursor-pointer"
           >
-            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 text-gray-900 admin-dark:text-gray-100" />
-            Quay lại
+            <ArrowLeft className="h-3 w-3 text-gray-900 admin-dark:text-gray-100" />
+            <span className="text-xs sm:text-base font-semibold">Quay lại</span>
           </Button>
-          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 admin-dark:text-gray-100">
+          <h1 className="text-base sm:text-lg md:text-xl md:mx-auto xl:mx-0 text-center font-bold text-gray-900 admin-dark:text-gray-100">
             {template.name}
           </h1>
         </div>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+        <div className="flex flex-row items-center justify-center xl:justify-end gap-2 sm:gap-4 w-full xl:w-fit">
           <Button
             onClick={() => navigate("/products/" + template.id)}
-            className="flex items-center gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900"
+            className="flex items-center shadow gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900 cursor-pointer"
           >
             <AppWindow className="h-3 w-3 sm:h-4 sm:w-4" />
-            Xem mẫu website
+            <span className="text-xs sm:text-base font-semibold">Xem mẫu website</span>
           </Button>
           <Button
             onClick={toggleExportState}
-            className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${localExportState == 1
+            className={`flex items-center shadow cursor-pointer gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${localExportState == 1
               ? "bg-green-600 hover:bg-green-700"
               : "bg-gray-400 hover:bg-gray-500"
               } text-white`}
             disabled={isToggling}
           >
-            {localExportState == 1 ? "Đã xuất bản" : "Chưa xuất bản"}
+            <span className="text-xs sm:text-base font-semibold">{localExportState == 1 ? "Đã xuất bản" : "Chưa xuất bản"}</span>
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* nội dung */}
-        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6 w-full">
           <Card className="py-0 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardContent className="p-0">
-              <div className="relative overflow-hidden rounded-lg">
+            <CardContent className="p-0 sm:px-0">
+              <div className="relative overflow-hidden rounded-lg w-full">
                 {template.image_url ? (
                   <img
                     src={`${import.meta.env.VITE_MAIN_BE_URL}${template.image_url}`}
@@ -157,42 +157,34 @@ export default function WebsiteTemplatesDetail() {
           </Card>
 
           {/* mô tả */}
-          <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
-                Mô tả chi tiết
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs sm:text-sm text-gray-700 admin-dark:text-gray-300 leading-relaxed wrap-anywhere">
-                {template.description}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+            <span className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">
+              Mô tả chi tiết
+            </span>
+            <p className="mt-2 text-xs sm:text-sm text-gray-700 admin-dark:text-gray-300 leading-relaxed wrap-anywhere">
+              {template.description}
+            </p>
+          </div>
 
           {/* tính năng */}
-          <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
-                Tính năng nổi bật
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                {template?.top_features?.map((feature) => (
-                  <div
-                    key={feature}
-                    className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-muted/20 admin-dark:bg-gray-800 rounded-lg"
-                  >
-                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full"></div>
-                    <span className="text-xs sm:text-sm text-gray-800 admin-dark:text-gray-200">
-                      {feature}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+            <span className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">
+              Tính năng nổi bật
+            </span>
+            <div className="flex flex-wrap gap-3 sm:gap-4 mt-2">
+              {template?.top_features?.map((feature) => (
+                <div
+                  key={feature}
+                  className="flex items-center justify-center shadow gap-1 sm:gap-2 p-2 bg-gray-100 admin-dark:bg-gray-800 rounded-lg w-fit"
+                >
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full"></div>
+                  <span className="font-semibold px-1 text-xs sm:text-sm text-gray-700 admin-dark:text-gray-200">
+                    {feature}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* xóa */}
           <AlertDialog>
@@ -201,30 +193,35 @@ export default function WebsiteTemplatesDetail() {
                 theme="admin"
                 size="sm"
                 variant="outline"
-                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm bg-primary hover:text-white hover:bg-black admin-dark:bg-red-700 admin-dark:hover:bg-red-900"
+                className="flex items-center mx-auto md:mx-0 lg:mx-auto shadow gap-1 sm:gap-2 border-none bg-red-500 hover:bg-red-600 admin-dark:bg-red-500 admin-dark:hover:bg-red-600 cursor-pointer"
                 title="Xóa"
               >
-                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                Xóa mẫu Website này
+                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-gray-200 admin-dark:text-gray-200" />
+                <span className="text-xs sm:text-base font-semibold text-gray-200 admin-dark:text-gray-200">Xóa mẫu Website này</span>
               </Button>
             </AlertDialogTrigger>
+
             <AlertDialogContent className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-base sm:text-lg text-gray-900 admin-dark:text-gray-100">Xác nhận xóa</AlertDialogTitle>
-                <AlertDialogDescription className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400">
+                <AlertDialogTitle className="text-base sm:text-lg text-center text-gray-900 admin-dark:text-gray-100">Xác nhận xóa</AlertDialogTitle>
+                <AlertDialogDescription className="text-xs sm:text-sm text-start text-gray-600 admin-dark:text-gray-400">
                   Bạn có chắc chắn muốn xóa mẫu "{template.name}"? Hành động này không thể hoàn tác.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100">Hủy</AlertDialogCancel>
+                <AlertDialogCancel
+                  onClick={() => navigate(0)}
+                  className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100 cursor-pointer">
+                  <span className="text-sm sm:text-base font-semibold text-white">Hủy</span>
+                </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
                     handleDelete(template.id);
                     navigate(-1);
                   }}
-                  className="text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700"
+                  className="text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700 cursor-pointer"
                 >
-                  Xóa
+                  <span className="text-sm sm:text-base font-semibold text-white">Xóa</span>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -234,18 +231,16 @@ export default function WebsiteTemplatesDetail() {
         {/* cột bên phải */}
         <div className="space-y-4 sm:space-y-6">
           {/* info */}
-          <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
-                Thông tin mẫu
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 sm:space-y-4">
+          <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+            <span className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">
+              Thông tin mẫu
+            </span>
+            <div className="space-y-3 sm:space-y-4 mt-2">
               <div className="flex items-center gap-2 sm:gap-3">
                 <Folder className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <div>
                   <p className="text-xs sm:text-sm font-medium text-gray-800 admin-dark:text-gray-200">
-                    Danh mục
+                    Danh mục:
                   </p>
                   <p className="text-xs sm:text-sm text-muted-foreground admin-dark:text-gray-400">
                     {template.category}
@@ -253,13 +248,13 @@ export default function WebsiteTemplatesDetail() {
                 </div>
               </div>
 
-              <Separator className="admin-dark:bg-gray-700" />
+              <Separator className="admin-dark:bg-gray-700 bg-gray-300" />
 
               <div className="flex items-center gap-2 sm:gap-3">
                 <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <div>
                   <p className="text-xs sm:text-sm font-medium text-gray-800 admin-dark:text-gray-200">
-                    Ngày tạo
+                    Ngày tạo:
                   </p>
                   <p className="text-xs sm:text-sm text-muted-foreground admin-dark:text-gray-400">
                     {new Date(template.created_at).toLocaleDateString("vi-VN")}
@@ -267,94 +262,90 @@ export default function WebsiteTemplatesDetail() {
                 </div>
               </div>
 
-              <Separator className="admin-dark:bg-gray-700" />
+              <Separator className="admin-dark:bg-gray-700 bg-gray-300" />
 
               <div className="flex items-center gap-2 sm:gap-3">
                 <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <div>
                   <p className="text-xs sm:text-sm font-medium text-gray-800 admin-dark:text-gray-200">
-                    Cập nhật lần cuối
+                    Cập nhật lần cuối:
                   </p>
                   <p className="text-xs sm:text-sm text-muted-foreground admin-dark:text-gray-400">
                     {new Date(template.updated_at).toLocaleDateString("vi-VN")}
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* tags */}
-          <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-1 sm:gap-2 text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
-                <Tag className="h-3 w-3 sm:h-4 sm:w-4" />
-                Tags
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-1 sm:gap-2">
+          <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+            <div className="flex items-center gap-1 sm:gap-2 text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
+              <Tag className="h-3 w-3 sm:h-4 sm:w-4 text-gray-800 admin-dark:text-gray-100" />
+              <span className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">Tags</span>
+            </div>
+            <div>
+              <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
                 {template?.tags?.map((tag) => (
                   <Badge
                     key={tag}
                     variant="outline"
-                    className="text-xs sm:text-sm admin-dark:bg-gray-700 admin-dark:text-gray-300"
+                    className="text-xs sm:text-sm border-2 text-gray-700 admin-dark:text-gray-200"
                   >
                     {tag}
                   </Badge>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* actions */}
-          <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
-                Hành động
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 sm:space-y-4">
-              <div className="flex justify-between items-center admin-dark:bg-gray-700 px-3 py-2 rounded-lg">
+          <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+            <div className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">
+              Hành động
+            </div>
+            <div className="space-y-3 sm:space-y-4 mt-2 w-full">
+              <div className="flex justify-between items-center px-2 py-1 text-sm sm:text-base admin-dark:bg-gray-700 text-gray-700 admin-dark:text-gray-100 bg-gray-200 rounded-lg">
                 <h1>Ngôn ngữ bài viết: {activeLang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}</h1>
                 <Switch onClick={() => setActiveLang(activeLang === "vi" ? "en" : "vi")} checked={activeLang === "en"} />
               </div>
-              <Button
-                onClick={() => navigate(`edit`)}
-                className="w-full text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-primary hover:bg-primary/90 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-500"
-              >
-                Chỉnh sửa mẫu
-              </Button>
-              <Link to={template.url_github}>
+              <div className="flex flex-col sm:flex-row lg:flex-col sm:justify-center md:justify-end md:gap-5 lg:gap-3 gap-3">
                 <Button
-                  variant="outline"
-                  className="w-full text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-transparent text-gray-800 admin-dark:text-gray-100 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800"
+                  onClick={() => navigate(`edit`)}
+                  className="w-full sm:w-fit lg:w-full px-2 sm:px-3 py-1 sm:py-2 bg-blue-400 hover:bg-blue-500 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-500 cursor-pointer"
                 >
-                  Github dự án
+                  <span className="text-sm sm:text-base font-semibold text-white">Chỉnh sửa mẫu</span>
                 </Button>
-              </Link>
-            </CardContent>
-          </Card>
+                <Link to={template.url_github}>
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-fit lg:w-full px-2 sm:px-3 py-1 sm:py-2 bg-black/90 hover:bg-black/80 admin-dark:text-gray-100 admin-dark:bg-gray-800 cursor-pointer"
+                  >
+                    <span className="text-sm sm:text-base font-semibold text-white">Github dự án</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
 
           {/* stats */}
-          <Card className="bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
-                Thống kê
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 sm:space-y-4">
-              <div className="flex justify-between items-center">
+          <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
+            <div className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">
+              Thống kê
+            </div>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-start gap-3 items-center">
                 <span className="text-xs sm:text-sm text-muted-foreground admin-dark:text-gray-400">
-                  Lượt xem
+                  Lượt xem mẫu website hiện tại:
                 </span>
-                <span className="text-xs sm:text-sm font-medium text-gray-900 admin-dark:text-gray-100">
+                <span className="text-xs sm:text-sm font-medium text-gray-800 admin-dark:text-gray-100">
                   {template.views}
                 </span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

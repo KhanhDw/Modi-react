@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLenisToggle } from "@/contexts/LenisContext";
 import { Plus, Search, SquarePen, Trash2 } from "lucide-react";
@@ -101,19 +100,20 @@ export default function WebsiteTemplateList() {
   };
 
   return (
-    <div className="mx-auto p-4">
-      <div className="flex flex-col gap-6 mb-8">
-        <div className="flex flex-col gap-4 sm:flex-row items-center justify-between">
+    <div className="mx-auto">
+      <div className="flex flex-col gap-6 mb-3 w-full">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
           <h1 className="text-2xl font-bold xs:text-xl sm:text-xl">Quản lý mẫu Website</h1>
           <Button
             onClick={() => navigate("new")}
-            className="flex items-center gap-2 cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black hover:text-white"
+            className="flex items-center shadow gap-2 cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black"
           >
-            <Plus className="h-4 w-4" /> Thêm mẫu mới
+            <Plus className="h-4 w-4 text-gray-700 admin-dark:text-gray-800" />
+            <span className="text-sm sm:text-base font-semibold text-gray-700 admin-dark:text-gray-800">Thêm mẫu mới</span>
           </Button>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col md:flex-row sm:items-center sm:justify-between gap-4 w-full">
           <div className="flex items-center gap-4">
             <FilterModalListTemplateWebAdmin
               filters={filters}
@@ -124,18 +124,18 @@ export default function WebsiteTemplateList() {
               availableTopFeatures={availableTopFeatures}
               onDialogToggle={handleDialogToggle}
             />
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <div className="relative md:min-w-sm w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 admin-dark:text-gray-300 h-4 w-4" />
               <Input
                 placeholder="Tìm kiếm mẫu website..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm"
+                className="pl-10 w-full border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm placeholder:text-gray-500 admin-dark:placeholder:text-gray-400"
               />
             </div>
           </div>
-          <div className="flex items-center gap-1 text-gray-600 admin-dark:text-white font-semibold">
-            <p>Hiện có {templates.length} website mẫu</p>
+          <div className="w-full flex items-center justify-end gap-1 text-gray-600 admin-dark:text-white font-semibold">
+            <p className="text-sm sm:text-base">Hiện có {templates.length} website mẫu</p>
           </div>
         </div>
       </div>
@@ -143,18 +143,22 @@ export default function WebsiteTemplateList() {
       <div className="space-y-4">
         {currentTemplates.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-muted-foreground mb-4">
+            <div className="text-gray-500 admin-dark:text-gray-400 mb-4 text-sm sm:text-base">
               {searchTerm ? "Không tìm thấy mẫu website nào phù hợp" : "Chưa có mẫu website nào"}
             </div>
-            {!searchTerm && <Button className="cursor-pointer bg-blue-700 hover:bg-blue-800 text-white" onClick={() => navigate("new")}>Thêm mẫu đầu tiên</Button>}
+            {!searchTerm &&
+              <Button className="cursor-pointer bg-blue-700 hover:bg-blue-800 text-white" onClick={() => navigate("new")}>
+                <span className="text-sm sm:text-base font-semibold">Thêm mẫu đầu tiên</span>
+              </Button>
+            }
           </div>
         ) : (
           currentTemplates.map((t) => (
-            <Card
+            <div
               key={t.id}
-              className="group border-2 border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800"
+              className="group border-2 py-2 sm:py-3 rounded-lg border-gray-300 admin-dark:border-gray-700 hover:shadow-lg transition-shadow duration-200 bg-slate-50 admin-dark:bg-slate-800"
             >
-              <CardContent className="px-4">
+              <div className="px-2 sm:px-3">
                 <div className="flex flex-col md:flex-row min-h-[200px] gap-4 sm:gap-2">
                   {/* Hình ảnh */}
                   <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-50 ">
@@ -169,7 +173,7 @@ export default function WebsiteTemplateList() {
                         <span className="text-gray-500">Không có hình ảnh</span>
                       </div>
                     )}
-                    <div className="absolute top-3 left-3">
+                    <div className="absolute top-2 left-2">
                       <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
                         {t.category}
                       </Badge>
@@ -177,94 +181,104 @@ export default function WebsiteTemplateList() {
                   </div>
 
                   {/* Nội dung */}
-                  <div className="flex-1 px-0 sm:px-auto pr-0">
-                    <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-xl mb-1 line-clamp-2">{t.name}</h3>
-                    <p className="text-sm text-gray-600 admin-dark:text-gray-400">
-                      Người đăng: <span className="text-blue-600 font-medium ">Admin</span>
-                    </p>
-                    <p className="text-sm text-gray-900 admin-dark:text-gray-100 ">Danh mục: {t.category}</p>
-
-                    <div className="mt-3">
-                      <p className="text-sm font-medium text-gray-900 admin-dark:text-gray-100 ">Công nghệ:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {t.tech?.map((item) => (
-                          <Badge key={item} variant="outline" className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5">{item}</Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="mt-3">
-                      <p className="text-sm font-medium text-gray-900 admin-dark:text-gray-100 ">Các loại File:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {t.tags?.slice(0, 6).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5">{tag}</Badge>
-                        ))}
-                        {t.tags?.length > 6 && (
-                          <Badge variant="outline" className="text-xs text-gray-500 mt-0.5">
-                            +{t.tags.length - 6} more
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Sidebar phải */}
-                  <div className="w-full md:w-56 border-t md:border-t-0 md:border-l-2 border-gray-300 pt-4 md:pt-0 md:p-2 flex flex-col justify-between ">
-                    <div className="flex items-center justify-end gap-1 mb-4">
-                      <div
-                        className={`${t.export_state ? "bg-green-600 text-white" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-lg`}
-                      >
-                        {t.export_state ? "Đã xuất bản" : "Chưa xuất bản"}
-                      </div>
-
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => navigate(`${t.id}/edit`)}
-                        className="h-8 w-8 p-0 cursor-pointer"
-                      >
-                        <SquarePen className="h-4 w-4" />
-                      </Button>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button size="sm" variant="outline" className="h-8 w-8 p-0 text-red-500 cursor-pointer">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Bạn có chắc chắn muốn xóa mẫu "{t.name}"? Hành động này không thể hoàn tác.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Hủy</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(t.id)}>Xóa</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-
-                    <div className="text-right">
-                      <div className="text-xl font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">
-                        {t.price ? <ProductPrice price={t.price} /> : 0}
-                        <span className="text-xs ml-1">VND</span>
-                      </div>
-                      <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Lượt xem:
-                        <span className="font-semibold text-gray-900 admin-dark:text-gray-100 ">{t.views}</span>
+                  <div className="w-full flex flex-col md:flex-row md:items-start gap-2">
+                    <div className="flex-1 px-0 sm:px-auto pr-0">
+                      <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-base sm:text-lg mb-1 line-clamp-2">{t.name}</h3>
+                      <p className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400 font-semibold">
+                        Người đăng: <span className="text-xs sm:text-sm text-blue-600 font-medium ">Admin</span>
                       </p>
-                      <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
+                      <p className="mt-2 text-xs sm:text-sm text-gray-700 admin-dark:text-gray-100 font-semibold">Danh mục: {t.category}</p>
+
+                      <div className="mt-2">
+                        <p className="text-xs sm:text-sm font-medium text-gray-700 admin-dark:text-gray-100 ">Công nghệ:</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {t.tech?.map((item) => (
+                            <Badge key={item} variant="outline" className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5">{item}</Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-3">
+                        <p className="text-xs sm:text-sm font-medium text-gray-700 admin-dark:text-gray-100 ">Các loại File:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {t.tags?.slice(0, 6).map((tag) => (
+                            <Badge key={tag} variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 mt-1">{tag}</Badge>
+                          ))}
+                          {t.tags?.length > 6 && (
+                            <Badge variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 mt-1">
+                              +{t.tags.length - 6} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
-                    <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full bg-blue-500 text-white gap mt-2 cursor-pointer hover:bg-blue-600">
-                      Xem mẫu
-                    </Button>
+                    {/* Sidebar phải */}
+                    <div className="w-full md:w-56 md:h-full md:pt-0 flex flex-col justify-between border-t md:border-t-0 md:border-l-2 border-gray-300">
+                      <div className="h-fit md:pl-2 pt-2 md:pt-0">
+                        <div className="flex items-center justify-end md:justify-center gap-1 mb-2">
+                          <div
+                            className={`${t.export_state ? "bg-green-600 text-white" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-sm`}
+                          >
+                            <span className="text-sm sm:text-sm font-semibold text-white">{t.export_state ? "Đã xuất bản" : "Chưa xuất bản"}</span>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => navigate(`${t.id}/edit`)}
+                            className="h-8 w-8 p-0 cursor-pointer rounded-sm"
+                          >
+                            <SquarePen className="h-4 w-4" />
+                          </Button>
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="outline" className="h-8 w-8 p-0 text-red-500 cursor-pointer">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+
+                            <AlertDialogContent className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="text-base sm:text-lg text-center text-gray-900 admin-dark:text-gray-100">Xác nhận xóa</AlertDialogTitle>
+                                <AlertDialogDescription className="text-xs sm:text-sm text-start text-gray-600 admin-dark:text-gray-400">
+                                  Bạn có chắc chắn muốn xóa mẫu "{t.name}"? Hành động này không thể hoàn tác.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel onClick={() => navigate(0)} className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100 cursor-pointer">
+                                  <span className="text-xs sm:text-base font-semibold text-gray-200 admin-dark:text-gray-200">Hủy</span>
+                                </AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(t.id)} className="text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700 cursor-pointer">
+                                  <span className="text-xs sm:text-base font-semibold text-gray-200 admin-dark:text-gray-200">Xóa</span>
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm sm:text-lg font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">
+                            {t.price ? <ProductPrice price={t.price} /> : 0}
+                            <span className="text-sm sm:text-lg ml-1">VND</span>
+                          </div>
+                          <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Lượt xem:
+                            <span className="font-semibold text-gray-900 admin-dark:text-gray-100 "> {t.views}</span>
+                          </p>
+                          <p className="mt-2 text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
+                        </div>
+
+                        <div className="w-full mt-4 flex justify-center">
+                          <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full sm:w-50 md:w-full bg-blue-500 text-white gap cursor-pointer hover:bg-blue-600">
+                            <span className="text-sm sm:text-base font-semibold text-white">Xem mẫu</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))
         )}
       </div>

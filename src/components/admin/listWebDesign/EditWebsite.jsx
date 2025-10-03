@@ -577,10 +577,10 @@ export default function WebsiteTemplateEdit() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex bg-primary text-primary-foreground hover:bg-primary/90 admin-dark:bg-blue-600 sm:w-60 sm:mx-auto admin-dark:hover:bg-blue-500 cursor-pointer text-sm sm:text-xl"
+                className="w-full flex bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 sm:w-60 sm:mx-auto admin-dark:hover:bg-blue-500 cursor-pointer px-4"
               >
-                <Save className="h-4 w-4 mr-2" />
-                <span className="font-semibold">{isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"} {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</span>
+                <Save className="h-4 w-4 text-white" />
+                <span className="font-semibold text-sm sm:text-base text-white">{isLoading ? "Đang lưu..." : template ? "Cập nhật" : "Thêm mẫu"} {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</span>
               </Button>
             </form>
           </CardContent>
@@ -609,8 +609,8 @@ export default function WebsiteTemplateEdit() {
                 </div>
               ) : (
                 <div className="relative overflow-hidden rounded-lg w-full lg:w-120 border-2 border-gray-300 admin-dark:border-gray-700">
-                  <div className="w-full lg:w-120 h-40 lg:h-50 flex items-center justify-center border-2 border-gray-600 admin-dark:border-gray-800 rounded-lg overflow-hidden">
-                    <h1 className="text-sm sm:text-base">Chưa có ảnh</h1>
+                  <div className="w-full lg:w-120 h-40 lg:h-50 flex items-center justify-center rounded-lg overflow-hidden">
+                    <h1 className="text-sm sm:text-base text-gray-500">Chưa có ảnh</h1>
                   </div>
                   <div className="absolute top-2 left-2">
                     <Badge variant="secondary" className="admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm">
@@ -621,16 +621,16 @@ export default function WebsiteTemplateEdit() {
               )}
 
               <div>
-                <h3 className="font-semibold text-base sm:text-lg mb-2 text-gray-900 admin-dark:text-gray-100">
+                <h3 className="font-semibold text-base sm:text-lg text-gray-900 admin-dark:text-gray-100">
                   {formData.name || "Tên mẫu"}
                 </h3>
-                <p className="max-w-full sm:max-w-6xl wrap-anywhere text-muted-foreground text-xs sm:text-sm mb-3 admin-dark:text-gray-400">
+                <p className="max-w-full sm:max-w-6xl wrap-anywhere text-muted-foreground text-xs sm:text-sm admin-dark:text-gray-400 mb-3">
                   {formData.description || "Mô tả mẫu website"}
                 </p>
                 {formData.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {formData.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs sm:text-sm admin-dark:bg-gray-700 admin-dark:text-gray-300">
+                      <Badge key={tag} variant="outline" className="text-xs sm:text-sm text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300">
                         {tag}
                       </Badge>
                     ))}
