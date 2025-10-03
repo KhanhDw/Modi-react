@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { FiSearch, FiEdit2, FiTrash2 } from "react-icons/fi";
-import axios from "axios";
 import UserForm from "@/components/admin/userForm/UserForm.jsx";
-import "../../styles/scrollbar.css";
 import PageList from "@/components/feature/pagination.jsx";
+import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
+import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
+import "../../styles/scrollbar.css";
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -109,14 +109,14 @@ export default function AdminZonePage() {
 
   return (
     <div>
-      <div className="mx-auto rounded-xl border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 p-6 transition-all duration-500 ease-in-out">
+      <div className="mx-auto rounded-xl border-gray-200 admin-dark:border-gray-700 transition-all duration-500 ease-in-out">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 admin-dark:text-white mb-4 text-center">
+          Quản lý tài khoản nhân viên
+        </h2>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 admin-dark:text-white">
-            Quản lý tài khoản nhân viên
-          </h2>
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mb-6">
 
-          <div className="relative w-full max-w-xs flex-grow">
+          <div className="relative w-full h-full max-w-xs flex-grow">
             <FiSearch
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
               size={20}
@@ -130,7 +130,7 @@ export default function AdminZonePage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-sm sm:text-base bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-200"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 admin-dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-200 placeholder:text-sm placeholder:sm:text-base"
             />
           </div>
 
@@ -140,12 +140,12 @@ export default function AdminZonePage() {
               setShowForm(true);
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white border border-transparent
-              admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 
+              admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700
               admin-dark:text-gray-200 admin-dark:border-gray-600
-              px-2 py-2 rounded-lg transition flex-shrink-0 cursor-pointer text-sm sm:text-base min-w-[90px] whitespace-nowrap"
+              rounded-lg transition flex-shrink-0 cursor-pointer min-w-[90px] whitespace-nowrap p-2"
             type="button"
           >
-            + Thêm mới
+            <span className="text-sm sm:text-base font-semibold">+ Thêm mới</span>
           </button>
         </div>
 
@@ -224,24 +224,24 @@ export default function AdminZonePage() {
                           }}
                           disabled={currentUser && item.id === currentUser.id}
                           className={`flex items-center gap-1 transition cursor-pointer ${currentUser && item.id === currentUser.id
-                            ? "text-gray-400 cursor-not-allowed"
+                            ? "text-gray-300 cursor-not-allowed"
                             : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500"
                             }`}
                         >
                           <FiEdit2 size={18} />
-                          <span className="text-sm font-medium">Sửa</span>
+                          <span className="text-sm font-medium text-gray-500 admin-dark:text-gray-300">Sửa</span>
                         </button>
 
                         <button
                           onClick={() => handleDelete(item.id)}
                           disabled={currentUser && item.id === currentUser.id}
                           className={`flex items-center gap-1 transition cursor-pointer ${currentUser && item.id === currentUser.id
-                            ? "text-gray-400 cursor-not-allowed"
+                            ? "text-gray-300 cursor-not-allowed"
                             : "text-red-600 admin-dark:text-red-500 hover:text-red-500"
                             }`}
                         >
                           <FiTrash2 size={18} />
-                          <span className="text-sm font-medium">Xóa</span>
+                          <span className="text-sm font-medium text-gray-500 admin-dark:text-gray-300">Xóa</span>
                         </button>
                       </div>
                     </td>

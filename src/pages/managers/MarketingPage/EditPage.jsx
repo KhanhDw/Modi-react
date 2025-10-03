@@ -169,7 +169,7 @@ export default function EditPage() {
         <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-2 md:p-2">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-                <h2 className="text-2xl text-center lg:text-2xl xl:text-3xl font-bold text-gray-900 admin-dark:text-white sm:text-xl">
+                <h2 className="text-xl md:text-2xl text-center font-bold text-gray-900 admin-dark:text-white sm:text-xl">
                     Chỉnh sửa bài viết
                 </h2>
 

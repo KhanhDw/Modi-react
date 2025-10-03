@@ -249,7 +249,7 @@ export default function FooterConfigMultiLang() {
     if (loading) return <p className="text-center text-xs sm:text-sm text-gray-700 admin-dark:text-gray-300 py-6">⏳ Đang tải...</p>;
 
     return (
-        <div className="p-2 sm:p-4 md:p-6 mx-auto space-y-6 sm:space-y-8">
+        <div className="md:p-2 mx-auto space-y-6 sm:space-y-8">
             <FooterView
                 data={{
                     [activeLang]: {
@@ -282,12 +282,12 @@ export default function FooterConfigMultiLang() {
                 lang={activeLang}
             />
             <div className="border-t border-gray-300 admin-dark:border-gray-600"></div>
-            <div className="space-y-6 sm:space-y-8 max-w-5xl w-full mx-auto px-2 sm:px-4">
-                <div className="flex w-full xs:flex-col md:flex-row md:justify-between items-center gap-3 sm:gap-4">
-                    <div className=" flex items-center justify-center  gap-2 xs:gap-3 ">
-                        <div className="border border-gray-500 flex flex-col z-2 rounded-lg p-3 xs:w-full xs:flex-row items-center justify-end gap-2">
+            <div className="space-y-6 sm:space-y-8 max-w-6xl w-full mx-auto">
+                <div className="flex w-full xs:flex-col md:flex-col xl:flex-row xl:justify-between items-center gap-3 sm:gap-4">
+                    <div className="flex items-center justify-center gap-2 xs:gap-3 ">
+                        <div className="border border-gray-300 flex flex-col z-2 rounded-lg p-3 xs:w-full xs:flex-row items-center justify-end gap-2">
                             {/* Hiển thị ở md+ */}
-                            <span >
+                            <span className="text-xs sm:text-sm">
                                 {activeLang === "vi" ? "Đang thiết lập nội dung cho tiếng Việt" : "Đang thiết lập nội dung cho tiếng Anh"}
                             </span>
 
@@ -295,7 +295,7 @@ export default function FooterConfigMultiLang() {
                         </div>
                     </div>
 
-                    <div className="flex items-center flex-wrap justify-center gap-2 xs:gap-3 border p-2  rounded-lg xs:rounded-xl bg-gray-400 admin-dark:bg-slate-900 ">
+                    <div className="flex items-center flex-wrap justify-center gap-2 xs:gap-3 border border-gray-300 p-2  rounded-lg xs:rounded-xl bg-gray-100 shadow admin-dark:bg-slate-900 ">
                         {[
                             { key: "company", label: "Thông tin công ty" },
                             { key: "services", label: "Dịch vụ" },
@@ -315,13 +315,12 @@ export default function FooterConfigMultiLang() {
                             </button>
                         ))}
                     </div>
-
                     <Button
                         type="button"
                         onClick={handleSave}
-                        className="w-full sm:w-auto px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer"
+                        className="w-full sm:w-auto px-3 sm:px-6 py-1 sm:py-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer"
                     >
-                        Lưu Cập Nhật
+                        <span className="text-sm sm:text-base font-semibold">Lưu Cập Nhật</span>
                     </Button>
                 </div>
 
@@ -442,7 +441,7 @@ export default function FooterConfigMultiLang() {
 
                 {activeTab === "thongBaoBoCongThuong" && (
                     <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white admin-dark:bg-gray-800 shadow space-y-3 sm:space-y-4 border border-gray-300 admin-dark:border-gray-600 transition">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                        <div className="flex flex-col sm:flex-col md:flex-row items-center sm:items-center justify-between gap-2 sm:gap-3">
                             <h4 className="font-bold text-base sm:text-lg">Thông báo bộ công thương</h4>
                             <button
                                 type="button"
@@ -450,8 +449,8 @@ export default function FooterConfigMultiLang() {
                                 className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold ${!enableBoCongThuong ? "bg-red-700" : "bg-green-600"
                                     } border border-gray-600 text-white`}
                             >
-                                <p>{enableBoCongThuong ? "Đã" : "Chưa"}</p>
-                                <span>thông báo cho bộ công thương</span>
+                                <span>{enableBoCongThuong ? "Đã" : "Chưa"}</span>
+                                <span className="text-xs sm:text-sm">thông báo cho bộ công thương</span>
                             </button>
                         </div>
 
@@ -459,7 +458,7 @@ export default function FooterConfigMultiLang() {
                             {thongBaoBoCongThuong.map((bct) => (
                                 <div key={bct.id} className="space-y-3 sm:space-y-4">
                                     <div className="flex flex-col gap-1 sm:gap-2">
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                                        <div className="flex flex-col sm:flex-col-reverse md:flex-row items-center sm:items-center justify-between gap-2 sm:gap-3">
                                             <h1 className="text-xs sm:text-sm font-semibold text-gray-600 admin-dark:text-gray-300">
                                                 Đường dẫn xác thực web của bộ công thương
                                             </h1>

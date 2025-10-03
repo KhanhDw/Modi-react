@@ -150,7 +150,7 @@ export default function ServiceCustomers() {
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-gray-200 text-2xl font-bold leading-none cursor-pointer"
               onClick={() => setOpenAddCustomer(false)}
             >
-              &times;
+              <span>X</span>
             </button>
 
             {/* Nội dung form */}

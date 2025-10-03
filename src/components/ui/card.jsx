@@ -1,6 +1,5 @@
-import * as React from "react"
-import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+import { cva } from "class-variance-authority"
 
 // Card styles
 const cardVariants = cva(
@@ -107,7 +106,7 @@ function CardAction({ className, ...props }) {
 
 function CardContent({ className, ...props }) {
   return (
-    <div data-slot="card-content" className={cn("px-6", className)} {...props} />
+    <div data-slot="card-content" className={cn("px-2 sm:px-4", className)} {...props} />
   )
 }
 
@@ -122,11 +121,5 @@ function CardFooter({ className, ...props }) {
 }
 
 export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
-  CardContent,
+  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
 }

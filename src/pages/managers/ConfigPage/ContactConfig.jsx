@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ContactConfig() {
     const [companyName, setCompanyName] = useState("");
@@ -124,14 +124,12 @@ export default function ContactConfig() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-4 md:p-3 lg:p-2 items-start min-h-screen">
             {/* Left: thông tin và lưu địa chỉ map */}
             <div className="lg:col-span-2 col-span-1 space-y-4">
-
-                <div className="p-4 border admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
+                <div className="p-3 border border-gray-300 admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
                     {/* Tên công ty */}
-                    <div>
-                        <label className="flex w-full items-center justify-between text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
-                            <p>Thiết lập Tên công ty {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</p>
-                            <div className="flex items-center justify-end space-x-3 ">
-                                <span className="text-base font-medium admin-dark:text-white text-gray-900">
+                    <div className="w-full">
+                        <label className="w-full admin-dark:text-white text-gray-900">
+                            <div className="flex items-center justify-end space-x-3 pb-2">
+                                <span className="text-xs sm:text-sm md:text-base font-medium admin-dark:text-white text-gray-900">
                                     {activeLang === 'vi' ? 'Tiếng Việt' : 'English'}
                                 </span>
 
@@ -153,10 +151,14 @@ export default function ContactConfig() {
                                 </div>
                             </div>
                         </label>
+                        <div className="text-start mb-3">
+                            <p className="text-xs sm:text-sm md:text-base font-medium">Thiết lập Tên công ty {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}</p>
+                        </div>
+
                         <input autoComplete="off"
                             type="text"
                             placeholder={activeLang === "vi" ? "Nhập tên công ty..." : "Enter company name..."}
-                            className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-3 py-2 focus:outline-none "
+                            className="admin-dark:bg-gray-700 w-full border border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"
                             value={companyName}
                             onChange={(e) => setCompanyName(e.target.value)}
                         />
@@ -165,18 +167,19 @@ export default function ContactConfig() {
                     {/* Nút lưu */}
                     <div className="flex justify-end">
                         <button
-                            className="inline-flex shadow-md h-10 items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
+                            className="inline-flex shadow-md items-center justify-center rounded bg-blue-600 px-2 py-2.5 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
                             onClick={handleSaveName}
                         >
-                            Lưu tên công ty
+                            <span className="text-xs sm:text-sm font-medium">Lưu tên công ty</span>
                         </button>
                     </div>
 
                 </div>
+
                 {/* URL Google Map */}
-                <div className="p-4 border admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
+                <div className="p-3 border border-gray-300 admin-dark:border-gray-700 rounded-2xl space-y-4 admin-dark:bg-gray-800">
                     <div>
-                        <label className="block text-sm md:text-[18px] lg:text-[20px] font-medium mb-3 admin-dark:text-white text-gray-900">
+                        <label className="block text-xs sm:text-sm md:text-base font-medium mb-3 admin-dark:text-white text-gray-900">
                             Thiết lập địa chỉ Google Map
                         </label>
                         <textarea
@@ -185,7 +188,7 @@ export default function ContactConfig() {
                                     ? "Nhập URL Google Maps vào đây..."
                                     : "Enter Google Maps URL..."
                             }
-                            className="admin-dark:bg-gray-700 w-full border-2 shadow-sm border-slate-300 admin-dark:border-slate-700 rounded-sm px-3 py-2 focus:outline-none"
+                            className="admin-dark:bg-gray-700 w-full border border-slate-300 admin-dark:border-slate-700 rounded-sm px-2 py-2 focus:outline-none"
                             value={mapUrl}
                             onChange={(e) => setMapUrl(e.target.value)}
                             rows={8}
@@ -195,10 +198,10 @@ export default function ContactConfig() {
                     {/* Nút lưu */}
                     <div className="flex justify-end">
                         <button
-                            className="inline-flex h-10 shadow-md items-center justify-center rounded bg-blue-600 px-6 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
+                            className="inline-flex px-2 py-2.5 shadow-md items-center justify-center rounded bg-blue-600 text-sm font-medium text-white transition active:scale-110 hover:bg-blue-700 cursor-pointer"
                             onClick={handleSaveUrlMap}
                         >
-                            Lưu địa chỉ Google Map
+                            <span className="text-xs sm:text-sm font-medium">Lưu địa chỉ Google Map</span>
                         </button>
                     </div>
 

@@ -1,6 +1,5 @@
-import React from "react";
+import { Contact, Home, Info, PanelBottom, PanelTop } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { Contact, BarChart3, PanelTop, PanelBottom, Home, Info } from "lucide-react";
 function ConfigPage() {
     const location = useLocation();
 
@@ -22,13 +21,13 @@ function ConfigPage() {
         // trường hợp đặc biệt: khi ở /marketing thì "overview" vẫn active
         const isOverviewActive =
             location.pathname === "/marketing" && to === "overview";
-        return `flex justify-center items-center gap-1 sm:gap-2 p-1 sm:p-2 rounded-md text-xs sm:text-sm font-medium ${isActive || isOverviewActive ? activeClass : normalClass}`;
+        return `flex justify-center items-center gap-1 sm:gap-2 p-2 rounded-md text-xs sm:text-sm font-medium ${isActive || isOverviewActive ? activeClass : normalClass}`;
     };
 
     return (
         <div className="container mx-auto">
-            <div className="mb-6 flex items-center justify-center">
-                <nav className="grid grid-cols-5 gap-2">
+            <div className="mb-3 flex items-center justify-center">
+                <nav className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-5">
                     {menus.map(({ to, icon: Icon, label }) => (
                         <NavLink
                             key={to}
