@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
     DialogFooter,
+    DialogHeader,
     DialogOverlay,
+    DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, Circle } from "lucide-react";
-import { getAllBridge, createBridge, deleteBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
+import { useEffect, useState } from "react";
+import { createBridge, deleteBridge, getAllBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
 
 export default function ServiceSelectionForGroupServiceModal({
     isOpen,
@@ -116,30 +116,30 @@ export default function ServiceSelectionForGroupServiceModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
-            <DialogContent className="admin-dark:bg-gray-900/95 admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-4xl h-full sm:h-auto sm:max-h-[90vh] flex flex-col">
+            <DialogOverlay className="bg-black/50 backdrop-blur-sm" />
+            <DialogContent className="admin-dark:bg-gray-900/95 bg-gray-100 admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-4xl h-full sm:h-auto sm:max-h-[90vh] flex flex-col">
                 <DialogHeader className="space-y-3 pr-6">
-                    <DialogTitle className="text-xl text-foreground">
+                    <DialogTitle className="text-base md:text-lg text-gray-900 admin-dark:text-white">
                         Chọn hạng mục cho gói dịch vụ - {currentStageTitle}
                     </DialogTitle>
 
                     {lineActive && (
-                        <div className="p-4 bg-primary/5 admin-dark:bg-primary/10 rounded-lg border border-primary/20 admin-dark:border-primary/30">
+                        <div className="p-4 bg-gray-200 admin-dark:bg-primary/10 rounded-lg border border-primary/20 admin-dark:border-primary/30">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                                 <div className="space-y-1">
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-sm text-muted-foreground admin-dark:text-gray-400">
                                         Đang chọn dịch vụ cho ServiceGroup:
                                     </p>
-                                    <p className="font-semibold text-primary">
+                                    <p className="font-semibold text admin-dark:text-primary">
                                         {lineActive.title_vi || "Line demo"}
                                     </p>
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-sm text-muted-foreground admin-dark:text-gray-400">
                                         {lineActive.title_en || "Line EN demo"}
                                     </p>
                                 </div>
                                 <div className="flex gap-2 self-end sm:self-center">
-                                    <Badge variant="outline" className="bg-card text-muted-foreground admin-dark:border-slate-600">
-                                        ID: {lineActive.id || "sg-demo"}
+                                    <Badge variant="outline" className="bg-gray-200 border border-gray-400 text-muted-foreground admin-dark:bg-gray-700 admin-dark:border-slate-600">
+                                        <span className="admin-dark:text-gray-300">ID: {lineActive.id || "sg-demo"}</span>
                                     </Badge>
                                     <Badge variant="secondary">{currentStageTitle}</Badge>
                                 </div>
@@ -202,7 +202,7 @@ export default function ServiceSelectionForGroupServiceModal({
                         <div className="flex items-center gap-4">
                             <div className="text-sm text-muted-foreground">
                                 Đang chọn cho:
-                                <span className="font-semibold text-foreground ml-1">
+                                <span className="font-semibold text-blue-600 admin-dark:text-foreground ml-1">
                                     "{lineActive?.title_vi || "Line demo"}"
                                 </span>
                             </div>
@@ -214,13 +214,13 @@ export default function ServiceSelectionForGroupServiceModal({
                         </div>
                         <div className="flex gap-2">
                             <Button variant="outline" onClick={onClose}>
-                                Hủy
+                                <span className="text-sm md:text-base font-semibold cursor-pointer">Hủy</span>
                             </Button>
                             <Button
                                 className="bg-primary hover:bg-primary/90"
                                 onClick={handleSaveSelectForMiniService}
                             >
-                                Xác nhận lưu ({selectedServiceIds.length})
+                                <span className="text-sm md:text-base font-semibold cursor-pointer">Xác nhận lưu ({selectedServiceIds.length})</span>
                             </Button>
                         </div>
                     </div>

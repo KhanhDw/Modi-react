@@ -544,7 +544,7 @@ export default function RenderHomeConfig({
                                     }
                                 />
 
-                                <div className="overflow-hidden whitespace-nowrap mt-4 bg-gray-100 p-3 rounded-lg admin-dark:bg-gray-900">
+                                <div className="overflow-hidden whitespace-nowrap mt-4 bg-gray-100 p-3 rounded-lg admin-dark:bg-gray-800">
                                     <motion.div
                                         animate={{ x: ["100%", "-100%"] }}
                                         transition={{ repeat: Infinity, duration: 50, ease: "linear" }}

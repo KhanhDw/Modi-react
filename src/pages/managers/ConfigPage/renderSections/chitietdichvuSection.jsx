@@ -1,3 +1,4 @@
+import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,10 +20,9 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ConfirmationModal from "./components/ConfirmationModal.jsx";
-import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { Crosshair, Edit2, GripVertical, LogOut, PencilLine, Plus, Save, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import ConfirmationModal from "./components/ConfirmationModal.jsx";
 import EditServiceGroupForm from "./components/EditServiceGroupForm.jsx";
 import { getAllBridge } from "./hook/use_bridge_services_stage_and_list_mini_service.jsx";
 import { createMiniService, deleteMiniService, getAllMiniServices } from "./hook/use_list_mini_service.jsx";
@@ -53,38 +53,54 @@ const SortableStageItem = ({ stage, onEdit, onDelete, isEditing, onUpdate, onCan
             ref={setNodeRef}
             style={style}
             className={cn(
-                "flex items-center justify-between border rounded-lg p-3 transition-shadow border-gray-200 admin-dark:border-gray-700",
-                isDragging ? "shadow-xl bg-gray-50 z-10 admin-dark:bg-gray-800" : "bg-white admin-dark:bg-gray-800/50",
+                "flex items-center justify-between border rounded-lg p-2 transition-shadow border-gray-200 admin-dark:border-gray-700",
+                isDragging ? "shadow-xl bg-gray-50 z-10 admin-dark:bg-gray-800 focus:border-none" : "bg-white admin-dark:bg-gray-800/50",
                 isEditing ? "ring-2 ring-blue-500/50" : ""
             )}
         >
             {isEditing ? (
-                <div className="flex gap-2 w-full items-center">
-                    <Input defaultValue={stage.code} onChange={(e) => (stage.code = e.target.value)} className="w-20" placeholder="Code" />
-                    <Input defaultValue={stage.title_vi} onChange={(e) => (stage.title_vi = e.target.value)} placeholder="Tiếng Việt" />
-                    <Input defaultValue={stage.title_en} onChange={(e) => (stage.title_en = e.target.value)} placeholder="English" />
-                    <Button theme="admin" size="sm" onClick={() => onUpdate(stage.id, stage)}><Save className="w-4 h-4" /></Button>
-                    <Button theme="admin" size="sm" variant="outline" onClick={onCancelEdit}><X className="w-4 h-4" /></Button>
+                <div className="flex flex-col lg:flex-row lg:items-center items-start gap-2 w-full">
+                    <Input defaultValue={stage.code} onChange={(e) => (stage.code = e.target.value)} className="placeholder:text-gray-500 text-gray-800 admin-dark:text-white w-20 lg:w-40" placeholder="Code" />
+                    <Input defaultValue={stage.title_vi} onChange={(e) => (stage.title_vi = e.target.value)} placeholder="Tiếng Việt" className={'placeholder:text-gray-500 text-gray-800 admin-dark:text-white lg:w-full'} />
+                    <Input defaultValue={stage.title_en} onChange={(e) => (stage.title_en = e.target.value)} placeholder="English" className={'placeholder:text-gray-500 text-gray-800 admin-dark:text-white lg:w-full'} />
+                    <div className="flex w-full lg:w-fit gap-2 lg:items-center justify-end">
+                        <Button theme="admin" size="sm" onClick={() => onUpdate(stage.id, stage)}
+                            className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600">
+                            <Save className="w-4 h-4 text-white" />
+                        </Button>
+                        <Button theme="admin" size="sm" variant="outline" onClick={onCancelEdit} className="cursor-pointer shadow border-none bg-red-500 hover:bg-red-600 admin-dark:bg-red-500 admin-dark:hover:bg-red-600">
+                            <X className="w-4 h-4" />
+                        </Button>
+                    </div>
                 </div>
             ) : (
                 <>
-                    <div className="flex items-center gap-3">
-                        <div {...attributes} {...listeners} className="cursor-grab p-1 text-gray-400 hover:text-gray-800 admin-dark:text-gray-500 admin-dark:hover:text-gray-200">
-                            <GripVertical className="w-5 h-5" />
+                    <div className="w-full flex flex-col md:gap-3 md:flex-row">
+                        <div className="flex items-center justify-start">
+                            <div {...attributes} {...listeners} className="cursor-grab focus:cursor-grabbing p-1 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-gray-200">
+                                <GripVertical className="w-5 h-5" />
+                            </div>
+                            <Badge variant="secondary" className="font-mono text-xs">{stage.code}</Badge>
                         </div>
-                        <Badge variant="secondary" className="font-mono text-xs">{stage.code}</Badge>
-                        <div>
+                        <div className="flex flex-col md:flex-row w-full gap-1 lg:gap-3 items-center">
                             <span className="font-medium text-sm text-gray-900 admin-dark:text-white">{stage.title_vi}</span>
-                            <span className="text-sm text-gray-500 ml-2 admin-dark:text-gray-400">/ {stage.title_en}</span>
+                            <span className="hidden md:inline text-gray-400">/</span>
+                            <span className="text-sm text-gray-500 admin-dark:text-gray-400"> {stage.title_en}</span>
                         </div>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button theme="admin" size="icon" variant="ghost" onClick={() => onEdit(stage.id)}><Edit2 className="w-4 h-4" /></Button>
-                        <Button theme="admin" size="icon" variant="ghost" className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400" onClick={() => onDelete(stage)}><Trash2 className="w-4 h-4" /></Button>
+                        <div className="flex gap-2 w-full justify-end md:w-fit mt-2 md:mt-0">
+                            <Button theme="admin" size="sm" variant="ghost" onClick={() => onEdit(stage.id)}
+                                className="cursor-pointer bg-gray-200 text-gray-500 hover:text-gray-500 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:text-white admin-dark:hover:bg-gray-800">
+                                <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button theme="admin" size="sm" variant="ghost" className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400 cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800" onClick={() => onDelete(stage)}>
+                                <Trash2 className="w-4 h-4" />
+                            </Button>
+                        </div>
                     </div>
                 </>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 };
 
@@ -351,7 +367,7 @@ export default function ChitietdichvuSection() {
                 message={confirmModalState.message}
             />
 
-            <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
+            <Card className="bg-white border border-gray-300 admin-dark:bg-gray-900 admin-dark:border-gray-700">
                 <CardHeader>
                     <CardTitle className="text-gray-900 admin-dark:text-white">
                         <div className="flex flex-col sm:flex-row gap-3 items-center justify-between w-full">
@@ -370,7 +386,7 @@ export default function ChitietdichvuSection() {
                             </Button>
                         </div>
                     </CardTitle>
-                    <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm sm:text-base">
+                    <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-xs md:text-sm lg:text-base">
                         Sử dụng thanh trượt để chuyển đổi giữa các giai đoạn
                     </CardDescription>
                 </CardHeader>
@@ -385,7 +401,7 @@ export default function ChitietdichvuSection() {
                             className="w-full"
                         />
 
-                        <div className="flex justify-between text-sm text-gray-600 admin-dark:text-gray-300 mt-2">
+                        <div className="flex justify-between text-xs md:text-sm text-gray-600 admin-dark:text-gray-300 mt-2">
                             {stageMaster.map((st) => (
                                 <span key={st.id}>{st.title_vi}</span>
                             ))}
@@ -393,11 +409,11 @@ export default function ChitietdichvuSection() {
                     </div>
                     <div className="text-center pt-2">
                         {stageMaster[currentStage - 1] && (
-                            <div className="inline-flex flex-col justify-center items-center gap-2 rounded-lg bg-gray-100 admin-dark:bg-gray-800 px-4 py-2 border border-gray-200 admin-dark:border-gray-700">
-                                <span className="text-xl font-bold text-blue-600 admin-dark:text-sky-400">
+                            <div className="inline-flex flex-col justify-center items-center rounded-sm bg-gray-100 admin-dark:bg-gray-800 px-1 py-1 md:px-3 border border-gray-200 admin-dark:border-gray-700 w-fit">
+                                <span className="text-center text-sm md:text-base lg:text-lg font-bold text-blue-600 admin-dark:text-sky-500">
                                     {stageMaster[currentStage - 1].title_vi}
                                 </span>
-                                <span className="text-base text-gray-500 admin-dark:text-gray-400">
+                                <span className="text-center text-xs md:text-sm lg:text-base text-gray-500 admin-dark:text-gray-400">
                                     {stageMaster[currentStage - 1].title_en}
                                 </span>
                             </div>
@@ -411,12 +427,12 @@ export default function ChitietdichvuSection() {
                     <CardTitle className="text-gray-900 admin-dark:text-white text-sm sm:text-base">Quản lý giai đoạn</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="flex gap-2 items-end">
+                    <div className="flex flex-col lg:flex-row gap-2 items-end">
                         <Input placeholder="Vị trí giai đoạn" value={newStageCode} onChange={(e) => setNewStageCode(e.target.value)} className={'text-gray-700 admin-dark:text-gray-100'} />
                         <Input placeholder="Tiếng Việt" value={newStageVi} onChange={(e) => setNewStageVi(e.target.value)} className={'text-gray-700 admin-dark:text-gray-100'} />
                         <Input placeholder="English" value={newStageEn} onChange={(e) => setNewStageEn(e.target.value)} className={'text-gray-700 admin-dark:text-gray-100'} />
                         <Button theme="admin" onClick={handleAddStage} className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600">
-                            <Plus className="w-4 h-4 mr-1 cursor-pointer text-xs sm:text-base text-white" /> <span className="text-sm sm:text-base font-semibold text-white">Thêm</span>
+                            <Plus className="w-4 h-4 cursor-pointer text-xs sm:text-base text-white" /> <span className="text-xs sm:text-base font-semibold text-white">Thêm</span>
                         </Button>
                     </div>
 
@@ -446,12 +462,12 @@ export default function ChitietdichvuSection() {
                     </DndContext>
 
                     {isOrderChanged && (
-                        <div className="flex justify-end gap-2 pt-4">
-                            <Button theme="admin" variant="ghost" onClick={handleCancelOrder} className="cursor-pointer">
-                                <span className="text-sm sm:text-base font-semibold text-white">Hủy sắp xếp</span>
+                        <div className="flex justify-end gap-2 pt-1">
+                            <Button theme="admin" variant="ghost" onClick={handleCancelOrder} className="cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800">
+                                <span className="text-sm sm:text-base font-semibold text-gray-800 admin-dark:text-white">Hủy sắp xếp</span>
                             </Button>
-                            <Button theme="admin" onClick={handleSaveOrder} className="cursor-pointer">
-                                <Save className="w-4 h-4 mr-2" />
+                            <Button theme="admin" onClick={handleSaveOrder} className="cursor-pointer bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600">
+                                <Save className="w-4 h-4 text-white" />
                                 <span className="text-sm sm:text-base font-semibold text-white">Lưu thứ tự</span>
                             </Button>
                         </div>
@@ -467,7 +483,7 @@ export default function ChitietdichvuSection() {
                     <CardHeader className="w-full gap-2 flex flex-col sm:flex-row items-center justify-between px-2 sm:px-4">
                         <div className="flex flex-col items-center sm:items-start">
                             <CardTitle className="text-gray-900 admin-dark:text-white text-sm sm:text-base">Dịch Vụ</CardTitle>
-                            <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm font-normal mt-1 sm:text-base">
+                            <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-xs md:text-base mt-1 font-normal">
                                 Chọn dịch vụ cho giai đoạn <span className="font-semibold">{stageMaster[currentStage - 1]?.title_vi}</span>
                             </CardDescription>
                         </div>
@@ -479,17 +495,19 @@ export default function ChitietdichvuSection() {
                                 className="cursor-pointer"
                             >
                                 <Plus className="w-4 h-4" />
-                                <span className="text-sm sm:text-base font-semibold text-white">Chọn dịch vụ</span>
+                                <span className="text-xs md:text-base font-semibold text-white">Chọn dịch vụ</span>
                             </Button>
                         </div>
                     </CardHeader>
 
                     <CardContent className="space-y-6">
                         <div className="space-y-3">
-                            <Label className="text-gray-800 admin-dark:text-gray-200 text-sm sm:text-base">Dịch vụ đã chọn cho giai đoạn <span className="font-semibold text-blue-600 admin-dark:text-sky-400 text-sm sm:text-base">{stageMaster[currentStage - 1]?.title_vi}</span></Label>
+                            <Label className="text-gray-800 admin-dark:text-gray-200 text-xs md:text-base flex flex-col md:flex-row lg:flex-col w-full items-start">Dịch vụ đã chọn cho giai đoạn
+                                <span className="font-semibold text-blue-600 admin-dark:text-sky-400 text-xs md:text-base">{stageMaster[currentStage - 1]?.title_vi}</span>
+                            </Label>
                             <div className="space-y-2 p-3 bg-gray-50 admin-dark:bg-gray-800 rounded-lg min-h-[100px] border border-gray-200 admin-dark:border-gray-700">
                                 {getCurrentStageServices().length === 0 ? (
-                                    <p className="text-center text-gray-500 admin-dark:text-gray-500 py-4 text-sm sm:text-base">
+                                    <p className="text-center text-gray-500 admin-dark:text-gray-500 py-4 text-xs md:text-base">
                                         Chưa có dịch vụ nào được chọn cho giai đoạn này
                                     </p>
                                 ) : (
@@ -518,7 +536,7 @@ export default function ChitietdichvuSection() {
                         <CardTitle className="text-gray-900 admin-dark:text-white text-sm sm:text-base">
                             Quản Lý Mục
                         </CardTitle>
-                        <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-sm sm:text-base">
+                        <CardDescription className="text-gray-500 admin-dark:text-gray-400 text-xs md:text-base">
                             Thêm và chỉnh sửa các hạng mục cho các gói dịch vụ
                         </CardDescription>
                     </CardHeader>
@@ -556,7 +574,7 @@ export default function ChitietdichvuSection() {
                                     <div
                                         key={item.id}
                                         className={cn(
-                                            "flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-white",
+                                            "flex flex-col w-full md:flex-row lg:flex-col xl:flex-row lg:items-start xl:items-center md:items-center md:justify-between items-start gap-2 p-3 border border-gray-200 rounded-lg bg-white",
                                             "admin-dark:bg-gray-800 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700/50"
                                         )}
                                     >
@@ -570,13 +588,13 @@ export default function ChitietdichvuSection() {
                                             <>
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2 text-blue-600 admin-dark:text-sky-400">
-                                                        <span className="font-medium text-sm sm:text-base">{item.title_vi}</span>
+                                                        <span className="font-medium text-xs sm:text-base">{item.title_vi}</span>
                                                     </div>
-                                                    <p className="text-gray-500 admin-dark:text-gray-400 text-sm sm:text-base">
+                                                    <p className="text-gray-500 admin-dark:text-gray-400 text-xs sm:text-base">
                                                         {item.title_en}
                                                     </p>
                                                 </div>
-                                                <div className="flex gap-2">
+                                                <div className="flex w-full md:w-fit lg:w-full xl:w-fit justify-end gap-2">
                                                     <Button theme="admin"
                                                         size="sm"
                                                         variant="ghost"
@@ -584,23 +602,26 @@ export default function ChitietdichvuSection() {
                                                             setSelectedServiceMini(item);
                                                             setIsGroupServiceModalOpen(true);
                                                         }}
+                                                        className="cursor-pointer bg-gray-200 hover:bg-gray-300 shadow admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
                                                     >
-                                                        <Crosshair className="w-4 h-4" />
+                                                        <Crosshair className="w-4 h-4 text-gray-600 admin-dark:text-gray-100" />
                                                     </Button>
 
                                                     <Button theme="admin"
                                                         size="sm"
                                                         variant="outline"
                                                         onClick={() => setEditingItem(item.id)}
+                                                        className="cursor-pointer shadow border-none bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
                                                     >
-                                                        <Edit2 className="w-4 h-4" />
+                                                        <Edit2 className="w-4 h-4 text-gray-600 admin-dark:text-gray-100" />
                                                     </Button>
                                                     <Button theme="admin"
                                                         size="sm"
                                                         variant="outline"
                                                         onClick={() => triggerDeleteMiniService(item)}
+                                                        className="cursor-pointer shadow border-none bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
                                                     >
-                                                        <Trash2 className="w-4 h-4" />
+                                                        <Trash2 className="w-4 h-4 text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400" />
                                                     </Button>
                                                 </div>
                                             </>

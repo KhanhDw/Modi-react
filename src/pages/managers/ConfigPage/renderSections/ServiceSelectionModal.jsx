@@ -116,13 +116,13 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
             <DialogOverlay className="bg-black/50 backdrop-blur-sm" />
             <DialogContent className="admin-dark:bg-gray-900/95 bg-gray-100 border-none admin-dark:backdrop-blur-lg admin-dark:border-gray-700 w-full max-w-2xl">
                 <DialogHeader className="pr-6">
-                    <DialogTitle className="text-xl text-gray-900 admin-dark:text-white">Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
+                    <DialogTitle className="text-base md:text-lg text-gray-900 admin-dark:text-white">Chọn dịch vụ cho Giai đoạn {currentStage}</DialogTitle>
                 </DialogHeader>
 
-                <div className="py-4">
+                <div className="py-2">
                     <div
                         data-lenis-prevent
-                        className="lenis-local grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2"
+                        className="lenis-local grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2 my-2"
                     >
                         {serviceFetch
                             .filter((service) => service.status === "Active")
@@ -139,19 +139,20 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
                                         className={cn(
                                             "p-3 border rounded-lg text-center relative transition-colors cursor-pointer",
                                             isSelected
-                                                ? "bg-primary/5 border-primary/40 ring-2 ring-primary/20 text-primary font-semibold"
+                                                ? "bg-gray-200 text-gray-300 admin-dark:bg-gray-900 admin-dark:text-gray-800 border-primary/40 ring-2 ring-primary/20 font-semibold"
                                                 : isDisabled
                                                     ? "bg-gray-100 text-gray-400 border-dashed cursor-not-allowed admin-dark:bg-muted/50 admin-dark:text-muted-foreground/50"
-                                                    : "bg-background hover:bg-gray-50 hover:border-primary/30 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50"
+                                                    : "bg-gray-200 hover:bg-gray-300 border border-gray-300 admin-dark:border-gray-800 admin-dark:hover:border-primary/60 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50"
                                         )}
                                     >
                                         <button
                                             type="button"
                                             disabled={isDisabled}
-                                            className="text-sm font-medium"
+                                            className="cursor-pointer"
                                         >
-                                            <p>{service.translation.ten_dich_vu}</p>
+                                            <p className="text-xs sm:text-sm font-medium">{service.translation.ten_dich_vu}</p>
                                         </button>
+
                                         {inOtherStage && !isSelected && (
                                             <div className="text-xs text-muted-foreground/60 mt-1">
                                                 Đã được chọn ở stage khác
@@ -166,7 +167,7 @@ export default function ServiceSelectionModal({ isOpen, onClose, currentStage, o
                 <DialogFooter className="pt-4 border-t admin-dark:border-gray-700">
                     <div className="flex items-center justify-between w-full">
                         <div>
-                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                            <Badge variant="outline" className="text-gray-700 admin-dark:text-primary/70 border border-primary/70">
                                 Đã chọn: {selectedServices.length} dịch vụ
                             </Badge>
                         </div>

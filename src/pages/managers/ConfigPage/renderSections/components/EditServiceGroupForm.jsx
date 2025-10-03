@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { updateMiniService } from "@/pages/managers/ConfigPage/renderSections/hook/use_list_mini_service.jsx";
 import { Save, X } from "lucide-react";
-import { updateMiniService } from "@/pages/managers/ConfigPage/renderSections/hook/use_list_mini_service.jsx"
+import { useState } from "react";
 
 export default function EditServiceGroupForm({ item, onCancel, onReload }) {
     const [nameEn, setNameEn] = useState(item.title_en);
@@ -22,8 +22,8 @@ export default function EditServiceGroupForm({ item, onCancel, onReload }) {
     };
 
     return (
-        <div className="flex-1 space-y-2">
-            <div className="grid grid-cols-1 gap-2">
+        <div className="space-y-2 w-full">
+            <div className="grid grid-cols-1 gap-2 w-full">
                 <Input
                     value={nameEn}
                     onChange={(e) => setNameEn(e.target.value)}
@@ -37,14 +37,14 @@ export default function EditServiceGroupForm({ item, onCancel, onReload }) {
                     className="text-sm"
                 />
             </div>
-            <div className="flex gap-2">
-                <Button size="sm" onClick={handleSave}>
-                    <Save className="w-3 h-3 mr-1" />
-                    Lưu
+            <div className="flex gap-2 w-full justify-end mt-2">
+                <Button size="sm" onClick={handleSave} className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600">
+                    <Save className="w-3 h-3 text-white" />
+                    <span className="font-semibold text-xs sm:text-sm text-white">Lưu</span>
                 </Button>
-                <Button size="sm" variant="outline" onClick={onCancel}>
-                    <X className="w-3 h-3 mr-1" />
-                    Hủy
+                <Button size="sm" variant="outline" onClick={onCancel} className="cursor-pointer shadow border-none bg-red-500 hover:bg-red-600 admin-dark:bg-red-500 admin-dark:hover:bg-red-600">
+                    <X className="w-3 h-3" />
+                    <span className="font-semibold text-xs sm:text-sm text-white">Hủy</span>
                 </Button>
             </div>
         </div>
