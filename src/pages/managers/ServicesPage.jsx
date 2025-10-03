@@ -3,15 +3,7 @@ import { CustomerAPI } from "@/api/customerAPI";
 import { ServiceAPI } from "@/api/serviceAPI";
 import { BarChart3, ShoppingCart, Target, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import {
-  NavLink,
-  Outlet,
-  useLocation,
-  useNavigate
-} from "react-router-dom";
-
-
-
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export default function ServicesPage() {
   // Common part
@@ -53,6 +45,7 @@ export default function ServicesPage() {
       const res = await fetch(ServiceAPI.getALL());
       const data = await res.json();
       setServices(Array.isArray(data.data) ? data.data : []);
+      console.log(data.data);
     } catch (err) {
       console.error("Lỗi khi lấy dữ liệu:", err);
     } finally {
@@ -71,8 +64,6 @@ export default function ServicesPage() {
     }
   }, [location, navigate]);
 
-
-
   // File: ServicesPage.jsx
   const handleCreateService = async (formData) => {
     try {
@@ -90,11 +81,14 @@ export default function ServicesPage() {
         headers["Content-Type"] = "application/json";
       }
 
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services`, {
-        method: "POST",
-        body: bodyData,
-        headers,
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services`,
+        {
+          method: "POST",
+          body: bodyData,
+          headers,
+        }
+      );
 
       const result = await res.json();
       if (!result.success) throw new Error(result.message);
@@ -105,7 +99,6 @@ export default function ServicesPage() {
       console.error("Lỗi khi tạo dịch vụ:", err);
     }
   };
-
 
   const handleCreateServiceTranslation = async (formData, id) => {
     try {
@@ -151,17 +144,22 @@ export default function ServicesPage() {
     try {
       const dataServiceUpdate = services.find((s) => s.id === id);
 
-      const getTotalLang = dataServiceUpdate.totalLanguages.includes(formData.get("lang"));
+      const getTotalLang = dataServiceUpdate.totalLanguages.includes(
+        formData.get("lang")
+      );
 
       if (!getTotalLang) {
         await handleCreateServiceTranslation(formData, id);
         return;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`, {
-        method: "PUT",
-        body: formData,   // trực tiếp gửi FormData
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`,
+        {
+          method: "PUT",
+          body: formData, // trực tiếp gửi FormData
+        }
+      );
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Cập nhật thất bại");
@@ -173,8 +171,6 @@ export default function ServicesPage() {
     }
   };
 
-
-
   const handleDeleteService = async (id) => {
     try {
       const res = await fetch(ServiceAPI.delete(id), {
@@ -185,7 +181,6 @@ export default function ServicesPage() {
         throw new Error("Error when delete service");
       }
       await fetchServices();
-
     } catch (err) {
       console.log("Error: ", err);
     }
@@ -196,8 +191,6 @@ export default function ServicesPage() {
     setEditingService(service);
     setShowForm(true);
   };
-
-
 
   // All part of booking
   const fetchBooking = async () => {
@@ -297,7 +290,6 @@ export default function ServicesPage() {
       console.log("Error: ", err);
     }
   };
-
 
   // All part of customer
   const fetchCustomer = async () => {
@@ -410,7 +402,6 @@ export default function ServicesPage() {
           handleEditingCustomer,
           handleDeleteCustomer,
           handleRefetchCustomer, // Truyền hàm refetch cho con
-
         }}
       />
     );
@@ -424,9 +415,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_overview"
               className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive || location.pathname === "/managers/services"
-                  ? "bg-muted admin-dark:bg-gray-700 text-white"
-                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
+                  isActive || location.pathname === "/managers/services"
+                    ? "bg-muted admin-dark:bg-gray-700 text-white"
+                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -436,9 +428,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_list"
               className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium text-center ${isActive
-                  ? "bg-muted admin-dark:bg-gray-700 text-white"
-                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium text-center ${
+                  isActive
+                    ? "bg-muted admin-dark:bg-gray-700 text-white"
+                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -448,9 +441,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_booking"
               className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted admin-dark:bg-gray-700 text-white"
-                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
+                  isActive
+                    ? "bg-muted admin-dark:bg-gray-700 text-white"
+                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
@@ -460,9 +454,10 @@ export default function ServicesPage() {
             <NavLink
               to="service_customer"
               className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive
-                  ? "bg-muted admin-dark:bg-gray-700 text-white"
-                  : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
+                  isActive
+                    ? "bg-muted admin-dark:bg-gray-700 text-white"
+                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
                 }`
               }
             >
