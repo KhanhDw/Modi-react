@@ -15,24 +15,24 @@ export default function PageHeader({
   return (
     <div className="flex flex-col gap-3 w-full">
       {/* Hàng chứa tiêu đề + search + nút */}
-      <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+      <div className="flex flex-col xl:flex-row items-center justify-between gap-3 w-full">
         {/* Title */}
-        <h1 className="text-xl text-center sm:text-xl font-bold text-gray-900 admin-dark:text-gray-200">
+        <h1 className="font-bold xl:w-90 text-xl text-gray-900 admin-dark:text-gray-200">
           {title}
         </h1>
 
         {/* Search + Buttons */}
-        <div className="flex flex-wrap gap-3 flex-1 sm:flex-none justify-center">
+        <div className="flex flex-col md:flex-row gap-3 flex-1 justify-center w-full">
           {/* Search */}
           {!isHiddenFilter && (
-            <div className="flex gap-2 flex-1 min-w-[250px] md:min-w-[300px] lg:min-w-[350px]">
+            <div className="flex gap-2 flex-1 min-w-[250px] md:min-w-[300px] lg:min-w-[300px]">
               {searchTerm !== "" && (
                 <button
                   onClick={() => {
                     APISearch("");
                     setSearchTerm("");
                   }}
-                  className="p-2 rounded-xl hover:bg-gray-200 admin-dark:hover:bg-gray-700 transition"
+                  className="rounded-xl px-3 hover:bg-gray-200 admin-dark:hover:bg-gray-700 transition cursor-pointer"
                 >
                   <RefreshCcw size={18} />
                 </button>
@@ -48,8 +48,8 @@ export default function PageHeader({
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Tìm kiếm..."
-                  className="flex-1 border-2 border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow-sm focus:border-green-500 focus:outline-none min-w-[250px] md:min-w-[300px] lg:min-w-[350px]"
+                  placeholder="Tìm kiếm tin tức..."
+                  className="flex-1 border-2 border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow-sm focus:border-green-500 focus:outline-none min-w-[250px] md:min-w-[300px] lg:min-w-[300px]"
                 />
                 <button hidden type="submit"></button>
               </form>
@@ -58,20 +58,20 @@ export default function PageHeader({
 
           {/* Buttons */}
           {buttonText && (
-            <div className="flex flex-wrap gap-2 justify-end">
+            <div className="flex flex-row gap-2 justify-between sm:justify-end">
               {!isHiddenFilter && (
                 <button
                   onClick={toggleSortOrder}
-                  className="px-4 py-2 rounded-lg bg-[#5B8FB9]  text-white transition text-sm text-center cursor-pointer"
+                  className="px-2 py-2 rounded-lg bg-[#5B8FB9]  text-white transition text-sm text-center cursor-pointer"
                 >
-                  Sắp xếp: {sortOrder === "asc" ? "Cũ nhất" : "Mới nhất"}
+                  <span className="text-sm md:text-base font-semibold">Sắp xếp: {sortOrder === "asc" ? "Cũ nhất" : "Mới nhất"}</span>
                 </button>
               )}
               <button
                 onClick={onButtonClick}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm text-center cursor-pointer"
+                className="px-2 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-center cursor-pointer"
               >
-                {buttonText}
+                <span className="text-sm md:text-base font-semibold">{buttonText}</span>
               </button>
             </div>
           )}

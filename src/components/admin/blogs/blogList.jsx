@@ -209,7 +209,7 @@ export default function BlogsListPage() {
                                                 );
                                             case "enum":
                                                 return (
-                                                    <td key={col.name} className="px-3 sm:px-4 py-3">
+                                                    <td key={col.name} className="px-3 sm:px-4 py-3 whitespace-nowrap">
                                                         {renderStatus(value, blog.published_at)}
                                                     </td>
                                                 );
@@ -273,7 +273,7 @@ export default function BlogsListPage() {
                                         <div className="flex justify-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(blog)}
-                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600
+                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-300 admin-dark:border-gray-700
                           text-gray-700 hover:bg-blue-600 hover:text-white
                           admin-dark:text-gray-200 admin-dark:hover:bg-blue-700/80
                           rounded-lg text-xs transition cursor-pointer"
@@ -283,7 +283,7 @@ export default function BlogsListPage() {
 
                                             <button
                                                 onClick={() => handleDelete(blog.id)}
-                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-600
+                                                className="flex items-center justify-center gap-1 px-3 py-2 border-2 border-gray-300 admin-dark:border-gray-700
                           text-gray-700 hover:bg-red-600 hover:text-white
                           admin-dark:text-gray-200 admin-dark:hover:bg-red-700/80
                           rounded-lg text-xs transition cursor-pointer"

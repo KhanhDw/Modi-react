@@ -1,8 +1,7 @@
-import PageHeader from "@/components/admin/common/PageHeader";
 import BlogForm from "@/components/admin/blogForm/BlogForm";
 import useBlogs from "@/hook/useBlogsAdmin";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export default function BlogsNewPage() {
 
@@ -32,7 +31,6 @@ export default function BlogsNewPage() {
         setEditingBlog,
     } = useBlogs();
 
-
     // Nếu có id (edit mode) thì tìm blog trong list hoặc fetch riêng
     useEffect(() => {
         if (id) {
@@ -44,8 +42,6 @@ export default function BlogsNewPage() {
             setEditingBlog(null);
         }
     }, [id, blogs]);
-
-
 
     // params: lang = "" | "en"
     const handleChangeLang = async (lang = "") => {
@@ -73,13 +69,8 @@ export default function BlogsNewPage() {
         console.log("Đang load lang:", lang);
     };
 
-
     if (loading) return <div className="p-4 text-center text-green-800">Đang tải...</div>;
     if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
-
-
-
-
 
 
     if (!blogs) {
@@ -87,15 +78,20 @@ export default function BlogsNewPage() {
     }
 
     return (
-        <div className="p-2">
-            <div className="flex justify-between items-center mb-4">
-                <PageHeader
-                    isHiddenFilter={id ? true : true} // id có hay không, miến trong form là không được hiển thị
-                    title={id ? "Sửa tin tức" : "Thêm tin tức"}
-                    buttonText="Quay lại"
-                    onButtonClick={() => navigate(-1)}
-                    className="mb-4 sm:mb-6 w-full"
-                />
+        <div>
+            <div className="flex justify-between items-center mb-4 w-full">
+                {/* Title */}
+                <h1 className="text-xl font-bold text-gray-900 admin-dark:text-gray-200">
+                    {id ? "Sửa tin tức" : "Thêm tin tức"}
+                </h1>
+
+                {/* Button Quay lại */}
+                <button
+                    onClick={() => navigate(-1)}
+                    className="px-3 py-2 shadow-lg bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-center cursor-pointer transition-colors duration-300"
+                >
+                    <span className="text-sm md:text-base font-semibold">Quay lại</span>
+                </button>
             </div>
 
             <div className="bg-white admin-dark:bg-slate-900">

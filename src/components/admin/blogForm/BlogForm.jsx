@@ -1,6 +1,6 @@
-import { Textarea } from "@material-tailwind/react";
-import React, { useState, useEffect, useRef } from "react";
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+import { Textarea } from "@material-tailwind/react";
+import { useEffect, useRef, useState } from "react";
 
 export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel }) {
   const editorRef = useRef(null);
@@ -132,43 +132,48 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col lg:flex-row w-full gap-6 items-start"
+      className="flex flex-col lg:flex-row w-full gap-4 items-start"
     >
       {/* Left column */}
-      <div className="w-full lg:w-1/3 flex flex-col gap-5 p-4 rounded-xl border-2 border-gray-300 admin-dark:border-gray-700 admin-dark:bg-slate-800">
+      <div className="w-full lg:w-1/3 flex flex-col gap-5 p-2 sm:p-3 rounded-md md:rounded-lg border-2 border-gray-300 admin-dark:border-gray-700 admin-dark:bg-slate-800">
         {!blog?.id && (
           <div className="flex flex-col items-center justify-center w-full">
-            <p className="text-sm">Chỉ thiết lập thêm nội dung cho Tiếng Việt</p>
-            <p className="text-sm">
+            <p className="text-sm text-center">Chỉ thiết lập thêm nội dung cho Tiếng Việt</p>
+            <p className="text-sm text-center">
               Cập nhật nội dung Tiếng Anh (sau khi thêm tin tức).
             </p>
           </div>
         )}
 
         {/* Lang switch */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center justify-center  gap-2 sm:gap-4 mb-4">
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 sm:gap-4 mb-4">
+          {/* Nút Tiếng Việt */}
           <button
             type="button"
             name="vi"
             onClick={() => handleActiveLangbtn("vi")}
-            className={`flex items-center justify-center flex-col px-2 py-1 rounded-md text-xs cursor-pointer font-semibold ${activeLang === "vi"
-              ? "bg-gray-200 text-white admin-dark:bg-gray-900 admin-dark:text-gray-300 cursor-pointer"
-              : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300 cursor-pointer"
+            className={`flex items-center shadow justify-center flex-col px-4 py-1.5 rounded-md font-semibold transition-colors cursor-pointer duration-200
+      ${activeLang === "vi"
+                ? "bg-blue-600 text-white admin-dark:bg-blue-500"
+                : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300"
               }`}
           >
-            Thiết lập nội dung tiếng Việt
+            <span className="text-sm md:text-base font-semibold">Tiếng Việt</span>
           </button>
+
+          {/* Nút Tiếng Anh - chỉ hiện khi có blog.id */}
           {blog?.id && (
             <button
               type="button"
               name="en"
               onClick={() => handleActiveLangbtn("en")}
-              className={`flex px-2 py-1 rounded-md text-sm cursor-pointer font-semibold ${activeLang === "en"
-                ? "bg-blue-500 text-white admin-dark:bg-gray-900 admin-dark:text-white cursor-pointer"
-                : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300 cursor-pointer"
+              className={`flex items-center shadow cursor-pointer justify-center flex-col px-4 py-1.5 rounded-md text-sm font-semibold transition-colors duration-200
+        ${activeLang === "en"
+                  ? "bg-blue-600 text-white admin-dark:bg-blue-500"
+                  : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300"
                 }`}
             >
-              Thiết lập nội dung tiếng Anh
+              <span className="text-sm md:text-base font-semibold">Tiếng Anh</span>
             </button>
           )}
         </div>
@@ -184,14 +189,21 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             onChange={handleChange}
             placeholder="Nhập tiêu đề"
             rows={3}
-            className={`w-full px-3 py-2 border-2 rounded-lg  focus:ring-0 admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200
-            ${errors.title ? "border-red-500" : "border-gray-300 admin-dark:border-slate-800"}`}
+            className={`w-full px-3 py-2 rounded-lg
+      border
+      ${errors.title ? "border-red-500" : "border-gray-300 admin-dark:border-gray-700"}
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      admin-dark:text-gray-200
+      transition-colors duration-200
+    `}
           />
           {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
         </div>
 
         {/* Status & Published */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-4">
+        <div className="flex flex-wrap gap-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Trạng thái
@@ -200,14 +212,18 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-3 py-2 border-2 rounded-lg cursor-pointer admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200"
+              className="w-full px-2 py-2 border-2 border-gray-300 rounded-lg cursor-pointer
+     admin-dark:border-gray-700 admin-dark:text-gray-200
+    focus:outline-none focus:border-blue-500 admin-dark:focus:border-blue-400
+    transition-colors duration-200"
             >
               <option value="draft">Nháp</option>
               <option value="published">Công khai</option>
             </select>
+
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Ngày đăng
             </label>
@@ -217,9 +233,8 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               value={formData.published_at}
               onChange={handleChange}
               disabled={!blog} // ❌ không cho chỉnh khi thêm mới
-              className={`w-full px-3 py-2 border-2 rounded-lg 
-      admin-dark:bg-gray-800 admin-dark:border-slate-700 admin-dark:text-gray-200
-      ${!blog ? "bg-gray-200 text-gray-500 cursor-not-allowed" : ""}`} // style khi disable
+              className={`w-full px-3 py-2 border-2 border-gray-300 rounded-lg admin-dark:border-gray-700 focus:outline-none admin-dark:text-gray-200
+      ${!blog ? "bg-gray-200 admin-dark:bg-gray-800 text-gray-500 cursor-not-allowed" : ""}`} // style khi disable
             />
           </div>
 
@@ -239,12 +254,12 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               }`}
           />
           {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
-          <div className="mt-2 border w-full flex justify-center items-center rounded p-1">
+          <div className="mt-2 w-full flex justify-center items-center rounded-md">
             {preview ? (
               <img
                 src={preview}
                 alt="Preview"
-                className="h-52 w-full object-cover rounded"
+                className="h-62 sm:h-fit w-full object-cover rounded-md"
                 onError={(e) => {
                   e.currentTarget.src = "/images/error.png";
                   e.currentTarget.onerror = null;
@@ -259,27 +274,28 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row justify-end gap-2">
+        <div className="flex flex-row justify-center items-center gap-2 w-full">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 w-full sm:w-auto bg-gray-900 text-white rounded-lg hover:bg-gray-600 transition duration-200 cursor-pointer"
+            className="px-2 py-1.5 w-full sm:w-40 bg-gray-800 text-white rounded-lg hover:bg-gray-600 transition duration-200 cursor-pointer admin-dark:bg-gray-600 admin-dark:hover:bg-gray-700"
           >
-            Hủy
+            <span className="text-sm md:text-base font-semibold">Hủy</span>
           </button>
           <button
             type="submit"
-            className="px-4 py-2 w-full sm:w-auto bg-gray-700 text-white rounded-lg hover:bg-green-900 transition duration-200 cursor-pointer"
+            className="px-2 py-1.5 w-full sm:w-40 text-white rounded-lg bg-green-700 hover:bg-green-800 transition duration-200 cursor-pointer"
           >
-            <span className="font-semibold lg:text-sm xl:text-xl">
-              {blog ? "Cập nhật" : "Thêm"} {activeLang === "vi" ? "(Việt)" : "(Anh)"}
+            <span className="font-semibold text-sm md:text-base">
+              {blog ? "Cập nhật" : "Thêm"}
+              {/* {activeLang === "vi" ? "(Việt)" : "(Anh)"} */}
             </span>
           </button>
         </div>
       </div>
 
       {/* Right column */}
-      <div className="admin-dark:border-gray-700 w-full lg:w-2/3 p-4 rounded-xl border-2 border-gray-300 admin-dark:bg-slate-800 mt-4 lg:mt-0">
+      <div className="admin-dark:border-gray-700 w-full lg:w-2/3 p-2 sm:p-3 rounded-md md:rounded-lg border-2 border-gray-300 admin-dark:bg-slate-800 mt-4 lg:mt-0">
         <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
           Nội dung
         </label>
