@@ -3,7 +3,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,9 +36,7 @@ export default function BookingForm() {
   const [customerMode, setCustomerMode] = useState("new");
   const [floorPriceOfservice, setFloorPriceOfservice] = useState(0);
 
-
   useEffect(() => {
-
     if (editingBooking) {
       const formatDate = (date) => {
         const d = new Date(date);
@@ -53,8 +51,6 @@ export default function BookingForm() {
         : formatDate(new Date());
 
       console.log("--1>", editingBooking);
-
-
 
       setFormData({
         cusName: editingBooking.customer_name || "",
@@ -82,7 +78,9 @@ export default function BookingForm() {
     setErrors((prev) => ({ ...prev, [field]: "" })); // reset lỗi khi người dùng nhập
 
     if (field === "service") {
-      const selected = initDataService.find((s) => String(s.id) === String(value));
+      const selected = initDataService.find(
+        (s) => String(s.id) === String(value)
+      );
       if (selected) {
         setFloorPriceOfservice(selected.floor_price);
       }
@@ -92,10 +90,9 @@ export default function BookingForm() {
       if (priceValue < floorPriceOfservice) {
         setErrors((prev) => ({
           ...prev,
-          price: `Giá không được thấp hơn ${Number(floorPriceOfservice).toLocaleString(
-            "vi-VN",
-            { style: "currency", currency: "VND" }
-          )}`
+          price: `Giá không được thấp hơn ${Number(
+            floorPriceOfservice
+          ).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}`,
         }));
       }
     }
@@ -131,8 +128,6 @@ export default function BookingForm() {
     }
   };
 
-
-
   const handleCheckCustomer = () => {
     const phone = formData.cusPhone?.trim();
     if (!phone) return;
@@ -154,8 +149,6 @@ export default function BookingForm() {
       setCustomerMode("new");
     }
   };
-
-
 
   // Validation logic
   const validateForm = () => {
@@ -192,13 +185,10 @@ export default function BookingForm() {
     } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
       newErrors.price = "Giá phải là số lớn hơn 0.";
     } else if (parseFloat(formData.price) < floorPriceOfservice) {
-      newErrors.price = `Giá không được thấp hơn ${Number(floorPriceOfservice).toLocaleString(
-        "vi-VN",
-        { style: "currency", currency: "VND" }
-      )}`;
+      newErrors.price = `Giá không được thấp hơn ${Number(
+        floorPriceOfservice
+      ).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}`;
     }
-
-
 
     if (!formData.bookingDate) {
       newErrors.bookingDate = "Vui lòng chọn ngày đặt.";
@@ -223,16 +213,12 @@ export default function BookingForm() {
 
     if (!isValid) return;
     if (!editingBooking) {
-
-
       console.log("-->>>", formData);
       handleCreateBooking(formData);
     } else {
       handleEditingBooking(formData, editingBooking.id);
     }
   };
-
-
 
   const floor_price_service = (id) => {
     const service = initDataService.find((s) => String(s.id) === String(id));
@@ -243,11 +229,12 @@ export default function BookingForm() {
     }
   };
 
-
   return (
-    <ScrollArea className="lenis-local overflow-auto" data-lenis-prevent>
+    <ScrollArea
+      className="lenis-local overflow-auto"
+      data-lenis-prevent
+    >
       <div className="w-full mx-auto bg-white admin-dark:bg-gray-800 admin-dark:border-gray-700 border border-gray-300 rounded-lg">
-
         <CardHeader className="px-2 sm:px-4">
           <CardTitle className="flex flex-col sm:flex-row gap-2 items-start sm:items-center text-base sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
             {editingBooking ? "Chỉnh sửa đơn đặt" : "Tạo đơn mới"}
@@ -265,7 +252,9 @@ export default function BookingForm() {
                 <div className="flex gap-4 mb-4">
                   <Button
                     type="button"
-                    variant={customerMode === "existing" ? "default" : "outline"}
+                    variant={
+                      customerMode === "existing" ? "default" : "outline"
+                    }
                     onClick={() => setCustomerMode("existing")}
                     className="cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-black/40"
                   >
@@ -283,7 +272,9 @@ export default function BookingForm() {
 
                 {customerMode === "existing" && (
                   <div className="space-y-2">
-                    <Label className="text-black admin-dark:text-gray-100">Khách hàng *</Label>
+                    <Label className="text-black admin-dark:text-gray-100">
+                      Khách hàng *
+                    </Label>
                     <CustomerCombobox
                       customers={initDataCustomer}
                       formData={formData}
@@ -294,7 +285,10 @@ export default function BookingForm() {
 
                 {/* Số điện thoại */}
                 <div className="space-y-2">
-                  <Label className="text-black admin-dark:text-gray-100" htmlFor="cusPhone">
+                  <Label
+                    className="text-black admin-dark:text-gray-100"
+                    htmlFor="cusPhone"
+                  >
                     Số điện thoại *
                   </Label>
                   <Input
@@ -304,7 +298,7 @@ export default function BookingForm() {
                     onChange={(e) => handleChange("cusPhone", e.target.value)}
                     onBlur={handleCheckCustomer}
                     placeholder="Nhập số điện thoại của khách hàng... "
-                    readOnly={customerMode === "existing" || editingBooking}  // 👈 THÊM ĐIỀU KIỆN NÀY
+                    readOnly={customerMode === "existing" || editingBooking} // 👈 THÊM ĐIỀU KIỆN NÀY
                   />
                   {errors.cusPhone && (
                     <p className="text-red-500 text-sm">{errors.cusPhone}</p>
@@ -313,7 +307,10 @@ export default function BookingForm() {
                 {/* Tên khách hàng */}
 
                 <div className="space-y-2">
-                  <Label className="text-black admin-dark:text-gray-100" htmlFor="cusName">
+                  <Label
+                    className="text-black admin-dark:text-gray-100"
+                    htmlFor="cusName"
+                  >
                     Tên khách hàng *
                   </Label>
                   <Input
@@ -333,40 +330,56 @@ export default function BookingForm() {
                 {!editingBooking && (
                   <>
                     <div className="space-y-2">
-                      <Label className="text-black admin-dark:text-gray-100" htmlFor="cusEmail">
+                      <Label
+                        className="text-black admin-dark:text-gray-100"
+                        htmlFor="cusEmail"
+                      >
                         Email
                       </Label>
                       <Input
                         className="text-black border border-black/30 admin-dark:text-gray-100"
                         id="cusEmail"
                         value={formData.cusEmail || ""}
-                        onChange={(e) => handleChange("cusEmail", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("cusEmail", e.target.value)
+                        }
                         placeholder="Nhập email của khách hàng... "
                         readOnly={customerMode === "existing" || editingBooking}
                       />
                       {errors.cusEmail && (
-                        <p className="text-red-500 text-sm">{errors.cusEmail}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.cusEmail}
+                        </p>
                       )}
                     </div>
 
                     <div className="flex flex-col space-y-2">
-                      <Label className="text-xs sm:text-sm text-gray-900 admin-dark:text-gray-100" htmlFor="cusAddress">
+                      <Label
+                        className="text-xs sm:text-sm text-gray-900 admin-dark:text-gray-100"
+                        htmlFor="cusAddress"
+                      >
                         Địa chỉ *
                       </Label>
                       <Input
                         className="text-xs sm:text-sm w-full border border-gray-400 rounded-md text-gray-900 placeholder-gray-500 admin-dark:text-gray-100"
                         id="cusAddress"
                         value={formData.cusAddress || ""}
-                        onChange={(e) => handleChange("cusAddress", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("cusAddress", e.target.value)
+                        }
                         placeholder="Nhập địa chỉ của khách hàng..."
                         readOnly={
                           (!!formData.cusPhone &&
-                            initDataCustomer.some((c) => c.phone === formData.cusPhone)) ||
+                            initDataCustomer.some(
+                              (c) => c.phone === formData.cusPhone
+                            )) ||
                           editingBooking
                         }
                       />
                       {errors.cusAddress && (
-                        <p className="text-red-500 text-xs sm:text-sm">{errors.cusAddress}</p>
+                        <p className="text-red-500 text-xs sm:text-sm">
+                          {errors.cusAddress}
+                        </p>
                       )}
                     </div>
                   </>
@@ -375,7 +388,10 @@ export default function BookingForm() {
                 {/* Trạng thái (chỉ khi chỉnh sửa) */}
                 {editingBooking && (
                   <div className="space-y-2">
-                    <Label className="text-black" htmlFor="status">
+                    <Label
+                      className="text-black"
+                      htmlFor="status"
+                    >
                       Trạng thái
                     </Label>
                     <Select
@@ -387,12 +403,18 @@ export default function BookingForm() {
                       <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2">
                         <SelectValue placeholder="Chọn trạng thái">
                           {/* Hiển thị giá trị đã chọn hoặc placeholder */}
-                          {formData.status ?
-                            (formData.status === "pending" ? "Chờ xác nhận" :
-                              formData.status === "completed" ? "Hoàn thành" :
-                                formData.status === "cancelled" ? "Hủy" :
-                                  formData.status === "processing" ? "Đang xử lý" :
-                                    formData.status === "confirmed" ? "Đã xác nhận" : "Chọn trạng thái")
+                          {formData.status
+                            ? formData.status === "pending"
+                              ? "Chờ xác nhận"
+                              : formData.status === "completed"
+                              ? "Hoàn thành"
+                              : formData.status === "cancelled"
+                              ? "Hủy"
+                              : formData.status === "processing"
+                              ? "Đang xử lý"
+                              : formData.status === "confirmed"
+                              ? "Đã xác nhận"
+                              : "Chọn trạng thái"
                             : "Chọn trạng thái"}
                         </SelectValue>
                       </SelectTrigger>
@@ -408,7 +430,9 @@ export default function BookingForm() {
                 )}
                 {initDataService && (
                   <div className="space-y-2">
-                    <Label className="text-black admin-dark:text-gray-100">Chọn dịch vụ*</Label>
+                    <Label className="text-black admin-dark:text-gray-100">
+                      Chọn dịch vụ*
+                    </Label>
                     <Select
                       value={formData.service || ""}
                       onValueChange={(value) => handleChange("service", value)}
@@ -418,16 +442,16 @@ export default function BookingForm() {
                         <SelectValue placeholder="Chọn dịch vụ" />
                       </SelectTrigger>
                       <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                        {initDataService
-                          .map((service, index) => (
-                            <SelectItem
-                              key={`${index}`}
-                              value={String(service?.id ?? "")}
-                              className="cursor-pointer px-3 py-2 hover:bg-blue-50"
-                            >
-                              {service?.translation?.ten_dich_vu || "Dịch vụ không tên"}
-                            </SelectItem>
-                          ))}
+                        {initDataService.map((service, index) => (
+                          <SelectItem
+                            key={`${index}`}
+                            value={String(service?.id ?? "")}
+                            className="cursor-pointer px-3 py-2 hover:bg-blue-50"
+                          >
+                            {service?.translation?.ten_dich_vu ||
+                              "Dịch vụ không tên"}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     {errors.service && (
@@ -437,9 +461,18 @@ export default function BookingForm() {
                 )}
 
                 <div className="space-y-2">
-                  <Label className="text-black flex w-full items-center justify-between admin-dark:text-gray-100" htmlFor="price" >
+                  <Label
+                    className="text-black flex w-full items-center justify-between admin-dark:text-gray-100"
+                    htmlFor="price"
+                  >
                     <span>Giá *</span>
-                    <span>Giá thấp nhất của dịch vụ: {Number(floorPriceOfservice).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                    <span>
+                      Giá thấp nhất của dịch vụ:{" "}
+                      {Number(floorPriceOfservice).toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </span>
                   </Label>
                   <Input
                     type="text"
@@ -452,19 +485,21 @@ export default function BookingForm() {
                   {errors.price && (
                     <p className="text-red-500 text-sm">{errors.price}</p>
                   )}
-
                 </div>
-
 
                 {/* Dịch vụ + ngày đặt */}
                 <div className="flex gap-4">
                   {/* Ngày đặt đơn */}
                   <div className="space-y-2 relative w-full">
-                    <Label className="text-black admin-dark:text-gray-100">Ngày đặt đơn</Label>
+                    <Label className="text-black admin-dark:text-gray-100">
+                      Ngày đặt đơn
+                    </Label>
                     <input
                       type="date"
                       value={formData.bookingDate || ""}
-                      onChange={(e) => handleChange("bookingDate", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("bookingDate", e.target.value)
+                      }
                       className="w-full px-3 py-2 focus:outline-none admin-dark:border-gray-600 border admin-dark:text-gray-100 border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10"
                     />
                     <Calendar
@@ -476,17 +511,23 @@ export default function BookingForm() {
                       }}
                     />
                     {errors.bookingDate && (
-                      <p className="text-red-500 text-sm">{errors.bookingDate}</p>
+                      <p className="text-red-500 text-sm">
+                        {errors.bookingDate}
+                      </p>
                     )}
                   </div>
 
                   {/* Ngày bàn giao */}
                   <div className="space-y-2 relative w-full">
-                    <Label className="text-black admin-dark:text-gray-100">Ngày bàn giao</Label>
+                    <Label className="text-black admin-dark:text-gray-100">
+                      Ngày bàn giao
+                    </Label>
                     <input
                       type="date"
                       value={formData.completedDate || ""}
-                      onChange={(e) => handleChange("completedDate", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("completedDate", e.target.value)
+                      }
                       className="w-full px-3 py-2 admin-dark:border-gray-600 admin-dark:text-gray-100 border border-gray-950/30 rounded-lg text-black focus:ring-2 pr-10 focus:outline-none"
                     />
                     <Calendar
@@ -498,7 +539,9 @@ export default function BookingForm() {
                       }}
                     />
                     {errors.completedDate && (
-                      <p className="text-red-500 text-sm">{errors.completedDate}</p>
+                      <p className="text-red-500 text-sm">
+                        {errors.completedDate}
+                      </p>
                     )}
                   </div>
                 </div>

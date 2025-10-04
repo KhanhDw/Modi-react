@@ -1,107 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-// NOTE: Components like ScrollArea and hooks like useLenisLocal are assumed to be available
-// For the purpose of this single-file output, we'll simulate the ScrollArea behavior
-const ScrollArea = ({ children, className, ...props }) => (
-  <div
-    className={`overflow-y-auto ${className}`}
-    {...props}
-  >
-    {children}
-  </div>
-);
-
-// Placeholder for useLenisLocal
-const useLenisLocal = (selector) => {
-  // Logic for Lenis setup would go here
-  useEffect(() => {
-    // console.log(`Lenis initialized for: ${selector}`);
-  }, [selector]);
-};
-
-// --- Custom Components for better UI structure (Simulating Shadcn/UI Inputs) ---
-
-// Custom Input Field with Label
-const InputField = ({
-  label,
-  id,
-  placeholder,
-  type = "text",
-  required,
-  className,
-  ...props
-}) => (
-  <div className="flex flex-col space-y-1">
-    <label
-      htmlFor={id}
-      className="text-sm font-medium text-gray-700 dark:text-gray-300"
-    >
-      {label} {required && <span className="text-red-500">*</span>}
-    </label>
-    <input
-      id={id}
-      type={type}
-      placeholder={placeholder || label}
-      required={required}
-      className={`w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm ${className}`}
-      {...props}
-    />
-  </div>
-);
-
-// Custom File Input Field with Label
-const FileInput = ({ label, id, accept = "image/*", onChange, ...props }) => (
-  <div className="flex flex-col space-y-1">
-    <label
-      htmlFor={id}
-      className="text-sm font-medium text-gray-700 dark:text-gray-300"
-    >
-      {label}
-    </label>
-    <input
-      id={id}
-      type="file"
-      accept={accept}
-      onChange={onChange}
-      className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-700 dark:file:text-white dark:hover:file:bg-gray-600 transition duration-150"
-      {...props}
-    />
-  </div>
-);
-
-// --- NEW COMPONENT: Image Placeholder Box ---
-const PlaceholderBox = ({ label, isCircle = false }) => (
-  <div
-    className={`flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-400 dark:border-gray-500 text-gray-500 dark:text-gray-300 transition duration-300 p-2 text-center select-none ${
-      isCircle ? "w-24 h-24 rounded-full" : "w-full h-32 rounded-lg"
-    }`}
-    style={{ minWidth: isCircle ? "6rem" : "auto" }}
-  >
-    {/* Icon (Camera/Image) */}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-7 w-7 mb-1"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-      />
-    </svg>
-    <p className="text-xs font-semibold">{label}</p>
-  </div>
-);
-// --- End NEW COMPONENT ---
-
-// --- Main Component ---
+import PlaceholderBox from "./PlaceholderBox";
+import InputField from "./InputField";
+import FileInput from "./FileInput";
+import BankDropdown from "@/components/feature/SelectBank.jsx";
 
 export default function UserForm({ user, onClose, onSuccess }) {
-  useLenisLocal(".lenis-local");
   const isEdit = !!user;
 
   const initialFormState = {
@@ -138,7 +42,6 @@ export default function UserForm({ user, onClose, onSuccess }) {
         cccd: user.cccd || "",
         number_bank: user.number_bank || "",
         name_bank: user.name_bank || "",
-        // Assuming img_cccd_top/bottom are URLs if editing an existing user
         img_cccd_top: user.img_cccd_top || "",
         img_cccd_bottom: user.img_cccd_bottom || "",
       });
@@ -166,12 +69,26 @@ export default function UserForm({ user, onClose, onSuccess }) {
     }
   };
 
+  // Thêm hàm này vào trong component UserForm:
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    // Kiểm tra nếu URL đã là tuyệt đối (bắt đầu bằng http/https)
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    // Ngược lại, nối với base URL của backend
+    return `${import.meta.env.VITE_MAIN_BE_URL}${
+      url.startsWith("/") ? url : "/" + url
+    }`;
+  };
+
   // Helper to get preview URL for CCCD images (File object or URL string)
   const getCccdPreviewUrl = (fieldValue) => {
     if (fieldValue instanceof File) {
       return URL.createObjectURL(fieldValue);
     }
-    return typeof fieldValue === "string" && fieldValue ? fieldValue : null;
+    // Sử dụng getImageUrl để xử lý đường dẫn tương đối/tuyệt đối
+    return getImageUrl(fieldValue);
   };
 
   const handleSubmit = async (e) => {
@@ -216,16 +133,21 @@ export default function UserForm({ user, onClose, onSuccess }) {
     // Handle Avatar (File or URL)
     if (avatarFile) {
       fd.append("avatar_url", avatarFile); // File upload
-    } else if (form.avatar_url) {
-      fd.append("avatar_url", form.avatar_url); // URL string
     }
 
     // Handle CCCD images (append file objects if they are File, otherwise they are URLs and server should handle persistence)
     if (form.img_cccd_top instanceof File) {
       fd.append("img_cccd_top", form.img_cccd_top);
+    } else if (isEdit && !form.img_cccd_top) {
+      // Gửi chuỗi rỗng để xóa ảnh cũ trong DB
+      fd.append("img_cccd_top", "");
     }
+
     if (form.img_cccd_bottom instanceof File) {
       fd.append("img_cccd_bottom", form.img_cccd_bottom);
+    } else if (isEdit && !form.img_cccd_bottom) {
+      // Gửi chuỗi rỗng để xóa ảnh cũ trong DB
+      fd.append("img_cccd_bottom", "");
     }
 
     try {
@@ -252,8 +174,8 @@ export default function UserForm({ user, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 ">
-      <ScrollArea
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] lenis-local"
+      <div
+        className="overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] lenis-local"
         data-lenis-prevent
       >
         <div className="p-6">
@@ -389,16 +311,20 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     </div>
                   </div>
                 </div>
-                <div className=" flex justify-center sm:justify-end xl:justify-center">
-                  {previewAvatar ? (
+                <div className="flex justify-center sm:justify-end xl:justify-center">
+                  {avatarFile ? (
                     <img
                       src={previewAvatar}
                       alt="Avatar Preview"
                       className="w-24 h-24 object-cover rounded-full border-4 border-white dark:border-gray-600 shadow-xl transition-all duration-300 hover:scale-105"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                        setPreviewAvatar("");
-                      }}
+                      onError={(e) => setPreviewAvatar("")}
+                    />
+                  ) : form.avatar_url ? (
+                    <img
+                      src={getImageUrl(form.avatar_url)}
+                      alt="Avatar Preview"
+                      className="w-24 h-24 object-cover rounded-full border-4 border-white dark:border-gray-600 shadow-xl transition-all duration-300 hover:scale-105"
+                      onError={(e) => (e.currentTarget.style.display = "none")}
                     />
                   ) : (
                     <PlaceholderBox
@@ -436,7 +362,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                       id="img_cccd_top"
                       onChange={(e) => {
                         const f = e.target.files?.[0];
-                        setForm((s) => ({ ...s, img_cccd_top: f || "" }));
+                        setForm((s) => ({ ...s, img_cccd_top: f || null }));
                       }}
                     />
                     <div className="mt-2 flex justify-center">
@@ -462,7 +388,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                       id="img_cccd_bottom"
                       onChange={(e) => {
                         const f = e.target.files?.[0];
-                        setForm((s) => ({ ...s, img_cccd_bottom: f || "" }));
+                        setForm((s) => ({ ...s, img_cccd_bottom: f || null }));
                       }}
                     />
                     <div className="mt-2 flex justify-center">
@@ -501,15 +427,18 @@ export default function UserForm({ user, onClose, onSuccess }) {
                   className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   autoComplete="off"
                 />
-                <InputField
-                  label="Tên ngân hàng"
-                  id="name_bank"
-                  name="name_bank"
-                  value={form.name_bank}
-                  onChange={handleChange}
-                  placeholder="Ví dụ: Vietcombank"
-                  autoComplete="off"
-                />
+                <div className="flex flex-col space-y-1">
+                  <label
+                    htmlFor="name_bank"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Chọn ngân hàng <span className="text-red-500">*</span>
+                  </label>
+                  <BankDropdown
+                    formData={form}
+                    setFormData={setForm}
+                  />
+                </div>
               </div>
             </section>
 
@@ -556,7 +485,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </div>
           </form>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

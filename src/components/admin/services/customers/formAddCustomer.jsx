@@ -1,20 +1,7 @@
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { useState } from "react";
 import { X } from "lucide-react";
-// Danh sách ngân hàng Việt Nam
-const VIETNAMESE_BANKS = [
-  { code: "", name: "--- Chọn Ngân hàng ---" },
-  { code: "VCB", name: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)" },
-  { code: "TCB", name: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)" },
-  { code: "BIDV", name: "BIDV (Ngân hàng TMCP Đầu tư và Phát triển Việt Nam)" },
-  { code: "CTG", name: "VietinBank (Ngân hàng TMCP Công Thương Việt Nam)" },
-  { code: "ACB", name: "ACB (Ngân hàng TMCP Á Châu)" },
-  { code: "MB", name: "MBBank (Ngân hàng TMCP Quân đội)" },
-  { code: "VPB", name: "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)" },
-  { code: "STB", name: "Sacombank (Ngân hàng TMCP Sài Gòn Thương Tín)" },
-  { code: "TPB", name: "TPBank (Ngân hàng TMCP Tiên Phong)" },
-  // Có thể bổ sung thêm
-];
+import BankDropdown from "@/components/feature/SelectBank.jsx";
 
 function FormAddCustomer({ onCancel, onSuccess }) {
   const [toast, setToast] = useState(null);
@@ -25,10 +12,10 @@ function FormAddCustomer({ onCancel, onSuccess }) {
     address: "",
     type: "new",
     cccd: "",
-    img_cccd_top: "", // Base64 string
-    img_cccd_bottom: "", // Base64 string
+    img_cccd_top: "",
+    img_cccd_bottom: "",
     number_bank: "",
-    name_bank: "", // Bank Code/Name from select
+    name_bank: "",
     status: "active",
     total_spent: 0,
     booking_count: 0,
@@ -337,23 +324,11 @@ function FormAddCustomer({ onCancel, onSuccess }) {
                     >
                       Tên Ngân hàng
                     </label>
-                    <select
-                      id="name_bank"
-                      name="name_bank"
-                      value={formData.name_bank}
-                      onChange={handleChange}
-                      className={inputClass}
-                      required
-                    >
-                      {VIETNAMESE_BANKS.map((bank) => (
-                        <option
-                          key={bank.code}
-                          value={bank.code}
-                        >
-                          {bank.name}
-                        </option>
-                      ))}
-                    </select>
+
+                    <BankDropdown
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
                   </div>
                 </div>
               </div>
