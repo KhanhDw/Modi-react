@@ -43,7 +43,7 @@ import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
-import ReadInforCustomer from "./ReadInforCustomer";
+import ReadInforCustomer from "./readInforCustomer";
 
 export default function ServiceCustomerTable() {
   const {
