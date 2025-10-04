@@ -11,21 +11,17 @@ const AdminLayoutInner = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
-  const { theme } = useAdminTheme(); // "light" | "dark"
-  // Trạng thái dialog dịch vụ
+  const { theme } = useAdminTheme();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // --- Load state từ localStorage khi mount ---
   useEffect(() => {
     const savedHeaderSticky = localStorage.getItem("headerSticky");
-    if (savedHeaderSticky) {
-      setIsHeaderSticky(savedHeaderSticky === "true");
-    }
+    if (savedHeaderSticky) setIsHeaderSticky(savedHeaderSticky === "true");
 
     const savedSidebarCollapsed = localStorage.getItem("sidebarCollapsed");
-    if (savedSidebarCollapsed) {
+    if (savedSidebarCollapsed)
       setSidebarCollapsed(savedSidebarCollapsed === "true");
-    }
   }, []);
 
   // --- Lưu state khi thay đổi ---
@@ -52,7 +48,7 @@ const AdminLayoutInner = ({ children }) => {
         theme === "dark" && "admin-dark"
       )}
     >
-      {/* Sidebar */}
+      {/* Sidebar + Blur Wrapper */}
       <div
         className={cn(
           "sidebar-blur-wrapper",
@@ -60,18 +56,36 @@ const AdminLayoutInner = ({ children }) => {
         )}
         style={{ transition: "filter 0.3s" }}
       >
-        <AdminSidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          isCollapsed={sidebarCollapsed}
-          toggleCollapse={toggleSidebar_Collapse}
-        />
+        {/* Sidebar được giữ trong DOM để transition hoạt động */}
+        <div
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out",
+            sidebarOpen ? "translate-x-0" : "-translate-x-full",
+            "lg:translate-x-0" // luôn hiện trên desktop
+          )}
+        >
+          <AdminSidebar
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            isCollapsed={sidebarCollapsed}
+            toggleCollapse={toggleSidebar_Collapse}
+          />
+        </div>
       </div>
+
+      {/* Overlay cho mobile */}
+      <div
+        className={cn(
+          "fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ease-in-out",
+          sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        )}
+        onClick={() => setSidebarOpen(false)}
+      />
 
       {/* Main Content */}
       <div
         className={cn(
-          "flex-1 min-h-screen  overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-gray-300 admin-dark:bg-gray-700 lg:py-2 pt-2",
+          "flex-1 min-h-screen overflow-x-hidden flex flex-col transition-all duration-300 ease-in-out bg-gray-300 admin-dark:bg-gray-700 lg:py-2 pt-2",
           sidebarCollapsed ? "lg:pl-20 lg:py-2 lg:pr-2" : "lg:pl-68 lg:pr-2"
         )}
       >
@@ -87,24 +101,15 @@ const AdminLayoutInner = ({ children }) => {
         {/* Page Content */}
         <main
           className={cn(
-            "flex-1 h-full overflow-y-auto overflow-x-hidden rounded-lg shadow-sm  mt-2 bg-white text-slate-900 admin-dark:bg-slate-800 admin-dark:text-slate-100",
+            "flex-1 h-full overflow-y-auto overflow-x-hidden rounded-lg shadow-sm mt-2 bg-white text-slate-900 admin-dark:bg-slate-800 admin-dark:text-slate-100",
             isHeaderSticky && "mt-23"
           )}
         >
           <div className="bg-white admin-dark:bg-gray-900 p-4 h-full">
-            {/* Truyền setIsDialogOpen cho children để các form dịch vụ có thể điều khiển trạng thái dialog */}
             {childrenWithDialogControl}
           </div>
         </main>
       </div>
-
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ease-in-out"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
     </div>
   );
 };

@@ -31,7 +31,6 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import PageSpeed from "./PageSpeed";
 
-
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
 // Menu gốc
@@ -212,8 +211,8 @@ const SidebarContent = ({
                     ? "bg-slate-700 text-white shadow-sm scale-[0.98]"
                     : "bg-primary text-primary-foreground shadow-sm scale-[0.98]"
                   : isDark
-                    ? "text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-[0.99]"
-                    : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
+                  ? "text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-[0.99]"
+                  : "text-gray-700 hover:bg-gray-100 hover:scale-[0.99]"
               )}
               title={isCollapsed && !isMobile ? item.name : undefined}
               aria-label={item.name}
@@ -241,7 +240,7 @@ const SidebarContent = ({
       </nav>
 
       {/* Today visits */}
-      <div className="px-2 flex items-center justify-between transition-all duration-300 ">
+      <div className="px-2 flex items-center justify-between transition-all duration-300">
         {isCollapsed && !isMobile ? (
           ""
         ) : (
@@ -257,7 +256,9 @@ const SidebarContent = ({
 
         <span
           className={cn(
-            `${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center mb-2`,
+            `${
+              isCollapsed && !isMobile ? "w-full" : ""
+            } font-medium text-xs text-center mb-2`,
             isDark ? "text-gray-50" : "text-gray-900"
           )}
         >
@@ -281,13 +282,16 @@ const SidebarContent = ({
 
         <span
           className={cn(
-            `${isCollapsed && !isMobile ? "w-full" : ""} font-medium text-xs text-center mb-2`,
+            `${
+              isCollapsed && !isMobile ? "w-full" : ""
+            } font-medium text-xs text-center mb-2`,
             isDark ? "text-gray-50" : "text-gray-900"
           )}
         >
           <PageSpeed />
         </span>
       </div>
+      <div className="pb-3"></div>
 
       {/* Theme Toggle */}
       <div
@@ -342,55 +346,50 @@ const AdminSidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse }) => {
       </div>
 
       {/* Mobile < lg */}
-      <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent
-          side="left"
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 w-[80vw] max-w-xs transform transition-transform duration-300 ease-in-out lg:hidden",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          isDark
+            ? "bg-gray-800 border-r border-gray-700 text-gray-50"
+            : "bg-white border-r border-gray-200 text-gray-900"
+        )}
+      >
+        <div
           className={cn(
-            "w-[80vw] max-w-xs p-0 overflow-hidden border-r transition-transform duration-300 ease-in-out",
-            isDark
-              ? "bg-gray-800 border-gray-700 text-gray-50"
-              : "bg-white border-gray-200 text-gray-900"
+            "h-16 flex items-center justify-between px-4 border-b",
+            isDark ? "border-gray-700" : "border-gray-200"
           )}
         >
-          <SheetHeader
+          <h1
             className={cn(
-              "h-16 flex items-center justify-between flex-row px-4 border-b",
-              isDark ? "border-gray-700" : "border-gray-200"
+              "text-lg font-bold",
+              isDark ? "text-gray-50" : "text-gray-900"
             )}
           >
-            <SheetTitle
-              className={cn(
-                "text-lg font-bold",
-                isDark ? "text-gray-50" : "text-gray-900"
-              )}
-            >
-              Modi
-            </SheetTitle>
-            <SheetDescription className="sr-only">
-              Menu điều hướng admin
-            </SheetDescription>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-8 w-8 transition-transform duration-200 hover:scale-110",
-                isDark ? "text-slate-100" : "text-slate-800"
-              )}
-              onClick={onClose}
-              aria-label="Đóng menu"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </SheetHeader>
+            Modi
+          </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "h-8 w-8 transition-transform duration-200 hover:scale-110",
+              isDark ? "text-slate-100" : "text-slate-800"
+            )}
+            onClick={onClose}
+            aria-label="Đóng menu"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
 
-          <SidebarContent
-            isCollapsed={false}
-            toggleCollapse={toggleCollapse}
-            onClose={onClose}
-            isMobile
-          />
-        </SheetContent>
-      </Sheet>
+        <SidebarContent
+          isCollapsed={false}
+          toggleCollapse={toggleCollapse}
+          onClose={onClose}
+          isMobile
+        />
+      </div>
     </>
   );
 };
