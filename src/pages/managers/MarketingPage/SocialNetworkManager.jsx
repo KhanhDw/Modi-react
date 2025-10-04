@@ -1,7 +1,7 @@
 // SocialNetworkManager.jsx
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Trash2 } from 'lucide-react';
+import { useState } from "react";
 
 export default function SocialNetworkManager({
     socialNetworks,
@@ -117,22 +117,22 @@ export default function SocialNetworkManager({
     };
 
     return (
-        <div className="grid grid-cols-1 p-4 h-fit border-2 border-slate-300 rounded-2xl overflow-hidden">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+        <div className="grid grid-cols-1 p-2 h-fit border-2 border-slate-300 rounded-2xl overflow-hidden">
+            <div className="flex flex-col-reverse justify-between items-start gap-2 mb-2 w-full">
+                <h1 className="text-xl mx-auto font-bold text-gray-900 admin-dark:text-white">
                     Danh sách mạng xã hội
                 </h1>
-                <button type="button" onClick={onClose} className="text-blue-500 hover:underline font-bold cursor-pointer">
-                    Quay lại
+                <button type="button" onClick={onClose} className="text-blue-500 hover:underline cursor-pointer">
+                    <span className="font-semibold text-sm sm:text-base">Quay lại</span>
                 </button>
             </div>
             <div>
                 <div>
                     {socialNetworks.map((network, index) => (
-                        <div key={network.id ?? `tempsocialNetworks-${index}`} className="p-2 border-b border-gray-200 admin-dark:border-gray-700">
-                            <div className="grid grid-cols-3 space-x-2">
+                        <div key={network.id ?? `tempsocialNetworks-${index}`} className="border-b border-gray-200 admin-dark:border-gray-700">
+                            <div className="flex flex-wrap gap-2 justify-between space-x-2 mb-4 mt-4">
                                 <div className="flex justify-start items-center gap-2 ">
-                                    <span className="flex justify-start font-medium text-white admin-dark:text-white px-2 py-1 rounded-lg"
+                                    <span className="font-medium text-white admin-dark:text-white px-2 py-1 rounded-lg text-base"
                                         style={{ background: network.HEX_color }}>{network.name}</span>
                                 </div>
 
@@ -162,15 +162,15 @@ export default function SocialNetworkManager({
                     ))}
                     <div>
                         {isOpenUpdateNetwork2 &&
-                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-3">
-                                <h2 className="text-lg font-medium mb-2">Điều chỉnh thông tin mạng xã hội</h2>
+                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-2 w-full">
+                                <h2 className="text-base text-center sm:text-lg font-medium mb-2">Điều chỉnh thông tin mạng xã hội</h2>
                                 <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
                                         <input autoComplete="off" value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
                                     </div>
 
-                                    <div className="flex items-center justify-between gap-2">
+                                    <div className="flex flex-col gap-3">
                                         <label htmlFor="color-picker-update" className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">Chọn màu:</label>
                                         <input autoComplete="off"
                                             value={color}
@@ -182,34 +182,34 @@ export default function SocialNetworkManager({
 
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 space-x-2 justify-between items-center mt-4">
+                                <div className="flex flex-row justify-center gap-2 space-x-2 items-center mt-4">
                                     <Button
                                         onClick={() => handleShowForm("close")}
                                         theme="admin"
-                                        className="cursor-pointer admin-dark:bg-red-500 admin-dark:hover:bg-red-600 bg-red-500 hover:bg-red-600 text-white"
+                                        className="cursor-pointer sm:w-40 admin-dark:bg-red-500 admin-dark:hover:bg-red-600 bg-red-500 hover:bg-red-600 text-white"
                                     >
-                                        Hủy
+                                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Hủy</span>
                                     </Button>
 
                                     <Button
                                         onClick={handleUpdateNetwork}
                                         theme="admin"
-                                        className="cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
+                                        className="cursor-pointer sm:w-40 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                                     >
-                                        Cập nhật
+                                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Cập nhật</span>
                                     </Button>
                                 </div>
                             </div>
                         }
                         {isOpenUpdateNetwork &&
-                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-2">
-                                <h2 className="text-lg font-medium mb-2">Thêm mạng xã hội mới</h2>
+                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-2 w-full">
+                                <h2 className="text-base text-center sm:text-lg font-medium mb-2">Thêm mạng xã hội mới</h2>
                                 <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
                                         <input autoComplete="off" value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full admin-dark:text-white admin-dark:bg-gray-800 bg-gray-200 text-black py-3 px-2 border-b border-gray-500 focus:outline-none" placeholder="Nhập tên mạng xã hội" />
                                         <div className="flex w-10 h-10 rounded-3xl" style={{ backgroundColor: color }}></div>
                                     </div>
-                                    <div className="flex flex-col  gap-3">
+                                    <div className="flex flex-col gap-3">
                                         <label htmlFor="color-picker-add" className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">Chọn màu:</label>
                                         <input autoComplete="off"
                                             value={color}
@@ -221,20 +221,20 @@ export default function SocialNetworkManager({
 
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 space-x-2 justify-between items-center mt-4">
+                                <div className="flex flex-row justify-center gap-2 space-x-2 items-center mt-4">
                                     <Button
                                         onClick={() => handleShowForm("close")}
                                         theme="admin"
-                                        className="cursor-pointer admin-dark:bg-red-500 admin-dark:hover:bg-red-600 bg-red-500 hover:bg-red-600 text-white"
+                                        className="cursor-pointer sm:w-30 admin-dark:bg-red-500 admin-dark:hover:bg-red-600 bg-red-500 hover:bg-red-600 text-white"
                                     >
-                                        Hủy
+                                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Hủy</span>
                                     </Button>
                                     <Button
                                         onClick={handleAddNetwork}
                                         theme="admin"
-                                        className="cursor-pointer admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
+                                        className="cursor-pointer sm:w-fit admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 bg-blue-500 hover:bg-blue-600 text-white"
                                     >
-                                        Thêm mạng xã hội mới
+                                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Thêm mạng xã hội mới</span>
                                     </Button>
                                 </div>
                             </div>

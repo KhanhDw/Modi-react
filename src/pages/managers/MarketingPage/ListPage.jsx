@@ -1,9 +1,9 @@
-import { useLocation, Link, useOutletContext } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
+import { Plus } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import FilterCard from "./FilterCard";
 import PostsTable from "./PostTable";
-import { Plus } from "lucide-react";
-import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 
 export default function ListPage() {
     const location = useLocation();
@@ -34,29 +34,31 @@ export default function ListPage() {
 
     return (
         <>
-            <h1 className="mb-2 text-2xl font-bold text-gray-900 admin-dark:text-white">
-                Quản lý bài viết Marketing
-            </h1>
-            <div className="flex justify-between items-center">
-                <FilterCard
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    selectedStatus={selectedStatus}
-                    setSelectedStatus={setSelectedStatus}
+            <div className="w-full">
+                <h1 className="mb-4 text-center xl:text-start font-bold text-xl text-gray-900 admin-dark:text-white">
+                    Quản lý bài viết Marketing
+                </h1>
+                <div className="flex flex-col md:flex-row-reverse gap-3 items-center w-full mb-4">
+                    <Link to={`${location.pathname}/add`}>
+                        <Button className="cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black hover:text-white">
+                            <Plus className="h-4 w-4" />
+                            Thêm bài viết
+                        </Button>
+                    </Link>
+                    <FilterCard
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        selectedStatus={selectedStatus}
+                        setSelectedStatus={setSelectedStatus}
+                    />
+                </div>
+                <PostsTable
+                    // posts={posts}
+                    posts={filteredPosts}
+                    columns={columns}
+                    handleDeletePost={handleDeletePost}
                 />
-                <Link to={`${location.pathname}/add`}>
-                    <Button className="cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black hover:text-white">
-                        <Plus className="h-4 w-4" />
-                        Thêm bài viết
-                    </Button>
-                </Link>
             </div>
-            <PostsTable
-                // posts={posts}
-                posts={filteredPosts}
-                columns={columns}
-                handleDeletePost={handleDeletePost}
-            />
         </>
     );
 }

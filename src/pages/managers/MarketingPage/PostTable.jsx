@@ -1,8 +1,7 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
 import PageList from "@/components/feature/pagination";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useEffect, useState } from "react";
 import PostRow from "./PostRow";
-import { useState, useEffect } from "react";
 
 export default function PostsTable({ posts, columns, handleDeletePost }) {
     // phân trang
@@ -64,10 +63,10 @@ export default function PostsTable({ posts, columns, handleDeletePost }) {
             {/* Empty state */}
             {posts.length === 0 && (
                 <div className="text-center py-12 bg-white admin-dark:bg-gray-900">
-                    <div className="text-gray-600 admin-dark:text-gray-300 text-lg font-medium mb-2">
+                    <span className="text-gray-600 text-sm sm:text-base md:text-lg admin-dark:text-gray-300 font-medium mb-2">
                         Không tìm thấy bài viết nào
-                    </div>
-                    <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                    </span>
+                    <p className="text-sm sm:text-base text-gray-500 admin-dark:text-gray-400">
                         Thử thay đổi bộ lọc hoặc thêm bài viết mới
                     </p>
                 </div>

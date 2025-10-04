@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import SocialNetworkManager from "./SocialNetworkManager";
-import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
+import { Separator } from "@/components/ui/separator";
 import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import SocialNetworkManager from "./SocialNetworkManager";
 
 export default function EditPage() {
     const editorRef = useRef(null);
@@ -166,30 +166,36 @@ export default function EditPage() {
     }
 
     return (
-        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-2 md:p-2">
+        <div className="w-full admin-dark:bg-gray-900 rounded-xl">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-                <h2 className="text-xl md:text-2xl text-center font-bold text-gray-900 admin-dark:text-white sm:text-xl">
+            <div className="flex flex-col md:flex-row sm:items-center justify-between mb-6 gap-4 w-full">
+                <h2 className="text-xl text-center md:text-start font-bold text-gray-900 admin-dark:text-white">
                     Chỉnh sửa bài viết
                 </h2>
 
                 {/* Ngôn ngữ */}
-                <div className="flex flex-wrap sm:flex-nowrap justify-center gap-2 sm:gap-4">
-                    {["vi", "en"].map((lang) => (
-                        <button
-                            key={lang}
-                            type="button"
-                            onClick={() => handleActiveLangbtn(lang)}
-                            className={`${activeLang === lang
-                                ? "admin-dark:bg-blue-500 bg-slate-600 admin-dark:text-gray-100 text-gray-200"
-                                : "admin-dark:bg-slate-200 bg-slate-600 admin-dark:text-gray-800 text-gray-200"
-                                } cursor-pointer flex px-2 py-1 rounded-md`}
-                        >
-                            <span className="font-semibold text-sm sm:text-base lg:text-lg">
-                                {lang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}
-                            </span>
-                        </button>
-                    ))}
+                <div className="flex flex-wrap sm:flex-nowrap justify-center gap-2 sm:gap-3">
+                    {["vi", "en"].map((lang) => {
+                        const isActive = activeLang === lang;
+
+                        return (
+                            <button
+                                key={lang}
+                                type="button"
+                                onClick={() => handleActiveLangbtn(lang)}
+                                className={`cursor-pointer flex px-2 py-1 rounded-md
+                    ${isActive
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-blue-300 text-blue-500"
+                                    }
+                `}
+                            >
+                                <span className="text-base lg:text-lg">
+                                    {lang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}
+                                </span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Nút hành động */}
@@ -200,14 +206,14 @@ export default function EditPage() {
                         disabled={submitting}
                         className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer"
                     >
-                        Hủy
+                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Hủy</span>
                     </Button>
                     <Button
                         onClick={onSubmit}
                         disabled={submitting}
                         className="bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer"
                     >
-                        {submitting ? "Đang lưu..." : "Cập nhật"}
+                        <span className="text-sm sm:text-base font-semibold text-white">{submitting ? "Đang lưu..." : "Cập nhật"}</span>
                     </Button>
                 </div>
             </div>
@@ -230,7 +236,7 @@ export default function EditPage() {
                             </div>
 
                             {/* Mạng xã hội + Trạng thái */}
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                            <div className="flex flex-wrap gap-4">
                                 <div className="space-y-3">
                                     <Label>Mạng xã hội</Label>
                                     <Select
@@ -242,12 +248,12 @@ export default function EditPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {socialNetworks.map((network) => (
-                                                <SelectItem key={network.id} value={String(network.id)}>
+                                                <SelectItem className={'cursor-pointer'} key={network.id} value={String(network.id)}>
                                                     {network.name}
                                                 </SelectItem>
                                             ))}
                                             <Separator className="mt-2" />
-                                            <Button onClick={() => setIsOpenEditNetwork(true)} theme="admin" className="w-full mt-2">
+                                            <Button onClick={() => setIsOpenEditNetwork(true)} theme="admin" className="w-full mt-2 cursor-pointer">
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
@@ -264,9 +270,9 @@ export default function EditPage() {
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="draft">Bản nháp</SelectItem>
-                                            <SelectItem value="published">Đã xuất bản</SelectItem>
-                                            <SelectItem value="archived">Lưu trữ</SelectItem>
+                                            <SelectItem className={'cursor-pointer'} value="draft">Bản nháp</SelectItem>
+                                            <SelectItem className={'cursor-pointer'} value="published">Đã xuất bản</SelectItem>
+                                            <SelectItem className={'cursor-pointer'} value="archived">Lưu trữ</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -303,12 +309,12 @@ export default function EditPage() {
                                             setFormData({ ...formData, image: file });
                                         }
                                     }}
-                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                    className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer"
                                 />
 
                                 {previewUrl && (
-                                    <div className="mt-3 border-2 border-slate-300 admin-dark:border-slate-600 p-2 rounded-xl">
-                                        <img src={previewUrl} alt="Preview" className="object-cover w-full rounded max-h-60 mx-auto" />
+                                    <div className="mt-3 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg">
+                                        <img src={previewUrl} alt="Preview" className="object-cover w-full rounded-lg h-full" />
                                     </div>
                                 )}
                             </div>
@@ -325,7 +331,7 @@ export default function EditPage() {
                 </div>
 
                 {/* Cột phải */}
-                <div className="lg:w-2/3 flex flex-col gap-3 p-4 border-2 border-slate-300 admin-dark:border-slate-600 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
+                <div className="lg:w-2/3 flex flex-col gap-3 p-3 border-2 border-slate-300 admin-dark:border-slate-600 bg-gray-50 admin-dark:bg-gray-800 rounded-lg shadow-sm">
                     <Label>Nội dung bài viết</Label>
                     <TextEditorWrapper ref={editorRef} value={formData.content} />
                 </div>
