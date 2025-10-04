@@ -212,7 +212,6 @@ export default function Products() {
 
         {filteredSamples.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-foreground mb-2">{lang == "vi" ? "Không tìm thấy kết quả!" : "No results found!"}</h3>
             <p className="text-muted-foreground">{lang == "vi" ? "Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc danh mục" : "Try changing your search keywords or category filters."}</p>
           </div>

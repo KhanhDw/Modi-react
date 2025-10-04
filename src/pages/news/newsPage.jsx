@@ -56,7 +56,6 @@ export default function NewsInterface() {
   if (isLoading)
     return (
       <div className="text-center min-h-screen flex items-center justify-center flex-col">
-        <div className="text-6xl mb-4">🔍</div>
         <h3 className="text-xl font-semibold text-foreground mb-2">
           {lang === "vi" ? "Hiện chưa tìm thấy tin tức!" : "No news articles found!"}
         </h3>
@@ -65,7 +64,6 @@ export default function NewsInterface() {
 
   if (!newsArticles.length)
     return <div className="text-center min-h-screen flex items-center justify-center flex-col">
-      <div className="text-6xl mb-4">🔍</div>
       <h3 className="text-xl font-semibold text-foreground mb-2">
         {lang === "vi" ? "Hiện chưa tìm thấy tin tức!" : "No news articles found!"}
       </h3>

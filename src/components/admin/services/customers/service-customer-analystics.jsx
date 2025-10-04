@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import useLenisLocal from '@/hook/useLenisLocal';
+import useLenisLocal from "@/hook/useLenisLocal";
 import { useOutletContext } from "react-router-dom";
 import {
   Bar,
@@ -15,12 +15,11 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 
-
 export default function ServiceCustomerAnalytics() {
-  useLenisLocal(".lenis-local")
+  useLenisLocal(".lenis-local");
 
   const { initDataCustomer, initDataBooking } = useOutletContext();
 
@@ -103,10 +102,6 @@ export default function ServiceCustomerAnalytics() {
     totalBookings: item.totalBookings,
   }));
 
-
-
-
-
   initDataCustomer.forEach((customer) => {
     const date = new Date(customer.created_at);
     const month = date.getMonth() + 1;
@@ -129,8 +124,6 @@ export default function ServiceCustomerAnalytics() {
       totalCustomers: item.totalCustomers,
     }));
 
-
-
   // Hàm format thời gian tương đối
   function formatRelativeTime(dateString) {
     const now = new Date();
@@ -146,7 +139,6 @@ export default function ServiceCustomerAnalytics() {
     if (diffHours < 24) return `${diffHours} giờ trước`;
     return `${diffDays} ngày trước`;
   }
-
 
   return (
     <div className="space-y-6">
@@ -164,7 +156,10 @@ export default function ServiceCustomerAnalytics() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div data-lenis-prevent className=" space-y-2 scrollbar-hide max-h-100 overflow-y-auto  overscroll-y-auto lenis-local">
+            <div
+              data-lenis-prevent
+              className=" space-y-2 scrollbar-hide max-h-100 overflow-y-auto  overscroll-y-auto lenis-local"
+            >
               {sortCustomersByCreatedAt
                 .filter((c) => c.status === "active")
                 .map((customer, index) => (
@@ -199,7 +194,6 @@ export default function ServiceCustomerAnalytics() {
                         <p className="text-sm font-medium text-[#5ea25e] admin-dark:text-green-400">
                           {formatRelativeTime(customer.created_at)}
                         </p>
-
                       </div>
                     </div>
                   </div>
@@ -226,11 +220,25 @@ export default function ServiceCustomerAnalytics() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer
+              width="100%"
+              height={400}
+            >
               <BarChart data={chartBookingData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="admin-dark:stroke-gray-600" />
-                <XAxis dataKey="name" stroke="#374151" className="admin-dark:stroke-gray-300" />
-                <YAxis stroke="#374151" className="admin-dark:stroke-gray-300" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e5e7eb"
+                  className="admin-dark:stroke-gray-600"
+                />
+                <XAxis
+                  dataKey="name"
+                  stroke="#374151"
+                  className="admin-dark:stroke-gray-300"
+                />
+                <YAxis
+                  stroke="#374151"
+                  className="admin-dark:stroke-gray-300"
+                />
                 <Tooltip
                   formatter={(value) => `${value} đơn`}
                   labelFormatter={(label) => `Tháng: ${label}`}
@@ -251,7 +259,6 @@ export default function ServiceCustomerAnalytics() {
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
-
         </Card>
       </div>
     </div>

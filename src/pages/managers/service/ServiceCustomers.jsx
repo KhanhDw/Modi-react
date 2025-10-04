@@ -1,19 +1,15 @@
 import FormAddCustomer from "@/components/admin/services/customers/formAddCustomer";
 import ServiceCustomerAnalytics from "@/components/admin/services/customers/service-customer-analystics";
 import ServiceCustomerTable from "@/components/admin/services/customers/ServiceCustomerTable";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, Star, UserPlus, Users } from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
 
 export default function ServiceCustomers() {
-  const { initDataCustomer, initDataBooking, handleRefetchCustomer } = useOutletContext();
+  const { initDataCustomer, initDataBooking, handleRefetchCustomer } =
+    useOutletContext();
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
 
   const now = new Date();
@@ -32,7 +28,7 @@ export default function ServiceCustomers() {
   const activeCustomerIds = new Set(
     initDataBooking
       .filter((b) => b.status !== "completed") // chỉ lấy booking đang xử lý
-      .map((b) => b.customer_id)               // lấy id khách
+      .map((b) => b.customer_id) // lấy id khách
   );
 
   // Đếm số lượng khách hàng duy nhất đang có booking
@@ -40,17 +36,12 @@ export default function ServiceCustomers() {
     activeCustomerIds.has(c.id)
   );
 
-
-
   const handleOpenAddCustomer = () => {
     setOpenAddCustomer(true);
   };
 
-
-
   return (
     <div className="space-y-6">
-
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
           <h2 className="md:text-xl sm:text-xl text-center md:text-start text-lg font-bold admin-dark:text-gray-100">
@@ -73,7 +64,9 @@ export default function ServiceCustomers() {
           ease-in-out cursor-pointer"
           onClick={handleOpenAddCustomer}
         >
-          <span className="text-white admin-dark:text-gray-200 font-semibold">Thêm khách hàng</span>
+          <span className="text-white admin-dark:text-gray-200 font-semibold">
+            Thêm khách hàng
+          </span>
         </button>
       </div>
       <div className="grid gap-2 sm:gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
@@ -143,22 +136,13 @@ export default function ServiceCustomers() {
 
       {openAddCustomer && (
         <div className="fixed inset-0 bg-black/50 admin-dark:bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white admin-dark:bg-gray-800 p-6 rounded-2xl shadow-2xl w-full max-w-3xl relative border border-gray-200 admin-dark:border-gray-700 animate-in fade-in-0 zoom-in-95">
-
-            {/* Close button */}
-            <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-gray-200 text-2xl font-bold leading-none cursor-pointer"
-              onClick={() => setOpenAddCustomer(false)}
-            >
-              <span>X</span>
-            </button>
-
-            {/* Nội dung form */}
-            <FormAddCustomer onSuccess={handleRefetchCustomer} />
-          </div>
+          {/* Nội dung form */}
+          <FormAddCustomer
+            onCancel={() => setOpenAddCustomer(false)}
+            onSuccess={handleRefetchCustomer}
+          />
         </div>
       )}
-
     </div>
-  )
+  );
 }
