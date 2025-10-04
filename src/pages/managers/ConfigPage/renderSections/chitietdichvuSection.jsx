@@ -26,8 +26,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ConfirmationModal from "./components/ConfirmationModal.jsx";
-import NotificationToast from "@/components/feature/notification-toast.jsx";
 import {
   Crosshair,
   Edit2,
