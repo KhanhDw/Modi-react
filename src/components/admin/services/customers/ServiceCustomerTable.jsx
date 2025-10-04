@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useLenisLocal from '@/hook/useLenisLocal';
+import useLenisLocal from "@/hook/useLenisLocal";
 import {
   Edit,
   Eye,
@@ -45,7 +45,6 @@ import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
 import ReadInforCustomer from "./ReadInforCustomer";
 
-
 export default function ServiceCustomerTable() {
   const {
     initDataCustomer,
@@ -53,10 +52,10 @@ export default function ServiceCustomerTable() {
     openEditCustomerForm,
     handleDeleteCustomer,
   } = useOutletContext();
-  useLenisLocal(".lenis-local")
-
+  useLenisLocal(".lenis-local");
   const [openConfigCustomerVIP, setOpenConfigCustomerVIP] = useState(false);
-  const [openDialogImportCustomer, setOpenDialogImportCustomer] = useState(false);
+  const [openDialogImportCustomer, setOpenDialogImportCustomer] =
+    useState(false);
   const [openReadInforCustomer, setOpenReadInforCustomer] = useState(false);
   const [customerDetail, setCustomerDetail] = useState(null);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -71,13 +70,14 @@ export default function ServiceCustomerTable() {
 
   // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
   const getFullInforCustomer = async (id) => {
-
     try {
       setLoadingCustomer(true);
       setCustomerDetail(null);
       setOpenReadInforCustomer(false);
 
-      const res = await fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/customers/${id}/full`);
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/customers/${id}/full`
+      );
 
       if (!res.ok) throw new Error("Không thể lấy dữ liệu khách hàng");
 
@@ -91,7 +91,6 @@ export default function ServiceCustomerTable() {
         setLoadingCustomer(false);
         setOpenReadInforCustomer(true);
       }, 0);
-
     } catch (err) {
       setCustomerDetail(null);
       setLoadingCustomer(false);
@@ -105,10 +104,7 @@ export default function ServiceCustomerTable() {
     setCurrentPage(1);
   };
 
-
-
   const filteredCustomer = initDataCustomer.filter((customer) => {
-
     const keyword = search.toLowerCase();
     const isVip = customer.total_spent >= minSpent;
     const groupType = isVip ? "vip" : "thuong";
@@ -134,15 +130,15 @@ export default function ServiceCustomerTable() {
     startIndex + itemsPerPage
   );
 
-
-
   return (
     <div className="space-y-6">
       <Card className="bg-gray-100 admin-dark:bg-gray-900 admin-dark:border-gray-700">
         <CardHeader>
           <div className="flex flex-col md:flex-col xl:flex-row items-center justify-between">
             <div>
-              <CardTitle className="admin-dark:text-white text-xl xl:text-start text-center">Danh sách khách hàng</CardTitle>
+              <CardTitle className="admin-dark:text-white text-xl xl:text-start text-center">
+                Danh sách khách hàng
+              </CardTitle>
               <CardDescription className="text-gray-600 mt-2 mb-2 xl:text-start text-center admin-dark:text-gray-400">
                 Quản lý tất cả khách hàng đã sử dụng dịch vụ
               </CardDescription>
@@ -160,22 +156,45 @@ export default function ServiceCustomerTable() {
                   className="pl-10 w-64 admin-dark:bg-gray-800 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
                 />
               </div>
-              <Select value={statusFilter} onValueChange={changeStatus}>
+              <Select
+                value={statusFilter}
+                onValueChange={changeStatus}
+              >
                 <SelectTrigger className="w-40 bg-white admin-dark:bg-gray-800 text-black admin-dark:text-white border border-gray-300 admin-dark:border-gray-600 rounded cursor-pointer">
                   <Filter className="h-4 w-4 mr-2 text-black admin-dark:text-white" />
-                  <SelectValue className="cursor-pointer" placeholder="Trạng thái" />
+                  <SelectValue
+                    className="cursor-pointer"
+                    placeholder="Trạng thái"
+                  />
                 </SelectTrigger>
                 <SelectContent className="bg-white admin-dark:bg-gray-800 admin-dark:border-gray-600 text-black admin-dark:text-white cursor-pointer">
-                  <SelectItem value="all" className="admin-dark:hover:bg-gray-700 cursor-pointer">Tất cả</SelectItem>
-                  <SelectItem value="new" className="admin-dark:hover:bg-gray-700 cursor-pointer">Thường</SelectItem>
-                  <SelectItem value="vip" className="admin-dark:hover:bg-gray-700 cursor-pointer">Vip</SelectItem>
+                  <SelectItem
+                    value="all"
+                    className="admin-dark:hover:bg-gray-700 cursor-pointer"
+                  >
+                    Tất cả
+                  </SelectItem>
+                  <SelectItem
+                    value="new"
+                    className="admin-dark:hover:bg-gray-700 cursor-pointer"
+                  >
+                    Thường
+                  </SelectItem>
+                  <SelectItem
+                    value="vip"
+                    className="admin-dark:hover:bg-gray-700 cursor-pointer"
+                  >
+                    Vip
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <button
                 className="bg-gray-600 hover:bg-slate-700 text-white font-bold p-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
                 onClick={() => setOpenDialogImportCustomer(true)}
               >
-                <span className="text-sm lg:text-base">Nhập dữ liệu khách hàng</span>
+                <span className="text-sm lg:text-base">
+                  Nhập dữ liệu khách hàng
+                </span>
               </button>
             </div>
           </div>
@@ -185,20 +204,47 @@ export default function ServiceCustomerTable() {
             <Table>
               <TableHeader>
                 <TableRow className="admin-dark:border-gray-700">
-                  <TableHead className="text-black admin-dark:text-white">STT</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Tên khách hàng</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">SĐT</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Email</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Đã đặt</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Hoàn thành</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Chi</TableHead>
-                  <TableHead className="text-black admin-dark:text-white">Thao tác</TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    STT
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Tên khách hàng
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    SĐT
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Email
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Số CCCD
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Số tài khoản ngân hàng
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Tên ngân hàng
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Đã đặt
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Hoàn thành
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Chi
+                  </TableHead>
+                  <TableHead className="text-black admin-dark:text-white">
+                    Thao tác
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currentData.map((customer, index) => (
-                  <TableRow key={customer.id} className="admin-dark:border-gray-700 admin-dark:hover:bg-gray-750">
-
+                  <TableRow
+                    key={customer.id}
+                    className="admin-dark:border-gray-700 admin-dark:hover:bg-gray-750"
+                  >
                     <TableCell className="text-black admin-dark:text-white">
                       {startIndex + index + 1}
                     </TableCell>
@@ -211,6 +257,15 @@ export default function ServiceCustomerTable() {
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white">
                       {customer.email || "Chưa cập nhật"}
+                    </TableCell>
+                    <TableCell className="text-black admin-dark:text-white">
+                      {customer.cccd || "Chưa cập nhật"}
+                    </TableCell>
+                    <TableCell className="text-black admin-dark:text-white">
+                      {customer.number_bank || "Chưa cập nhật"}
+                    </TableCell>
+                    <TableCell className="text-black admin-dark:text-white">
+                      {customer.name_bank || "Chưa cập nhật"}
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white pl-6">
                       {customer.booking_count || 0}
@@ -225,21 +280,32 @@ export default function ServiceCustomerTable() {
                       }
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white">
-                      {(Number(customer.total_spent || 0)).toLocaleString("vi-VN")} ₫
+                      {Number(customer.total_spent || 0).toLocaleString(
+                        "vi-VN"
+                      )}{" "}
+                      ₫
                     </TableCell>
                     <TableCell className="flex items-center space-x-2">
                       <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="admin-dark:hover:bg-gray-700 admin-dark:text-white">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="admin-dark:hover:bg-gray-700 admin-dark:text-white"
+                          >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="admin-dark:bg-gray-800 admin-dark:border-gray-600">
+                        <DropdownMenuContent
+                          align="end"
+                          className="admin-dark:bg-gray-800 admin-dark:border-gray-600"
+                        >
                           <DropdownMenuItem
                             onClick={() => {
                               getFullInforCustomer(customer.id);
                             }}
-                            className="admin-dark:text-white admin-dark:hover:bg-gray-700">
+                            className="admin-dark:text-white admin-dark:hover:bg-gray-700"
+                          >
                             <Eye className="mr-2 h-4 w-4" />
                             Xem chi tiết
                           </DropdownMenuItem>
@@ -264,7 +330,10 @@ export default function ServiceCustomerTable() {
                 ))}
                 {currentData.length === 0 && (
                   <TableRow className="admin-dark:border-gray-700">
-                    <TableCell colSpan={7} className="text-center py-4 text-gray-500 admin-dark:text-gray-400">
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-4 text-gray-500 admin-dark:text-gray-400"
+                    >
                       Không tìm thấy khách hàng
                     </TableCell>
                   </TableRow>
@@ -276,7 +345,11 @@ export default function ServiceCustomerTable() {
           {/* Pagination */}
           <div className="flex justify-between mt-4 gap-2 items-center">
             <div>
-              <button onClick={() => setOpenConfigCustomerVIP(true)} type="button" className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer">
+              <button
+                onClick={() => setOpenConfigCustomerVIP(true)}
+                type="button"
+                className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
+              >
                 <span className=" transition-all duration-300  text-sm text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
                   Thiết lập điều kiện là khách hàng VIP
                 </span>
@@ -287,35 +360,40 @@ export default function ServiceCustomerTable() {
               totalPages={totalPages}
               setCurrentPage={setCurrentPage}
             />
-
-
           </div>
         </CardContent>
       </Card>
 
       {openConfigCustomerVIP && (
-
-        <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center  min-h-screen">
+        <div
+          data-lenis-prevent
+          className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center  min-h-screen"
+        >
           <div className="relative  rounded-lg shadow-2xl  min-w-[350px] max-w-[90vw] w-full flex flex-col items-center">
-            <button hidden
+            <button
+              hidden
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold cursor-pointer"
               onClick={() => setOpenConfigCustomerVIP(false)}
               aria-label="Đóng"
             >
               &times;
             </button>
-            <ConfigCustomerVIP setOpenConfigCustomerVIP={setOpenConfigCustomerVIP} />
-
+            <ConfigCustomerVIP
+              setOpenConfigCustomerVIP={setOpenConfigCustomerVIP}
+            />
           </div>
         </div>
-      )
-      }
+      )}
 
       {/* Component Upload Excel */}
       {openDialogImportCustomer && (
-        <div data-lenis-prevent className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center admin-dark:bg-black/90 bg-white min-h-screen">
+        <div
+          data-lenis-prevent
+          className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center admin-dark:bg-black/90 bg-white min-h-screen"
+        >
           <div className="relative rounded-lg w-full flex flex-col items-center p-2">
-            <button hidden
+            <button
+              hidden
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 admin-dark:text-gray-400 admin-dark:hover:text-white text-xl font-bold cursor-pointer"
               onClick={() => setOpenDialogImportCustomer(false)}
               aria-label="Đóng"
@@ -325,7 +403,6 @@ export default function ServiceCustomerTable() {
             <ExcelDataUploader
               openDialogImportCustomer={openDialogImportCustomer}
               setOpenDialogImportCustomer={setOpenDialogImportCustomer}
-
             />
           </div>
         </div>
