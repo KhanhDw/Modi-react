@@ -1,15 +1,15 @@
 // AddPage.jsx
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import SocialNetworkManager from "./SocialNetworkManager";
-import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
-import axios from "axios";
 import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SocialNetworkManager from "./SocialNetworkManager";
 
 export default function AddPage() {
     const editorRef = useRef(null);
@@ -102,10 +102,10 @@ export default function AddPage() {
     };
 
     return (
-        <div className="w-full admin-dark:bg-gray-900 rounded-xl p-2 sm:p-4 md:p-4 lg:p-4">
+        <div className="w-full admin-dark:bg-gray-900 rounded-xl md:p-2">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 admin-dark:text-white">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+                <h2 className="text-xl font-bold text-gray-900 admin-dark:text-white">
                     Tạo bài viết mới
                 </h2>
 
@@ -114,15 +114,15 @@ export default function AddPage() {
                         <Button
                             variant="outline"
                             onClick={() => navigate(-1)}
-                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700"
+                            className="px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700 cursor-pointer"
                         >
-                            Hủy
+                            <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Hủy</span>
                         </Button>
                         <Button
                             onClick={onSubmit}
-                            className="text-sm sm:text-base px-4 sm:px-6 py-2 rounded-md bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white"
+                            className="px-4 sm:px-6 py-2 rounded-md bg-blue-500 hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 cursor-pointer"
                         >
-                            Tạo mới
+                            <span className="text-sm sm:text-base font-semibold text-white">Tạo mới</span>
                         </Button>
                     </div>
                 </div>
@@ -145,7 +145,7 @@ export default function AddPage() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                            <div className="flex flex-wrap gap-3">
                                 {/* Social network */}
                                 <div className="space-y-2">
                                     <Label>Mạng xã hội</Label>
@@ -159,12 +159,12 @@ export default function AddPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {socialNetworks.map((network, index) => (
-                                                <SelectItem key={network.id ?? `temp-${index}`} value={network.id}>
+                                                <SelectItem className={'cursor-pointer'} key={network.id ?? `temp-${index}`} value={network.id}>
                                                     {network.name}
                                                 </SelectItem>
                                             ))}
                                             <Separator className="mt-2" />
-                                            <Button onClick={handleOpenEditNetwork} className="w-full mt-2">
+                                            <Button onClick={handleOpenEditNetwork} className="w-full mt-2 cursor-pointer">
                                                 Thêm mạng xã hội mới
                                             </Button>
                                         </SelectContent>
@@ -179,13 +179,13 @@ export default function AddPage() {
                                         onValueChange={setStatus}
                                         className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
                                     >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg">
+                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="draft">Bản nháp</SelectItem>
-                                            <SelectItem value="published">Đã xuất bản</SelectItem>
-                                            <SelectItem value="archived">Lưu trữ</SelectItem>
+                                            <SelectItem className={'cursor-pointer'} value="draft">Bản nháp</SelectItem>
+                                            <SelectItem className={'cursor-pointer'} value="published">Đã xuất bản</SelectItem>
+                                            <SelectItem className={'cursor-pointer'} value="archived">Lưu trữ</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -215,7 +215,7 @@ export default function AddPage() {
                                         setError("");
                                     }
                                 }}
-                                className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
+                                className="border-2 cursor-pointer border-slate-300 admin-dark:border-slate-600 rounded-lg"
                             />
 
                             {preview && (
@@ -248,4 +248,3 @@ export default function AddPage() {
         </div>
     );
 }
-

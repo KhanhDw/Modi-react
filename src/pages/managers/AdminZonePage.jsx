@@ -181,7 +181,7 @@ export default function AdminZonePage() {
                     key={item.id}
                     className="last:border-none hover:bg-purple-50 admin-dark:hover:bg-gray-800 transition-colors duration-150 border-b border-gray-100 admin-dark:border-gray-700"
                   >
-                    {Object.keys(item)
+                    {/* {Object.keys(item)
                       .filter((key) => key !== "id")
                       .map((key, index) => {
                         let cellContent = item[key];
@@ -217,7 +217,45 @@ export default function AdminZonePage() {
                             {cellContent}
                           </td>
                         );
-                      })}
+                      })} */}
+
+                    {/*do thay thêm cột user nên dữ liệu ko đồng bộ */}
+                    {columns.map((col, index) => {
+                      const key = col.name;
+                      let cellContent = item[key];
+
+                      if (key === "created_at" || key === "updated_at") {
+                        cellContent = formatValue(cellContent);
+                      } else if (key === "avatar_url") {
+                        const rawUrl = cellContent;
+                        let avatarUrl = rawUrl?.startsWith("/image/")
+                          ? `${import.meta.env.VITE_MAIN_BE_URL}${rawUrl}`
+                          : rawUrl;
+
+                        cellContent = avatarUrl ? (
+                          <img
+                            src={avatarUrl}
+                            alt="Avatar"
+                            className="w-10 h-10 rounded-full object-cover border border-gray-200 admin-dark:border-gray-600"
+                            onError={(e) => (e.currentTarget.style.display = "none")}
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
+                            N/A
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <td
+                          key={index}
+                          className={`px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 ${index === 0 ? "whitespace-nowrap font-medium" : ""
+                            }`}
+                        >
+                          {cellContent}
+                        </td>
+                      );
+                    })}
 
                     <td className="px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 text-center">
                       <div className="flex justify-center gap-4">
