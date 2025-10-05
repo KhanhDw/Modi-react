@@ -12,7 +12,7 @@ export function ThemeProvider({ children }) {
     } catch (error) {
       console.log("LocalStorage not available");
     }
-    return true; // fallback mặc định
+    return false; // fallback mặc định là light
   });
 
   useEffect(() => {

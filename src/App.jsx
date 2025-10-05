@@ -1,4 +1,9 @@
-import { Routes, Route, BrowserRouter as Router, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  BrowserRouter as Router,
+  useLocation,
+} from "react-router-dom";
 import { Suspense, useEffect, useRef } from "react";
 import { publicRoutes, privateRoutes } from "./routes";
 import PrivateRoute from "@/guardRouter/PrivateRoute";
@@ -22,7 +27,10 @@ function ScrollHandler() {
     if (prevFull === currFull) return; // không đổi → không làm gì
 
     // Scroll chỉ khi path hoặc query thay đổi (không phải chỉ hash)
-    if (prev.pathname !== location.pathname || prev.search !== location.search) {
+    if (
+      prev.pathname !== location.pathname ||
+      prev.search !== location.search
+    ) {
       if (lenis?.instance) {
         lenis.instance.scrollTo(0, { immediate: true });
         lenis.instance.resize();
@@ -38,13 +46,12 @@ function ScrollHandler() {
 }
 
 function App() {
-
   useEffect(() => {
-    const key = "site_visit"
-    const now = Date.now()
-    const expireTime = 30 * 60 * 1000 // 30 phút
+    const key = "site_visit";
+    const now = Date.now();
+    const expireTime = 30 * 60 * 1000; // 30 phút
 
-    const lastVisit = localStorage.getItem(key)
+    const lastVisit = localStorage.getItem(key);
 
     if (!lastVisit || now - lastVisit > expireTime) {
       // console.log("🔹 Người dùng vừa vào website, gửi log lên server")
@@ -52,13 +59,12 @@ function App() {
       // Gửi request log (toàn site)
       fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/site/visit`, {
         method: "POST",
-      }).catch((err) => console.error("Không log được site visit:", err))
+      }).catch((err) => console.error("Không log được site visit:", err));
 
       // Lưu lại timestamp
-      localStorage.setItem(key, now)
+      localStorage.setItem(key, now);
     }
-  }, [])
-
+  }, []);
 
   return (
     <ThemeProvider>
@@ -66,11 +72,18 @@ function App() {
         <LenisProvider>
           <Router>
             <ScrollHandler />
-            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Đang tải...</div>}>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center min-h-screen">
+                  Đang tải...
+                </div>
+              }
+            >
               <Routes>
                 {publicRoutes.map((router, index) => {
                   const Page = router.component;
-                  const Layout = router.layout || (({ children }) => <>{children}</>);
+                  const Layout =
+                    router.layout || (({ children }) => <>{children}</>);
                   return (
                     <Route
                       key={index}
@@ -95,7 +108,8 @@ function App() {
 
                 {privateRoutes.map((router, index) => {
                   const Page = router.component;
-                  const Layout = router.layout || (({ children }) => <>{children}</>);
+                  const Layout =
+                    router.layout || (({ children }) => <>{children}</>);
                   return (
                     <Route
                       key={"private" + index}
