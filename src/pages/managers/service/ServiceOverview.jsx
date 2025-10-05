@@ -95,7 +95,7 @@ export default function ServiceOverview() {
               <Layers className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">{initDataService.length}</div>
+              <span className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">{initDataService.length}</span>
             </CardContent>
           </Card>
 
@@ -105,7 +105,7 @@ export default function ServiceOverview() {
               <DollarSign className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">
+              <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">
                 {totalRevenue.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
@@ -121,7 +121,7 @@ export default function ServiceOverview() {
               <Target className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">{initDataBooking.length}</div>
+              <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">{initDataBooking.length}</div>
             </CardContent>
           </Card>
 
@@ -131,7 +131,7 @@ export default function ServiceOverview() {
               <Star className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl text-gray-800 admin-dark:text-white font-bold">
+              <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">
                 {initDataCustomer.filter((c) => c.status === "active").length}
               </div>
             </CardContent>
@@ -154,7 +154,7 @@ export default function ServiceOverview() {
                     type="button"
                     onClick={handlePrev}
                     disabled={currentPage === 0}
-                    className="bg-transparent hover:bg-gray-600/30 px-3 py-2 rounded-xl disabled:opacity-40"
+                    className="bg-transparent hover:bg-gray-600/30 px-3 py-2 rounded-xl disabled:opacity-40 cursor-pointer"
                   >
                     <ChevronLeft />
                   </button>
@@ -162,7 +162,7 @@ export default function ServiceOverview() {
                     type="button"
                     onClick={handleNext}
                     disabled={currentPage === totalPages - 1}
-                    className="bg-transparent hover:bg-gray-600/30 px-3 py-2 rounded-xl disabled:opacity-40"
+                    className="bg-transparent hover:bg-gray-600/30 px-3 py-2 rounded-xl disabled:opacity-40 cursor-pointer"
                   >
                     <ChevronRight />
                   </button>

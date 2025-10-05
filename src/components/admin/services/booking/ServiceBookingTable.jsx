@@ -207,7 +207,7 @@ export default function ServiceBookingTable() {
                       ? new Date(item.completed_date).toLocaleDateString("vi-VN")
                       : "Không có"}
                   </TableCell>
-                  <TableCell className="flex items-center space-x-2">
+                  <TableCell className="flex items-center justify-center space-x-2">
                     <DropdownMenu modal={false}>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -228,7 +228,7 @@ export default function ServiceBookingTable() {
                           onClick={() => openEditBookingForm(item)}
                           className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
                         >
-                          <Edit className="mr-2 h-4 w-4" />
+                          <Edit className="mr-2 h-4 w-4 hover:text-white" />
                           Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -236,7 +236,7 @@ export default function ServiceBookingTable() {
                           onClick={() => handleDeleteBooking(item.id)}
                           className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
                         >
-                          <Trash2 className="mr-2 h-4 w-4" />
+                          <Trash2 className="mr-2 h-4 w-4 hover:text-white" />
                           Xóa
                         </DropdownMenuItem>
                       </DropdownMenuContent>

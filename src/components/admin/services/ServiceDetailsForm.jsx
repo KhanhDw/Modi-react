@@ -47,7 +47,7 @@ export default function ServiceDetailsForm({
           Tên dịch vụ *
         </Label>
         <Input
-          className="text-black border border-black/30 admin-dark:text-gray-100"
+          className="text-black border border-gray-300 admin-dark:border-gray-700 admin-dark:text-gray-100"
           id="ten_dich_vu"
           value={formData.ten_dich_vu || ""}
           onChange={(e) => handleNameChange(e.target.value)}
@@ -64,7 +64,7 @@ export default function ServiceDetailsForm({
           Đoạn định danh URL *
         </Label>
         <Input
-          className="text-black border border-black/30 bg-gray-100 cursor-not-allowed admin-dark:text-gray-100"
+          className="text-black border border-gray-300 admin-dark:border-gray-700 bg-gray-100 cursor-not-allowed admin-dark:text-gray-100"
           id="slug"
           value={formData.slug || ""}
           readOnly
@@ -78,7 +78,7 @@ export default function ServiceDetailsForm({
           Giá thấp nhất có thể chấp nhận (VND) *
         </Label>
         <Input
-          className="text-black border border-black/30 admin-dark:text-gray-100"
+          className="text-black border border-gray-300 admin-dark:border-gray-700 admin-dark:text-gray-100"
           id="floor_price"
           type="text"
           value={formData.floor_price ? Number(formData.floor_price).toLocaleString("vi-VN") : ""}
@@ -98,7 +98,7 @@ export default function ServiceDetailsForm({
           Mô tả *
         </Label>
         <Textarea
-          className="text-black border border-black/30 focus:border-none admin-dark:text-gray-100"
+          className="text-black border border-gray-300 admin-dark:border-gray-700 focus:border-none admin-dark:text-gray-100"
           id="mo_ta"
           value={formData.mo_ta || ""}
           onChange={(e) => handleChange("mo_ta", e.target.value)}
@@ -108,13 +108,13 @@ export default function ServiceDetailsForm({
       </div>
 
       {/* Ảnh dịch vụ */}
-      <div className="space-y-2 col-span-1 md:col-span-2 lg:col-span-2 w-full">
+      <div className="space-y-2 col-span-1 md:col-span-2 lg:col-span-3 w-full">
         <Label className="text-black admin-dark:text-gray-100" htmlFor="image_url">
           Ảnh dịch vụ
         </Label>
         <div className="flex flex-col items-start gap-4 w-full">
           <Input
-            className="text-black border border-black/30 w-full admin-dark:text-gray-100"
+            className="text-black border border-gray-300 admin-dark:border-gray-700 w-full admin-dark:text-gray-100 cursor-pointer"
             id="image_url"
             type="file"
             accept="image/*"
@@ -130,7 +130,7 @@ export default function ServiceDetailsForm({
                   : `${import.meta.env.VITE_MAIN_BE_URL}${formData.image_url}`)
               }
               alt="Ảnh dịch vụ"
-              className="max-h-42 rounded w-full object-contain border"
+              className="h-full md:h-90 rounded-lg w-full object-contain"
               style={{ minWidth: "120px" }}
             />
           )}
@@ -146,7 +146,7 @@ export default function ServiceDetailsForm({
           Tính năng nổi bật
         </Label>
         <Textarea
-          className="text-black border border-black/30 focus:border-none admin-dark:text-gray-100"
+          className="text-black border border-gray-300 admin-dark:border-gray-700 focus:border-none admin-dark:text-gray-100"
           id="features"
           value={formData.features || ""}
           onChange={(e) => handleChange("features", e.target.value)}
@@ -163,7 +163,7 @@ export default function ServiceDetailsForm({
           Chi tiết dịch vụ
         </Label>
         <Textarea
-          className="text-black border border-black/30 focus:border-none admin-dark:text-gray-100"
+          className="text-black border border-gray-300 admin-dark:border-gray-700 focus:border-none admin-dark:text-gray-100"
           id="details"
           value={formData.details || ""}
           onChange={(e) => handleChange("details", e.target.value)}

@@ -29,13 +29,13 @@ export default function CustomerCombobox({ customers, formData, setFormData }) {
           role="combobox"
           className="w-full justify-between border border-black/30 text-white admin-dark:text-gray-100 cursor-pointer"
         >
-          {formData.cusName && formData.cusPhone
+          <span className="text-sm sm:text-base">{formData.cusName && formData.cusPhone
             ? `${formData.cusName} - ${formData.cusPhone}`
-            : "Chọn khách hàng..."}
+            : "Chọn khách hàng..."}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0">
+      <PopoverContent className="sm:w-[400px] p-0">
         <Command>
           <CommandInput placeholder="Tìm theo tên hoặc số điện thoại..." />
           <CommandList>

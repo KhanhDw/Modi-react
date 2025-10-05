@@ -28,8 +28,6 @@ import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import WarningMessage from "./utils/warningMessage";
 
-
-
 export default function ServiceTable() {
 
   const navigate = useNavigate();
@@ -64,7 +62,7 @@ export default function ServiceTable() {
       className="bg-gray-100 rounded-xl border border-gray-300 shadow-sm
         admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
     >
-      <CardHeader className="px-2 sm:px-3 md:p-4">
+      <CardHeader className="px-2 sm:px-3 md:px-4">
         <div className="flex flex-col sm:flex-col md:flex-row items-center sm:items-center justify-between gap-3 sm:gap-4">
           <div className="">
             <CardTitle className="text-sm sm:text-xl md:text-xl md:text-start font-bold text-gray-900 admin-dark:text-gray-100">
@@ -100,7 +98,8 @@ export default function ServiceTable() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-2 sm:px-3 md:p-4 text-black admin-dark:text-gray-200">
+
+      <CardContent className="px-2 sm:px-3 md:px-4 text-black admin-dark:text-gray-200">
         <div
           className="rounded-md border border-gray-300 bg-white shadow-sm
             admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50
@@ -167,7 +166,7 @@ export default function ServiceTable() {
                     </TableCell>
 
 
-                    <TableCell onClick={() => handleReaderDetailService(item.translation?.slug)} className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  hover:bg-slate-600 cursor-pointer`}>
+                    <TableCell onClick={() => handleReaderDetailService(item.translation?.slug)} className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"} hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}>
                       {item.translation?.ten_dich_vu || "Chưa có thông tin tiếng việt"}
                     </TableCell>
                     <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>
@@ -184,17 +183,17 @@ export default function ServiceTable() {
                         : ""}
                     </TableCell>
                     <TableCell
-                      className="text-gray-900 admin-dark:text-gray-200 flex-col items-center justify-center"
-                    ><div className="flex flex-wrap gap-1 text-center">
+                      className="text-gray-900 admin-dark:text-gray-200 flex-col items-center justify-center">
+                      <div className="flex flex-wrap justify-center gap-1 text-center">
                         {item.totalLanguages.map((lang, index) => {
                           return (
-                            <span key={`${lang}-${index}`} className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"} px-2 py-1 text-xs text-white  rounded-sm`}>{lang}</span>
+                            <span key={`${lang}-${index}`} className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"} px-2 py-1 text-xs text-white rounded`}>{lang}</span>
                           )
                         }) || ""}
                       </div>
                     </TableCell>
                     <TableCell className={`text-center`}>
-                      <Badge className="bg-green-600 text-white admin-dark:bg-green-500">
+                      <Badge className="bg-green-600 px-2 py-1 rounded text-white admin-dark:bg-green-500">
                         {item.status === "Active"
                           ? "Hoạt động"
                           : "Không hoạt động"}
@@ -219,14 +218,14 @@ export default function ServiceTable() {
                             onClick={() => openEditServiceForm(item)}
                             className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
                           >
-                            <Edit className="mr-2 h-4 w-4" />
+                            <Edit className="mr-2 h-4 w-4 hover:text-white" />
                             Cập nhật
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteService(item.id)}
                             className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
                           >
-                            <Trash2 className="mr-2 h-4 w-4" />
+                            <Trash2 className="mr-2 h-4 w-4 hover:text-white" />
                             Xóa
                           </DropdownMenuItem>
                         </DropdownMenuContent>

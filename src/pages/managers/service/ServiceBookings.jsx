@@ -1,7 +1,7 @@
 import ServiceBookingTable from "@/components/admin/services/booking/ServiceBookingTable";
 import ServiceBookingAnalytics from "@/components/admin/services/booking/service-booking-analytics";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeCheck, CheckCircle, Loader2, Package, Plus, Target, Trash2 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
@@ -66,8 +66,8 @@ export default function ServiceBooking() {
   return (
 
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+        <div className="text-center sm:text-start">
           <h2 className="text-lg sm:text-xl md:text-[22px] font-bold text-gray-900 admin-dark:text-white">
             Quản lý đơn
           </h2>
@@ -76,11 +76,11 @@ export default function ServiceBooking() {
           </p>
         </div>
         <Button
-          className="bg-primary cursor-pointer hover:bg-primary/90 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+          className="bg-blue-500 cursor-pointer hover:bg-blue-600 admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700 text-white"
           onClick={() => handleOpen("booking")}
         >
-          <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
-          Tạo đơn mới
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base font-semibold">Tạo đơn mới</span>
         </Button>
       </div>
 
@@ -97,11 +97,11 @@ export default function ServiceBooking() {
               </CardTitle>
               {card.icon}
             </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${card.color}`}>
+            <div className="px-6">
+              <div className={`text-xl font-bold ${card.color}`}>
                 {card.value}
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>

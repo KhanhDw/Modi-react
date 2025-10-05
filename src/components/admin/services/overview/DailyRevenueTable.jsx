@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Pagination from "@/components/admin/services/utils/Pagination.jsx"; // import component pagination
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Table,
     TableBody,
@@ -10,7 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Pagination from "@/components/admin/services/utils/Pagination.jsx"; // import component pagination
+import { useMemo, useState } from "react";
 
 export default function DailyRevenueTable({ data }) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,12 +35,12 @@ export default function DailyRevenueTable({ data }) {
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
-                            <TableHead>STT</TableHead>
-                            <TableHead>Ngày</TableHead>
-                            <TableHead>Dịch vụ</TableHead>
-                            <TableHead>Khách hàng</TableHead>
-                            <TableHead>Số điện thoại</TableHead>
-                            <TableHead>Doanh thu</TableHead>
+                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>STT</TableHead>
+                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Ngày</TableHead>
+                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Dịch vụ</TableHead>
+                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Khách hàng</TableHead>
+                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Số điện thoại</TableHead>
+                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Doanh thu</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
