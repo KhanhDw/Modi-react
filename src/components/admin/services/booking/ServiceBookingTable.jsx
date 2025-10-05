@@ -214,6 +214,7 @@ export default function ServiceBookingTable() {
                           variant="ghost"
                           size="icon"
                           className="text-gray-600 hover:bg-gray-200
+                          hover:text-gray-500
                 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 cursor-pointer"
                         >
                           <MoreHorizontal className="h-4 w-4" />

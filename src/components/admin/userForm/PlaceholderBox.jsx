@@ -2,9 +2,8 @@ import React from "react";
 
 const PlaceholderBox = ({ label, isCircle = false }) => (
   <div
-    className={`flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-400 dark:border-gray-500 text-gray-500 dark:text-gray-300 transition duration-300 p-2 text-center select-none ${
-      isCircle ? "w-24 h-24 rounded-full" : "w-full h-32 rounded-lg"
-    }`}
+    className={`flex flex-col items-center justify-center bg-gray-100 admin-dark:bg-gray-700 border-2 border-dashed border-gray-400 admin-dark:border-gray-500 text-gray-500 admin-dark:text-gray-300 transition duration-300 p-2 text-center select-none ${isCircle ? "w-24 h-24 rounded-full" : "w-full h-32 rounded-lg"
+      }`}
     style={{ minWidth: isCircle ? "6rem" : "auto" }}
   >
     {/* Icon (Camera/Image) */}

@@ -151,7 +151,7 @@ export default function ServiceSelectionForGroupServiceModal({
                 <div className="py-4 flex-1 overflow-y-auto pr-2">
                     <div className="mb-4 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                            <Badge variant="outline" className="bg-primary/10 admin-dark:text-primary border-primary/30">
                                 Đã chọn: {selectedServiceIds.length} dịch vụ
                             </Badge>
                         </div>
@@ -175,14 +175,14 @@ export default function ServiceSelectionForGroupServiceModal({
                                         className={cn(
                                             "p-4 border rounded-lg cursor-pointer transition-all duration-200 flex items-center gap-4",
                                             isSelected
-                                                ? "bg-primary/5 border-primary/40 ring-2 ring-primary/20"
-                                                : "bg-background hover:bg-gray-50 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50 border-border hover:border-primary/30"
+                                                ? "admin-dark:bg-primary/5 bg-gray-200 border-primary/40 ring-2 ring-primary/20"
+                                                : "bg-gray-200 hover:bg-gray-300 border-gray-300 admin-dark:border-gray-700 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700/50 hover:border-primary/30"
                                         )}
                                     >
                                         {isSelected ? (
-                                            <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0" />
+                                            <CheckCircle2 className="w-6 h-6 text-blue-700 admin-dark:text-primary flex-shrink-0" />
                                         ) : (
-                                            <Circle className="w-6 h-6 text-muted-foreground flex-shrink-0" />
+                                            <Circle className="w-6 h-6 text-gray-400 admin-dark:text-muted-foreground flex-shrink-0" />
                                         )}
                                         <div className="space-y-1 flex-1">
                                             <div className="font-medium">{service.translation?.ten_dich_vu}</div>

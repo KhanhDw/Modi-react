@@ -154,6 +154,7 @@ const MiniServiceManager = ({
                           setSelectedServiceMini(item);
                           setIsGroupServiceModalOpen(true);
                         }}
+                        className="cursor-pointer"
                       >
                         <Crosshair className="w-4 h-4" />
                       </Button>
@@ -163,6 +164,7 @@ const MiniServiceManager = ({
                         size="sm"
                         variant="outline"
                         onClick={() => setEditingItem(item.id)}
+                        className="cursor-pointer"
                       >
                         <Edit2 className="w-4 h-4" />
                       </Button>
@@ -171,6 +173,7 @@ const MiniServiceManager = ({
                         size="sm"
                         variant="outline"
                         onClick={() => triggerDeleteMiniService(item)}
+                        className="cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

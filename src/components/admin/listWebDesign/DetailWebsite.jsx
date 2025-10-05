@@ -30,6 +30,7 @@ export default function WebsiteTemplatesDetail() {
   const [isToggling, setIsToggling] = useState(false);
   const [localExportState, setLocalExportState] = useState(0);
 
+
   const fetchTemplate = async (id, lang) => {
     setLoading(true);
     try {
@@ -210,7 +211,7 @@ export default function WebsiteTemplatesDetail() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel
-                  onClick={() => navigate(0)}
+                  onClick={() => navigate(-1)}
                   className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100 cursor-pointer">
                   <span className="text-sm sm:text-base font-semibold text-white">Hủy</span>
                 </AlertDialogCancel>

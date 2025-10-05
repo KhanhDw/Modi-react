@@ -63,6 +63,7 @@ const SortableStageItem = ({
             theme="admin"
             size="sm"
             onClick={() => onUpdate(stage.id, stage)}
+            className="cursor-pointer shadow"
           >
             <Save className="w-4 h-4" />
           </Button>
@@ -71,6 +72,7 @@ const SortableStageItem = ({
             size="sm"
             variant="outline"
             onClick={onCancelEdit}
+            className="cursor-pointer"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -81,7 +83,7 @@ const SortableStageItem = ({
             <div
               {...attributes}
               {...listeners}
-              className="cursor-grab p-1 text-gray-400 hover:text-gray-800 admin-dark:text-gray-500 admin-dark:hover:text-gray-200"
+              className="cursor-grab focus:cursor-grabbing p-1 text-gray-400 hover:text-gray-800 admin-dark:text-gray-500 admin-dark:hover:text-gray-200"
             >
               <GripVertical className="w-5 h-5" />
             </div>
@@ -106,14 +108,15 @@ const SortableStageItem = ({
               size="icon"
               variant="ghost"
               onClick={() => onEdit(stage.id)}
+              className="cursor-pointer"
             >
-              <Edit2 className="w-4 h-4" />
+              <Edit2 className="w-4 h-4 text-gray-400" />
             </Button>
             <Button
               theme="admin"
               size="icon"
               variant="ghost"
-              className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400"
+              className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400 cursor-pointer"
               onClick={() => onDelete(stage)}
             >
               <Trash2 className="w-4 h-4" />

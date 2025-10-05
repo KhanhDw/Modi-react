@@ -179,7 +179,7 @@ const StageManager = ({
               theme="admin"
               variant="ghost"
               onClick={handleCancelOrder}
-              className="cursor-pointer"
+              className="cursor-pointer bg-gray-700"
             >
               <span className="text-sm sm:text-base font-semibold text-white">
                 Hủy sắp xếp
@@ -188,10 +188,10 @@ const StageManager = ({
             <Button
               theme="admin"
               onClick={handleSaveOrder}
-              className="cursor-pointer"
+              className="cursor-pointer shadow"
             >
               <Save className="w-4 h-4 mr-2" />
-              <span className="text-sm sm:text-base font-semibold text-white">
+              <span className="text-sm sm:text-base font-semibold text-gray-600">
                 Lưu thứ tự
               </span>
             </Button>

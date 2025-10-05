@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function DeleteDialog({ post, handleDeletePost }) {
+    const navigate = useNavigate();
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -34,7 +36,9 @@ export default function DeleteDialog({ post, handleDeletePost }) {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white cursor-pointer">
+                    <AlertDialogCancel
+                        onClick={() => navigate(0)}
+                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white cursor-pointer">
                         Hủy
                     </AlertDialogCancel>
                     <AlertDialogAction

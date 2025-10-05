@@ -30,7 +30,7 @@ export default function ChitietdichvuSection() {
     isOpen: false,
     title: "",
     message: "",
-    onConfirm: () => {},
+    onConfirm: () => { },
   });
   const [toastState, setToastState] = useState({
     isVisible: false,
@@ -167,26 +167,26 @@ export default function ChitietdichvuSection() {
 
       {isEditStage && (
         <StageManager
-            showToast={showToast}
-            triggerDelete={triggerDeleteStage}
-            stageMaster={stageMaster}
-            setStageMaster={setStageMaster}
-            fetchStages={fetchStages}
+          showToast={showToast}
+          triggerDelete={triggerDeleteStage}
+          stageMaster={stageMaster}
+          setStageMaster={setStageMaster}
+          fetchStages={fetchStages}
         />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ServiceManager
-            stageMaster={stageMaster}
-            currentStage={currentStage}
-            servicesStage={servicesStage}
-            setIsModalOpen={setIsModalOpen}
+          stageMaster={stageMaster}
+          currentStage={currentStage}
+          servicesStage={servicesStage}
+          setIsModalOpen={setIsModalOpen}
         />
         <MiniServiceManager
-            showToast={showToast}
-            triggerDelete={triggerDeleteMiniService}
-            setSelectedServiceMini={setSelectedServiceMini}
-            setIsGroupServiceModalOpen={setIsGroupServiceModalOpen}
+          showToast={showToast}
+          triggerDelete={triggerDeleteMiniService}
+          setSelectedServiceMini={setSelectedServiceMini}
+          setIsGroupServiceModalOpen={setIsGroupServiceModalOpen}
         />
       </div>
 

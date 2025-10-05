@@ -1,6 +1,6 @@
-import React from "react";
 import formatDateTime from "../../../utils/formatDate.jsx";
 import { VIETNAMESE_BANKS } from "@/components/feature/SelectBank.jsx";
+import React, { useRef, useEffect } from "react";
 
 const getBankName = (code) => {
   const bank = VIETNAMESE_BANKS.find((b) => b.code === code);
@@ -26,6 +26,22 @@ export default function UserDetailView({ user, onClose }) {
     created_at: "N/A",
     updated_at: "N/A",
   };
+
+  const modalRef = useRef();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose(); // Gọi hàm đóng khi click ngoài
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
 
   // Helper để hiển thị giá trị hoặc 'N/A'
   const displayValue = (value) => value || "N/A";
@@ -57,10 +73,10 @@ export default function UserDetailView({ user, onClose }) {
   // Component phụ trợ cho mỗi trường thông tin
   const DetailItem = ({ label, value, className = "" }) => (
     <div className={`space-y-1 ${className}`}>
-      <p className="text-sm font-medium text-gray-500 admin-dark:text-gray-400">
+      <p className="text-sm sm:text-base font-medium text-gray-500 admin-dark:text-gray-400">
         {label}
       </p>
-      <p className="text-base font-semibold text-gray-900 admin-dark:text-white break-words">
+      <p className="text-xs sm:text-base font-semibold text-gray-900 admin-dark:text-white break-words">
         {displayValue(value)}
       </p>
     </div>
@@ -69,7 +85,7 @@ export default function UserDetailView({ user, onClose }) {
   // Component phụ trợ cho hiển thị ảnh
   const ImagePreview = ({ label, url }) => (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-700 admin-dark:text-gray-300">
+      <p className="mb-2 md:mb-3 text-xs sm:text-base font-medium text-gray-700 admin-dark:text-gray-300">
         {label}
       </p>
       <div className="w-full h-32 bg-gray-100 admin-dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-300 admin-dark:border-gray-600 shadow-sm flex items-center justify-center">
@@ -94,20 +110,22 @@ export default function UserDetailView({ user, onClose }) {
   );
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
       <div
-        className="overflow-y-auto bg-white admin-dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] transition-all duration-300 transform scale-100"
+        ref={modalRef}
+        className="overflow-y-auto scrollbar-hide bg-white admin-dark:bg-gray-900 rounded-lg shadow-2xl w-full md:max-w-xl lg:max-w-2xl max-h-[90vh] transition-all duration-300 transform scale-100"
         data-lenis-prevent
       >
-        <div className="p-6">
-          <h3 className="text-2xl font-extrabold mb-6 text-center text-blue-600 admin-dark:text-blue-400 border-b pb-3">
+        <div className="p-2 sm:p-4 md:p-5">
+
+          <h3 className="text-xl lg:text-[22px] font-extrabold mb-6 text-center text-blue-600 admin-dark:text-blue-400 border-b border-gray-300 admin-dark:border-gray-700 pb-3">
             THÔNG TIN CHI TIẾT NGƯỜI DÙNG
           </h3>
 
           <div className="space-y-6">
             {/* --- AVATAR & BASIC INFO HEADER --- */}
-            <header className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 p-4 bg-blue-50 admin-dark:bg-gray-800 rounded-xl shadow-inner">
-              <div className="flex-shrink-0">
+            <header className="flex flex-col sm:flex-row items-center sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 p-3 bg-blue-50 admin-dark:bg-gray-800 rounded-lg shadow-inner">
+              <div className="flex-shrink-0 mx-5">
                 <img
                   src={getImageUrl(userData.avatar_url)}
                   alt="Avatar"
@@ -118,14 +136,14 @@ export default function UserDetailView({ user, onClose }) {
                   }}
                 />
               </div>
-              <div className="text-center sm:text-left">
-                <p className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+              <div className="text-center sm:text-left w-full">
+                <p className="text-base sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-white">
                   {displayValue(userData.full_name)}
                 </p>
-                <p className="text-lg text-blue-600 admin-dark:text-blue-300 mt-1">
+                <p className="text-sm sm:text-base md:text-lg font-semibold text-blue-600 admin-dark:text-blue-300 mt-1">
                   {getRoleLabel(userData.role)}
                 </p>
-                <p className="text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
+                <p className="text-xs sm:text-sm md:text-base font-semibold text-gray-600 admin-dark:text-gray-400 mt-1">
                   ID người dùng: {displayValue(userData.id)}
                 </p>
               </div>
@@ -134,9 +152,9 @@ export default function UserDetailView({ user, onClose }) {
             <hr className="border-gray-200 admin-dark:border-gray-700" />
 
             {/* --- SECTION 1: THÔNG TIN CÁ NHÂN & LIÊN LẠC --- */}
-            <section className="p-4 border border-gray-200 admin-dark:border-gray-700 rounded-xl">
-              <h4 className="text-xl font-semibold mb-4 pb-2 text-blue-600 admin-dark:text-blue-400">
-                1. Thông tin Cá nhân & Liên lạc
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg">
+              <h4 className="text-base sm:text-lg ScrollArea font-semibold mb-2 md:mb-3 text-blue-600 admin-dark:text-blue-400">
+                Thông tin Cá nhân & Liên lạc
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <DetailItem
@@ -159,9 +177,9 @@ export default function UserDetailView({ user, onClose }) {
             </section>
 
             {/* --- SECTION 2: THÔNG TIN ĐỊNH DANH (CCCD) --- */}
-            <section className="p-4 border border-gray-200 admin-dark:border-gray-700 rounded-xl bg-gray-50 admin-dark:bg-gray-800/50">
-              <h4 className="text-xl font-semibold mb-4 pb-2 text-green-600 admin-dark:text-green-400">
-                2. Thông tin Định danh (CCCD)
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg bg-gray-50 admin-dark:bg-gray-800/50">
+              <h4 className="text-base sm:text-lg ScrollArea font-semibold mb-2 md:mb-3 text-green-600 admin-dark:text-green-400">
+                Thông tin Định danh (CCCD)
               </h4>
               <div className="space-y-6">
                 <DetailItem
@@ -183,9 +201,9 @@ export default function UserDetailView({ user, onClose }) {
             </section>
 
             {/* --- SECTION 3: THÔNG TIN NGÂN HÀNG --- */}
-            <section className="p-4 border border-gray-200 admin-dark:border-gray-700 rounded-xl">
-              <h4 className="text-xl font-semibold mb-4 pb-2 text-purple-600 admin-dark:text-purple-400">
-                3. Thông tin Ngân hàng
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg">
+              <h4 className="text-base sm:text-lg ScrollArea font-semibold mb-2 md:mb-3 text-purple-600 admin-dark:text-purple-400">
+                Thông tin Ngân hàng
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <DetailItem
@@ -201,14 +219,14 @@ export default function UserDetailView({ user, onClose }) {
 
             {/* --- FOOTER/AUDIT INFO --- */}
             <footer className="pt-4 border-t border-gray-200 admin-dark:border-gray-700 text-sm text-gray-500 admin-dark:text-gray-400">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <p>
+              <div className="flex flex-col sm:flex-row sm:justify-between flex-wrap gap-2">
+                <p className="text-sm">
                   Tạo lúc:{" "}
                   <span className="font-medium text-gray-700 admin-dark:text-gray-300">
                     {formatDateTime(displayValue(userData.created_at))}
                   </span>
                 </p>
-                <p>
+                <p className="text-sm">
                   Cập nhật cuối:{" "}
                   <span className="font-medium text-gray-700 admin-dark:text-gray-300">
                     {formatDateTime(displayValue(userData.updated_at))}
@@ -223,9 +241,9 @@ export default function UserDetailView({ user, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-8 py-2 border border-gray-300 admin-dark:border-gray-700 rounded-xl cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 text-gray-800 admin-dark:text-gray-200 font-semibold transition duration-150 shadow-md"
+              className="px-8 py-2 border border-gray-300 admin-dark:border-gray-700 rounded-md cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 text-gray-800 admin-dark:text-gray-200 font-semibold transition duration-150 shadow-md"
             >
-              Đóng
+              <span className="text-sm sm:text-base font-semibold">Đóng</span>
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import PlaceholderBox from "./PlaceholderBox";
+import RoleDropdown from "./SelectRole"
 import InputField from "./InputField";
 import FileInput from "./FileInput";
 import BankDropdown from "@/components/feature/SelectBank.jsx";
@@ -28,6 +29,22 @@ export default function UserForm({ user, onClose, onSuccess }) {
   const [avatarFile, setAvatarFile] = useState(null);
   const [previewAvatar, setPreviewAvatar] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const modalRef = useRef();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose(); // Gọi hàm đóng khi click ngoài
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
 
   useEffect(() => {
     if (isEdit && user) {
@@ -77,9 +94,8 @@ export default function UserForm({ user, onClose, onSuccess }) {
       return url;
     }
     // Ngược lại, nối với base URL của backend
-    return `${import.meta.env.VITE_MAIN_BE_URL}${
-      url.startsWith("/") ? url : "/" + url
-    }`;
+    return `${import.meta.env.VITE_MAIN_BE_URL}${url.startsWith("/") ? url : "/" + url
+      }`;
   };
 
   // Helper to get preview URL for CCCD images (File object or URL string)
@@ -175,11 +191,12 @@ export default function UserForm({ user, onClose, onSuccess }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 ">
       <div
-        className="overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] lenis-local"
+        ref={modalRef}
+        className="overflow-y-auto scrollbar-hide bg-white admin-dark:bg-gray-900 rounded-lg shadow-2xl w-full md:max-w-2xl lg:max-w-3xl max-h-[90vh] transition-all duration-300 transform scale-100 lenis-local"
         data-lenis-prevent
       >
-        <div className="p-6">
-          <h3 className="text-xl font-bold mb-6 text-center text-gray-900 dark:text-white">
+        <div className="p-2 sm:p-4 md:p-5">
+          <h3 className="text-xl lg:text-[22px] font-extrabold mb-6 text-center text-gray-900 admin-dark:text-white">
             {isEdit ? "CẬP NHẬT TÀI KHOẢN" : "THÊM TÀI KHOẢN MỚI"}
           </h3>
 
@@ -188,9 +205,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
             className="space-y-6"
           >
             {/* --- SECTION 1: THÔNG TIN CÁ NHÂN --- */}
-            <section className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700/50">
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2 text-blue-600 dark:text-blue-400">
-                1. Thông tin Cá nhân & Liên lạc
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg">
+              <h4 className="text-base sm:text-lg font-semibold mb-4 border-b border-gray-300 admin-dark:border-gray-700 pb-2 text-blue-600 admin-dark:text-blue-400">
+                Thông tin Cá nhân & Liên lạc
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
@@ -207,10 +224,12 @@ export default function UserForm({ user, onClose, onSuccess }) {
                   label="Số điện thoại"
                   id="phone"
                   name="phone"
+                  maxLength={10}
                   value={form.phone}
                   onChange={handleChange}
                   placeholder="0901234567"
                   type="tel"
+                  required
                   autoComplete="off"
                 />
                 <InputField
@@ -228,9 +247,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </section>
 
             {/* --- SECTION 2: THÔNG TIN TÀI KHOẢN & MẬT KHẨU --- */}
-            <section className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2 text-blue-600 dark:text-blue-400">
-                2. Tài khoản & Phân quyền
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg">
+              <h4 className="text-base sm:text-lg font-semibold mb-4 border-b border-gray-300 admin-dark:border-gray-700 pb-2 text-blue-600 admin-dark:text-blue-400">
+                Tài khoản & Phân quyền
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Username & Role */}
@@ -244,25 +263,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
                   required
                   autoComplete="off"
                 />
-                <div className="flex flex-col space-y-1">
-                  <label
-                    htmlFor="role"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Vai trò (Role) <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    value={form.role}
-                    onChange={handleChange}
-                    className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
-                  >
-                    <option value="manager">Manager (Quản lý)</option>
-                    <option value="admin">Admin (Quản trị viên)</option>
-                    <option value="dev">Dev (Lập trình viên)</option>
-                  </select>
-                </div>
+
+                <RoleDropdown form={form} setForm={setForm} />
+
               </div>
 
               {/* Password Fields */}
@@ -296,13 +299,13 @@ export default function UserForm({ user, onClose, onSuccess }) {
               </div>
 
               {/* Avatar Section */}
-              <div className="flex xs:flex-col xl:flex-row mt-6 p-4 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800/50">
-                <div className="flex items-start flex-col space-y-3 ">
-                  <h5 className="font-medium mb-3 text-gray-900 dark:text-white">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center mt-6 p-4 border border-dashed border-gray-300 admin-dark:border-gray-600 rounded-lg bg-white admin-dark:bg-gray-800/50 w-full">
+                <div className="flex items-start flex-col space-y-3 w-full">
+                  <h5 className="font-medium text-sm sm:text-base mb-3 text-gray-900 admin-dark:text-white">
                     Ảnh đại diện (Avatar)
                   </h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                    <div className=" space-y-3">
+                  <div className="w-full flex flex-col">
+                    <div className="space-y-3 w-full">
                       <FileInput
                         label="Upload từ thiết bị"
                         id="avatar_file"
@@ -311,19 +314,19 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-center sm:justify-end xl:justify-center">
+                <div className="flex justify-center sm:justify-center xl:justify-center w-full">
                   {avatarFile ? (
                     <img
                       src={previewAvatar}
                       alt="Avatar Preview"
-                      className="w-24 h-24 object-cover rounded-full border-4 border-white dark:border-gray-600 shadow-xl transition-all duration-300 hover:scale-105"
+                      className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-white shadow-xl transition-all duration-300 hover:scale-105"
                       onError={(e) => setPreviewAvatar("")}
                     />
                   ) : form.avatar_url ? (
                     <img
                       src={getImageUrl(form.avatar_url)}
                       alt="Avatar Preview"
-                      className="w-24 h-24 object-cover rounded-full border-4 border-white dark:border-gray-600 shadow-xl transition-all duration-300 hover:scale-105"
+                      className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-gray-600 shadow-xl transition-all duration-300 hover:scale-105"
                       onError={(e) => (e.currentTarget.style.display = "none")}
                     />
                   ) : (
@@ -337,9 +340,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </section>
 
             {/* --- SECTION 3: THÔNG TIN ĐỊNH DANH (CCCD) --- */}
-            <section className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700/50">
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2 text-green-600 dark:text-green-400">
-                3. Thông tin Định danh (CCCD)
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg">
+              <h4 className="text-base sm:text-lg font-semibold mb-4 border-b border-gray-300 admin-dark:border-gray-700 admin-dark:border-hray pb-2 text-green-600 dark:text-green-400">
+                Thông tin Định danh (CCCD)
               </h4>
               <div className="grid grid-cols-1 gap-4">
                 <InputField
@@ -354,7 +357,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                   autoComplete="off"
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                <div className="flex flex-col md:flex-row justify-between gap-6 pt-2">
                   {/* CCCD Mặt trước */}
                   <div className="space-y-2">
                     <FileInput
@@ -370,7 +373,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                         <img
                           src={getCccdPreviewUrl(form.img_cccd_top)}
                           alt="CCCD Top Preview"
-                          className="w-full h-auto max-h-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600 shadow-md"
+                          className="w-full h-auto max-h-52 object-cover rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-md"
                           onError={(e) =>
                             (e.currentTarget.style.display = "none")
                           }
@@ -396,7 +399,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                         <img
                           src={getCccdPreviewUrl(form.img_cccd_bottom)}
                           alt="CCCD Bottom Preview"
-                          className="w-full h-auto max-h-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600 shadow-md"
+                          className="w-full h-auto max-h-52 object-cover rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-md"
                           onError={(e) =>
                             (e.currentTarget.style.display = "none")
                           }
@@ -411,9 +414,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </section>
 
             {/* --- SECTION 4: THÔNG TIN NGÂN HÀNG --- */}
-            <section className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2 text-purple-600 dark:text-purple-400">
-                4. Thông tin Ngân hàng
+            <section className="p-3 border border-gray-200 admin-dark:border-gray-700 rounded-lg">
+              <h4 className="text-base sm:text-lg font-semibold mb-4 border-b border-gray-300 admin-dark:border-gray-700 pb-2 text-purple-600 admin-dark:text-purple-400">
+                Thông tin Ngân hàng
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
@@ -427,10 +430,10 @@ export default function UserForm({ user, onClose, onSuccess }) {
                   className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   autoComplete="off"
                 />
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-2">
                   <label
                     htmlFor="name_bank"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="text-sm sm:text-base font-medium text-gray-700 admin-dark:text-gray-300"
                   >
                     Chọn ngân hàng <span className="text-red-500">*</span>
                   </label>
@@ -443,18 +446,18 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </section>
 
             {/* --- ACTION BUTTONS --- */}
-            <div className="flex justify-center gap-4 pt-4 sticky bottom-0 bg-white dark:bg-gray-800 p-4 rounded-b-2xl border-t border-gray-200 dark:border-gray-700">
+            <div className="flex justify-center gap-4 p-4 sticky bottom-0 left-0 right-0 bg-white admin-dark:bg-gray-900 border-t border-gray-200 admin-dark:border-gray-700">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2 border border-gray-300 dark:border-gray-700 rounded-xl cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold transition duration-150 shadow-md"
+                className="px-6 py-2 border border-gray-300 admin-dark:border-gray-700 rounded-md cursor-pointer bg-gray-200 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 text-gray-800 admin-dark:text-gray-200 font-semibold transition duration-150 shadow-md"
                 disabled={isLoading}
               >
-                Hủy
+                <span className="text-sm sm:text-base font-semibold">Hủy</span>
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition duration-150 shadow-lg shadow-blue-500/50 flex items-center justify-center disabled:opacity-50"
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-semibold transition duration-150 shadow-lg shadow-blue-500/50 flex items-center justify-center disabled:opacity-50 cursor-pointer"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -479,7 +482,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     ></path>
                   </svg>
                 ) : (
-                  <span>{isEdit ? "CẬP NHẬT TÀI KHOẢN" : "THÊM MỚI"}</span>
+                  <span className="text-sm sm:text-base font-semibold">{isEdit ? "CẬP NHẬT TÀI KHOẢN" : "THÊM MỚI"}</span>
                 )}
               </button>
             </div>

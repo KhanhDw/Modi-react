@@ -1,13 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-
+import { useEffect, useRef } from "react";
 
 // form xác nhận xóa
 export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDelete }) {
+
+    const dialogRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dialogRef.current && !dialogRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        }
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open, setOpen]);
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="w-75 sm:w-100 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
+            <DialogContent
+                ref={dialogRef}
+                className="w-75 sm:w-100 bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 shadow-lg">
                 <DialogHeader>
                     <DialogTitle className="text-gray-900 font-semibold admin-dark:text-gray-100 text-base sm:text-lg text-center">
                         Xác nhận xóa
