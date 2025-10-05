@@ -79,7 +79,7 @@ export default function PageList({ data, pageSize = 6, onPageChange, onPageNumbe
 
 
     return (
-        <div className="w-full p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="w-full p-3 flex flex-col justify-between items-center sm:flex-row md:items-center md:justify-between gap-3">
             {/* Thông tin hiển thị */}
             <div className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
                 Hiển thị{" "}

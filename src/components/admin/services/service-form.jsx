@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useLenisLocal from "@/hook/useLenisLocal";
@@ -89,21 +86,21 @@ export default function ServiceForm() {
   };
 
   return (
-    <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
-      <div className="max-h-screen overflow-y-auto admin-dark:bg-gray-800 rounded-xl">
-        <Card Card className="bg-white admin-dark:bg-gray-800 w-full mx-auto" >
-          <CardHeader className="relative">
-            <CardTitle className="flex gap-2 items-center admin-dark:text-gray-100">
+    <div className="max-h-screen overflow-y-auto rounded">
+      <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
+        <Card Card className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto" >
+          <div className="relative px-2 sm:px-4">
+            <div className="flex gap-2 text-base sm:text-lg md:text-lg font-semibold items-center text-gray-800 admin-dark:text-gray-100">
               <Target className="h-5 w-5" />
               {editingService ? "Chỉnh sửa dịch vụ" : "Tạo dịch vụ mới"}
-            </CardTitle>
-            <CardDescription className="text-black/50 admin-dark:text-gray-100">
+            </div>
+            <span className="text-black/50 text-sm sm:text-base admin-dark:text-gray-100">
               {editingService
                 ? "Cập nhật thông tin dịch vụ"
                 : "Điền thông tin để tạo dịch vụ mới"}
-            </CardDescription>
+            </span>
 
-            <div className="absolute right-0 top-0 text-black mr-4 rounded-4xl cursor-pointer hover:scale-110">
+            <div className="absolute px-2 sm:px-4 right-0 top-0 text-black rounded-md cursor-pointer hover:scale-110">
               <Button
                 onClick={handleChangeLang}
                 className="flex flex-row gap-2 cursor-pointer bg-green-500/90 hover:bg-green-600/90"
@@ -116,8 +113,8 @@ export default function ServiceForm() {
                 )}
               </Button>
             </div>
+          </div>
 
-          </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <ServiceDetailsForm
@@ -127,23 +124,23 @@ export default function ServiceForm() {
                 editingService={editingService}
               />
 
-              <div className="flex gap-3 pt-4 border-t">
-                <Button type="submit" className="flex-1 hover:bg-gray-500/25 cursor-pointer">
-                  {editingService ? "Cập nhật dịch vụ" : "Tạo dịch vụ"}
+              <div className="flex flex-wrap flex-row items-center justify-center gap-5 pt-2 w-full">
+                <Button type="submit" className="w-fit md:w-50 text-white bg-blue-500 hover:bg-blue-600 cursor-pointer">
+                  <span className="text-sm sm:text-base font-semibold">{editingService ? "Cập nhật dịch vụ" : "Tạo dịch vụ"}</span>
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleClose}
-                  className="flex-1 cursor-pointer"
+                  className="w-fit md:w-50 cursor-pointer bg-black admin-dark:hover:bg-black/70"
                 >
-                  Thoát
+                  <span className="text-sm sm:text-base font-semibold">Thoát</span>
                 </Button>
               </div>
             </form>
           </CardContent>
         </Card>
-      </div >
-    </ScrollArea>
+      </ScrollArea>
+    </div >
   );
 }

@@ -18,8 +18,8 @@ export default function DialogShowForm_Service() {
     >
       <DialogOverlay className="fixed inset-0 bg-black/50 z-50" />
       <DialogContent showCloseButton={false}
-        className={`${typeForm === "service" ? "min-w-[70vw]" : ""
-          } min-h-[60vh] p-0 m-0 text-black shadow-2xl rounded-xl max-w-2xl w-full`}
+        className={`${typeForm === "service" ? "min-w-[55vw] bg-transparent rounded-md border-none" : ""
+          } min-h-[60vh] p-0 m-0 max-w-xl w-full bg-transparent rounded-md border-none`}
       >
         {typeForm === "service" ? (
           <ServiceForm />

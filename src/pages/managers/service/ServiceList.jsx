@@ -19,19 +19,22 @@ export default function ServiceList() {
           </p>
         </div>
         <Button
-          className="admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 hover:bg-gray-300 text-xs xs:text-sm px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 w-full xs:w-auto cursor-pointer"
+          className="admin-dark:bg-blue-500 shadow admin-dark:hover:bg-blue-600 text-white bg-blue-500 hover:bg-blue-600 px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 w-full xs:w-auto cursor-pointer"
           onClick={() => {
             handleOpen("service");
           }}
         >
-          <Plus className="h-3.5 w-3.5 xs:h-4 xs:w-4 sm:h-5 sm:w-5 mr-1 xs:mr-1.5 sm:mr-2" />
-          Tạo dịch vụ mới
+          <Plus className="h-3.5 w-3.5 xs:h-4 xs:w-4 sm:h-5 sm:w-5" />
+          <span className="text-xs xs:text-sm font-semibold">Tạo dịch vụ mới</span>
         </Button>
       </div>
+
       <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 admin-dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
         <ServiceTable />
       </div>
+
       <DialogShowForm_Service />
+
       <Outlet />
     </div>
   );

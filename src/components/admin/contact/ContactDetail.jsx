@@ -1,43 +1,85 @@
 
-import Modal from "../common/Modal"
+import Modal from "../common/Modal";
 
 export default function ContactDetail({ contact, isOpen, onClose, onStatusChange }) {
   if (!contact) return null
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Chi tiết liên hệ">
-      <div className="space-y-4">
+      <div className="space-y-2 sm:text-base">
+        {/* Họ tên */}
         <div>
-          <label className="block text-sm font-medium text-black admin-dark:text-gray-100">Họ tên</label>
-          <p className="text-black">{contact.ho_ten}</p>
+          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+            Họ tên
+          </label>
+          <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
+            {contact.ho_ten}
+          </p>
         </div>
+
+        {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-black">Email</label>
-          <p className="text-black">{contact.email}</p>
+          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+            Email
+          </label>
+          <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
+            {contact.email}
+          </p>
         </div>
+
+        {/* Số điện thoại */}
         <div>
-          <label className="block text-sm font-medium text-black">Số điện thoại</label>
-          <p className="text-black">{contact.so_dien_thoai}</p>
+          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+            Số điện thoại
+          </label>
+          <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
+            {contact.so_dien_thoai}
+          </p>
         </div>
+
+        {/* Nội dung */}
         <div>
-          <label className="block text-sm font-medium text-black">Nội dung</label>
-          <p className="text-black rounded">{contact.noi_dung}</p>
+          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+            Nội dung
+          </label>
+          <textarea
+            readOnly
+            rows={3}
+            className="w-full shadow px-3 py-2 rounded-md bg-gray-100 text-gray-900
+      admin-dark:bg-gray-700 admin-dark:text-gray-200
+      focus:outline-none
+      whitespace-pre-line resize-none"
+            value={contact.noi_dung}
+          />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-black">Ngày gửi</label>
-          <p className="text-black">{contact.ngay_gui}</p>
+
+        <div className="flex flex-wrap items-center gap-2 sm:gap-5 justify-start">
+          {/* Ngày gửi */}
+          <div>
+            <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+              Ngày gửi
+            </label>
+            <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
+              {contact.ngay_gui}
+            </p>
+          </div>
+
+          {/* Trạng thái */}
+          <div>
+            <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+              Trạng thái
+            </label>
+            <select
+              value={contact.trang_thai}
+              onChange={(e) => onStatusChange(contact.id, e.target.value)}
+              className="w-full shadow px-3 py-2 border border-gray-300 admin-dark:border-gray-600 rounded-md bg-gray-100 admin-dark:bg-gray-700 text-gray-800 admin-dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-colors"
+            >
+              <option value="Chưa phản hồi">Chưa phản hồi</option>
+              <option value="Đã phản hồi">Đã phản hồi</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-black">Trạng thái</label>
-          <select
-            value={contact.trang_thai}
-            onChange={(e) => onStatusChange(contact.id, e.target.value)}
-            className="mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black cursor-pointer"
-          >
-            <option value="Chưa phản hồi">Chưa phản hồi</option>
-            <option value="Đã phản hồi">Đã phản hồi</option>
-          </select>
-        </div>
+
       </div>
     </Modal>
 

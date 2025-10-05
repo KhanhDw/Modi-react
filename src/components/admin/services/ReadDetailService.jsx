@@ -1,10 +1,10 @@
-import { useParams, useOutletContext, useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Globe, CheckCircle, XCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import React, { useState, useEffect } from "react";
+import { CheckCircle, DollarSign, Globe, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 export default function ReaderDetailService() {
     const { slug } = useParams();
@@ -73,18 +73,18 @@ export default function ReaderDetailService() {
         : `${import.meta.env.VITE_MAIN_BE_URL}${service.image_url}`;
 
     return (
-        <div className="container mx-auto py-8 w-full">
+        <div className="container mx-auto py-6 w-full">
             {/* Header */}
             <div className="w-full flex justify-between items-center mb-6">
                 <div className="w-full flex items-center gap-2 justify-between">
                     <Button
                         variant="outline"
                         onClick={() => navigate(-1)}
-                        className="text-gray-600 hover:text-gray-900 admin-dark:text-gray-300 admin-dark:hover:text-white transition-colors"
+                        className="flex items-center text-white hover:text-gray-200  admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:text-gray-300 admin-dark:hover:text-white transition-colors cursor-pointer"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 mr-2"
+                            className="h-4 w-4"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                         >
@@ -94,10 +94,10 @@ export default function ReaderDetailService() {
                                 clipRule="evenodd"
                             />
                         </svg>
-                        Quay lại danh sách
+                        <span className="text-xs sm:text-sm font-semibold">Quay lại</span>
                     </Button>
 
-                    <div className="flex items-center justify-between gap-5 font-semibold text-gray-800 admin-dark:text-gray-200">
+                    <div className="flex items-center justify-between gap-5 font-semibold text-gray-800 admin-dark:text-gray-200 bg-gray-200 admin-dark:bg-gray-800 px-3 py-1.5 rounded-full">
                         {isEnglish ? "Tiếng Anh" : "Tiếng Việt"}
                         <Switch
                             onClick={toggleLanguage}
@@ -124,26 +124,27 @@ export default function ReaderDetailService() {
 
             {/* Nội dung */}
             {!loading && !error && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start animate-fade-in-up">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start animate-fade-in-up">
                     {/* Cột trái: Hình ảnh */}
                     {service.image_url && (
-                        <div className="relative overflow-hidden rounded-3xl shadow-2xl group transition-transform duration-500">
+                        <div className="relative overflow-hidden rounded-md shadow-2xl group transition-transform duration-500">
                             <div
                                 className="w-full h-[400px] md:h-[600px] bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                 style={{ backgroundImage: `url('${imageUrl}')` }}
-                            ></div>
+                            >
+                            </div>
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute bottom-6 left-6 text-white z-10">
-                                <h1 className="text-4xl font-extrabold tracking-tight drop-shadow-lg">
+                            <div className="absolute bottom-6 text-center text-white z-10 p-2 w-full">
+                                <h1 className="text-base sm:text-lg md:text-xl font-bold tracking-tight drop-shadow-lg">
                                     {service.translation?.ten_dich_vu || "Chưa có tên"}
                                 </h1>
-                                <div className="flex flex-wrap gap-2 mt-2">
+                                <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
                                     {service.totalLanguages?.map((lang, index) => (
                                         <Badge
                                             key={index}
                                             className={`flex items-center gap-1 font-semibold ${lang === "vi"
-                                                ? "bg-red-500 hover:bg-red-600"
-                                                : "bg-blue-500 hover:bg-blue-600"
+                                                ? "bg-red-500 hover:bg-red-600 text-white"
+                                                : "bg-blue-500 hover:bg-blue-600 text-white"
                                                 } transition-colors`}
                                         >
                                             <Globe size={14} />
@@ -152,8 +153,8 @@ export default function ReaderDetailService() {
                                     ))}
                                     <Badge
                                         className={`flex items-center gap-1 font-semibold ${service.status === "Active"
-                                            ? "bg-green-500 hover:bg-green-600"
-                                            : "bg-gray-500 hover:bg-gray-600"
+                                            ? "bg-green-500 hover:bg-green-600 text-white"
+                                            : "bg-gray-500 hover:bg-gray-600 text-white"
                                             } transition-colors`}
                                     >
                                         {service.status === "Active" ? (
@@ -173,18 +174,18 @@ export default function ReaderDetailService() {
 
                     {/* Cột phải: Thông tin chi tiết */}
                     <div className="space-y-8 animate-fade-in-up delay-200">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-6">
                             {/* Giá */}
                             <Card className="rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.03] admin-dark:bg-gray-800">
-                                <CardContent className="flex items-center gap-4 p-5">
+                                <CardContent className="flex items-center gap-4 p-3">
                                     <DollarSign className="text-green-500 flex-shrink-0 w-8 h-8" />
                                     <div>
-                                        <p className="text-sm font-medium text-gray-500 admin-dark:text-gray-400">
+                                        <p className="text-sm font-medium text-gray-400 admin-dark:text-gray-400">
                                             Giá khởi điểm
                                         </p>
-                                        <p className="text-xl font-bold text-green-600 admin-dark:text-green-400">
+                                        <p className="text-xl font-bold text-green-500 admin-dark:text-green-400">
                                             {service.floor_price
-                                                ? `₫${Number(service.floor_price).toLocaleString()}`
+                                                ? `${Number(service.floor_price).toLocaleString()} ₫`
                                                 : "Chưa có"}
                                         </p>
                                     </div>
@@ -193,7 +194,7 @@ export default function ReaderDetailService() {
 
                             {/* Lượt đặt */}
                             <Card className="rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.03] admin-dark:bg-gray-800">
-                                <CardContent className="flex items-center gap-4 p-5">
+                                <CardContent className="flex items-center gap-4 p-3">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         className="h-8 w-8 text-blue-500 flex-shrink-0"
@@ -206,10 +207,10 @@ export default function ReaderDetailService() {
                                         <circle cx="12" cy="7" r="4"></circle>
                                     </svg>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-500 admin-dark:text-gray-400">
+                                        <p className="text-sm font-medium text-gray-400 admin-dark:text-gray-400">
                                             Số lần đặt
                                         </p>
-                                        <p className="text-xl font-bold text-gray-900 admin-dark:text-white ">
+                                        <p className="text-xl font-bold text-gray-200 admin-dark:text-white ">
                                             {service.booking_count || 0}
                                         </p>
                                     </div>
@@ -218,29 +219,29 @@ export default function ReaderDetailService() {
                         </div>
 
                         {/* Mô tả */}
-                        <div className="space-y-4 pt-4 border-t border-gray-200 admin-dark:border-gray-700">
-                            <h3 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+                        <div className="space-y-1 pt-4 border-t border-gray-200 admin-dark:border-gray-700">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 admin-dark:text-white">
                                 Mô tả dịch vụ
                             </h3>
-                            <p className="leading-relaxed text-gray-700 admin-dark:text-gray-300">
+                            <p className="leading-relaxed text-sm sm:text-base text-gray-700 admin-dark:text-gray-300">
                                 {service.translation?.mo_ta || "Chưa có mô tả chi tiết."}
                             </p>
                         </div>
 
                         {/* Features */}
                         {features.length > 0 && (
-                            <div className="space-y-4 pt-4 border-t border-gray-200 admin-dark:border-gray-700">
-                                <h3 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+                            <div className="space-y-1 pt-4 border-t border-gray-200 admin-dark:border-gray-700">
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-900 admin-dark:text-white">
                                     Điểm nổi bật
                                 </h3>
-                                <ul className="list-none space-y-3">
+                                <ul className="list-none space-y-2">
                                     {features.map((f, i) => (
                                         <li key={i} className="flex items-start gap-3">
                                             <CheckCircle
                                                 size={20}
                                                 className="text-green-500 flex-shrink-0 mt-1"
                                             />
-                                            <p className="text-gray-700 admin-dark:text-gray-300">{f}</p>
+                                            <p className="text-gray-700 admin-dark:text-gray-300 text-sm sm:text-base">{f}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -249,13 +250,13 @@ export default function ReaderDetailService() {
 
                         {/* Details */}
                         {details.length > 0 && (
-                            <div className="space-y-4 pt-4 border-t border-gray-200 admin-dark:border-gray-700">
-                                <h3 className="text-2xl font-bold text-gray-900 admin-dark:text-white">
+                            <div className="space-y-1 pt-4 border-t border-gray-200 admin-dark:border-gray-700">
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-900 admin-dark:text-white">
                                     Chi tiết dịch vụ
                                 </h3>
-                                <div className="space-y-4 text-gray-700 admin-dark:text-gray-300">
+                                <div className="space-y-2 text-gray-700 admin-dark:text-gray-300">
                                     {details.map((d, i) => (
-                                        <p key={i} className="leading-relaxed">
+                                        <p key={i} className="leading-relaxed text-sm sm:text-base">
                                             {d}
                                         </p>
                                     ))}

@@ -235,22 +235,20 @@ export default function ContactPage() {
     setSearchTerm("");
   };
 
-
-
   return (
     <div className="admin-dark:bg-gray-900 bg-white min-h-screen">
-      <div className="mx-auto max-w-[100%] px-2 sm:px-4 md:px-6">
-        <div className="flex xs:flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-4">
-          <h1 className="text-lg sm:text-xl font-bold admin-dark:text-gray-100 text-gray-900">
+      <div className="mx-auto max-w-[100%]">
+        <div className="flex xs:flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-4 w-full">
+          <h1 className="text-lg sm:text-xl text-center font-bold admin-dark:text-gray-100 text-gray-900">
             Quản lý liên hệ
           </h1>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+          <div className="flex flex-col flex-wrap justify-between sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
             <input autoComplete="off"
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm theo tên, số điện thoại, email..."
-              className="px-3 sm:px-1 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-60 focus:border-none"
+              className="px-3 sm:px-1 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-65 md:w-70 focus:border-none"
             />
             <select
               value={dateFilter}
@@ -368,7 +366,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="admin-dark:bg-gray-800 bg-white shadow-sm rounded-lg border admin-dark:border-gray-700 border-gray-200 overflow-hidden">
+        <div className="admin-dark:bg-gray-800 bg-white shadow-sm rounded-lg border admin-dark:border-gray-700 border-gray-200 overflow-hidden w-full">
           <div className="overflow-hidden">
             <Table
               columns={columns}
@@ -377,6 +375,9 @@ export default function ContactPage() {
               onDelete={handleDelete}
             />
           </div>
+
+        </div>
+        <div className="w-full">
           <PageList
             data={filteredContacts}
             pageSize={itemsPerPage}
@@ -389,7 +390,6 @@ export default function ContactPage() {
             onPageNumberChange={(pageNum) => setCurrentPage(pageNum)}
           />
         </div>
-
         <ContactDetail
           contact={showDetail}
           isOpen={!!showDetail}

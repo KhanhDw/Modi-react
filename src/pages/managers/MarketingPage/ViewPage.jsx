@@ -152,7 +152,7 @@ export default function ViewPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen admin-dark:bg-gray-900">
-                <div className="text-xl font-semibold text-gray-700 admin-dark:text-gray-300">Đang tải bài viết...</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-700 admin-dark:text-gray-300">Đang tải bài viết...</div>
             </div>
         );
     }
@@ -189,7 +189,7 @@ export default function ViewPage() {
     const createdAt = post.created_at ? format(new Date(post.created_at), "PPP", { locale: vi }) : "N/A";
 
     return (
-        <div className="relative transition-all duration-300 min-h-screen">
+        <div className="relative transition-all admin-dark:bg-gray-800 px-4 py-2 rounded-lg duration-300 min-h-screen">
 
             {/* Top bar: Nút trở về và chọn ngôn ngữ */}
             <div className="flex justify-between items-center">
