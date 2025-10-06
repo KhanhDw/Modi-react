@@ -48,21 +48,47 @@ export default function RenderHomeConfig({
   };
 
   const FetchPositionComponentHome = async () => {
+    const sectionsUrl = `${
+      import.meta.env.VITE_MAIN_BE_URL
+    }/api/sections?slug=home`;
+    const statusPositionUrl = `${
+      import.meta.env.VITE_MAIN_BE_URL
+    }/api/status-position-home-page`;
+
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/sections?slug=home`
-      );
-      if (!res.ok) {
-        throw new Error(`Lỗi HTTP: ${res.status}`);
+      const [resSections, resStatusPosition] = await Promise.all([
+        fetch(sectionsUrl),
+        fetch(statusPositionUrl),
+      ]);
+
+      if (!resSections.ok) {
+        throw new Error(`Lỗi HTTP: ${resSections.status}`);
       }
-      const data = await res.json();
+      if (!resStatusPosition.ok) {
+        throw new Error(`Lỗi HTTP: ${resStatusPosition.status}`);
+      }
+      const data = await resSections.json();
+      const statusPosition = await resStatusPosition.json();
       // Kiểm tra dữ liệu hợp lệ
       if (!data.data || !Array.isArray(data.data)) {
         throw new Error("Dữ liệu không đúng định dạng hoặc rỗng");
       }
       const clonedData = JSON.parse(JSON.stringify(data.data));
-      setVitri(clonedData);
-      setDefaultVitri(clonedData);
+      const clonedDataSatusPosition = JSON.parse(
+        JSON.stringify(statusPosition.data)
+      );
+
+      const dataComplete = clonedData.map((section) => {
+        const toggle = clonedDataSatusPosition.find(
+          (t) => t.sections_type === section.type
+        );
+        return {
+          ...section,
+          status: toggle ? toggle.status : null, // nếu không có thì để null
+        };
+      });
+      setVitri(dataComplete);
+      setDefaultVitri(dataComplete);
     } catch (err) {
       console.error("Fetch vitri error:", err);
       setError(err.message);
@@ -70,6 +96,8 @@ export default function RenderHomeConfig({
       setLoading(false);
     }
   };
+
+  const normalizeVitri = (arr) => arr.map(({ status, ...rest }) => rest);
 
   const isVitriSameAsDefault = (vitri) => {
     if (!vitri || vitri.length !== positionsDefault.length) return false;
@@ -138,7 +166,6 @@ export default function RenderHomeConfig({
       if (!res.ok) throw new Error("Lỗi khi gọi API");
 
       const data = await res.json();
-      console.log(data.message);
       setToast({ message: "Lưu vị trí thành công", type: "success" });
       await FetchPositionComponentHome();
       isVitriSameAsDefault(defaultVitri);
@@ -206,12 +233,17 @@ export default function RenderHomeConfig({
                   <button
                     onClick={() => setVitri(defaultVitri)} // khôi phục lại vitri gốc từ DB
                     disabled={
-                      JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                      JSON.stringify(normalizeVitri(vitri)) ===
+                      JSON.stringify(normalizeVitri(defaultVitri))
                     }
                     className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${
-                                          JSON.stringify(vitri) ===
-                                          JSON.stringify(defaultVitri)
+                                          JSON.stringify(
+                                            normalizeVitri(vitri)
+                                          ) ===
+                                          JSON.stringify(
+                                            normalizeVitri(defaultVitri)
+                                          )
                                             ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
                                             : "bg-blue-500 hover:bg-blue-700 text-white"
                                         }`}
@@ -240,12 +272,17 @@ export default function RenderHomeConfig({
                   <button
                     onClick={() => savePositions(vitri)}
                     disabled={
-                      JSON.stringify(vitri) === JSON.stringify(defaultVitri)
+                      JSON.stringify(normalizeVitri(vitri)) ===
+                      JSON.stringify(normalizeVitri(defaultVitri))
                     }
                     className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
                                         ${
-                                          JSON.stringify(vitri) ===
-                                          JSON.stringify(defaultVitri)
+                                          JSON.stringify(
+                                            normalizeVitri(vitri)
+                                          ) ===
+                                          JSON.stringify(
+                                            normalizeVitri(defaultVitri)
+                                          )
                                             ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
                                             : "bg-green-500 hover:bg-green-700 text-white"
                                         }`}
