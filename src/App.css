@@ -1,135 +1,135 @@
 /* Áp dụng chung */
 .scrollbar-hide {
-    -ms-overflow-style: none; /* IE và Edge */
-    scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE và Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .scroll-container {
-    touch-action: pan-y;
+  touch-action: pan-y;
 }
 
 /* Light mode */
 .scroll-container::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 .scroll-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
-    border-radius: 4px;
-    cursor: pointer;
+  background: #cbd5e0;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
+  background: #a0aec0;
 }
 
 /* Dark mode */
 .dark .scroll-container::-webkit-scrollbar-track {
-    background: #1f2937;
-    /* bg-gray-800 */
+  background: #1f2937;
+  /* bg-gray-800 */
 }
 
 .dark .scroll-container::-webkit-scrollbar-thumb {
-    background: #4b5563;
-    /* gray-600 */
+  background: #4b5563;
+  /* gray-600 */
 }
 
 .dark .scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-    /* gray-500 */
+  background: #6b7280;
+  /* gray-500 */
 }
 
 /* Admin-dark mode */
 .admin-dark .scroll-container::-webkit-scrollbar-track {
-    background: #1f2937;
-    /* bg-gray-800 */
+  background: #1f2937;
+  /* bg-gray-800 */
 }
 
 .admin-dark .scroll-container::-webkit-scrollbar-thumb {
-    background: #4b5563;
-    /* gray-600 */
+  background: #4b5563;
+  /* gray-600 */
 }
 
 .admin-dark .scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-    /* gray-500 */
+  background: #6b7280;
+  /* gray-500 */
 }
 
 .lenis-local {
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    touch-action: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: auto;
 }
 
 html.lenis,
 html.lenis body {
-    height: auto;
-    /* Ngăn chặn chặn cuộn */
-    overflow: auto;
+  height: auto;
+  /* Ngăn chặn chặn cuộn */
+  overflow: auto;
 }
 
 /* Optional: Animation keyframes for dropdown */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .animate-in.fade-in-0.zoom-in-95 {
-    animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 [contenteditable="true"] {
-    -webkit-user-modify: read-write;
-    -webkit-text-size-adjust: none;
-    spellcheck: false;
+  -webkit-user-modify: read-write;
+  -webkit-text-size-adjust: none;
+  spellcheck: false;
 }
 
 /* Áp dụng cho Chrome / Safari */
 input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px #f3f4f6 inset !important; /* bg-gray-100 */
-    -webkit-text-fill-color: #1f2937 !important; /* text-gray-700 */
-    transition: background-color 5000s ease-in-out 0s; /* tránh bị nhấp nháy */
+  -webkit-box-shadow: 0 0 0px 1000px #f3f4f6 inset !important; /* bg-gray-100 */
+  -webkit-text-fill-color: #1f2937 !important; /* text-gray-700 */
+  transition: background-color 5000s ease-in-out 0s; /* tránh bị nhấp nháy */
 }
 
 /* Dark mode */
 .admin-dark input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; /* bg-gray-700 */
-    -webkit-text-fill-color: #f3f4f6 !important; /* text-gray-100 */
+  -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; /* bg-gray-700 */
+  -webkit-text-fill-color: #f3f4f6 !important; /* text-gray-100 */
 }
 
 .preview-html p,
 .preview-html div {
-    display: inline; /* ép p/div thành inline text */
-    margin: 0;
+  display: inline; /* ép p/div thành inline text */
+  margin: 0;
 }
 
 .preview-html img {
-    display: none; /* ẩn ảnh trong đoạn preview */
+  display: none; /* ẩn ảnh trong đoạn preview */
 }
 
 /* căn giữa cho ảnh trong blog */
 .custom-image {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    height: auto;
-    border-radius: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
 }

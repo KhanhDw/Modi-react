@@ -4,6 +4,7 @@ import { ServiceAPI } from "@/api/serviceAPI";
 import { BarChart3, ShoppingCart, Target, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import ServiceNav from "@/pages/managers/service/headerService.jsx";
 
 export default function ServicesPage() {
   // Common part
@@ -45,7 +46,6 @@ export default function ServicesPage() {
       const res = await fetch(ServiceAPI.getALL());
       const data = await res.json();
       setServices(Array.isArray(data.data) ? data.data : []);
-      console.log(data.data);
     } catch (err) {
       console.error("Lỗi khi lấy dữ liệu:", err);
     } finally {
@@ -402,58 +402,7 @@ export default function ServicesPage() {
       <div className="container mx-auto md:px-2 lg:px-2">
         <div className="flex w-full flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
           <nav className="w-full flex flex-col sm:flex-row sm:flex-wrap sm:max-w-auto gap-2 sm:gap-3">
-            <NavLink
-              to="service_overview"
-              className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive || location.pathname === "/managers/services"
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
-                }`
-              }
-            >
-              <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-              Tổng quan
-            </NavLink>
-            <NavLink
-              to="service_list"
-              className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium text-center ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
-                }`
-              }
-            >
-              <Target className="h-4 w-4 sm:h-5 sm:w-5" />
-              Danh sách dịch vụ
-            </NavLink>
-            <NavLink
-              to="service_booking"
-              className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
-                }`
-              }
-            >
-              <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
-              Danh sách đơn đặt hàng
-            </NavLink>
-            <NavLink
-              to="service_customer"
-              className={({ isActive }) =>
-                `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
-                  isActive
-                    ? "bg-muted admin-dark:bg-gray-700 text-white"
-                    : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
-                }`
-              }
-            >
-              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-              Danh sách khách hàng
-            </NavLink>
+            <ServiceNav />
           </nav>
         </div>
         {content}

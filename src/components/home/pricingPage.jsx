@@ -1,11 +1,10 @@
 import React from "react";
-import PricingPageV1 from "./pricingPageV1";
 import PricingPageV2 from "./pricingPageV2";
 
 export default function PricingPage() {
-    return <>
-        {/* <PricingPageV1 /> */}
-        <PricingPageV2 />
-    </>;
-
+  return (
+    <>
+      <PricingPageV2 />
+    </>
+  );
 }

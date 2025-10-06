@@ -2,7 +2,14 @@ import { Link } from "react-router-dom";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 
-function NavDropdown({ to, label, isHover, setIsHover, children, isActive = false }) {
+function NavDropdown({
+  to,
+  label,
+  isHover,
+  setIsHover,
+  children,
+  isActive = false,
+}) {
   return (
     <div
       onMouseEnter={() => setIsHover(true)}
@@ -11,12 +18,15 @@ function NavDropdown({ to, label, isHover, setIsHover, children, isActive = fals
     >
       <Link
         to={to}
-        className={`flex justify-center items-center text-lg h-full ${isActive ? "text-green-400" : "text-white hover:text-green-300"
-          }`}
+        className={`flex justify-center items-center lg:text-sm xl:text-md 2xl:text-lg 3xl:text-xl  h-full ${
+          isActive ? "text-green-400" : "text-white hover:text-green-300"
+        }`}
       >
         {label}
         <IoMdArrowDropdown
-          className={`ml-1 ${isHover ? "rotate-180" : ""} transition-transform duration-200`}
+          className={`ml-1 ${
+            isHover ? "rotate-180" : ""
+          } transition-transform duration-200`}
         />
       </Link>
 

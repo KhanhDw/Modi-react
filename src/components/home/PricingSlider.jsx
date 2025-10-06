@@ -15,14 +15,14 @@ import { cn } from "@/lib/utils";
 
 // --- 1. ENHANCED SKELETON LOADER ---
 const SkeletonLoader = () => (
-  <div className="overflow-x-auto w-full p-3 sm:p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 rounded-3xl shadow-xl border border-slate-200/60 dark:border-slate-800/60">
+  <div className="hidden md:block overflow-x-auto w-full p-3 sm:p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 rounded-3xl shadow-xl border border-slate-200/60 dark:border-slate-800/60">
     <div className="overflow-auto rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-inner">
       <div className="w-full border-collapse min-w-[700px] md:min-w-[900px]">
         {/* Skeleton Header */}
         <div className="sticky top-0 z-20">
           {/* Stage Row */}
           <div className="border-b-2 border-slate-300/50 dark:border-slate-600/50 flex backdrop-blur-sm">
-            <div className="py-4 px-4 sm:py-5 sm:px-6 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 sticky left-0 z-30 w-[160px] sm:w-[220px] min-w-[160px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-700">
+            <div className="py-4 px-4 sm:py-5 sm:px-6 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 sticky left-0 z-30 w-[120px] sm:w-[180px] min-w-[120px] sm:min-w-[180px] border-r border-slate-200 dark:border-slate-700">
               <div className="h-7 sm:h-8 bg-gradient-to-r from-slate-300 to-slate-200 dark:from-slate-700 dark:to-slate-600 rounded-lg w-3/4 animate-pulse"></div>
             </div>
             {[...Array(3)].map((_, i) => (
@@ -36,7 +36,7 @@ const SkeletonLoader = () => (
           </div>
           {/* Service Name Row */}
           <div className="bg-slate-50/80 dark:bg-slate-800/40 flex backdrop-blur-sm">
-            <div className="py-3 px-4 sm:py-4 sm:px-6 border-b sticky left-0 z-30 w-[160px] sm:w-[220px] min-w-[160px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-700">
+            <div className="py-3 px-4 sm:py-4 sm:px-6 border-b sticky left-0 z-30 w-[120px] sm:w-[180px] min-w-[120px] sm:min-w-[180px] border-r border-slate-200 dark:border-slate-700">
               <div className="h-5 sm:h-6 bg-slate-200 dark:bg-slate-700 rounded-md w-1/2 animate-pulse"></div>
             </div>
             {[...Array(6)].map((_, i) => (
@@ -56,7 +56,7 @@ const SkeletonLoader = () => (
               key={rowIndex}
               className="flex hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors"
             >
-              <div className="py-3 px-4 sm:py-4 sm:px-6 border-b sticky left-0 z-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm w-[160px] sm:w-[220px] min-w-[160px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-700">
+              <div className="py-3 px-4 sm:py-4 sm:px-6 border-b sticky left-0 z-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm w-[120px] sm:w-[180px] min-w-[120px] sm:min-w-[180px] border-r border-slate-200 dark:border-slate-700">
                 <div className="h-5 sm:h-6 bg-slate-200 dark:bg-slate-700 rounded-md w-full animate-pulse"></div>
               </div>
               {[...Array(6)].map((_, cellIndex) => (
@@ -186,7 +186,7 @@ const ServiceTable = () => {
   // --- 3. ENHANCED ERROR STATE (API FETCH) ---
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 sm:p-10 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 border-2 border-red-200 dark:border-red-800 rounded-2xl shadow-xl max-w-lg mx-auto my-10">
+      <div className="hidden md:flex flex-col items-center justify-center p-8 sm:p-10 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 border-2 border-red-200 dark:border-red-800 rounded-2xl shadow-xl max-w-lg mx-auto my-10">
         <div className="relative">
           <div className="absolute inset-0 bg-red-500/20 dark:bg-red-500/10 rounded-full blur-xl"></div>
           <XCircle
@@ -217,7 +217,7 @@ const ServiceTable = () => {
   // --- 4. ENHANCED MISSING DATA STATE ---
   if (!servicesData.length || !serviceDetailsData.length || !stageData.length) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 sm:p-10 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-2xl shadow-xl border-2 border-amber-200 dark:border-amber-800 max-w-2xl mx-auto my-10">
+      <div className="hidden md:flex flex-col items-center justify-center p-8 sm:p-10 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-2xl shadow-xl border-2 border-amber-200 dark:border-amber-800 max-w-2xl mx-auto my-10">
         <div className="relative mb-6">
           <div className="absolute inset-0 bg-amber-500/20 dark:bg-amber-500/10 rounded-full blur-2xl"></div>
           <AlertTriangle
@@ -282,7 +282,7 @@ const ServiceTable = () => {
   // --- 5. ENHANCED INVALID DATA STATE ---
   if (!uniqueTitles.length || !uniqueServices.length) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 sm:p-10 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-2xl shadow-xl border-2 border-blue-200 dark:border-blue-800 max-w-2xl mx-auto my-10">
+      <div className="hidden md:flex flex-col items-center justify-center p-8 sm:p-10 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-2xl shadow-xl border-2 border-blue-200 dark:border-blue-800 max-w-2xl mx-auto my-10">
         <div className="relative mb-6">
           <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-2xl"></div>
           <Info
@@ -344,13 +344,13 @@ const ServiceTable = () => {
 
   // --- 6. ENHANCED TABLE DISPLAY ---
   return (
-    <div className="overflow-x-auto w-full p-3 sm:p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 rounded-3xl shadow-2xl border border-slate-200/60 dark:border-slate-800/60 animate-fade-in">
+    <div className="hidden md:block overflow-x-auto w-full p-3 sm:p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 rounded-3xl shadow-2xl border border-slate-200/60 dark:border-slate-800/60 animate-fade-in">
       <div className="max-h-[75vh] overflow-auto rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-inner">
         <table className="w-full border-collapse min-w-[700px] table-auto md:min-w-[900px]">
           <thead className="text-sm sticky top-0 z-20">
             {/* Stage Row */}
             <tr className="border-b-2 border-slate-300/50 dark:border-slate-600/50">
-              <th className="py-4 px-4 sm:py-5 sm:px-6 text-left font-bold text-base md:text-lg text-slate-700 dark:text-slate-300 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 sticky left-0 z-40 w-[160px] min-w-[160px] sm:w-[220px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-700 shadow-sm">
+              <th className="py-4 px-4 sm:py-5 sm:px-6 text-left font-bold text-base md:text-lg text-slate-700 dark:text-slate-300 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 sticky left-0 z-40 w-[120px] min-w-[120px] sm:w-[180px] sm:min-w-[180px] border-r border-slate-200 dark:border-slate-700 shadow-sm">
                 Giai đoạn
               </th>
               {servicesByStage.map(({ stage, services }, index) => {
@@ -396,7 +396,7 @@ const ServiceTable = () => {
             </tr>
             {/* Service Name Row */}
             <tr className="bg-slate-50/90 dark:bg-slate-800/50 backdrop-blur-sm">
-              <th className="py-3 px-4 sm:py-4 sm:px-6 border-b text-left font-semibold text-sm sm:text-base text-slate-600 dark:text-slate-400 sticky left-0 z-30 bg-slate-50/95 dark:bg-slate-800/95 backdrop-blur-sm w-[160px] min-w-[160px] sm:w-[220px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-700 shadow-sm">
+              <th className="py-3 px-4 sm:py-4 sm:px-6 border-b text-left font-semibold text-sm sm:text-base text-slate-600 dark:text-slate-400 sticky left-0 z-30 bg-slate-50/95 dark:bg-slate-800/95 backdrop-blur-sm w-[120px] min-w-[120px] sm:w-[180px] sm:min-w-[180px] border-r border-slate-200 dark:border-slate-700 shadow-sm">
                 Danh mục
               </th>
 
@@ -431,7 +431,7 @@ const ServiceTable = () => {
                     : "bg-slate-50/30 dark:bg-slate-800/10"
                 )}
               >
-                <td className="py-3 px-4 sm:py-4 sm:px-6 border-b  text-left font-semibold text-sm sm:text-base text-slate-800 dark:text-slate-200 sticky left-0 z-10 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm w-[160px] min-w-[160px] sm:w-[220px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-700 shadow-sm group-hover:bg-slate-50 dark:group-hover:bg-slate-700/50 transition-colors">
+                <td className="py-3 px-4 sm:py-4 sm:px-6 border-b  text-left font-semibold text-sm sm:text-base text-slate-800 dark:text-slate-200 sticky left-0 z-10 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm w-[120px] min-w-[120px] sm:w-[180px] sm:min-w-[180px] border-r border-slate-200 dark:border-slate-700 shadow-sm group-hover:bg-slate-50 dark:group-hover:bg-slate-700/50 transition-colors">
                   {title}
                 </td>
                 {servicesByStage.map(({ stage, services }) =>
@@ -439,7 +439,7 @@ const ServiceTable = () => {
                     services.map((service) => (
                       <td
                         key={service.id}
-                        className="py-3 px-2 sm:py-4 sm:px-3 border-b border-l border-slate-200/60 dark:border-slate-600/60 text-center min-w-[110px] md:min-w-[130px]"
+                        className="w-50 py-3 px-2 sm:py-4 sm:px-3 border-b border-l border-slate-200/60 dark:border-slate-600/60 text-center min-w-50 md:min-w-50"
                       >
                         {isServiceProvided(service.id, title) ? (
                           <div className="flex justify-center">

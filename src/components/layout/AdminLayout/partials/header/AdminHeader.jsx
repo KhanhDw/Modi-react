@@ -12,7 +12,7 @@ import axios from "axios";
 
 const breadcrumbMap = {
   "/managers/dashboard": "Tổng quan",
-  "/managers/page-config": "Cấu hình thông tin website",
+  "/managers/page-config": "Cấu hình website",
   "/managers/marketing": "Truyền thông",
   "/managers/website-templates": "Thiết kế Website",
   "/managers/news": "Tin tức",
@@ -70,7 +70,9 @@ const AdminHeader = ({
         const storedAvatar_url = localStorage.getItem("avatar_url");
         if (storedUsername) setUsername(storedUsername);
         if (storedAvatar_url)
-          setAvatarUrl(`${import.meta.env.VITE_MAIN_BE_URL}${storedAvatar_url}`);
+          setAvatarUrl(
+            `${import.meta.env.VITE_MAIN_BE_URL}${storedAvatar_url}`
+          );
       }
     };
 
@@ -88,9 +90,9 @@ const AdminHeader = ({
 
   const headerStyle = isHeaderSticky
     ? {
-      width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
-      left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
-    }
+        width: `calc(100% - ${sidebarCollapsed ? "5rem" : "17rem"} - 0.5rem)`,
+        left: `${sidebarCollapsed ? "5rem" : "17rem"}`,
+      }
     : {};
 
   return (
@@ -182,7 +184,7 @@ const AdminHeader = ({
             <NavLink to="/managers/profile">
               <Button
                 variant="ghost"
-                className="flex items-center gap-2 text-gray-600 admin-dark:text-gray-300  md:flex 
+                className="flex items-center gap-2 text-gray-600 admin-dark:text-gray-300  md:flex
                         hover:bg-gray-600 admin-dark:hover:bg-gray-600 flex-shrink-0 rounded-full cursor-pointer px-2 py-1"
               >
                 <Avatar className="h-8 w-8 flex-shrink-0">
@@ -264,7 +266,6 @@ const AdminHeader = ({
           </div>
         </div>
       )}
-
     </>
   );
 };

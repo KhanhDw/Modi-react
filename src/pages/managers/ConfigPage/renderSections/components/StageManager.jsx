@@ -139,6 +139,7 @@ const StageManager = ({
           <Button
             theme="admin"
             onClick={handleAddStage}
+            disabled={!newStageVi.trim() || !newStageEn.trim()}
             className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600"
           >
             <Plus className="w-4 h-4 mr-1 cursor-pointer text-xs sm:text-base text-white" />{" "}
