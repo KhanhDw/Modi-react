@@ -22,7 +22,6 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
   const [cachedLogo, setCachedLogo] = useState(null);
   const [logo, setLogo] = useState(() => localStorage.getItem("header_logo"));
 
-
   const [servicesPreloaded, setServicesPreloaded] = useState(false);
   const modalServicesRef = useRef(null);
 
@@ -71,7 +70,6 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     preloadServicesData();
   }, []);
 
-
   const toggleSidebar = () => {
     const next = !isSidebarOpen;
     setIsSidebarOpen(next);
@@ -106,22 +104,27 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
       <motion.div
         animate={{
           height: location.pathname === "/" ? (scrolled ? 80 : 100) : 80,
-          backgroundColor: scrolled ? "rgba(17, 24, 39, 0.8)" : "rgba(17, 24, 39, 0)",
+          backgroundColor: scrolled
+            ? "rgba(17, 24, 39, 0.8)"
+            : "rgba(17, 24, 39, 0)",
           backdropFilter: scrolled ? "blur(12px)" : "blur(0px)",
         }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="w-full fixed top-0 left-0 z-40"
       >
-        <div className="max-w-screen-2xl mx-auto grid xs:grid-cols-2 md:grid-cols-3 items-center h-full px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto grid xs:grid-cols-2 lg:grid-cols-3 items-center h-full px-4 sm:px-6 md:px-20 lg:px-10">
           {/* Logo */}
           <motion.div
             animate={{
               scale: scrolled ? 0.95 : 1,
             }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="flex items-center justify-start"
+            className="flex items-center justify-start lg:pl-5 xl:pl-0"
           >
-            <Link to={"/"} className="flex items-center">
+            <Link
+              to={"/"}
+              className="flex items-center"
+            >
               {logo ? (
                 <img
                   src={logo}
@@ -133,11 +136,10 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
                 <div className="h-8 w-24 bg-gray-700 animate-pulse rounded-md lg:h-10" />
               )}
             </Link>
-
           </motion.div>
 
           {/* Nav */}
-          <nav className="hidden lg:flex items-center justify-center text-sm font-bold gap-6 lg:gap-6 xl:gap-8 2xl:gap-10 whitespace-nowrap">
+          <nav className="hidden lg:flex items-center justify-center text-sm font-bold lg:gap-3 xl:gap-5 2xl:gap-10 whitespace-nowrap">
             {navItems.map((item) => {
               const isActive =
                 item.to === "/"
@@ -173,7 +175,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
           {/* Right Side Controls */}
           <div className="flex items-center justify-end gap-2 sm:gap-4">
             {/* Theme toggle */}
-            <div className="hidden md:flex p-2 rounded-full border border-transparent hover:border-gray-600 transition-colors">
+            <div className="hidden lg:flex rounded-full hover:border-gray-600 transition-colors">
               <ThemeToggle />
             </div>
 
@@ -183,7 +185,10 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
               onClick={toggleSidebar}
               className="flex lg:hidden h-10 w-10 transition-all duration-300 text-white justify-center items-center border border-gray-600 rounded-lg hover:bg-gray-700/50 hover:border-gray-500 cursor-pointer"
             >
-              <TiThMenu className="text-base" size={20} />
+              <TiThMenu
+                className="text-base"
+                size={20}
+              />
             </button>
           </div>
         </div>
@@ -195,10 +200,11 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
         className={`
     fixed top-0 left-0 w-full h-full z-40 lg:hidden
     transition-opacity duration-300 ease-in-out
-    ${isSidebarOpen
-            ? "opacity-100 pointer-events-auto bg-black/60"
-            : "opacity-0 pointer-events-none"
-          }
+    ${
+      isSidebarOpen
+        ? "opacity-100 pointer-events-auto bg-black/60"
+        : "opacity-0 pointer-events-none"
+    }
   `}
       />
       <Sidebar

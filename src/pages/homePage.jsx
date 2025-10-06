@@ -29,7 +29,6 @@ function HomePage({ activeSidebarHeader }) {
         throw new Error(`Lỗi HTTP: ${res.status}`);
       }
       const data = await res.json();
-      console.log(data.data);
       setStatus(data.data);
     } catch (error) {}
   };
@@ -268,10 +267,12 @@ function HomePage({ activeSidebarHeader }) {
       ),
     khauhieu: (data, activeLang) =>
       data.khauHieu && (
-        <BannerText
-          data={data.khauHieu}
-          activeLang={activeLang}
-        />
+        <div className="w-full">
+          <BannerText
+            data={data.khauHieu}
+            activeLang={activeLang}
+          />
+        </div>
       ),
     khachhang: (data, activeLang) =>
       data.khachHang?.length > 0 && (

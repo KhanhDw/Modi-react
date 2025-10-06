@@ -18,24 +18,35 @@ export default function Footer() {
     try {
       setLoading(true);
 
-      const [logoRes, infoRes, serviceRes, socialRes, privacyRes, bctRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`),
-        fetch(`${API_BASE_URL}/api/section-items/type/company_info?slug=footer`),
-        fetch(`${API_BASE_URL}/api/section-items/type/services?slug=footer`),
-        fetch(`${API_BASE_URL}/api/section-items/type/social?slug=footer`),
-        fetch(`${API_BASE_URL}/api/section-items/type/privacy?slug=footer`),
-        fetch(`${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`),
-      ]);
-
-      const [logoData, companyInfo, serviceData, socialsData, privacyData, bctData] =
+      const [logoRes, infoRes, serviceRes, socialRes, privacyRes, bctRes] =
         await Promise.all([
-          logoRes.json(),
-          infoRes.json(),
-          serviceRes.json(),
-          socialRes.json(),
-          privacyRes.json(),
-          bctRes.json(),
+          fetch(`${API_BASE_URL}/api/section-items/type/logo?slug=header`),
+          fetch(
+            `${API_BASE_URL}/api/section-items/type/company_info?slug=footer`
+          ),
+          fetch(`${API_BASE_URL}/api/section-items/type/services?slug=footer`),
+          fetch(`${API_BASE_URL}/api/section-items/type/social?slug=footer`),
+          fetch(`${API_BASE_URL}/api/section-items/type/privacy?slug=footer`),
+          fetch(
+            `${API_BASE_URL}/api/section-items/type/ThongBaoBoCongThuong?slug=footer`
+          ),
         ]);
+
+      const [
+        logoData,
+        companyInfo,
+        serviceData,
+        socialsData,
+        privacyData,
+        bctData,
+      ] = await Promise.all([
+        logoRes.json(),
+        infoRes.json(),
+        serviceRes.json(),
+        socialRes.json(),
+        privacyRes.json(),
+        bctRes.json(),
+      ]);
 
       const logoItem = logoData[0] || null;
       const bctItem = bctData[0] || null; // ✅ chỉ lấy 1 item
@@ -49,12 +60,19 @@ export default function Footer() {
 
       langs.forEach((lng) => {
         footerMap[lng] = {
-          logo: logoItem?.image_url ? `${API_BASE_URL}${logoItem.image_url}` : "/logoModi.png",
-          name_company: companyInfo.find((f) => f.position === 2)?.description?.[lng] || "",
-          content_about_us: companyInfo.find((f) => f.position === 6)?.description?.[lng] || "",
-          address_company: companyInfo.find((f) => f.position === 3)?.description?.[lng] || "",
-          phone: companyInfo.find((f) => f.position === 4)?.description?.[lng] || "",
-          email: companyInfo.find((f) => f.position === 5)?.description?.[lng] || "",
+          logo: logoItem?.image_url
+            ? `${API_BASE_URL}${logoItem.image_url}`
+            : "/logoModi.png",
+          name_company:
+            companyInfo.find((f) => f.position === 2)?.description?.[lng] || "",
+          content_about_us:
+            companyInfo.find((f) => f.position === 6)?.description?.[lng] || "",
+          address_company:
+            companyInfo.find((f) => f.position === 3)?.description?.[lng] || "",
+          phone:
+            companyInfo.find((f) => f.position === 4)?.description?.[lng] || "",
+          email:
+            companyInfo.find((f) => f.position === 5)?.description?.[lng] || "",
         };
 
         serviceMap[lng] = serviceData.map((s) => ({
@@ -84,7 +102,6 @@ export default function Footer() {
       setSocials(socialMap);
       setPrivacy(privacyMap);
       setBoCongThuong(bctMap);
-
     } catch (err) {
       console.error("❌ Lỗi tải footer:", err);
     } finally {
@@ -101,7 +118,7 @@ export default function Footer() {
   }, [lang]);
 
   if (loading) {
-    return <p className="text-center py-6">⏳ Đang tải footer...</p>;
+    return <p className="text-center py-6">Đang tải chân trang...</p>;
   }
 
   return (

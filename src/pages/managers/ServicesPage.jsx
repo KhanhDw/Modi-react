@@ -46,7 +46,6 @@ export default function ServicesPage() {
       const res = await fetch(ServiceAPI.getALL());
       const data = await res.json();
       setServices(Array.isArray(data.data) ? data.data : []);
-      console.log(data.data);
     } catch (err) {
       console.error("Lỗi khi lấy dữ liệu:", err);
     } finally {

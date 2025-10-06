@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import PricingSlider from "./PricingSlider";
 import PricingSliderMobi from "./PricingSliderMobi";
-// import pricingData from "./pricingData";
-import PricingData from "./pricingData";
 import PricingFooterPage from "./pricingFooterPage";
 
 export default function PricingPageV2() {
@@ -29,11 +27,13 @@ export default function PricingPageV2() {
           </header>
         </div>
 
-        <main className="space-y-16 flex flex-col items-center justify-center">
-          <div className="xs:hidden md:flex items-center justify-center">
-            <PricingSlider />
+        <main className="space-y-16 ">
+          <div className="xs:hidden lg:flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center">
+              <PricingSlider />
+            </div>
           </div>
-          <div className="xs:block md:hidden">
+          <div className="xs:block lg:hidden">
             {" "}
             <PricingSliderMobi />
           </div>
