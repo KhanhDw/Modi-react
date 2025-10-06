@@ -41,7 +41,7 @@ const ServiceManager = ({
             disabled={stageMaster.length === 0}
           >
             <Plus className="w-4 h-4" />
-            <span className="text-sm sm:text-base font-semibold text-white">
+            <span className="text-sm sm:text-base font-semibold text-gray-700 admin-dark:text-gray-300">
               Chọn dịch vụ
             </span>
           </Button>

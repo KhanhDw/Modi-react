@@ -3,38 +3,43 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import PricingSlider from "./PricingSlider";
 import PricingSliderMobi from "./PricingSliderMobi";
 // import pricingData from "./pricingData";
-import PricingData from './pricingData';
+import PricingData from "./pricingData";
 import PricingFooterPage from "./pricingFooterPage";
 
 export default function PricingPageV2() {
-    const { t } = useLanguage();
-    const [isAdmin, setIsAdmin] = useState(false);
+  const { t } = useLanguage();
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    useEffect(() => {
-        setIsAdmin(window.location.pathname.includes("managers"));
-    }, []);
+  useEffect(() => {
+    setIsAdmin(window.location.pathname.includes("managers"));
+  }, []);
 
-    return (
-        <div className="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 w-full">
-            <div className="container mx-auto py-16 md:py-24 ">
-                <div className="relative">
-                    <header className="text-center mb-16 px-4">
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
-                            {t("home.PricingPage.title")}
-                        </h1>
+  return (
+    <div className="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 w-full">
+      <div className="container mx-auto py-16 md:py-24 ">
+        <div className="relative">
+          <header className="text-center mb-16 px-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-snug md:leading-normal font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-sky-400 bg-clip-text text-transparent mb-4">
+              {t("home.PricingPage.title")}
+            </h1>
 
-                        <p className="max-w-4xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-400">
-                            {t("home.PricingPage.description")}
-                        </p>
-                    </header>
-                </div>
-
-                <main className="space-y-16">
-                    <div className="xs:hidden md:block"> <PricingSlider /></div>
-                    <div className="xs:block md:hidden"> <PricingSliderMobi /></div>
-                    {!isAdmin && <PricingFooterPage />}
-                </main>
-            </div>
+            <p className="max-w-4xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-400">
+              {t("home.PricingPage.description")}
+            </p>
+          </header>
         </div>
-    );
+
+        <main className="space-y-16 flex flex-col items-center justify-center">
+          <div className="xs:hidden md:flex items-center justify-center">
+            <PricingSlider />
+          </div>
+          <div className="xs:block md:hidden">
+            {" "}
+            <PricingSliderMobi />
+          </div>
+          {!isAdmin && <PricingFooterPage />}
+        </main>
+      </div>
+    </div>
+  );
 }

@@ -100,6 +100,7 @@ const MiniServiceManager = ({
           <Button
             theme="admin"
             onClick={HandlePostSelectMiniServiceForServiceStage}
+            disabled={!newLineVi.trim() || !newLineEn.trim()}
             className="w-full md:w-50 flex md:mx-auto shadow bg-blue-500 hover:bg-blue-600 cursor-pointer"
           >
             <Plus className="w-4 h-4 mr-2 text-white" />

@@ -439,7 +439,7 @@ const ServiceTable = () => {
                     services.map((service) => (
                       <td
                         key={service.id}
-                        className="py-3 px-2 sm:py-4 sm:px-3 border-b border-l border-slate-200/60 dark:border-slate-600/60 text-center min-w-[110px] md:min-w-[130px]"
+                        className="w-50 py-3 px-2 sm:py-4 sm:px-3 border-b border-l border-slate-200/60 dark:border-slate-600/60 text-center min-w-50 md:min-w-50"
                       >
                         {isServiceProvided(service.id, title) ? (
                           <div className="flex justify-center">

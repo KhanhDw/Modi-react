@@ -58,7 +58,13 @@ function SortableCategoryItem({
           <GripVertical className="h-4 w-4" />
         </span>
         {/* <span className="truncate">{cat.name?.[lang] || cat.name}</span> */}
-        <span className="text-xs lg:text-sm">{cat.name?.[lang] || cat.name}</span>
+        <span
+          className={`text-xs lg:text-sm  admin-dark:text-white ${
+            selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
+          }`}
+        >
+          {cat.name?.[lang] || cat.name}
+        </span>
       </div>
 
       <div className="flex gap-2">
@@ -69,7 +75,7 @@ function SortableCategoryItem({
             e.stopPropagation();
             onEdit(cat);
           }}
-          className="cursor-pointer bg-gray-900 hover:bg-gray-800"
+          className="cursor-pointer bg-white hover:bg-gray-200 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800"
         >
           <Pencil className="h-4 w-4 text-xs" />
         </Button>
@@ -105,8 +111,6 @@ export default function CategoryList({
 
   useEffect(() => {
     setItems(categories);
-    console.log(dialog);
-
   }, [categories, dialog]);
 
   // ✅ Chọn mặc định item đầu tiên khi chưa có selectedCategory
@@ -166,10 +170,15 @@ export default function CategoryList({
         </div>
         {isChanged ? (
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={handleCancel}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleCancel}
               className="cursor-pointer hover:text-gray-900 shadow"
             >
-              <span className="font-semibold text-xs xl:text-sm text-white">Hủy</span>
+              <span className="font-semibold text-xs xl:text-sm text-white">
+                Hủy
+              </span>
             </Button>
             <Button
               size="sm"
@@ -186,7 +195,9 @@ export default function CategoryList({
             onClick={onAdd}
           >
             <Plus className="h-4 w-4" />
-            <span className="font-semibold text-xs xl:text-sm text-black/70 admin-dark:text-white">Thêm</span>
+            <span className="font-semibold text-xs xl:text-sm text-white">
+              Thêm
+            </span>
           </Button>
         )}
       </CardHeader>
