@@ -117,7 +117,7 @@ export default function SocialNetworkManager({
     };
 
     return (
-        <div className="grid grid-cols-1 p-2 h-fit border-2 border-slate-300 rounded-2xl overflow-hidden">
+        <div className="grid grid-cols-1 p-2 h-fit border-2 border-slate-300 admin-dark:border-gray-700 admin-dark:bg-gray-800 rounded-2xl overflow-hidden">
             <div className="flex flex-col-reverse justify-between items-start gap-2 mb-2 w-full">
                 <h1 className="text-xl mx-auto font-bold text-gray-900 admin-dark:text-white">
                     Danh sách mạng xã hội
@@ -162,7 +162,7 @@ export default function SocialNetworkManager({
                     ))}
                     <div>
                         {isOpenUpdateNetwork2 &&
-                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-2 w-full">
+                            <div className="p-2 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg mt-2 w-full">
                                 <h2 className="text-base text-center sm:text-lg font-medium mb-2">Điều chỉnh thông tin mạng xã hội</h2>
                                 <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">
@@ -202,7 +202,7 @@ export default function SocialNetworkManager({
                             </div>
                         }
                         {isOpenUpdateNetwork &&
-                            <div className="p-2 border-2 border-gray-300 rounded-lg mt-2 w-full">
+                            <div className="p-2 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg mt-2 w-full">
                                 <h2 className="text-base text-center sm:text-lg font-medium mb-2">Thêm mạng xã hội mới</h2>
                                 <div className="grid grid-cols-1 gap-2">
                                     <div className="flex items-center justify-between gap-3">

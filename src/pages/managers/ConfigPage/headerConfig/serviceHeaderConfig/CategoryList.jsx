@@ -59,9 +59,8 @@ function SortableCategoryItem({
         </span>
         {/* <span className="truncate">{cat.name?.[lang] || cat.name}</span> */}
         <span
-          className={`text-xs lg:text-sm  admin-dark:text-white ${
-            selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
-          }`}
+          className={`text-xs lg:text-sm  admin-dark:text-white ${selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
+            }`}
         >
           {cat.name?.[lang] || cat.name}
         </span>
@@ -75,7 +74,7 @@ function SortableCategoryItem({
             e.stopPropagation();
             onEdit(cat);
           }}
-          className="cursor-pointer bg-white hover:bg-gray-200 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800"
+          className="cursor-pointer hover:bg-gray-800 bg-gray-900 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800"
         >
           <Pencil className="h-4 w-4 text-xs" />
         </Button>
@@ -182,19 +181,19 @@ export default function CategoryList({
             </Button>
             <Button
               size="sm"
-              className="bg-primary shadow text-black/80 admin-dark:text-white hover:bg-primary/90 cursor-pointer"
+              className="bg-blue-500 shadow text-black/80 admin-dark:text-white hover:bg-blue-600 cursor-pointer"
               onClick={handleSave}
             >
-              <span className="font-semibold text-xs xl:text-sm">Lưu</span>
+              <span className="font-semibold text-xs xl:text-sm text-white">Lưu</span>
             </Button>
           </div>
         ) : (
           <Button
             size="sm"
-            className="bg-primary shadow hover:bg-primary/90 transition-colors cursor-pointer"
+            className="bg-blue-500 shadow hover:bg-blue-600 transition-colors cursor-pointer"
             onClick={onAdd}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4 text-white" />
             <span className="font-semibold text-xs xl:text-sm text-white">
               Thêm
             </span>

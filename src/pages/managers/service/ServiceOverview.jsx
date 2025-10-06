@@ -173,15 +173,15 @@ export default function ServiceOverview() {
               {pagedServices.map((service, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-2 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all duration-200 admin-dark:bg-gray-800 admin-dark:border-gray-700"
+                  className="flex w-full items-start justify-between gap-3 flex-col p-2 rounded-xl border border-gray-300 bg-white shadow-sm hover:shadow-md transition-all duration-200 admin-dark:bg-gray-800 admin-dark:border-gray-700"
                 >
                   {/* Left content */}
                   <div className="flex items-center">
                     <div className="h-full gap-2 flex flex-col justify-between">
-                      <p className="font-semibold text-gray-900 admin-dark:text-gray-100">
+                      <p className="font-semibold text-sm sm:text-base text-gray-900 admin-dark:text-gray-100">
                         {service.name}
                       </p>
-                      <p className="text-xs text-gray-500 admin-dark:text-gray-400">
+                      <p className="text-xs font-medium sm:text-sm text-gray-500 admin-dark:text-gray-400">
                         Doanh thu:{" "}
                         {service.revenue.toLocaleString("vi-VN", {
                           style: "currency",
@@ -192,17 +192,17 @@ export default function ServiceOverview() {
                   </div>
 
                   {/* Right content */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between gap-4 w-full">
                     <Badge
                       variant="secondary"
-                      className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium admin-dark:bg-gray-700 admin-dark:text-gray-200"
+                      className="px-2 py-1 rounded-full bg-gray-200 text-gray-600 text-xs font-medium admin-dark:bg-gray-700 admin-dark:text-gray-200"
                     >
-                      {service.orders} đơn
+                      Số lượng: {service.orders} đơn
                     </Badge>
 
-                    <div className="text-right h-full gap-2 flex flex-col justify-between">
-                      <p className="text-xs text-muted-foreground">Giá dịch vụ</p>
-                      <p className="text-base font-semibold text-emerald-600 admin-dark:text-emerald-400">
+                    <div className="text-right h-full gap-2 flex flex-wrap flex-row items-center justify-end">
+                      <p className="text-xs text-gray-500 admin-dark:text-gray-400 font-medium">Giá dịch vụ</p>
+                      <p className="text-xs sm:text-sm font-semibold text-emerald-600 admin-dark:text-emerald-400">
                         {Number(service.price).toLocaleString("vi-VN")} ₫
                       </p>
                     </div>

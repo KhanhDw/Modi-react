@@ -1,6 +1,5 @@
 import Pagination from "@/components/admin/services/utils/Pagination.jsx";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,12 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -23,10 +16,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, MoreHorizontal, Search, Trash2 } from "lucide-react";
+import { Edit, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import WarningMessage from "./utils/warningMessage";
+import TableRowActions from "@/pages/managers/service/TableRowActions";
 
 export default function ServiceTable() {
 
@@ -199,37 +193,21 @@ export default function ServiceTable() {
                           : "Không hoạt động"}
                       </Badge>
                     </TableCell>
-                    <TableCell className={`text-center`}>
-                      <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-gray-600 hover:text-600 hover:bg-gray-200 admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 cursor-pointer"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="bg-white text-black border-gray-300 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
-                        >
-                          <DropdownMenuItem
-                            onClick={() => openEditServiceForm(item)}
-                            className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
-                          >
-                            <Edit className="mr-2 h-4 w-4 hover:text-white" />
-                            Cập nhật
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteService(item.id)}
-                            className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4 hover:text-white" />
-                            Xóa
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <TableCell className="text-center">
+                      <TableRowActions
+                        actions={[
+                          {
+                            label: "Cập nhật",
+                            icon: Edit,
+                            onClick: () => openEditServiceForm(item),
+                          },
+                          {
+                            label: "Xóa",
+                            icon: Trash2,
+                            onClick: () => handleDeleteService(item.id),
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 )

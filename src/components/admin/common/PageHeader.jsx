@@ -49,7 +49,7 @@ export default function PageHeader({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Tìm kiếm tin tức..."
-                  className="flex-1 border-2 border-gray-300 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow-sm focus:border-green-500 focus:outline-none min-w-[250px] md:min-w-[300px] lg:min-w-[300px]"
+                  className="flex-1 border-2 border-gray-300 admin-dark:bg-gray-800 admin-dark:border-gray-700 py-2 px-3 rounded-xl shadow-sm focus:border-green-500 focus:outline-none min-w-[250px] md:min-w-[300px] lg:min-w-[300px]"
                 />
                 <button hidden type="submit"></button>
               </form>

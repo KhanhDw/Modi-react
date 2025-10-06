@@ -16,13 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -30,9 +23,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Filter, MoreHorizontal, Search, Trash2 } from "lucide-react";
+import { Edit, MoreHorizontal, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
+import TableRowActions from "@/pages/managers/service/TableRowActions";
 
 
 
@@ -105,25 +100,18 @@ export default function ServiceBookingTable() {
                   admin-dark:placeholder-gray-400 rounded-md shadow-sm w-full"
               />
             </div>
-            <Select value={statusFilter} onValueChange={changeStatus}>
-              <SelectTrigger
-                className="w-full sm:w-40 text-xs sm:text-sm bg-white text-black border border-gray-300 rounded cursor-pointer admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
-              >
-                <Filter
-                  className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2 text-black admin-dark:text-gray-200"
-                />
-                <SelectValue placeholder="Trạng thái" />
-              </SelectTrigger>
-              <SelectContent
-                className="bg-white text-black border-gray-300
-                  admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600 text-xs sm:text-sm"
-              >
-                <SelectItem className={'cursor-pointer'} value="all">Tất cả</SelectItem>
-                <SelectItem className={'cursor-pointer'} value="completed">Hoàn thành</SelectItem>
-                <SelectItem className={'cursor-pointer'} value="pending">Chưa hoàn thành</SelectItem>
-                <SelectItem className={'cursor-pointer'} value="destroy">Hủy</SelectItem>
-              </SelectContent>
-            </Select>
+            <CustomSelectFilter
+              value={statusFilter}
+              onValueChange={changeStatus}
+              placeholder="Trạng thái"
+              options={[
+                { value: "all", label: "Tất cả" },
+                { value: "completed", label: "Hoàn thành" },
+                { value: "pending", label: "Chưa hoàn thành" },
+                { value: "destroy", label: "Hủy" },
+              ]}
+            />
+
           </div>
         </div>
       </CardHeader>
@@ -208,40 +196,20 @@ export default function ServiceBookingTable() {
                       : "Không có"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center space-x-2">
-                    <DropdownMenu modal={false}>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-gray-600 hover:bg-gray-200
-                          hover:text-gray-500
-                admin-dark:text-gray-300 admin-dark:hover:bg-gray-700 cursor-pointer"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="bg-white text-black border-gray-300
-              admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
-                      >
-                        <DropdownMenuItem
-                          onClick={() => openEditBookingForm(item)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
-                        >
-                          <Edit className="mr-2 h-4 w-4 hover:text-white" />
-                          Chỉnh sửa
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          key={item.id}
-                          onClick={() => handleDeleteBooking(item.id)}
-                          className="hover:bg-gray-100 admin-dark:hover:bg-gray-600 cursor-pointer"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4 hover:text-white" />
-                          Xóa
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <TableRowActions
+                      actions={[
+                        {
+                          label: "Chỉnh sửa",
+                          icon: Edit,
+                          onClick: () => openEditBookingForm(item),
+                        },
+                        {
+                          label: "Xóa",
+                          icon: Trash2,
+                          onClick: () => handleDeleteBooking(item.id),
+                        },
+                      ]}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

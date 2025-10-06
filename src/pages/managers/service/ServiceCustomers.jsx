@@ -56,7 +56,7 @@ export default function ServiceCustomers() {
           className="bg-blue-500 mt-4
           hover:bg-blue-600
           rounded-lg
-          px-4 py-2
+          px-4 py-1.5
           shadow-lg
           hover:shadow-xl
           transition-all
@@ -64,7 +64,7 @@ export default function ServiceCustomers() {
           ease-in-out cursor-pointer"
           onClick={handleOpenAddCustomer}
         >
-          <span className="text-white admin-dark:text-gray-200 font-semibold">
+          <span className="text-white admin-dark:text-gray-200 font-semibold text-sm sm:text-base">
             Thêm khách hàng
           </span>
         </button>

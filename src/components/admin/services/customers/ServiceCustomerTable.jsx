@@ -16,13 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -34,7 +27,6 @@ import useLenisLocal from "@/hook/useLenisLocal";
 import {
   Edit,
   Eye,
-  Filter,
   MoreHorizontal,
   Search,
   Trash2,
@@ -44,6 +36,7 @@ import { useOutletContext } from "react-router-dom";
 import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
 import ReadInforCustomer from "./readInforCustomer";
+import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 
 export default function ServiceCustomerTable() {
   const {
@@ -132,7 +125,7 @@ export default function ServiceCustomerTable() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gray-100 admin-dark:bg-gray-900 admin-dark:border-gray-700">
+      <Card className="bg-white border-gray-300 admin-dark:bg-gray-800 admin-dark:border-gray-700">
         <CardHeader>
           <div className="flex flex-col md:flex-col xl:flex-row items-center justify-between">
             <div>
@@ -143,7 +136,7 @@ export default function ServiceCustomerTable() {
                 Quản lý tất cả khách hàng đã sử dụng dịch vụ
               </CardDescription>
             </div>
-            <div className="flex flex-col md:flex-row items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2 md:gap-5">
               <div className="relative bg-white admin-dark:bg-gray-800 rounded-md shadow-sm text-black admin-dark:text-white">
                 <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
                 <Input
@@ -153,41 +146,21 @@ export default function ServiceCustomerTable() {
                     setCurrentPage(1);
                   }}
                   placeholder="Tìm kiếm khách hàng..."
-                  className="pl-10 w-64 admin-dark:bg-gray-800 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
+                  className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
                 />
               </div>
-              <Select
+              <CustomSelectFilter
                 value={statusFilter}
                 onValueChange={changeStatus}
-              >
-                <SelectTrigger className="w-40 bg-white admin-dark:bg-gray-800 text-black admin-dark:text-white border border-gray-300 admin-dark:border-gray-600 rounded cursor-pointer">
-                  <Filter className="h-4 w-4 mr-2 text-black admin-dark:text-white" />
-                  <SelectValue
-                    className="cursor-pointer"
-                    placeholder="Trạng thái"
-                  />
-                </SelectTrigger>
-                <SelectContent className="bg-white admin-dark:bg-gray-800 admin-dark:border-gray-600 text-black admin-dark:text-white cursor-pointer">
-                  <SelectItem
-                    value="all"
-                    className="admin-dark:hover:bg-gray-700 cursor-pointer"
-                  >
-                    Tất cả
-                  </SelectItem>
-                  <SelectItem
-                    value="new"
-                    className="admin-dark:hover:bg-gray-700 cursor-pointer"
-                  >
-                    Thường
-                  </SelectItem>
-                  <SelectItem
-                    value="vip"
-                    className="admin-dark:hover:bg-gray-700 cursor-pointer"
-                  >
-                    Vip
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                placeholder="Trạng thái"
+                className="w-fit"
+                options={[
+                  { value: "all", label: "Tất cả" },
+                  { value: "new", label: "Thường" },
+                  { value: "vip", label: "Vip" },
+                ]}
+              />
+
               <button
                 className="bg-gray-600 hover:bg-slate-700 text-white font-bold p-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
                 onClick={() => setOpenDialogImportCustomer(true)}
@@ -196,6 +169,7 @@ export default function ServiceCustomerTable() {
                   Nhập dữ liệu khách hàng
                 </span>
               </button>
+
             </div>
           </div>
         </CardHeader>

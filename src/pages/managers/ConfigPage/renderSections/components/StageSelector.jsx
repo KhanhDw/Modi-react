@@ -17,7 +17,7 @@ const StageSelector = ({
   setIsEditStage,
 }) => {
   return (
-    <Card className="bg-white admin-dark:bg-gray-900 admin-dark:border-gray-700">
+    <Card className="bg-white border-gray-300 admin-dark:bg-gray-900 admin-dark:border-gray-700">
       <CardHeader>
         <CardTitle className="text-gray-900 admin-dark:text-white">
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-between w-full">
