@@ -1,51 +1,65 @@
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { ChevronsUpDown, Check } from "lucide-react";
 
 export default function CustomerCombobox({ customers, formData, setFormData }) {
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef();
+
+  const selectedCustomer = customers.find(
+    (c) => c.id === formData.customerId
+  );
+
+  // Đóng dropdown khi click ra ngoài
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <Popover
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          className="w-full justify-between border border-black/30 text-white admin-dark:text-gray-100 cursor-pointer"
+    <div className="relative w-full" ref={dropdownRef}>
+      {/* Nút chính */}
+      <Button
+        type="button"
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+        className="w-full justify-between border px-3 py-1.5 border-black/30 text-black bg-white
+                   admin-dark:text-gray-100 admin-dark:bg-gray-800 admin-dark:border-gray-600
+                   hover:bg-gray-100 admin-dark:hover:bg-gray-700 cursor-pointer hover:text-gray-700 truncate"
+      >
+        <span className="truncate max-w-[calc(100%-24px)] text-gray-800 admin-dark:text-gray-200">
+          {selectedCustomer
+            ? `${selectedCustomer.name} - ${selectedCustomer.phone}`
+            : "Chọn khách hàng..."}
+        </span>
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+
+      {/* Dropdown */}
+      {open && (
+        <div
+          className="absolute w-full top-full mt-1 p-2 max-h-60 overflow-auto border border-black/30
+                     bg-white text-black admin-dark:bg-gray-800 admin-dark:text-gray-100
+                     admin-dark:border-gray-600 rounded-md shadow-lg z-50"
         >
-          <span className="text-sm sm:text-base">{formData.cusName && formData.cusPhone
-            ? `${formData.cusName} - ${formData.cusPhone}`
-            : "Chọn khách hàng..."}</span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="sm:w-[400px] p-0">
-        <Command>
-          <CommandInput placeholder="Tìm theo tên hoặc số điện thoại..." />
-          <CommandList>
-            <CommandEmpty>Không tìm thấy khách hàng</CommandEmpty>
-            <CommandGroup>
-              {customers.map((c) => (
-                <CommandItem
+          {customers.length === 0 ? (
+            <div className="px-4 py-2 text-sm text-gray-500 text-center">
+              Không có khách hàng
+            </div>
+          ) : (
+            customers.map((c) => {
+              const isSelected = c.id === formData.customerId;
+              return (
+                <div
                   key={c.id}
-                  value={`${c.name} - ${c.phone}`}
-                  onSelect={() => {
+                  onClick={() => {
                     setFormData({
                       ...formData,
                       customerId: c.id,
@@ -56,14 +70,20 @@ export default function CustomerCombobox({ customers, formData, setFormData }) {
                     });
                     setOpen(false);
                   }}
+                  className={`flex items-center justify-between cursor-pointer px-3 py-2 text-sm rounded-sm transition-all
+                    ${isSelected
+                      ? "bg-blue-100 text-blue-700 admin-dark:bg-blue-900/40 admin-dark:text-blue-300"
+                      : "hover:bg-gray-100 admin-dark:hover:bg-gray-700"
+                    }`}
                 >
-                  {c.name} - {c.phone}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+                  <span>{c.name} - {c.phone}</span>
+                  {isSelected && <Check className="h-4 w-4 text-blue-600" />}
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+    </div>
   );
 }
