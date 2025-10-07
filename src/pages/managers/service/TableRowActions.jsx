@@ -8,33 +8,55 @@ export default function TableRowActions({ actions = [], className = "" }) {
   const menuRef = useRef(null);
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
-  // Đóng dropdown khi click ngoài hoặc nhấn Escape
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(e.target)
-      ) {
+    if (!open) return;
+
+    const updatePosition = () => {
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        setPosition({
+          top: rect.bottom + window.scrollY + 4,
+          left: rect.right + window.scrollX - 160,
+        });
+      }
+    };
+
+    // Cập nhật vị trí lần đầu
+    updatePosition();
+
+    // Hàm đóng dropdown
+    const handleClose = (e) => {
+      // Click ngoài
+      if (e?.type === "mousedown") {
+        if (
+          menuRef.current &&
+          !menuRef.current.contains(e.target) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(e.target)
+        ) {
+          setOpen(false);
+        }
+      }
+      // Escape, scroll, resize
+      else {
         setOpen(false);
       }
-    }
+    };
 
-    function handleEscapeKey(e) {
-      if (e.key === "Escape") {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    window.addEventListener("keydown", handleEscapeKey);
+    // Event listeners
+    document.addEventListener("mousedown", handleClose);
+    window.addEventListener("keydown", (e) => e.key === "Escape" && handleClose());
+    window.addEventListener("scroll", handleClose, true); // capture để bắt scroll trong container
+    window.addEventListener("resize", handleClose);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("keydown", handleEscapeKey);
+      document.removeEventListener("mousedown", handleClose);
+      window.removeEventListener("keydown", (e) => e.key === "Escape" && handleClose());
+      window.removeEventListener("scroll", handleClose, true);
+      window.removeEventListener("resize", handleClose);
     };
-  }, []);
+  }, [open]);
+
 
   // Tính vị trí dropdown
   useEffect(() => {

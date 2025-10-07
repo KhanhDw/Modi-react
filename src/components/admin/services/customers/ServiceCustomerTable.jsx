@@ -1,6 +1,5 @@
 import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
 import Pagination from "@/components/admin/services/utils/Pagination.jsx";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -27,7 +21,6 @@ import useLenisLocal from "@/hook/useLenisLocal";
 import {
   Edit,
   Eye,
-  MoreHorizontal,
   Search,
   Trash2,
 } from "lucide-react";
@@ -37,6 +30,8 @@ import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
 import ReadInforCustomer from "./readInforCustomer";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
+import TableRowActions from "@/pages/managers/service/TableRowActions";
+import { X } from "lucide-react";
 
 export default function ServiceCustomerTable() {
   const {
@@ -162,7 +157,7 @@ export default function ServiceCustomerTable() {
               />
 
               <button
-                className="bg-gray-600 hover:bg-slate-700 text-white font-bold p-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
+                className="bg-gray-800 hover:bg-slate-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 text-white font-bold py-1.5 px-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
                 onClick={() => setOpenDialogImportCustomer(true)}
               >
                 <span className="text-sm lg:text-base">
@@ -260,45 +255,25 @@ export default function ServiceCustomerTable() {
                       ₫
                     </TableCell>
                     <TableCell className="flex items-center space-x-2">
-                      <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="admin-dark:hover:bg-gray-700 admin-dark:text-white"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="admin-dark:bg-gray-800 admin-dark:border-gray-600"
-                        >
-                          <DropdownMenuItem
-                            onClick={() => {
-                              getFullInforCustomer(customer.id);
-                            }}
-                            className="admin-dark:text-white admin-dark:hover:bg-gray-700"
-                          >
-                            <Eye className="mr-2 h-4 w-4" />
-                            Xem chi tiết
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => openEditCustomerForm(customer)}
-                            className="admin-dark:text-white admin-dark:hover:bg-gray-700"
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Chỉnh sửa
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteCustomer(customer.id)}
-                            className="admin-dark:text-white admin-dark:hover:bg-gray-700"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Xóa
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <TableRowActions
+                        actions={[
+                          {
+                            label: "Xem chi tiết",
+                            icon: Eye,
+                            onClick: () => getFullInforCustomer(customer.id),
+                          },
+                          {
+                            label: "Chỉnh sửa",
+                            icon: Edit,
+                            onClick: () => openEditCustomerForm(customer),
+                          },
+                          {
+                            label: "Xóa",
+                            icon: Trash2,
+                            onClick: () => handleDeleteCustomer(customer.id),
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -317,23 +292,25 @@ export default function ServiceCustomerTable() {
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-between mt-4 gap-2 items-center">
-            <div>
+          <div className="flex flex-col sm:flex-row justify-between mt-4 gap-2 items-center w-full">
+            <div className="w-full flex justify-center sm:justify-start">
               <button
                 onClick={() => setOpenConfigCustomerVIP(true)}
                 type="button"
                 className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
               >
-                <span className=" transition-all duration-300  text-sm text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
+                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
                   Thiết lập điều kiện là khách hàng VIP
                 </span>
               </button>
             </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
+            <div className="w-full sm:w-fit items-center justify-center flex sm:justify-end">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -363,7 +340,7 @@ export default function ServiceCustomerTable() {
       {openDialogImportCustomer && (
         <div
           data-lenis-prevent
-          className="lenis-local overflow-y-auto fixed inset-0 z-50 flex items-center justify-center admin-dark:bg-black/90 bg-white min-h-screen"
+          className="lenis-local overflow-y-auto scrollbar-hide fixed inset-0 z-50 flex items-center justify-center admin-dark:bg-black/90 bg-white min-h-screen"
         >
           <div className="relative rounded-lg w-full flex flex-col items-center p-2">
             <button
@@ -384,32 +361,52 @@ export default function ServiceCustomerTable() {
 
       {/* Modal hiển thị thông tin chi tiết khách hàng */}
       {openReadInforCustomer && (
-        <div className="fixed inset-0 admin-dark:bg-black bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white admin-dark:bg-gray-900 p-6 rounded-2xl shadow-2xl w-full max-w-3xl relative max-h-[90vh] overflow-y-auto">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 admin-dark:bg-black/60 px-3 sm:px-5 md:px-8"
+          onClick={() => {
+            setOpenReadInforCustomer(false);
+            setCustomerDetail(null);
+            setLoadingCustomer(false);
+          }}
+        >
+          <div
+            className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto rounded-xl shadow-2xl
+               bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700
+               p-3 sm:p-4 transition-all duration-300 scrollbar-hide"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Nút đóng */}
             <button
-              className="rounded-full cursor-pointer w-8 h-8 border border-gray-500 absolute top-3 right-3 text-gray-500 hover:text-gray-700 admin-dark:text-gray-400 admin-dark:hover:text-white text-2xl font-bold z-10"
               onClick={() => {
                 setOpenReadInforCustomer(false);
                 setCustomerDetail(null);
                 setLoadingCustomer(false);
               }}
+              className="absolute top-1 sm:top-3 right-3 flex items-center justify-center
+             w-9 h-9 rounded-full border border-gray-300 bg-white/80 text-gray-600
+             hover:bg-gray-100 hover:text-gray-900 hover:shadow-md
+             admin-dark:border-gray-600 admin-dark:bg-gray-800 admin-dark:text-gray-300
+             admin-dark:hover:bg-gray-700 admin-dark:hover:text-white
+             transition-all duration-200 cursor-pointer backdrop-blur-sm z-50"
+              aria-label="Đóng"
             >
-              &times;
+              <X className="h-5 w-5" strokeWidth={2.2} />
             </button>
 
+            {/* Nội dung */}
             {(() => {
               if (loadingCustomer) {
                 return (
-                  <div className="text-center py-10 admin-dark:text-white">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 admin-dark:border-white"></div>
-                    <p className="mt-4">Đang tải dữ liệu...</p>
+                  <div className="flex flex-col items-center justify-center py-10 text-gray-700 admin-dark:text-gray-200">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800 admin-dark:border-gray-300"></div>
+                    <p className="mt-4 text-sm font-medium">Đang tải dữ liệu...</p>
                   </div>
                 );
               } else if (customerDetail) {
                 return <ReadInforCustomer data={customerDetail} />;
               } else {
                 return (
-                  <div className="text-center py-10 text-red-500 admin-dark:text-red-400">
+                  <div className="text-center py-10 text-red-600 admin-dark:text-red-400 font-medium">
                     Không tìm thấy dữ liệu hoặc có lỗi xảy ra
                   </div>
                 );
@@ -418,6 +415,7 @@ export default function ServiceCustomerTable() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

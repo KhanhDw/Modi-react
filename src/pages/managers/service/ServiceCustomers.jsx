@@ -44,10 +44,10 @@ export default function ServiceCustomers() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
-          <h2 className="md:text-xl sm:text-xl text-center md:text-start text-lg font-bold admin-dark:text-gray-100">
+          <h2 className="text-lg sm:text-xl md:text-[22px] font-bold text-center md:text-start admin-dark:text-gray-100">
             Quản lý khách hàng
           </h2>
-          <p className="text-muted-foreground text-center md:text-start sm:text-base text-sm admin-dark:text-gray-400">
+          <p className="text-xs text-center md:text-base md:text-start xs:text-sm admin-dark:text-gray-400">
             Quản lý thông tin khách hàng, lịch sử dịch vụ và tương tác với khách
             hàng.
           </p>
@@ -78,7 +78,7 @@ export default function ServiceCustomers() {
             <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground admin-dark:text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-black admin-dark:text-white">
+            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
               {initDataCustomer.length}
             </div>
             {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
@@ -93,7 +93,7 @@ export default function ServiceCustomers() {
             <UserPlus className="h-4 w-4 md:h-5 md:w-5 sm:h-6 sm:w-6 text-muted-foreground admin-dark:text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-black admin-dark:text-white">
+            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
               {newCustomersThisMonth.length}
             </div>
             {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
@@ -108,7 +108,7 @@ export default function ServiceCustomers() {
             <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground admin-dark:text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-black admin-dark:text-white">
+            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
               {customersOrderingService.length}
             </div>
             {/* <p className="text-xs text-[#ac9a00]">+2 từ tháng trước</p> */}
@@ -123,7 +123,7 @@ export default function ServiceCustomers() {
             <Star className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground admin-dark:text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-black admin-dark:text-white">
+            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
               {initDataCustomer.filter((c) => c.isVIP).length}
             </div>
           </CardContent>
