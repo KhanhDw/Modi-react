@@ -1,54 +1,87 @@
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function DeleteDialog({ post, handleDeletePost }) {
+export default function DeleteDialog({
+    name,
+    id,
+    handleDelete,
+    className = ""
+}) {
+    const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+
     return (
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-white hover:text-black border-gray-300 text-red-600 admin-dark:border-gray-600 admin-dark:text-red-500 admin-dark:bg-gray-800 hover:bg-red-50 admin-dark:hover:bg-red-900/10 cursor-pointer"
+        <>
+            {/* Nút Xóa (chỉ icon) */}
+            <button
+                type="button"
+                onClick={() => setIsOpen(true)}
+                aria-label={`Xóa mẫu ${name}`}
+                className={`flex items-center justify-center
+          p-1 h-8 w-8
+          rounded-sm bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-700
+          cursor-pointer border-none transition-colors duration-200
+          ${className}`}
+            >
+                <Trash2 className="h-4 w-4" />
+            </button>
+
+            {/* Dialog xác nhận xoá */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black/60 z-50"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="dialog-title"
+                    aria-describedby="dialog-description"
+                    onClick={() => setIsOpen(false)}
                 >
-                    <Trash2 className="h-4 w-4" />
-                </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white admin-dark:bg-gray-800">
-                <AlertDialogHeader>
-                    <AlertDialogTitle className="text-gray-900 admin-dark:text-white">
-                        Xác nhận xóa
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-gray-600 admin-dark:text-gray-300">
-                        Bạn có chắc chắn muốn xóa bài viết "{post.title}"? Hành động này không thể hoàn tác.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel
-                        onClick={() => navigate(0)}
-                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white cursor-pointer">
-                        Hủy
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                        onClick={() => handleDeletePost(post.id)}
-                        className="bg-red-600 hover:bg-red-700 admin-dark:bg-red-500 admin-dark:hover:bg-red-600 text-white cursor-pointer"
+                    <div
+                        className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 rounded-md max-w-sm w-full p-4 mx-4"
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        Xóa
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+                        <header>
+                            <h2
+                                id="dialog-title"
+                                className="text-gray-900 font-semibold admin-dark:text-gray-100 text-base sm:text-lg text-center mb-2 break-words"
+                            >
+                                Xác nhận xóa
+                            </h2>
+
+                            <p
+                                id="dialog-description"
+                                className="text-sm text-start sm:text-base text-gray-600 admin-dark:text-gray-400 mb-6 break-words whitespace-pre-line"
+                            >
+                                Bạn có chắc chắn muốn xóa bài viết Maketing &quot;{name}&quot;?
+                            </p>
+                        </header>
+
+                        <footer className="flex justify-end space-x-3">
+                            <button
+                                type="button"
+                                onClick={() => setIsOpen(false)}
+                                className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100 bg-gray-300 hover:bg-gray-200 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 px-4 py-1 rounded cursor-pointer"
+                            >
+                                <span className="text-xs sm:text-base font-semibold text-gray-700 admin-dark:text-gray-300">
+                                    Hủy
+                                </span>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    handleDelete(id);
+                                    setIsOpen(false);
+                                }}
+                                className="text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700 px-4 py-1 rounded cursor-pointer"
+                            >
+                                <span className="text-xs sm:text-base font-semibold">Xóa</span>
+                            </button>
+                        </footer>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

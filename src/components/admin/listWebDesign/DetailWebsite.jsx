@@ -1,22 +1,12 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { AppWindow, ArrowLeft, Calendar, Folder, Tag, Trash2 } from "lucide-react";
+import { AppWindow, ArrowLeft, Calendar, Folder, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
+import ConfirmDeleteDialog from "./DeleteAlertDialog";
 
 export default function WebsiteTemplatesDetail() {
   const { id } = useParams();
@@ -188,45 +178,14 @@ export default function WebsiteTemplatesDetail() {
           </div>
 
           {/* xóa */}
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                theme="admin"
-                size="sm"
-                variant="outline"
-                className="flex items-center mx-auto md:mx-0 lg:mx-auto shadow gap-1 sm:gap-2 border-none bg-red-500 hover:bg-red-600 admin-dark:bg-red-500 admin-dark:hover:bg-red-600 cursor-pointer"
-                title="Xóa"
-              >
-                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-gray-200 admin-dark:text-gray-200" />
-                <span className="text-xs sm:text-base font-semibold text-gray-200 admin-dark:text-gray-200">Xóa mẫu Website này</span>
-              </Button>
-            </AlertDialogTrigger>
+          <ConfirmDeleteDialog
+            name={template.name}
+            id={template.id}
+            handleDelete={handleDelete}
+            className="shadow-lg mx-auto"
+            isDetail={true}
+          />
 
-            <AlertDialogContent className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-base sm:text-lg text-center text-gray-900 admin-dark:text-gray-100">Xác nhận xóa</AlertDialogTitle>
-                <AlertDialogDescription className="text-xs sm:text-sm text-start text-gray-600 admin-dark:text-gray-400">
-                  Bạn có chắc chắn muốn xóa mẫu "{template.name}"? Hành động này không thể hoàn tác.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel
-                  onClick={() => navigate(-1)}
-                  className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100 cursor-pointer">
-                  <span className="text-sm sm:text-base font-semibold text-white">Hủy</span>
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    handleDelete(template.id);
-                    navigate(-1);
-                  }}
-                  className="text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700 cursor-pointer"
-                >
-                  <span className="text-sm sm:text-base font-semibold text-white">Xóa</span>
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
 
         {/* cột bên phải */}

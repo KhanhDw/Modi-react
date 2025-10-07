@@ -1,22 +1,12 @@
 import FilterModalListTemplateWebAdmin from "@/components/admin/templateWebsite/filterModalListTemplateWeb";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLenisToggle } from "@/contexts/LenisContext";
-import { Plus, Search, SquarePen, Trash2 } from "lucide-react";
+import { Plus, Search, SquarePen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import ConfirmDeleteDialog from "./DeleteAlertDialog";
 
 export default function WebsiteTemplateList() {
   const { templates, handleDelete } = useOutletContext();
@@ -216,7 +206,7 @@ export default function WebsiteTemplateList() {
                     {/* Sidebar phải */}
                     <div className="w-full md:w-56 md:h-full md:pt-0 flex flex-col justify-between border-t md:border-t-0 md:border-l-2 border-gray-300">
                       <div className="h-fit md:pl-2 pt-2 md:pt-0">
-                        <div className="flex items-center justify-end md:justify-center gap-1 mb-2">
+                        <div className="flex items-center justify-end md:justify-center gap-2 mb-2">
                           <div
                             className={`${t.export_state ? "bg-green-600 text-white" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-sm`}
                           >
@@ -224,38 +214,26 @@ export default function WebsiteTemplateList() {
                           </div>
 
                           <Button
-                            size="sm"
-                            variant="outline"
+                            type="button"
                             onClick={() => navigate(`${t.id}/edit`)}
-                            className="h-8 w-8 p-0 cursor-pointer rounded-sm"
+                            className="flex items-center justify-center
+    h-8 w-8 p-1
+    rounded-sm bg-blue-100 text-blue-600
+    hover:bg-blue-200 hover:text-blue-700
+    admin-dark:bg-blue-950 admin-dark:text-blue-400
+    admin-dark:hover:bg-blue-900
+    transition-colors duration-200 border-none cursor-pointer shadow-lg"
                           >
-                            <SquarePen className="h-4 w-4" />
+                            <SquarePen className="h-4 w-4 sm:h-5 sm:w-5" />
                           </Button>
 
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline" className="h-8 w-8 p-0 text-red-500 cursor-pointer">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
+                          <ConfirmDeleteDialog
+                            name={t.name}
+                            id={t.id}
+                            handleDelete={handleDelete}
+                            className="shadow-lg"
+                          />
 
-                            <AlertDialogContent className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="text-base sm:text-lg text-center text-gray-900 admin-dark:text-gray-100">Xác nhận xóa</AlertDialogTitle>
-                                <AlertDialogDescription className="text-xs sm:text-sm text-start text-gray-600 admin-dark:text-gray-400">
-                                  Bạn có chắc chắn muốn xóa mẫu "{t.name}"? Hành động này không thể hoàn tác.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => navigate(0)} className="text-xs sm:text-sm border border-gray-200 admin-dark:border-gray-700 text-gray-900 admin-dark:text-gray-100 cursor-pointer">
-                                  <span className="text-xs sm:text-base font-semibold text-gray-200 admin-dark:text-gray-200">Hủy</span>
-                                </AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(t.id)} className="text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700 cursor-pointer">
-                                  <span className="text-xs sm:text-base font-semibold text-gray-200 admin-dark:text-gray-200">Xóa</span>
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
                         </div>
                         <div className="text-right">
                           <div className="text-sm sm:text-lg font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">

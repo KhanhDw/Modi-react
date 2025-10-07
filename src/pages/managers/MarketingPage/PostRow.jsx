@@ -97,15 +97,25 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
                 <div className="flex justify-end gap-2">
                     <Link to={`${location.pathname}/${post.id}/edit`}>
                         <Button
-                            theme="admin"
-                            variant="outline"
-                            size="sm"
-                            className="bg-white hover:text-black border-gray-300 text-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 hover:bg-gray-100 admin-dark:hover:bg-gray-700 cursor-pointer"
+                            type="button"
+                            className="flex items-center justify-center
+                            h-8 w-8 p-1
+                            rounded-sm bg-blue-100 text-blue-600
+                            hover:bg-blue-200 hover:text-blue-700
+                            admin-dark:bg-blue-950 admin-dark:text-blue-400
+                            admin-dark:hover:bg-blue-900
+                            transition-colors duration-200 border-none cursor-pointer"
                         >
-                            <SquarePen className="h-4 w-4" />
+                            <SquarePen className="h-4 w-4 sm:h-5 sm:w-5" />
                         </Button>
                     </Link>
-                    <DeleteDialog post={post} handleDeletePost={handleDeletePost} />
+
+                    <DeleteDialog
+                        name={post.title}
+                        id={post.id}
+                        handleDelete={handleDeletePost}
+                    />
+
                 </div>
             </TableCell>
         </TableRow>

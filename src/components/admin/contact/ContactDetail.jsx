@@ -9,9 +9,9 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
       <div className="space-y-2 sm:text-base">
         {/* Họ tên */}
         <div>
-          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+          <span className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
             Họ tên
-          </label>
+          </span>
           <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
             {contact.ho_ten}
           </p>
@@ -19,9 +19,9 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
 
         {/* Email */}
         <div>
-          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+          <span className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
             Email
-          </label>
+          </span>
           <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
             {contact.email}
           </p>
@@ -29,9 +29,9 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
 
         {/* Số điện thoại */}
         <div>
-          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+          <span className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
             Số điện thoại
-          </label>
+          </span>
           <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
             {contact.so_dien_thoai}
           </p>
@@ -39,9 +39,9 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
 
         {/* Nội dung */}
         <div>
-          <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+          <span className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
             Nội dung
-          </label>
+          </span>
           <textarea
             readOnly
             rows={3}
@@ -56,9 +56,9 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
         <div className="flex flex-wrap items-center gap-2 sm:gap-5 justify-start">
           {/* Ngày gửi */}
           <div>
-            <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+            <span className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
               Ngày gửi
-            </label>
+            </span>
             <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
               {contact.ngay_gui}
             </p>
@@ -66,9 +66,9 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
 
           {/* Trạng thái */}
           <div>
-            <label className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
+            <span className="block text-sm sm:text-base font-medium text-gray-800 admin-dark:text-gray-100 mb-1">
               Trạng thái
-            </label>
+            </span>
             <select
               value={contact.trang_thai}
               onChange={(e) => onStatusChange(contact.id, e.target.value)}
@@ -82,6 +82,5 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
 
       </div>
     </Modal>
-
   )
 }

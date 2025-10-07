@@ -50,9 +50,9 @@ export default function DailyRevenueTable({ data }) {
                                     <TableCell>{(currentPage - 1) * pageSize + index + 1}</TableCell>
                                     <TableCell>{new Date(item.completed_date).toLocaleDateString("vi-VN")}</TableCell>
                                     <TableCell>{item.service_name}</TableCell>
-                                    <TableCell>{item.customer_name}</TableCell>
-                                    <TableCell>{item.phone}</TableCell>
-                                    <TableCell>
+                                    <TableCell className={'text-gray-800 admin-dark:text-gray-100 font-medium'}>{item.customer_name}</TableCell>
+                                    <TableCell className={'text-amber-600 admin-dark:text-amber-400 font-medium'}>{item.phone}</TableCell>
+                                    <TableCell className={'text-red-600 admin-dark:text-green-400 font-medium'}>
                                         {Number(item.total).toLocaleString("vi-VN", {
                                             style: "currency",
                                             currency: "VND",

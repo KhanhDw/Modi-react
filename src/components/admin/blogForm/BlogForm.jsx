@@ -1,6 +1,7 @@
 import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Textarea } from "@material-tailwind/react";
 import { useEffect, useRef, useState } from "react";
+import CustomSelect from "./OptionSelect";
 
 export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel }) {
   const editorRef = useRef(null);
@@ -180,9 +181,9 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
+          <span className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
             Tiêu đề
-          </label>
+          </span>
           <Textarea
             name="title"
             value={formData.title}
@@ -203,30 +204,27 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
         </div>
 
         {/* Status & Published */}
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
+        <div className="flex flex-col sm:flex-row gap-4 md:gap-10 lg:flex-wrap lg:gap-4">
+          <div className="w-fit lg:w-full">
+            <span className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Trạng thái
-            </label>
-            <select
-              name="status"
+            </span>
+            <CustomSelect
               value={formData.status}
-              onChange={handleChange}
-              className="w-full px-2 py-2 border-2 border-gray-300 rounded-lg cursor-pointer
-     admin-dark:border-gray-700 admin-dark:text-gray-200
-    focus:outline-none focus:border-blue-500 admin-dark:focus:border-blue-400
-    transition-colors duration-200"
-            >
-              <option value="draft">Nháp</option>
-              <option value="published">Công khai</option>
-            </select>
+              onValueChange={(newValue) => handleChange({ target: { name: "status", value: newValue } })}
+              options={[
+                { value: "draft", label: "Nháp" },
+                { value: "published", label: "Công khai" },
+              ]}
+              className={'w-full sm:w-40'}
+            />
 
           </div>
 
-          <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
+          <div className="w-fit lg:w-full xl:w-fit">
+            <span className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Ngày đăng
-            </label>
+            </span>
             <input autoComplete="off"
               type="datetime-local"
               name="published_at"
@@ -242,9 +240,9 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
 
         {/* Image */}
         <div>
-          <label className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
+          <span className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
             Ảnh
-          </label>
+          </span>
           <input autoComplete="off"
             type="file"
             accept="image/*"
