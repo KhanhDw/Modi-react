@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useMemo,
+} from "react";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ModalServices = forwardRef((props, ref) => {
-
   const [services, setServices] = useState([]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [childrenMap, setChildrenMap] = useState({});
@@ -19,7 +25,10 @@ const ModalServices = forwardRef((props, ref) => {
     href: "#",
     section_id: child.section_id,
     section_type: child.section_type,
-    description: child.description || { en: slugify(child.title?.en || ""), vi: "" }
+    description: child.description || {
+      en: slugify(child.title?.en || ""),
+      vi: "",
+    },
   });
 
   const loadAllData = async () => {
@@ -33,8 +42,8 @@ const ModalServices = forwardRef((props, ref) => {
       const sectionsArray = Array.isArray(sectionsRes)
         ? sectionsRes
         : Array.isArray(sectionsRes.data)
-          ? sectionsRes.data
-          : [];
+        ? sectionsRes.data
+        : [];
 
       // lọc và chuẩn hóa danh sách cha
       const merged = sectionsArray
@@ -67,14 +76,17 @@ const ModalServices = forwardRef((props, ref) => {
           const itemsArray = Array.isArray(json)
             ? json
             : Array.isArray(json.data)
-              ? json.data
-              : [];
+            ? json.data
+            : [];
 
           // CHÚ Ý: item mẫu có field section_id = id của section cha
           // defensive: lọc theo section_id === service.id (để đảm bảo đúng cha)
           const linked = itemsArray
-            .filter(ch => ch.section_id === service.id || ch.section_type === service.type)
-            .map(ch => normalizeChild(ch));
+            .filter(
+              (ch) =>
+                ch.section_id === service.id || ch.section_type === service.type
+            )
+            .map((ch) => normalizeChild(ch));
 
           return [service.id, linked];
         })
@@ -88,7 +100,7 @@ const ModalServices = forwardRef((props, ref) => {
 
   // expose hàm fetch ra ngoài
   useImperativeHandle(ref, () => ({
-    loadAllData
+    loadAllData,
   }));
 
   // vẫn giữ useEffect cũ nếu muốn hover cũng fetch như bình thường
@@ -112,13 +124,12 @@ const ModalServices = forwardRef((props, ref) => {
   };
 
   const activeService = memoizedServices.find((s) => s.id === hoveredItem);
-  const activeChildren = useMemo(() =>
-    activeService ? childrenMap[activeService.id] || [] : [],
+  const activeChildren = useMemo(
+    () => (activeService ? childrenMap[activeService.id] || [] : []),
     [activeService, childrenMap]
   );
 
   const hasActiveSubmenu = activeChildren.length > 0;
-
 
   return (
     <motion.div
@@ -129,15 +140,15 @@ const ModalServices = forwardRef((props, ref) => {
       className="w-fit relative"
       onMouseLeave={handleMouseLeaveContainer}
     >
-      <div
-        className="rounded-xl bg-gray-800/80 backdrop-blur-lg border border-gray-700/60 shadow-2xl overflow-hidden"
-      >
+      <div className="rounded-xl bg-gray-800/80 backdrop-blur-lg border border-gray-700/60 shadow-2xl overflow-hidden">
         <div className="flex">
           {/* Cột 1: Menu cấp 1 */}
           <div
             className={`
           flex-shrink-0 w-64 p-2
-          ${memoizedServices.length > 10 ? "h-[480px] overflow-y-auto" : "h-fit"}
+          ${
+            memoizedServices.length > 10 ? "h-[480px] overflow-y-auto" : "h-fit"
+          }
         `}
             onWheel={(e) => e.stopPropagation()}
           >
@@ -145,7 +156,8 @@ const ModalServices = forwardRef((props, ref) => {
               {memoizedServices.map((service) => {
                 const isActive = hoveredItem === service.id;
                 const hasSubItems =
-                  Array.isArray(childrenMap[service.id]) && childrenMap[service.id].length > 0;
+                  Array.isArray(childrenMap[service.id]) &&
+                  childrenMap[service.id].length > 0;
 
                 return (
                   <Link
@@ -154,9 +166,10 @@ const ModalServices = forwardRef((props, ref) => {
                     className={`
                       group cursor-pointer transition-all duration-200
                       px-3 py-2.5 rounded-lg relative flex items-center justify-between
-                      ${isActive && hasSubItems
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700/50 hover:text-white"
+                      ${
+                        isActive && hasSubItems
+                          ? "bg-gray-900 text-white"
+                          : "text-gray-300 hover:bg-gray-700/50 hover:text-white"
                       }
                     `}
                     onMouseEnter={() => handleMouseEnterItem(service.id)}
@@ -175,7 +188,11 @@ const ModalServices = forwardRef((props, ref) => {
                       <ChevronRight
                         className={`
                           ml-2 w-4 h-4 text-gray-500 transition-transform duration-200
-                          ${isActive ? "translate-x-1" : "group-hover:translate-x-1"}
+                          ${
+                            isActive
+                              ? "translate-x-1"
+                              : "group-hover:translate-x-1"
+                          }
                         `}
                       />
                     )}
@@ -215,15 +232,17 @@ const ModalServices = forwardRef((props, ref) => {
                       <li key={sub.id}>
                         <Link
                           to={`/services/${sub.section_type}/${sub.description?.en}`}
-                          className="group flex items-center px-3 py-2.5 
-                       text-gray-300 hover:text-white 
-                       transition-all duration-200 
-                       cursor-pointer rounded-lg text-sm font-medium 
+                          className="group flex items-center px-3 py-2.5
+                       text-gray-300 hover:text-white
+                       transition-all duration-200
+                       cursor-pointer rounded-lg text-sm font-medium
                        hover:bg-gray-700/50"
                         >
-                          <span className="w-1.5 h-1.5 bg-gray-500 rounded-full mr-3 
-                             transition-all duration-200 
-                             group-hover:bg-emerald-400 group-hover:scale-125"></span>
+                          <span
+                            className="w-1.5 h-1.5 bg-gray-500 rounded-full mr-3
+                             transition-all duration-200
+                             group-hover:bg-emerald-400 group-hover:scale-125"
+                          ></span>
                           <span className="truncate">{sub.title}</span>
                         </Link>
                       </li>
@@ -231,13 +250,12 @@ const ModalServices = forwardRef((props, ref) => {
                   </ul>
                 </div>
               </motion.div>
-
             )}
           </AnimatePresence>
         </div>
       </div>
     </motion.div>
   );
-})
+});
 
 export default ModalServices;

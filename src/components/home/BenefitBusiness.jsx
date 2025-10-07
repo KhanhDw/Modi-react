@@ -82,7 +82,9 @@ function BenefitBusiness({ data, activeLang }) {
                     : "text-black dark:text-white"
                 }`}
               />
-              <span>{item.title?.[activeLang]}</span>
+              <span className="xs:text-lg xs:font-semibold">
+                {item.title?.[activeLang]}
+              </span>
             </motion.button>
 
             <AnimatePresence mode="wait">
@@ -94,7 +96,7 @@ function BenefitBusiness({ data, activeLang }) {
                   transition={{ duration: 0.4 }}
                   className="pl-6 mt-2"
                 >
-                  <ul className="list-disc space-y-1 dark:text-white text-black xs:text-xs text-sm md:text-base lg:text-lg xl:text-xl">
+                  <ul className="list-disc space-y-1 dark:text-white text-black xs:text-sm md:text-base lg:text-lg xl:text-xl">
                     {item.description?.[activeLang]?.map(
                       (contentItem, subIndex) => (
                         <li key={subIndex}>{contentItem}</li>
