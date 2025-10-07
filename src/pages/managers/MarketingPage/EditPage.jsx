@@ -2,12 +2,12 @@ import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SocialNetworkManager from "./SocialNetworkManager";
+import CustomSelect from "./OptionsSelect";
+import CustomSelectWithFooter from "./SocialNetworksSelect";
 
 export default function EditPage() {
     const editorRef = useRef(null);
@@ -223,7 +223,7 @@ export default function EditPage() {
                 {/* Cột trái */}
                 <div className="lg:w-1/3">
                     {!isOpenEditNetwork ? (
-                        <div className="flex flex-col gap-4 p-3 border-2 border-slate-300 admin-dark:border-slate-600 rounded-2xl bg-gray-50 admin-dark:bg-gray-900">
+                        <div className="flex flex-col gap-4 p-3 border-2 border-slate-300 admin-dark:border-slate-600 rounded-2xl bg-gray-50 admin-dark:bg-gray-800">
                             {/* Tiêu đề */}
                             <div className="space-y-3">
                                 <Label>Tiêu đề</Label>
@@ -239,42 +239,45 @@ export default function EditPage() {
                             <div className="flex flex-wrap gap-4">
                                 <div className="space-y-3">
                                     <Label>Mạng xã hội</Label>
-                                    <Select
+                                    <CustomSelectWithFooter
                                         value={String(formData.platform_id || "")}
-                                        onValueChange={(value) => setFormData({ ...formData, platform_id: Number(value) })}
-                                    >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
-                                            <SelectValue placeholder="Chọn mạng xã hội" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {socialNetworks.map((network) => (
-                                                <SelectItem className={'cursor-pointer'} key={network.id} value={String(network.id)}>
-                                                    {network.name}
-                                                </SelectItem>
-                                            ))}
-                                            <Separator className="mt-2" />
-                                            <Button onClick={() => setIsOpenEditNetwork(true)} theme="admin" className="w-full mt-2 cursor-pointer">
-                                                Thêm mạng xã hội mới
-                                            </Button>
-                                        </SelectContent>
-                                    </Select>
+                                        onValueChange={(val) =>
+                                            setFormData({ ...formData, platform_id: Number(val) })
+                                        }
+                                        placeholder="Chọn mạng xã hội"
+                                        className="w-full"
+                                        options={socialNetworks.map((network, index) => ({
+                                            label: network.name,
+                                            value: String(network.id ?? `temp-${index}`),
+                                        }))}
+                                        footer={
+                                            <>
+                                                <div className="border-t border-gray-200 admin-dark:border-gray-700 mt-2" />
+                                                <Button
+                                                    onClick={() => setIsOpenEditNetwork(true)}
+                                                    theme="admin"
+                                                    className="w-full mt-2 cursor-pointer"
+                                                >
+                                                    Thêm mạng xã hội mới
+                                                </Button>
+                                            </>
+                                        }
+                                    />
                                 </div>
 
                                 <div className="space-y-3">
                                     <Label>Trạng thái</Label>
-                                    <Select
+                                    <CustomSelect
                                         value={formData.status || ""}
                                         onValueChange={(value) => setFormData({ ...formData, status: value })}
-                                    >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
-                                            <SelectValue placeholder="Chọn trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem className={'cursor-pointer'} value="draft">Bản nháp</SelectItem>
-                                            <SelectItem className={'cursor-pointer'} value="published">Đã xuất bản</SelectItem>
-                                            <SelectItem className={'cursor-pointer'} value="archived">Lưu trữ</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                        placeholder="Chọn trạng thái"
+                                        className={'md:w-42'}
+                                        options={[
+                                            { label: "Bản nháp", value: "draft" },
+                                            { label: "Đã xuất bản", value: "published" },
+                                            { label: "Lưu trữ", value: "archived" },
+                                        ]}
+                                    />
                                 </div>
                             </div>
 

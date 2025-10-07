@@ -130,7 +130,7 @@ export default function WebsiteTemplateList() {
                 placeholder="Tìm kiếm mẫu website..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-full border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm placeholder:text-gray-500 admin-dark:placeholder:text-gray-400"
+                className="pl-10 w-full admin-dark:bg-gray-800 border-2 border-gray-300 admin-dark:border-gray-700 rounded-lg shadow-sm placeholder:text-gray-500 admin-dark:placeholder:text-gray-400"
               />
             </div>
           </div>

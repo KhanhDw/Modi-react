@@ -3,13 +3,13 @@ import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useMarketing } from "@/pages/managers/MarketingPage/hooks/MarketingContext";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SocialNetworkManager from "./SocialNetworkManager";
+import CustomSelect from "./OptionsSelect";
+import CustomSelectWithFooter from "./SocialNetworksSelect";
 
 export default function AddPage() {
     const editorRef = useRef(null);
@@ -145,49 +145,43 @@ export default function AddPage() {
                                 />
                             </div>
 
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-wrap gap-3 w-full">
                                 {/* Social network */}
                                 <div className="space-y-2">
                                     <Label>Mạng xã hội</Label>
-                                    <Select
+                                    <CustomSelectWithFooter
                                         value={platformId || ""}
                                         onValueChange={setPlatformId}
-                                        className="w-full border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
-                                    >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg">
-                                            <SelectValue placeholder="Chọn mạng xã hội" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {socialNetworks.map((network, index) => (
-                                                <SelectItem className={'cursor-pointer'} key={network.id ?? `temp-${index}`} value={network.id}>
-                                                    {network.name}
-                                                </SelectItem>
-                                            ))}
-                                            <Separator className="mt-2" />
-                                            <Button onClick={handleOpenEditNetwork} className="w-full mt-2 cursor-pointer">
-                                                Thêm mạng xã hội mới
-                                            </Button>
-                                        </SelectContent>
-                                    </Select>
+                                        placeholder="Chọn mạng xã hội"
+                                        className="w-50"
+                                        options={socialNetworks.map((network, index) => ({
+                                            label: network.name,
+                                            value: String(network.id ?? `temp-${index}`),
+                                        }))}
+                                        footer={
+                                            <>
+                                                <Button onClick={handleOpenEditNetwork} className="w-full cursor-pointer shadow">
+                                                    Thêm mạng xã hội mới
+                                                </Button>
+                                            </>
+                                        }
+                                    />
                                 </div>
 
                                 {/* Status */}
                                 <div className="space-y-2">
                                     <Label>Trạng thái</Label>
-                                    <Select
+                                    <CustomSelect
                                         value={status}
                                         onValueChange={setStatus}
-                                        className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg"
-                                    >
-                                        <SelectTrigger className="border-2 border-slate-300 admin-dark:border-slate-600 rounded-lg cursor-pointer">
-                                            <SelectValue placeholder="Chọn trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem className={'cursor-pointer'} value="draft">Bản nháp</SelectItem>
-                                            <SelectItem className={'cursor-pointer'} value="published">Đã xuất bản</SelectItem>
-                                            <SelectItem className={'cursor-pointer'} value="archived">Lưu trữ</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                        placeholder="Chọn trạng thái"
+                                        className={'md:w-42'}
+                                        options={[
+                                            { label: "Bản nháp", value: "draft" },
+                                            { label: "Đã xuất bản", value: "published" },
+                                            { label: "Lưu trữ", value: "archived" },
+                                        ]}
+                                    />
                                 </div>
                             </div>
 

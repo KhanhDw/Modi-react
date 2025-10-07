@@ -45,12 +45,11 @@ export default function ServiceNav() {
           key={to}
           to={to}
           className={({ isActive }) =>
-            `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
-              isActive ||
+            `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ||
               (to === "service_overview" &&
                 location.pathname === "/managers/services")
-                ? "bg-primary admin-dark:bg-gray-700 text-white"
-                : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+              ? "bg-gray-800 admin-dark:bg-gray-700 text-white"
+              : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
             }`
           }
         >

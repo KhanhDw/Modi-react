@@ -40,8 +40,8 @@ const ServiceManager = ({
             className="cursor-pointer"
             disabled={stageMaster.length === 0}
           >
-            <Plus className="w-4 h-4" />
-            <span className="text-sm sm:text-base font-semibold text-gray-700 admin-dark:text-gray-300">
+            <Plus className="w-4 h-4 text-gray-100 admin-dark:text-gray-300" />
+            <span className="text-sm sm:text-base font-semibold text-gray-100 admin-dark:text-gray-300">
               Chọn dịch vụ
             </span>
           </Button>

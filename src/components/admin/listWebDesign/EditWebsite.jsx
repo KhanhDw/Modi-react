@@ -3,18 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import CustomSelect from "@/pages/managers/MarketingPage/OptionsSelect";
 
 const categories = [
   { key: "E-commerce", name: "Thương Mại Điện Tử" },
@@ -266,9 +260,8 @@ export default function WebsiteTemplateEdit() {
     if (!id) return;
     try {
       const langPath = lang === "en" ? `/${lang}` : "";
-      const url = `${
-        import.meta.env.VITE_MAIN_BE_URL
-      }${langPath}/api/web-samples/${id}`;
+      const url = `${import.meta.env.VITE_MAIN_BE_URL
+        }${langPath}/api/web-samples/${id}`;
       const res = await fetch(url);
 
       let websiteData = {};
@@ -393,10 +386,9 @@ export default function WebsiteTemplateEdit() {
               name={lang.key}
               onClick={() => handleActiveLangbtn(lang.key)}
               className={`flex px-2 sm:px-3 py-1 sm:py-1.5 rounded-md font-semibold text-sm sm:text-xl transition-colors
-                ${
-                  activeLang === lang.key
-                    ? "bg-blue-600 text-white cursor-pointer admin-dark:bg-blue-500 admin-dark:text-white"
-                    : "bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
+                ${activeLang === lang.key
+                  ? "bg-blue-600 text-white cursor-pointer admin-dark:bg-blue-500 admin-dark:text-white"
+                  : "bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
                 }`}
             >
               {lang.label}
@@ -414,11 +406,10 @@ export default function WebsiteTemplateEdit() {
             <Button
               type="button"
               onClick={toggleExportState}
-              className={`w-full sm:w-auto mt-2 sm:mt-0 ${
-                localExportState === 1
-                  ? "bg-green-600 hover:bg-green-700"
-                  : "bg-gray-400 hover:bg-gray-500"
-              } text-white cursor-pointer text-sm sm:text-base`}
+              className={`w-full sm:w-auto mt-2 sm:mt-0 ${localExportState === 1
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-gray-400 hover:bg-gray-500"
+                } text-white cursor-pointer text-sm sm:text-base`}
               disabled={isLoading}
             >
               {localExportState === 1 ? "Đã xuất bản" : "Chưa xuất bản"}
@@ -471,38 +462,30 @@ export default function WebsiteTemplateEdit() {
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <div className="flex-1 space-y-2">
+              <div className="flex flex-col flex-wrap sm:flex-row gap-4 sm:gap-6">
+                <div className="flex-1 space-y-2 w-full">
                   <Label
                     htmlFor="category"
                     className="text-gray-800 admin-dark:text-gray-200"
                   >
                     Danh mục *
                   </Label>
-                  <Select
+
+                  <CustomSelect
                     value={formData.category || ""}
                     onValueChange={(value) =>
                       setFormData((prev) => ({ ...prev, category: value }))
                     }
-                  >
-                    <SelectTrigger className="bg-white admin-dark:bg-gray-800 border-gray-300 admin-dark:border-gray-600 text-gray-900 admin-dark:text-gray-100 cursor-pointer text-sm sm:text-base">
-                      <SelectValue placeholder="Chọn danh mục" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white admin-dark:bg-gray-800 text-gray-900 admin-dark:text-gray-100 border border-gray-300 admin-dark:border-gray-600">
-                      {categories.map((category) => (
-                        <SelectItem
-                          className="cursor-pointer"
-                          key={category.key} // Key của React là "E-commerce"
-                          value={category.key} // Value lưu vào formData là "E-commerce"
-                        >
-                          {category.name}{" "}
-                          {/* Hiển thị là "Thương Mại Điện Tử" */}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    placeholder="Chọn danh mục"
+                    className="text-sm sm:text-base w-full sm:w-70 md:w-full"
+                    options={categories.map((cat) => ({
+                      value: cat.key,
+                      label: cat.name,
+                    }))}
+                  />
                 </div>
-                <div className="flex-1 space-y-2">
+
+                <div className="flex-1 space-y-2 w-full">
                   <Label
                     htmlFor="price"
                     className="text-gray-800 admin-dark:text-gray-200"
@@ -521,7 +504,7 @@ export default function WebsiteTemplateEdit() {
                     decimalScale={0}
                     allowNegative={false}
                     prefix="đ "
-                    className="bg-white admin-dark:bg-gray-800 focus:outline-none border admin-dark:border-gray-700 border-gray-300 text-gray-900 admin-dark:text-gray-100 rounded-md px-3 py-2 text-sm sm:text-base"
+                    className="bg-white admin-dark:bg-gray-800 focus:outline-none border admin-dark:border-gray-700 border-gray-300 text-gray-900 admin-dark:text-gray-100 rounded-md px-3 py-1 text-sm sm:text-base"
                     placeholder="Nhập giá tiền"
                   />
                 </div>
@@ -702,8 +685,8 @@ export default function WebsiteTemplateEdit() {
                   {isLoading
                     ? "Đang lưu..."
                     : template
-                    ? "Cập nhật"
-                    : "Thêm mẫu"}{" "}
+                      ? "Cập nhật"
+                      : "Thêm mẫu"}{" "}
                   {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}
                 </span>
               </Button>

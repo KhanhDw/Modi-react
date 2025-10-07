@@ -35,12 +35,12 @@ export default function DailyRevenueTable({ data }) {
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>STT</TableHead>
-                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Ngày</TableHead>
-                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Dịch vụ</TableHead>
-                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Khách hàng</TableHead>
-                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Số điện thoại</TableHead>
-                            <TableHead className={'text-gray-400 admin-dark:text-gray-200'}>Doanh thu</TableHead>
+                            <TableHead className={'text-gray-500 admin-dark:text-gray-200'}>STT</TableHead>
+                            <TableHead className={'text-gray-500 admin-dark:text-gray-200'}>Ngày</TableHead>
+                            <TableHead className={'text-gray-500 admin-dark:text-gray-200'}>Dịch vụ</TableHead>
+                            <TableHead className={'text-gray-500 admin-dark:text-gray-200'}>Khách hàng</TableHead>
+                            <TableHead className={'text-gray-500 admin-dark:text-gray-200'}>Số điện thoại</TableHead>
+                            <TableHead className={'text-gray-500 admin-dark:text-gray-200'}>Doanh thu</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

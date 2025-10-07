@@ -48,28 +48,29 @@ function SortableRow({ v, i, onAskToggle }) {
       className="
       group
       cursor-grab
+      focus:cursor-grabbing
       transition-all duration-200 ease-in-out
-      border-b border-gray-200 dark:border-gray-700
-      hover:bg-indigo-50 dark:hover:bg-gray-800
+      border-b border-gray-200 admin-dark:border-gray-700
+      hover:bg-indigo-50 admin-dark:hover:bg-gray-800
     "
     >
       {/* Cột 1: STT (Số thứ tự) */}
-      <td className="px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400">
+      <td className="px-4 py-3 text-sm font-medium text-gray-500 admin-dark:text-gray-400">
         {i + 1}
       </td>
 
       {/* Cột 2: displayType (Loại hiển thị) */}
-      <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+      <td className="px-4 py-3 text-sm text-gray-700 admin-dark:text-gray-300">
         {displayType}
       </td>
 
       {/* Cột 3: v.type (Loại dữ liệu) */}
-      <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+      <td className="px-4 py-3 text-sm text-gray-700 admin-dark:text-gray-300">
         {v.type}
       </td>
 
       {/* Cột 4: v.position (Vị trí) */}
-      <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+      <td className="px-4 py-3 text-sm text-gray-700 admin-dark:text-gray-300">
         {v.position}
       </td>
 
@@ -84,15 +85,14 @@ function SortableRow({ v, i, onAskToggle }) {
           className={`
           inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide
           transition-colors duration-200 shadow-sm
-          ${
-            v.status === 1
-              ? "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800"
-              : "bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800"
-          }
+          ${v.status === 1
+              ? "bg-green-100 text-green-800 hover:bg-green-200 admin-dark:bg-green-900 admin-dark:text-green-300 admin-dark:hover:bg-green-800"
+              : "bg-red-100 text-red-800 hover:bg-red-200 admin-dark:bg-red-900 admin-dark:text-red-300 admin-dark:hover:bg-red-800"
+            }
         `}
         >
           {/* Thêm biểu tượng (Icon) để trực quan hơn */}
-          {v.status === 1 ? "Hoạt động" : "Tạm dừng"}
+          <span className="text-xs font-semibold">{v.status === 1 ? "Hoạt động" : "Tạm dừng"}</span>
         </button>
       </td>
     </tr>
@@ -199,18 +199,17 @@ export default function VitriTable({ initialVitri = [], onChangeVitri }) {
           items={vitri.map((v, i) => v.id ?? `vitri-${i}`)}
           strategy={verticalListSortingStrategy}
         >
-          <table className="min-w-full border-collapse shadow-md ">
+          <table className="min-w-full border-collapse shadow-sm">
             <thead className="bg-gray-200 admin-dark:bg-gray-700">
               <tr>
                 {columnName.map((c, i) => (
                   <th
                     key={i}
-                    className={`px-4 py-3 text-left font-semibold text-gray-700
-                    border-b admin-dark:text-gray-200 admin-dark:border-gray-600  ${
-                      c === "Trạng thái"
+                    className={`px-4 py-3 text-sm sm:text-base text-left font-semibold text-gray-700
+                      admin-dark:text-gray-200 ${c === "Trạng thái"
                         ? "flex items-center justify-center text-center "
                         : ""
-                    }`}
+                      }`}
                   >
                     {c}
                   </th>
