@@ -9,10 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
-import { ChevronLeft, ChevronRight, DollarSign, Layers, Star, Target } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  DollarSign,
+  Layers,
+  Star,
+  Target,
+} from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-
 
 // Hàm chuyển đổi bookings → services
 function transformBookingsToServices(bookings) {
@@ -43,9 +49,65 @@ function transformBookingsToServices(bookings) {
   return Object.values(serviceMap);
 }
 
+// Component StatCard tái sử dụng
+const StatCard = ({ title, icon: Icon, value, format = "count" }) => (
+  <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
+    <CardHeader className="flex flex-row items-center justify-between">
+      <CardTitle className="xs:text-xs xs:font-semibold text-sm font-medium admin-dark:text-white text-black">
+        {title}
+      </CardTitle>
+      <Icon className="xs:hidden md:block  h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
+    </CardHeader>
+    <CardContent>
+      <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">
+        {format === "currency"
+          ? value.toLocaleString("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            })
+          : value}
+      </div>
+    </CardContent>
+  </Card>
+);
+
+// Mảng dữ liệu cho các thẻ thống kê
+const getStatsData = (
+  initDataService,
+  initDataBooking,
+  initDataCustomer,
+  totalRevenue
+) => [
+  {
+    title: "Tổng dịch vụ",
+    icon: Layers,
+    value: initDataService.length,
+    format: "count",
+  },
+  {
+    title: "Tổng doanh thu",
+    icon: DollarSign,
+    value: totalRevenue,
+    format: "currency",
+  },
+  {
+    title: "Đơn đặt",
+    icon: Target,
+    value: initDataBooking.length,
+    format: "count",
+  },
+  {
+    title: "Khách hàng",
+    icon: Star,
+    value: initDataCustomer.filter((c) => c.status === "active").length,
+    format: "count",
+  },
+];
+
 export default function ServiceOverview() {
   useLenisLocal(".lenis-local");
-  const { initDataService, initDataBooking, initDataCustomer } = useOutletContext();
+  const { initDataService, initDataBooking, initDataCustomer } =
+    useOutletContext();
 
   // Gom dữ liệu
   const services = transformBookingsToServices(initDataBooking);
@@ -80,70 +142,46 @@ export default function ServiceOverview() {
   };
 
   const totalRevenue = initDataBooking
-    .filter(b => b.status === "completed" && b.is_deleted === 0)
-    .reduce((sum, b) => sum + Number(b.total || b.price) * (b.quantity || 1), 0);
+    .filter((b) => b.status === "completed" && b.is_deleted === 0)
+    .reduce(
+      (sum, b) => sum + Number(b.total || b.price) * (b.quantity || 1),
+      0
+    );
 
+  // Lấy dữ liệu cho stats cards
+  const statsData = getStatsData(
+    initDataService,
+    initDataBooking,
+    initDataCustomer,
+    totalRevenue
+  );
 
   return (
     <div className="text-black admin-dark:text-white">
       <div className="space-y-6">
-        {/* 4 thẻ thống kê */}
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-medium admin-dark:text-white text-black ">Tổng dịch vụ</CardTitle>
-              <Layers className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
-            </CardHeader>
-            <CardContent>
-              <span className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">{initDataService.length}</span>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-medium admin-dark:text-white text-black">Tổng doanh thu</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">
-                {totalRevenue.toLocaleString("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                })}
-              </div>
-            </CardContent>
-
-          </Card>
-
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-medium admin-dark:text-white text-black">Đơn đặt</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">{initDataBooking.length}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-medium admin-dark:text-white text-black">Khách hàng</CardTitle>
-              <Star className="h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">
-                {initDataCustomer.filter((c) => c.status === "active").length}
-              </div>
-            </CardContent>
-          </Card>
+        {/* 4 thẻ thống kê - Đã được tối ưu */}
+        <div className="grid gap-3 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+          {statsData.map((stat, index) => (
+            <StatCard
+              key={index}
+              title={stat.title}
+              icon={stat.icon}
+              value={stat.value}
+              format={stat.format}
+            />
+          ))}
         </div>
 
         {/* Dịch vụ hot + Analytics */}
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-white admin-dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader className={`flex flex-row items-center justify-between`}>
+            <CardHeader
+              className={`flex flex-row items-center justify-between`}
+            >
               <div>
-                <CardTitle className={`admin-dark:text-white`}>Dịch vụ hot</CardTitle>
+                <CardTitle className={`admin-dark:text-white`}>
+                  Dịch vụ hot
+                </CardTitle>
                 <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
                   Các dịch vụ có đơn đặt nhiều nhất
                 </CardDescription>
@@ -169,7 +207,10 @@ export default function ServiceOverview() {
                 </div>
               )}
             </CardHeader>
-            <CardContent data-lenis-prevent className="space-y-2 overscroll-y-auto lenis-local">
+            <CardContent
+              data-lenis-prevent
+              className="space-y-2 overscroll-y-auto lenis-local"
+            >
               {pagedServices.map((service, index) => (
                 <div
                   key={index}
@@ -201,7 +242,9 @@ export default function ServiceOverview() {
                     </Badge>
 
                     <div className="text-right h-full gap-2 flex flex-wrap flex-row items-center justify-end">
-                      <p className="text-xs text-gray-500 admin-dark:text-gray-400 font-medium">Giá dịch vụ</p>
+                      <p className="text-xs text-gray-500 admin-dark:text-gray-400 font-medium">
+                        Giá dịch vụ
+                      </p>
                       <p className="text-xs sm:text-sm font-semibold text-emerald-600 admin-dark:text-emerald-400">
                         {Number(service.price).toLocaleString("vi-VN")} ₫
                       </p>
@@ -224,7 +267,6 @@ export default function ServiceOverview() {
               (b) => b.status === "completed" && b.is_deleted === 0
             )}
           />
-
         </div>
       </div>
     </div>

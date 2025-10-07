@@ -1,7 +1,7 @@
 import {
   CustomDropdown,
   CustomDropdownItem,
-  CustomDropdownSeparator
+  CustomDropdownSeparator,
 } from "@/components/adminComponent/CustomDropdown";
 import { NotificationBell } from "@/components/layout/AdminLayout/partials/header/NotificationBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,7 +14,12 @@ import { LogOut, Moon, Settings, SunMedium } from "lucide-react";
 import { CgWebsite } from "react-icons/cg";
 import { NavLink, useNavigate } from "react-router-dom";
 
-const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, avatar_url }) => {
+const AdminSettingsDropdown = ({
+  isHeaderSticky,
+  setIsHeaderSticky,
+  username,
+  avatar_url,
+}) => {
   const { isDark, toggleTheme } = useAdminTheme();
   const navigate = useNavigate();
 
@@ -47,27 +52,39 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
             className="text-gray-600 hover:bg-gray-100 dark:text-gray-300 admin-dark:hover:bg-gray-700 rounded-lg transition-colors duration-150 cursor-pointer"
             aria-label="Cài đặt"
           >
-            <Settings color={isDark ? '#ffffff' : '#000000'} className="h-5 w-5" />
+            <Settings
+              color={isDark ? "#ffffff" : "#000000"}
+              className="h-5 w-5"
+            />
           </Button>
         }
         align="end"
       >
-
         {/* Profile Link - chỉ hiển thị trên mobile */}
-        <CustomDropdownItem asChild className="md:hidden">
+        <CustomDropdownItem
+          asChild
+          className="md:hidden"
+        >
           <NavLink
             to="/managers/profile"
             className="flex items-center font-medium gap-2 hover:underline underline-offset-4 px-4 py-2"
           >
             <Avatar className="h-6 w-6">
-              <AvatarImage src={avatar_url || "https://randomuser.me/api/portraits/lego/1.jpg"} />
+              <AvatarImage
+                src={
+                  avatar_url || "https://randomuser.me/api/portraits/lego/1.jpg"
+                }
+              />
               <AvatarFallback>😢</AvatarFallback>
             </Avatar>
             {username || "Hồ sơ"}
           </NavLink>
         </CustomDropdownItem>
         {/* Notification Link - chỉ hiển thị trên mobile */}
-        <CustomDropdownItem asChild className="md:hidden">
+        <CustomDropdownItem
+          asChild
+          className="md:hidden"
+        >
           <div
             className="flex items-center justify-start w-full font-medium gap-2 hover:underline underline-offset-4 px-4 py-2 pl-1.5"
             onClick={(e) => {
@@ -82,7 +99,10 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
         </CustomDropdownItem>
 
         {/* Website Link - chỉ hiển thị trên mobile */}
-        <CustomDropdownItem asChild className="md:hidden">
+        <CustomDropdownItem
+          asChild
+          className="md:hidden"
+        >
           <NavLink
             to={`${import.meta.env.VITE_MAIN_FE_URL}`}
             target="_blank"
@@ -95,8 +115,11 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
         </CustomDropdownItem>
 
         {/* Sticky Header Toggle - ẩn trên mobile */}
-        <CustomDropdownItem asChild className="hidden lg:flex">
-          <div className="flex items-center justify-between w-full px-4 py-2">
+        <CustomDropdownItem
+          asChild
+          className="hidden lg:flex"
+        >
+          <div className="flex items-center justify-between w-full px-2 py-2">
             <Label
               htmlFor="sticky-header"
               className="flex items-center gap-2 cursor-pointer text-sm"
@@ -115,7 +138,7 @@ const AdminSettingsDropdown = ({ isHeaderSticky, setIsHeaderSticky, username, av
 
         {/* Theme Toggle */}
         <CustomDropdownItem asChild>
-          <div className="flex items-center justify-between w-full px-4 py-2">
+          <div className="flex items-center justify-between w-full px-2 py-2">
             <Label className="flex items-center gap-2 cursor-pointer text-sm">
               {isDark ? (
                 <Moon className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />

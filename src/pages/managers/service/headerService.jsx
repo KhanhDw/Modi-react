@@ -15,19 +15,19 @@ const navItems = [
 
 export default function ServiceNav() {
   const location = useLocation();
-  const [isXs, setIsXs] = useState(false);
+  const [isMd, setIsMd] = useState(false);
 
   useEffect(() => {
     // check initial size
-    setIsXs(window.innerWidth < 640); // xs < 640px
-    const handleResize = () => setIsXs(window.innerWidth < 640);
+    setIsMd(window.innerWidth < 769); // xs < 640px
+    const handleResize = () => setIsMd(window.innerWidth < 640);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const getLabel = (label) => {
     // Nếu không phải xs thì trả nguyên label
-    if (!isXs) return label;
+    if (!isMd) return label;
 
     const words = label.split(" ");
     const lastTwoWords = words.slice(-2);
@@ -45,11 +45,12 @@ export default function ServiceNav() {
           key={to}
           to={to}
           className={({ isActive }) =>
-            `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ||
+            `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
+              isActive ||
               (to === "service_overview" &&
                 location.pathname === "/managers/services")
-              ? "bg-gray-800 admin-dark:bg-gray-700 text-white"
-              : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+                ? "bg-gray-800 admin-dark:bg-gray-700 text-white"
+                : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
             }`
           }
         >

@@ -40,7 +40,6 @@ export default function AdminZonePage() {
         `${import.meta.env.VITE_MAIN_BE_URL}/api/users`
       );
       setUsers(res.data.data || []);
-      console.log(res.data.data);
       setColumns(res.data.column || []);
     } catch (err) {
       console.error("Lỗi lấy users:", err);
@@ -160,8 +159,9 @@ export default function AdminZonePage() {
 
         {/* Table */}
         <div
-          className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${fade ? "opacity-100 shadow-md" : "opacity-0"
-            }`}
+          className={`overflow-x-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 transition-opacity duration-500 ease-in-out scrollbar-thin ${
+            fade ? "opacity-100 shadow-md" : "opacity-0"
+          }`}
         >
           <table className="min-w-full border-collapse table-auto text-sm sm:text-base leading-6">
             <thead>
@@ -224,8 +224,9 @@ export default function AdminZonePage() {
                         return (
                           <td
                             key={index}
-                            className={`px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 ${index === 0 ? "whitespace-nowrap font-medium" : ""
-                              }`}
+                            className={`px-3 sm:px-4 py-3 text-gray-700 admin-dark:text-gray-300 ${
+                              index === 0 ? "whitespace-nowrap font-medium" : ""
+                            }`}
                           >
                             {cellContent}
                           </td>
@@ -240,10 +241,11 @@ export default function AdminZonePage() {
                             setIsDetailViewOpen(true);
                           }}
                           disabled={currentUser && item.id === currentUser.id}
-                          className={`flex items-center gap-1  p-2 rounded-lg duration-300 transition-all  cursor-pointer ${currentUser && item.id === currentUser.id
+                          className={`flex items-center gap-1  p-2 rounded-lg duration-300 transition-all  cursor-pointer ${
+                            currentUser && item.id === currentUser.id
                               ? "text-gray-300 cursor-not-allowed"
                               : "text-green-600 admin-dark:text-green-400 hover:text-green-500 hover:bg-green-800/20 admin-dark:hover:bg-green-700/30"
-                            }`}
+                          }`}
                         >
                           <FiEye size={18} />
                         </button>
@@ -253,10 +255,11 @@ export default function AdminZonePage() {
                             setShowForm(true);
                           }}
                           disabled={currentUser && item.id === currentUser.id}
-                          className={`flex items-center gap-1  p-2 rounded-lg duration-300 transition-all  cursor-pointer ${currentUser && item.id === currentUser.id
+                          className={`flex items-center gap-1  p-2 rounded-lg duration-300 transition-all  cursor-pointer ${
+                            currentUser && item.id === currentUser.id
                               ? "text-gray-300 cursor-not-allowed"
                               : "text-blue-600 admin-dark:text-blue-400 hover:text-blue-500 hover:bg-blue-800/20 admin-dark:hover:bg-blue-700/30"
-                            }`}
+                          }`}
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -264,10 +267,11 @@ export default function AdminZonePage() {
                         <button
                           onClick={() => handleDelete(item.id)}
                           disabled={currentUser && item.id === currentUser.id}
-                          className={` p-2 rounded-lg duration-300 transition-all flex items-center gap-1 cursor-pointer ${currentUser && item.id === currentUser.id
+                          className={` p-2 rounded-lg duration-300 transition-all flex items-center gap-1 cursor-pointer ${
+                            currentUser && item.id === currentUser.id
                               ? "text-gray-300 cursor-not-allowed"
                               : "text-red-600 admin-dark:text-red-500 hover:text-red-500 hover:bg-red-800/20 admin-dark:hover:bg-red-700/30"
-                            }`}
+                          }`}
                         >
                           <FiTrash2 size={18} />
                         </button>

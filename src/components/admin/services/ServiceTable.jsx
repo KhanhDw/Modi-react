@@ -23,7 +23,6 @@ import WarningMessage from "./utils/warningMessage";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
 
 export default function ServiceTable() {
-
   const navigate = useNavigate();
 
   const { initDataService, openEditServiceForm, handleDeleteService } =
@@ -35,10 +34,10 @@ export default function ServiceTable() {
   // Lọc theo search
   const filteredService = Array.isArray(initDataService)
     ? initDataService.filter((service) =>
-      (service.translation?.ten_dich_vu || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    )
+        (service.translation?.ten_dich_vu || "")
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
     : [];
   const totalPages = Math.ceil(filteredService.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -49,7 +48,7 @@ export default function ServiceTable() {
 
   const handleReaderDetailService = (slug) => {
     navigate(`/managers/services/read-detail/${slug}`);
-  }
+  };
 
   return (
     <Card
@@ -88,7 +87,6 @@ export default function ServiceTable() {
                   admin-dark:placeholder-gray-400 placeholder:text-sm sm:placeholder:text-base"
               />
             </div>
-
           </div>
         </div>
       </CardHeader>
@@ -141,13 +139,17 @@ export default function ServiceTable() {
                     key={item.id}
                     className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                   >
-                    <TableCell className={`text-gray-900 admin-dark:text-gray-200  `}>
+                    <TableCell
+                      className={`text-gray-900 admin-dark:text-gray-200  `}
+                    >
                       {startIndex + index + 1}
                     </TableCell>
                     <TableCell>
                       {item.image_url ? (
                         <img
-                          src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`}
+                          src={`${import.meta.env.VITE_MAIN_BE_URL}${
+                            item.image_url
+                          }`}
                           alt="Ảnh dịch vụ"
                           style={{
                             width: 60,
@@ -159,12 +161,28 @@ export default function ServiceTable() {
                       ) : null}
                     </TableCell>
 
-
-                    <TableCell onClick={() => handleReaderDetailService(item.translation?.slug)} className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"} hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}>
-                      {item.translation?.ten_dich_vu || "Chưa có thông tin tiếng việt"}
+                    <TableCell
+                      onClick={() =>
+                        handleReaderDetailService(item.translation?.slug)
+                      }
+                      className={`${
+                        !item.totalLanguages.includes("vi")
+                          ? "text-red-400"
+                          : "text-gray-900 admin-dark:text-gray-200"
+                      } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
+                    >
+                      {item.translation?.ten_dich_vu ||
+                        "Chưa có thông tin tiếng việt"}
                     </TableCell>
-                    <TableCell className={`${!item.totalLanguages.includes("vi") ? "text-red-400" : "text-gray-900 admin-dark:text-gray-200"}  `}>
-                      {item.translation?.mo_ta || "Chưa có thông tin tiếng việt"}
+                    <TableCell
+                      className={`${
+                        !item.totalLanguages.includes("vi")
+                          ? "text-red-400"
+                          : "text-gray-900 admin-dark:text-gray-200"
+                      }  `}
+                    >
+                      {item.translation?.mo_ta ||
+                        "Chưa có thông tin tiếng việt"}
                     </TableCell>
                     <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
                       {item.floor_price
@@ -176,13 +194,19 @@ export default function ServiceTable() {
                         ? item.booking_count
                         : ""}
                     </TableCell>
-                    <TableCell
-                      className="text-gray-900 admin-dark:text-gray-200 flex-col items-center justify-center">
+                    <TableCell className="text-gray-900 admin-dark:text-gray-200 flex-col items-center justify-center">
                       <div className="flex flex-wrap justify-center gap-1 text-center">
                         {item.totalLanguages.map((lang, index) => {
                           return (
-                            <span key={`${lang}-${index}`} className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"} px-2 py-1 text-xs text-white rounded`}>{lang}</span>
-                          )
+                            <span
+                              key={`${lang}-${index}`}
+                              className={`${
+                                lang === "vi" ? "bg-red-700" : "bg-blue-600"
+                              } px-2 py-1 text-xs text-white rounded`}
+                            >
+                              {lang}
+                            </span>
+                          );
                         }) || ""}
                       </div>
                     </TableCell>
@@ -210,18 +234,18 @@ export default function ServiceTable() {
                       />
                     </TableCell>
                   </TableRow>
-                )
-              }
+                );
+              })}
+              {currentData.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className="text-center text-muted-foreground py-4"
+                  >
+                    Không có dữ liệu
+                  </TableCell>
+                </TableRow>
               )}
-              {
-                currentData.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground py-4">
-                      Không có dữ liệu
-                    </TableCell>
-                  </TableRow>
-                )
-              }
             </TableBody>
           </Table>
         </div>

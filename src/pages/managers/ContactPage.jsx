@@ -478,6 +478,7 @@ export default function ContactPage() {
             />
           </div>
         </div>
+
         <div className="w-full">
           <PageList
             data={filteredContacts}
@@ -490,6 +491,7 @@ export default function ContactPage() {
             onPageNumberChange={(pageNum) => setCurrentPage(pageNum)}
           />
         </div>
+
         <ContactDetail
           contact={showDetail}
           isOpen={!!showDetail}

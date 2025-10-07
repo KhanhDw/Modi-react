@@ -2,26 +2,42 @@ import ServiceBookingTable from "@/components/admin/services/booking/ServiceBook
 import ServiceBookingAnalytics from "@/components/admin/services/booking/service-booking-analytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { BadgeCheck, CheckCircle, Loader2, Package, Plus, Target, Trash2 } from "lucide-react";
+import {
+  BadgeCheck,
+  CheckCircle,
+  Loader2,
+  Package,
+  Plus,
+  Target,
+  Trash2,
+} from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import DialogShowForm_Service from "./DialogShowFormService";
 
 export default function ServiceBooking() {
-
-
   const { initDataService, initDataBooking, handleOpen } = useOutletContext();
 
-  const completedCount = initDataBooking.filter(b => b.status === "completed").length;
-  const pendingCount = initDataBooking.filter(b => b.status === "pending").length;
-  const cancelled = initDataBooking.filter(b => b.status === "cancelled").length;
-  const processingCount = initDataBooking.filter(b => b.status === "processing").length;
-  const confirmedCount = initDataBooking.filter(b => b.status === "confirmed").length;
+  const completedCount = initDataBooking.filter(
+    (b) => b.status === "completed"
+  ).length;
+  const pendingCount = initDataBooking.filter(
+    (b) => b.status === "pending"
+  ).length;
+  const cancelled = initDataBooking.filter(
+    (b) => b.status === "cancelled"
+  ).length;
+  const processingCount = initDataBooking.filter(
+    (b) => b.status === "processing"
+  ).length;
+  const confirmedCount = initDataBooking.filter(
+    (b) => b.status === "confirmed"
+  ).length;
 
   // Config UI cho từng trạng thái
   const cards = [
     {
       key: "total",
-      title: "Số lượng đơn đặt",
+      title: "Số đơn đặt",
       value: initDataBooking.length,
       icon: <Package className="h-4 w-4 text-gray-400" />,
       color: "text-black admin-dark:text-white",
@@ -64,7 +80,6 @@ export default function ServiceBooking() {
   ];
 
   return (
-
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         <div className="text-center sm:text-start">
@@ -80,13 +95,15 @@ export default function ServiceBooking() {
           onClick={() => handleOpen("booking")}
         >
           <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="text-sm sm:text-base font-semibold">Tạo đơn mới</span>
+          <span className="text-sm sm:text-base font-semibold">
+            Tạo đơn mới
+          </span>
         </Button>
       </div>
 
       {/* Cards */}
-      <div className="grid gap-2 sm:gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6">
-        {cards.map(card => (
+      <div className="grid gap-2 sm:gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6">
+        {cards.map((card) => (
           <Card
             key={card.key}
             className="bg-white admin-dark:bg-[#374151] rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]"
