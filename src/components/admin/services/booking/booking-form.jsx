@@ -15,6 +15,7 @@ import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import CustomerCombobox from "./selectOldCustomer";
+import CustomSelect from "./CustomSelect";
 
 export default function BookingForm() {
   useLenisLocal(".lenis-local");
@@ -224,345 +225,587 @@ export default function BookingForm() {
     }
   };
 
+  // return (
+  //   <ScrollArea className="lenis-local w-full h-full lenis-local" data-lenis-prevent>
+  //     <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5">
+  //       <div className="flex flex-col items-start">
+  //         <span className="sm:text-lg md:text-lg font-semibold text-gray-900 admin-dark:text-gray-100">
+  //           {editingBooking ? "Chỉnh sửa đơn đặt" : "Tạo đơn mới"}
+  //         </span>
+  //         <span className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-100">
+  //           {editingBooking
+  //             ? "Cập nhật thông tin đơn đặt"
+  //             : "Điền thông tin để tạo đơn mới"}
+  //         </span>
+  //       </div>
+
+  //       <div className="flex gap-4 mt-2 mb-2">
+  //         <Button
+  //           type="button"
+  //           onClick={() => setCustomerMode("existing")}
+  //           className={`
+  //     cursor-pointer shadow border-none
+  //     ${customerMode === "existing"
+  //               ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+  //               : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"}
+  //   `}
+  //         >
+  //           <span className="text-sm sm:text-base font-semibold">Khách hàng cũ</span>
+  //         </Button>
+
+  //         <Button
+  //           type="button"
+  //           onClick={() => setCustomerMode("new")}
+  //           className={`
+  //     cursor-pointer shadow border-none
+  //     ${customerMode === "new"
+  //               ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+  //               : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"}
+  //   `}
+  //         >
+  //           <span className="text-sm sm:text-base font-semibold">Khách hàng mới</span>
+  //         </Button>
+  //       </div>
+
+  //     </div>
+
+  //     <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5">
+  //       <form onSubmit={handleSubmit}>
+  //         <div className="gap-4 w-full">
+  //           <div className="space-y-2 w-full">
+  //             {customerMode === "existing" && (
+  //               <div className="space-y-2">
+  //                 <Label className="text-black admin-dark:text-gray-100">
+  //                   Khách hàng *
+  //                 </Label>
+  //                 <CustomerCombobox
+  //                   customers={initDataCustomer}
+  //                   formData={formData}
+  //                   setFormData={setFormData}
+  //                 />
+  //               </div>
+  //             )}
+
+  //             {/* Số điện thoại */}
+  //             <div className="space-y-2">
+  //               <Label
+  //                 className="text-black admin-dark:text-gray-100"
+  //                 htmlFor="cusPhone"
+  //               >
+  //                 Số điện thoại *
+  //               </Label>
+  //               <Input
+  //                 className="text-black border w-full border-black/30 admin-dark:text-gray-100 shadow-none"
+  //                 id="cusPhone"
+  //                 value={formData.cusPhone || ""}
+  //                 onChange={(e) => handleChange("cusPhone", e.target.value)}
+  //                 onBlur={handleCheckCustomer}
+  //                 placeholder="Nhập số điện thoại của khách hàng... "
+  //                 readOnly={customerMode === "existing" || editingBooking} // 👈 THÊM ĐIỀU KIỆN NÀY
+  //               />
+  //               {errors.cusPhone && (
+  //                 <p className="text-red-500 text-sm">{errors.cusPhone}</p>
+  //               )}
+  //             </div>
+  //             {/* Tên khách hàng */}
+
+  //             <div className="space-y-2">
+  //               <Label
+  //                 className="text-black admin-dark:text-gray-100"
+  //                 htmlFor="cusName"
+  //               >
+  //                 Tên khách hàng *
+  //               </Label>
+  //               <Input
+  //                 className="text-black w-full border border-black/30 admin-dark:text-gray-100 shadow-none"
+  //                 id="cusName"
+  //                 value={formData.cusName || ""}
+  //                 onChange={(e) => handleChange("cusName", e.target.value)}
+  //                 placeholder="Nhập Họ và Tên khách hàng... "
+  //                 readOnly={customerMode === "existing" || editingBooking}
+  //               />
+
+  //               {errors.cusName && (
+  //                 <p className="text-red-500 text-sm">{errors.cusName}</p>
+  //               )}
+  //             </div>
+  //             {/* Email + Address (chỉ khi tạo mới) */}
+  //             {!editingBooking && (
+  //               <>
+  //                 <div className="space-y-2">
+  //                   <Label
+  //                     className="text-black admin-dark:text-gray-100"
+  //                     htmlFor="cusEmail"
+  //                   >
+  //                     Email
+  //                   </Label>
+  //                   <Input
+  //                     className="text-black w-full border border-black/30 admin-dark:text-gray-100 shadow-none"
+  //                     id="cusEmail"
+  //                     value={formData.cusEmail || ""}
+  //                     onChange={(e) =>
+  //                       handleChange("cusEmail", e.target.value)
+  //                     }
+  //                     placeholder="Nhập email của khách hàng... "
+  //                     readOnly={customerMode === "existing" || editingBooking}
+  //                   />
+  //                   {errors.cusEmail && (
+  //                     <p className="text-red-500 text-sm">
+  //                       {errors.cusEmail}
+  //                     </p>
+  //                   )}
+  //                 </div>
+
+  //                 <div className="flex flex-col space-y-2">
+  //                   <Label
+  //                     className="text-xs sm:text-sm text-gray-900 admin-dark:text-gray-100"
+  //                     htmlFor="cusAddress"
+  //                   >
+  //                     Địa chỉ *
+  //                   </Label>
+  //                   <Input
+  //                     className="text-xs sm:text-sm w-full border border-gray-400 rounded-md text-gray-900 placeholder-gray-500 admin-dark:text-gray-100 shadow-none"
+  //                     id="cusAddress"
+  //                     value={formData.cusAddress || ""}
+  //                     onChange={(e) =>
+  //                       handleChange("cusAddress", e.target.value)
+  //                     }
+  //                     placeholder="Nhập địa chỉ của khách hàng..."
+  //                     readOnly={
+  //                       (!!formData.cusPhone &&
+  //                         initDataCustomer.some(
+  //                           (c) => c.phone === formData.cusPhone
+  //                         )) ||
+  //                       editingBooking
+  //                     }
+  //                   />
+  //                   {errors.cusAddress && (
+  //                     <p className="text-red-500 text-xs sm:text-sm">
+  //                       {errors.cusAddress}
+  //                     </p>
+  //                   )}
+  //                 </div>
+  //               </>
+  //             )}
+
+  //             {/* Trạng thái (chỉ khi chỉnh sửa) */}
+  //             {editingBooking && (
+  //               <div className="space-y-2">
+  //                 <Label
+  //                   className="text-black"
+  //                   htmlFor="status"
+  //                 >
+  //                   Trạng thái
+  //                 </Label>
+  //                 <Select
+  //                   value={formData.status}
+  //                   onValueChange={(value) => handleChange("status", value)}
+  //                   // Thêm key để đảm bảo Select component được re-render khi formData.status thay đổi
+  //                   key={formData.status}
+  //                   className=""
+  //                 >
+  //                   <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none cursor-pointer">
+  //                     <SelectValue placeholder="Chọn trạng thái">
+  //                       {/* Hiển thị giá trị đã chọn hoặc placeholder */}
+  //                       {formData.status
+  //                         ? formData.status === "pending"
+  //                           ? "Chờ xác nhận"
+  //                           : formData.status === "completed"
+  //                             ? "Hoàn thành"
+  //                             : formData.status === "cancelled"
+  //                               ? "Hủy"
+  //                               : formData.status === "processing"
+  //                                 ? "Đang xử lý"
+  //                                 : formData.status === "confirmed"
+  //                                   ? "Đã xác nhận"
+  //                                   : "Chọn trạng thái"
+  //                         : "Chọn trạng thái"}
+  //                     </SelectValue>
+  //                   </SelectTrigger>
+  //                   <SelectContent className="bg-white text-black rounded-lg shadow-lg">
+  //                     <SelectItem className={'cursor-pointer'} value="pending">Chờ xác nhận</SelectItem>
+  //                     <SelectItem className={'cursor-pointer'} value="confirmed">Đã xác nhận</SelectItem>
+  //                     <SelectItem className={'cursor-pointer'} value="processing">Đang xử lý</SelectItem>
+  //                     <SelectItem className={'cursor-pointer'} value="completed">Hoàn thành</SelectItem>
+  //                     <SelectItem className={'cursor-pointer'} value="cancelled">Hủy</SelectItem>
+  //                   </SelectContent>
+  //                 </Select>
+  //               </div>
+  //             )}
+  //             {initDataService && (
+  //               <div className="space-y-2">
+  //                 <Label className="text-black admin-dark:text-gray-100">
+  //                   Chọn dịch vụ*
+  //                 </Label>
+  //                 <Select
+  //                   value={formData.service || ""}
+  //                   onValueChange={(value) => handleChange("service", value)}
+  //                   key={formData.service}
+  //                 >
+  //                   <SelectTrigger className="w-full px-3 py-2 text-black rounded-lg focus:outline-none cursor-pointer border border-gray-400">
+  //                     <SelectValue placeholder="Chọn dịch vụ" />
+  //                   </SelectTrigger>
+  //                   <SelectContent className="bg-white text-black rounded-lg shadow-lg">
+  //                     {initDataService.map((service, index) => (
+  //                       <SelectItem
+  //                         key={`${index}`}
+  //                         value={String(service?.id ?? "")}
+  //                         className="cursor-pointer px-3 py-2 hover:bg-blue-50"
+  //                       >
+  //                         {service?.translation?.ten_dich_vu ||
+  //                           "Dịch vụ không tên"}
+  //                       </SelectItem>
+  //                     ))}
+  //                   </SelectContent>
+  //                 </Select>
+  //                 {errors.service && (
+  //                   <p className="text-red-500 text-sm">{errors.service}</p>
+  //                 )}
+  //               </div>
+  //             )}
+
+  //             <div className="space-y-2">
+  //               <Label
+  //                 className="text-black gap-10 admin-dark:text-gray-100"
+  //                 htmlFor="price"
+  //               >
+  //                 <span>Giá *</span>
+  //                 <span>
+  //                   Giá thấp nhất của dịch vụ:{" "}
+  //                   {Number(floorPriceOfservice).toLocaleString("vi-VN", {
+  //                     style: "currency",
+  //                     currency: "VND",
+  //                   })}
+  //                 </span>
+  //               </Label>
+  //               <Input
+  //                 type="text"
+  //                 id="price"
+  //                 className="text-black w-full border border-black/30 admin-dark:text-gray-100 shadow-none"
+  //                 value={formatCurrency(String(formData.price))}
+  //                 onChange={(e) => handlePriceChange(e.target.value)}
+  //                 placeholder="Nhập giá dịch vụ... không được thấp hơn giá thấp nhất của dịch vụ"
+  //               />
+  //               {errors.price && (
+  //                 <p className="text-red-500 text-sm">{errors.price}</p>
+  //               )}
+  //             </div>
+
+  //             {/* Dịch vụ + ngày đặt */}
+  //             <div className="flex flex-col sm:flex-row sm:gap-4">
+  //               {/* Ngày đặt đơn */}
+  //               <div className="space-y-2 relative w-full">
+  //                 <Label className="text-black admin-dark:text-gray-100">
+  //                   Ngày đặt đơn
+  //                 </Label>
+  //                 <input
+  //                   type="date"
+  //                   value={formData.bookingDate || ""}
+  //                   onChange={(e) =>
+  //                     handleChange("bookingDate", e.target.value)
+  //                   }
+  //                   className="w-full px-3 py-2 focus:outline-none admin-dark:border-gray-600 border admin-dark:text-gray-100 border-gray-950/30 rounded-lg text-black"
+  //                 />
+  //                 <Calendar
+  //                   className="absolute right-3 top-[50%] text-gray-500 cursor-pointer"
+  //                   size={18}
+  //                   onClick={(e) => {
+  //                     // focus input khi nhấn icon → trigger datepicker
+  //                     e.currentTarget.previousSibling.showPicker?.();
+  //                   }}
+  //                 />
+  //                 {errors.bookingDate && (
+  //                   <p className="text-red-500 text-sm">
+  //                     {errors.bookingDate}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               {/* Ngày bàn giao */}
+  //               <div className="space-y-2 relative w-full">
+  //                 <Label className="text-black admin-dark:text-gray-100">
+  //                   Ngày bàn giao
+  //                 </Label>
+  //                 <input
+  //                   type="date"
+  //                   value={formData.completedDate || ""}
+  //                   onChange={(e) =>
+  //                     handleChange("completedDate", e.target.value)
+  //                   }
+  //                   className="w-full px-3 py-2 admin-dark:border-gray-600 admin-dark:text-gray-100 border border-gray-950/30 rounded-lg text-black focus:outline-none"
+  //                 />
+  //                 <Calendar
+  //                   className="absolute right-3 top-[50%] text-gray-500 cursor-pointer"
+  //                   size={18}
+  //                   onClick={(e) => {
+  //                     // focus input khi nhấn icon → trigger datepicker
+  //                     e.currentTarget.previousSibling.showPicker?.();
+  //                   }}
+  //                 />
+  //                 {errors.completedDate && (
+  //                   <p className="text-red-500 text-sm">
+  //                     {errors.completedDate}
+  //                   </p>
+  //                 )}
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         <div className="flex flex-wrap flex-row items-center justify-center gap-2 pt-2 w-full">
+  //           <Button
+  //             type="submit"
+  //             className="w-fit md:w-50 text-white bg-blue-500 hover:bg-blue-600 cursor-pointer"
+  //           >
+  //             <span className="text-sm sm:text-base font-semibold">{editingBooking ? "Cập nhật đơn đặt" : "Tạo đơn"}</span>
+  //           </Button>
+  //           <Button
+  //             type="button"
+  //             variant="outline"
+  //             onClick={handleClose}
+  //             className="w-fit md:w-50 cursor-pointer bg-black admin-dark:hover:bg-black/70"
+  //           >
+  //             <span className="text-sm sm:text-base font-semibold">Thoát</span>
+  //           </Button>
+  //         </div>
+  //       </form>
+  //     </div>
+  //   </ScrollArea>
+  // );
+
   return (
-    <ScrollArea className="w-full max-h-screen h-full py-3 lenis-local bg-white admin-dark:bg-gray-800 rounded-md" data-lenis-prevent>
-      <div className="px-2 sm:px-5 flex flex-wrap items-center justify-between mb-2 w-full">
-        <div className="flex flex-col items-start">
-          <span className="sm:text-lg md:text-lg font-semibold text-gray-900 admin-dark:text-gray-100">
+    <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
+      {/* Header */}
+      <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5 flex justify-between items-center flex-col md:flex-row">
+        <div className="flex flex-col items-center md:items-start">
+          <span className="sm:text-lg md:text-lg font-bold uppercase text-gray-900 admin-dark:text-gray-100">
             {editingBooking ? "Chỉnh sửa đơn đặt" : "Tạo đơn mới"}
           </span>
-          <span className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-100">
+          <span className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
             {editingBooking
               ? "Cập nhật thông tin đơn đặt"
               : "Điền thông tin để tạo đơn mới"}
           </span>
         </div>
 
-        <div className="flex gap-4 mt-2 mb-2">
-          <Button
-            type="button"
-            onClick={() => setCustomerMode("existing")}
-            className={`
-      cursor-pointer shadow border-none
-      ${customerMode === "existing"
-                ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
-                : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"}
-    `}
-          >
-            <span className="text-sm sm:text-base font-semibold">Khách hàng cũ</span>
-          </Button>
-
-          <Button
-            type="button"
-            onClick={() => setCustomerMode("new")}
-            className={`
-      cursor-pointer shadow border-none
-      ${customerMode === "new"
-                ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
-                : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"}
-    `}
-          >
-            <span className="text-sm sm:text-base font-semibold">Khách hàng mới</span>
-          </Button>
+        {/* Mode Switch */}
+        <div className="flex gap-4 mt-3 mb-2">
+          {["existing", "new"].map((mode) => (
+            <Button
+              key={mode}
+              type="button"
+              onClick={() => setCustomerMode(mode)}
+              className={`cursor-pointer shadow border-none transition-all
+              ${customerMode === mode
+                  ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+                  : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
+                }
+            `}
+            >
+              <span className="text-xs sm:text-sm md:text-base font-semibold">
+                {mode === "existing" ? "Khách hàng cũ" : "Khách hàng mới"}
+              </span>
+            </Button>
+          ))}
         </div>
-
       </div>
 
-      <div className="w-full px-2 sm:px-5">
-        <form onSubmit={handleSubmit}>
-          <div className="gap-4 w-full">
-            <div className="space-y-2 w-full">
-              {customerMode === "existing" && (
-                <div className="space-y-2">
-                  <Label className="text-black admin-dark:text-gray-100">
-                    Khách hàng *
-                  </Label>
-                  <CustomerCombobox
-                    customers={initDataCustomer}
-                    formData={formData}
-                    setFormData={setFormData}
-                  />
-                </div>
-              )}
-
-              {/* Số điện thoại */}
-              <div className="space-y-2">
-                <Label
-                  className="text-black admin-dark:text-gray-100"
-                  htmlFor="cusPhone"
-                >
-                  Số điện thoại *
-                </Label>
-                <Input
-                  className="text-black border w-full border-black/30 admin-dark:text-gray-100 shadow-none"
-                  id="cusPhone"
-                  value={formData.cusPhone || ""}
-                  onChange={(e) => handleChange("cusPhone", e.target.value)}
-                  onBlur={handleCheckCustomer}
-                  placeholder="Nhập số điện thoại của khách hàng... "
-                  readOnly={customerMode === "existing" || editingBooking} // 👈 THÊM ĐIỀU KIỆN NÀY
-                />
-                {errors.cusPhone && (
-                  <p className="text-red-500 text-sm">{errors.cusPhone}</p>
-                )}
-              </div>
-              {/* Tên khách hàng */}
-
-              <div className="space-y-2">
-                <Label
-                  className="text-black admin-dark:text-gray-100"
-                  htmlFor="cusName"
-                >
-                  Tên khách hàng *
-                </Label>
-                <Input
-                  className="text-black w-full border border-black/30 admin-dark:text-gray-100 shadow-none"
-                  id="cusName"
-                  value={formData.cusName || ""}
-                  onChange={(e) => handleChange("cusName", e.target.value)}
-                  placeholder="Nhập Họ và Tên khách hàng... "
-                  readOnly={customerMode === "existing" || editingBooking}
-                />
-
-                {errors.cusName && (
-                  <p className="text-red-500 text-sm">{errors.cusName}</p>
-                )}
-              </div>
-              {/* Email + Address (chỉ khi tạo mới) */}
-              {!editingBooking && (
-                <>
-                  <div className="space-y-2">
-                    <Label
-                      className="text-black admin-dark:text-gray-100"
-                      htmlFor="cusEmail"
-                    >
-                      Email
-                    </Label>
-                    <Input
-                      className="text-black w-full border border-black/30 admin-dark:text-gray-100 shadow-none"
-                      id="cusEmail"
-                      value={formData.cusEmail || ""}
-                      onChange={(e) =>
-                        handleChange("cusEmail", e.target.value)
-                      }
-                      placeholder="Nhập email của khách hàng... "
-                      readOnly={customerMode === "existing" || editingBooking}
-                    />
-                    {errors.cusEmail && (
-                      <p className="text-red-500 text-sm">
-                        {errors.cusEmail}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col space-y-2">
-                    <Label
-                      className="text-xs sm:text-sm text-gray-900 admin-dark:text-gray-100"
-                      htmlFor="cusAddress"
-                    >
-                      Địa chỉ *
-                    </Label>
-                    <Input
-                      className="text-xs sm:text-sm w-full border border-gray-400 rounded-md text-gray-900 placeholder-gray-500 admin-dark:text-gray-100 shadow-none"
-                      id="cusAddress"
-                      value={formData.cusAddress || ""}
-                      onChange={(e) =>
-                        handleChange("cusAddress", e.target.value)
-                      }
-                      placeholder="Nhập địa chỉ của khách hàng..."
-                      readOnly={
-                        (!!formData.cusPhone &&
-                          initDataCustomer.some(
-                            (c) => c.phone === formData.cusPhone
-                          )) ||
-                        editingBooking
-                      }
-                    />
-                    {errors.cusAddress && (
-                      <p className="text-red-500 text-xs sm:text-sm">
-                        {errors.cusAddress}
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {/* Trạng thái (chỉ khi chỉnh sửa) */}
-              {editingBooking && (
-                <div className="space-y-2">
-                  <Label
-                    className="text-black"
-                    htmlFor="status"
-                  >
-                    Trạng thái
-                  </Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => handleChange("status", value)}
-                    // Thêm key để đảm bảo Select component được re-render khi formData.status thay đổi
-                    key={formData.status}
-                    className=""
-                  >
-                    <SelectTrigger className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none cursor-pointer">
-                      <SelectValue placeholder="Chọn trạng thái">
-                        {/* Hiển thị giá trị đã chọn hoặc placeholder */}
-                        {formData.status
-                          ? formData.status === "pending"
-                            ? "Chờ xác nhận"
-                            : formData.status === "completed"
-                              ? "Hoàn thành"
-                              : formData.status === "cancelled"
-                                ? "Hủy"
-                                : formData.status === "processing"
-                                  ? "Đang xử lý"
-                                  : formData.status === "confirmed"
-                                    ? "Đã xác nhận"
-                                    : "Chọn trạng thái"
-                          : "Chọn trạng thái"}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                      <SelectItem className={'cursor-pointer'} value="pending">Chờ xác nhận</SelectItem>
-                      <SelectItem className={'cursor-pointer'} value="confirmed">Đã xác nhận</SelectItem>
-                      <SelectItem className={'cursor-pointer'} value="processing">Đang xử lý</SelectItem>
-                      <SelectItem className={'cursor-pointer'} value="completed">Hoàn thành</SelectItem>
-                      <SelectItem className={'cursor-pointer'} value="cancelled">Hủy</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              {initDataService && (
-                <div className="space-y-2">
-                  <Label className="text-black admin-dark:text-gray-100">
-                    Chọn dịch vụ*
-                  </Label>
-                  <Select
-                    value={formData.service || ""}
-                    onValueChange={(value) => handleChange("service", value)}
-                    key={formData.service}
-                  >
-                    <SelectTrigger className="w-full px-3 py-2 text-black rounded-lg focus:outline-none cursor-pointer border border-gray-400">
-                      <SelectValue placeholder="Chọn dịch vụ" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white text-black rounded-lg shadow-lg">
-                      {initDataService.map((service, index) => (
-                        <SelectItem
-                          key={`${index}`}
-                          value={String(service?.id ?? "")}
-                          className="cursor-pointer px-3 py-2 hover:bg-blue-50"
-                        >
-                          {service?.translation?.ten_dich_vu ||
-                            "Dịch vụ không tên"}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.service && (
-                    <p className="text-red-500 text-sm">{errors.service}</p>
-                  )}
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label
-                  className="text-black gap-10 admin-dark:text-gray-100"
-                  htmlFor="price"
-                >
-                  <span>Giá *</span>
-                  <span>
-                    Giá thấp nhất của dịch vụ:{" "}
-                    {Number(floorPriceOfservice).toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </span>
-                </Label>
-                <Input
-                  type="text"
-                  id="price"
-                  className="text-black w-full border border-black/30 admin-dark:text-gray-100 shadow-none"
-                  value={formatCurrency(String(formData.price))}
-                  onChange={(e) => handlePriceChange(e.target.value)}
-                  placeholder="Nhập giá dịch vụ... không được thấp hơn giá thấp nhất của dịch vụ"
-                />
-                {errors.price && (
-                  <p className="text-red-500 text-sm">{errors.price}</p>
-                )}
-              </div>
-
-              {/* Dịch vụ + ngày đặt */}
-              <div className="flex flex-col sm:flex-row sm:gap-4">
-                {/* Ngày đặt đơn */}
-                <div className="space-y-2 relative w-full">
-                  <Label className="text-black admin-dark:text-gray-100">
-                    Ngày đặt đơn
-                  </Label>
-                  <input
-                    type="date"
-                    value={formData.bookingDate || ""}
-                    onChange={(e) =>
-                      handleChange("bookingDate", e.target.value)
-                    }
-                    className="w-full px-3 py-2 focus:outline-none admin-dark:border-gray-600 border admin-dark:text-gray-100 border-gray-950/30 rounded-lg text-black"
-                  />
-                  <Calendar
-                    className="absolute right-3 top-[50%] text-gray-500 cursor-pointer"
-                    size={18}
-                    onClick={(e) => {
-                      // focus input khi nhấn icon → trigger datepicker
-                      e.currentTarget.previousSibling.showPicker?.();
-                    }}
-                  />
-                  {errors.bookingDate && (
-                    <p className="text-red-500 text-sm">
-                      {errors.bookingDate}
-                    </p>
-                  )}
-                </div>
-
-                {/* Ngày bàn giao */}
-                <div className="space-y-2 relative w-full">
-                  <Label className="text-black admin-dark:text-gray-100">
-                    Ngày bàn giao
-                  </Label>
-                  <input
-                    type="date"
-                    value={formData.completedDate || ""}
-                    onChange={(e) =>
-                      handleChange("completedDate", e.target.value)
-                    }
-                    className="w-full px-3 py-2 admin-dark:border-gray-600 admin-dark:text-gray-100 border border-gray-950/30 rounded-lg text-black focus:outline-none"
-                  />
-                  <Calendar
-                    className="absolute right-3 top-[50%] text-gray-500 cursor-pointer"
-                    size={18}
-                    onClick={(e) => {
-                      // focus input khi nhấn icon → trigger datepicker
-                      e.currentTarget.previousSibling.showPicker?.();
-                    }}
-                  />
-                  {errors.completedDate && (
-                    <p className="text-red-500 text-sm">
-                      {errors.completedDate}
-                    </p>
-                  )}
-                </div>
-              </div>
+      {/* Form */}
+      <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto px-3 md:px-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Khách hàng cũ */}
+          {customerMode === "existing" && (
+            <div className="space-y-2">
+              <Label className="text-black admin-dark:text-gray-100">Khách hàng *</Label>
+              <CustomerCombobox
+                customers={initDataCustomer}
+                formData={formData}
+                setFormData={setFormData}
+              />
             </div>
+          )}
+
+          {/* Số điện thoại */}
+          <div className="space-y-2">
+            <Label htmlFor="cusPhone" className="text-black admin-dark:text-gray-100">
+              Số điện thoại *
+            </Label>
+            <Input
+              id="cusPhone"
+              maxLength={10}
+              className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+              value={formData.cusPhone || ""}
+              onChange={(e) => handleChange("cusPhone", e.target.value)}
+              onBlur={handleCheckCustomer}
+              placeholder="Nhập số điện thoại của khách hàng..."
+              readOnly={customerMode === "existing" || editingBooking}
+            />
+            {errors.cusPhone && <p className="text-red-500 text-sm">{errors.cusPhone}</p>}
           </div>
 
-          <div className="flex flex-wrap flex-row items-center justify-center gap-2 pt-2 w-full">
+          {/* Tên khách hàng */}
+          <div className="space-y-2">
+            <Label htmlFor="cusName" className="text-black admin-dark:text-gray-100">
+              Tên khách hàng *
+            </Label>
+            <Input
+              id="cusName"
+              className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+              value={formData.cusName || ""}
+              onChange={(e) => handleChange("cusName", e.target.value)}
+              placeholder="Nhập Họ và Tên khách hàng..."
+              readOnly={customerMode === "existing" || editingBooking}
+            />
+            {errors.cusName && <p className="text-red-500 text-sm">{errors.cusName}</p>}
+          </div>
+
+          {/* Email + Địa chỉ (khi tạo mới) */}
+          {!editingBooking && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="cusEmail" className="text-black admin-dark:text-gray-100">
+                  Email
+                </Label>
+                <Input
+                  id="cusEmail"
+                  className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                  value={formData.cusEmail || ""}
+                  onChange={(e) => handleChange("cusEmail", e.target.value)}
+                  placeholder="Nhập email của khách hàng..."
+                  readOnly={customerMode === "existing" || editingBooking}
+                />
+                {errors.cusEmail && <p className="text-red-500 text-sm">{errors.cusEmail}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cusAddress" className="text-black admin-dark:text-gray-100">
+                  Địa chỉ *
+                </Label>
+                <Input
+                  id="cusAddress"
+                  className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                  value={formData.cusAddress || ""}
+                  onChange={(e) => handleChange("cusAddress", e.target.value)}
+                  placeholder="Nhập địa chỉ của khách hàng..."
+                  readOnly={
+                    (!!formData.cusPhone &&
+                      initDataCustomer.some((c) => c.phone === formData.cusPhone)) ||
+                    editingBooking
+                  }
+                />
+                {errors.cusAddress && <p className="text-red-500 text-sm">{errors.cusAddress}</p>}
+              </div>
+            </>
+          )}
+
+          {/* Trạng thái (chỉ khi chỉnh sửa) */}
+          {editingBooking && (
+            <div className="space-y-2">
+              <Label htmlFor="status" className="text-black admin-dark:text-gray-100">
+                Trạng thái
+              </Label>
+
+              <CustomSelect
+                value={formData.status || ""}
+                onValueChange={(value) => handleChange("status", value)}
+                placeholder="Chọn trạng thái"
+                options={[
+                  { value: "pending", label: "Chờ xác nhận" },
+                  { value: "confirmed", label: "Đã xác nhận" },
+                  { value: "processing", label: "Đang xử lý" },
+                  { value: "completed", label: "Hoàn thành" },
+                  { value: "cancelled", label: "Hủy" },
+                ]}
+                className="w-full"
+              />
+            </div>
+          )}
+
+          {/* Dịch vụ */}
+          {initDataService && (
+            <div className="space-y-2">
+              <Label className="text-black admin-dark:text-gray-100">Chọn dịch vụ *</Label>
+
+              <CustomSelect
+                value={formData.service || ""}
+                onValueChange={(value) => handleChange("service", value)}
+                placeholder="Chọn dịch vụ"
+                options={initDataService.map((service) => ({
+                  value: String(service?.id ?? ""),
+                  label: service?.translation?.ten_dich_vu || "Dịch vụ không tên",
+                }))}
+                className="w-full"
+              />
+
+              {errors.service && (
+                <p className="text-red-500 text-sm">{errors.service}</p>
+              )}
+            </div>
+          )}
+
+          {/* Giá */}
+          <div className="space-y-2">
+            <Label htmlFor="price" className="text-black admin-dark:text-gray-100 flex items-center justify-between sm:flex-row sm:items-center sm:justify-between gap-3">
+              <span>Giá *</span>
+              <span className="text-sm text-gray-600 admin-dark:text-gray-300">
+                Giá thấp nhất:{" "}
+                {Number(floorPriceOfservice).toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </span>
+            </Label>
+            <Input
+              id="price"
+              type="text"
+              className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+              value={formatCurrency(String(formData.price))}
+              onChange={(e) => handlePriceChange(e.target.value)}
+              placeholder="Nhập giá dịch vụ..."
+            />
+            {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+          </div>
+
+          {/* Ngày đặt & Ngày bàn giao */}
+          <div className="flex flex-col sm:flex-row sm:gap-4">
+            {[
+              ["bookingDate", "Ngày đặt đơn", errors.bookingDate],
+              ["completedDate", "Ngày bàn giao", errors.completedDate],
+            ].map(([field, label, err]) => (
+              <div key={field} className="w-full space-y-2">
+                <Label className="text-black admin-dark:text-gray-100">{label}</Label>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={formData[field] || ""}
+                    onChange={(e) => handleChange(field, e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-950/30 admin-dark:border-gray-600 rounded-lg text-black admin-dark:text-gray-100 focus:outline-none"
+                  />
+                  <Calendar
+                    size={18}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 admin-dark:hidden cursor-pointer"
+                    onClick={(e) => e.currentTarget.previousSibling.showPicker?.()}
+                  />
+                </div>
+                {err && <p className="text-red-500 text-sm">{err}</p>}
+              </div>
+            ))}
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 pb-5">
             <Button
               type="submit"
               className="w-fit md:w-50 text-white bg-blue-500 hover:bg-blue-600 cursor-pointer"
             >
-              <span className="text-sm sm:text-base font-semibold">{editingBooking ? "Cập nhật đơn đặt" : "Tạo đơn"}</span>
+              <span className="text-sm sm:text-base font-semibold">
+                {editingBooking ? "Cập nhật đơn đặt" : "Tạo đơn"}
+              </span>
             </Button>
             <Button
               type="button"
-              variant="outline"
               onClick={handleClose}
-              className="w-fit md:w-50 cursor-pointer bg-black admin-dark:hover:bg-black/70"
+              className="w-fit md:w-50 cursor-pointer bg-black hover:bg-black/80 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-900 text-white py-1.5"
             >
               <span className="text-sm sm:text-base font-semibold">Thoát</span>
             </Button>
@@ -571,4 +814,6 @@ export default function BookingForm() {
       </div>
     </ScrollArea>
   );
+
+
 }
