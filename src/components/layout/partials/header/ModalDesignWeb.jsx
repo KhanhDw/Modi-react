@@ -72,7 +72,7 @@ function ModalDesignWeb() {
     return (
       <div className="w-60 rounded-xl bg-gray-800/80 backdrop-blur-lg border border-gray-700/60 shadow-2xl p-2">
         <div className="space-y-2">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(1)].map((_, i) => (
             <div
               key={i}
               className="h-9 bg-gray-700/50 rounded-lg animate-pulse"
