@@ -7,10 +7,10 @@ const navItems = [
   { to: "service_list", label: "Danh sách dịch vụ", icon: Target },
   {
     to: "service_booking",
-    label: "Danh sách đơn đặt hàng",
+    label: "Đơn đặt hàng",
     icon: ShoppingCart,
   },
-  { to: "service_customer", label: "Danh sách khách hàng", icon: Users },
+  { to: "service_customer", label: "Khách hàng", icon: Users },
 ];
 
 export default function ServiceNav() {
