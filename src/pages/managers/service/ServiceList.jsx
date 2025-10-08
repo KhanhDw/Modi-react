@@ -14,7 +14,7 @@ export default function ServiceList() {
           <h2 className="text-base text-center md:text-[22px] sm:text-start xs:text-lg sm:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
             Quản lý dịch vụ
           </h2>
-          <p className="text-xs text-center md:text-base sm:text-start xs:text-sm text-muted-foreground mt-0.5 xs:mt-1">
+          <p className="text-xs text-center md:text-base sm:text-start xs:text-sm admin-dark:text-gray-400 mt-0.5 xs:mt-1">
             Theo dõi và quản lý các dịch vụ
           </p>
         </div>

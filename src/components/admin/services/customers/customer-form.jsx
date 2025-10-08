@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { useOutletContext } from "react-router-dom";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { X, Upload, Trash2 } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import useLenisLocal from "@/hook/useLenisLocal";
 
 const VIETNAMESE_BANKS = [
   { code: "", name: "--- Chọn Ngân hàng ---" },
@@ -33,6 +35,8 @@ export default function CustomerForm() {
     handleEditingCustomer,
     initDataCustomer,
   } = useOutletContext();
+
+  useLenisLocal(".lenis-local");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -84,7 +88,7 @@ export default function CustomerForm() {
       [name]:
         (type === "number" ||
           ["total_spent", "booking_count"].includes(name)) &&
-        value !== ""
+          value !== ""
           ? Number(value)
           : value,
     }));
@@ -288,284 +292,286 @@ export default function CustomerForm() {
   };
 
   return (
-    <Card className="bg-white w-full mx-auto admin-dark:bg-gray-800 admin-dark:text-gray-100">
-      <CardHeader className="relative">
-        <CardTitle className="flex gap-2 items-center">
-          Chỉnh sửa người dùng
-        </CardTitle>
-        <CardDescription className="text-black/60 admin-dark:text-gray-300">
-          Cập nhật thông tin người dùng
-        </CardDescription>
-        <button
-          aria-label="Đóng"
-          onClick={handleClose}
-          className="absolute top-4 right-4 p-1 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 admin-dark:hover:bg-gray-700 admin-dark:text-gray-300 transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </CardHeader>
+    <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
+      <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5">
+        <div className="relative">
+          <span className="flex gap-2 items-center sm:text-lg md:text-lg font-bold uppercase text-gray-900 admin-dark:text-gray-100">
+            Chỉnh sửa người dùng
+          </span>
+          <span className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
+            Cập nhật thông tin người dùng
+          </span>
+          <button
+            aria-label="Đóng"
+            onClick={handleClose}
+            className="absolute top-4 right-4 p-1 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 admin-dark:hover:bg-gray-700 admin-dark:text-gray-300 transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-      <CardContent>
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
-                  Thông Tin Liên Hệ
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label
-                      className={labelClass}
-                      htmlFor="name"
-                    >
-                      Tên khách hàng *
-                    </Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={inputClass}
-                      placeholder="Nguyễn Văn A"
-                    />
-                    {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-                    )}
-                  </div>
+        <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                    Thông Tin Liên Hệ
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label
+                        className={labelClass}
+                        htmlFor="name"
+                      >
+                        Tên khách hàng *
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className={inputClass}
+                        placeholder="Nguyễn Văn A"
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                      )}
+                    </div>
 
-                  <div>
-                    <Label
-                      className={labelClass}
-                      htmlFor="phone"
-                    >
-                      Số điện thoại *
-                    </Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className={inputClass}
-                      placeholder="0901234567"
-                    />
-                    {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.phone}
-                      </p>
-                    )}
-                  </div>
+                    <div>
+                      <Label
+                        className={labelClass}
+                        htmlFor="phone"
+                      >
+                        Số điện thoại *
+                      </Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className={inputClass}
+                        placeholder="0901234567"
+                      />
+                      {errors.phone && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
 
-                  <div className="sm:col-span-2">
-                    <Label
-                      className={labelClass}
-                      htmlFor="email"
-                    >
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={inputClass}
-                      placeholder="tenkhach@email.com"
-                    />
-                    {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.email}
-                      </p>
-                    )}
-                  </div>
+                    <div className="sm:col-span-2">
+                      <Label
+                        className={labelClass}
+                        htmlFor="email"
+                      >
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={inputClass}
+                        placeholder="tenkhach@email.com"
+                      />
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
 
-                  <div className="sm:col-span-2">
-                    <Label
-                      className={labelClass}
-                      htmlFor="address"
-                    >
-                      Địa chỉ *
-                    </Label>
-                    <textarea
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      rows={2}
-                      className={inputClass}
-                      placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố"
-                    />
-                    {errors.address && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.address}
-                      </p>
-                    )}
+                    <div className="sm:col-span-2">
+                      <Label
+                        className={labelClass}
+                        htmlFor="address"
+                      >
+                        Địa chỉ *
+                      </Label>
+                      <textarea
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        rows={2}
+                        className={inputClass}
+                        placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố"
+                      />
+                      {errors.address && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.address}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-4 pt-2">
-                <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
-                  Thông Tin Ngân Hàng
-                </h3>
+                <div className="space-y-4 pt-2">
+                  <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                    Thông Tin Ngân Hàng
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label
+                        className={labelClass}
+                        htmlFor="number_bank"
+                      >
+                        Số tài khoản ngân hàng
+                      </Label>
+                      <Input
+                        id="number_bank"
+                        name="number_bank"
+                        value={formData.number_bank}
+                        onChange={handleChange}
+                        className={inputClass}
+                        placeholder="101010xxxxxx"
+                      />
+                    </div>
+
+                    <div>
+                      <Label
+                        className={labelClass}
+                        htmlFor="name_bank"
+                      >
+                        Tên ngân hàng
+                      </Label>
+                      <select
+                        id="name_bank"
+                        name="name_bank"
+                        value={formData.name_bank}
+                        onChange={handleChange}
+                        className={inputClass}
+                      >
+                        {VIETNAMESE_BANKS.map((b) => (
+                          <option
+                            key={b.code}
+                            value={b.code}
+                          >
+                            {b.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   <div>
                     <Label
                       className={labelClass}
-                      htmlFor="number_bank"
+                      htmlFor="type"
                     >
-                      Số tài khoản ngân hàng
+                      Loại khách hàng
                     </Label>
-                    <Input
-                      id="number_bank"
-                      name="number_bank"
-                      value={formData.number_bank}
+                    <select
+                      id="type"
+                      name="type"
+                      value={formData.type}
                       onChange={handleChange}
                       className={inputClass}
-                      placeholder="101010xxxxxx"
-                    />
+                    >
+                      <option value="new">Khách mới</option>
+                      <option value="regular">Khách thường xuyên</option>
+                      <option value="vip">Khách VIP</option>
+                    </select>
                   </div>
 
                   <div>
                     <Label
                       className={labelClass}
-                      htmlFor="name_bank"
+                      htmlFor="status"
                     >
-                      Tên ngân hàng
+                      Trạng thái
                     </Label>
                     <select
-                      id="name_bank"
-                      name="name_bank"
-                      value={formData.name_bank}
+                      id="status"
+                      name="status"
+                      value={formData.status}
                       onChange={handleChange}
                       className={inputClass}
                     >
-                      {VIETNAMESE_BANKS.map((b) => (
-                        <option
-                          key={b.code}
-                          value={b.code}
-                        >
-                          {b.name}
-                        </option>
-                      ))}
+                      <option value="active">Hoạt động</option>
+                      <option value="inactive">Ngừng hoạt động</option>
                     </select>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <Label
-                    className={labelClass}
-                    htmlFor="type"
-                  >
-                    Loại khách hàng
-                  </Label>
-                  <select
-                    id="type"
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className={inputClass}
-                  >
-                    <option value="new">Khách mới</option>
-                    <option value="regular">Khách thường xuyên</option>
-                    <option value="vip">Khách VIP</option>
-                  </select>
-                </div>
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                    Thông Tin Định Danh & Ảnh
+                  </h3>
 
-                <div>
-                  <Label
-                    className={labelClass}
-                    htmlFor="status"
-                  >
-                    Trạng thái
-                  </Label>
-                  <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    className={inputClass}
-                  >
-                    <option value="active">Hoạt động</option>
-                    <option value="inactive">Ngừng hoạt động</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+                  <div>
+                    <Label
+                      className={labelClass}
+                      htmlFor="cccd"
+                    >
+                      Số CCCD/CMND
+                    </Label>
+                    <Input
+                      id="cccd"
+                      name="cccd"
+                      value={formData.cccd}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="001200xxxxxx"
+                    />
+                  </div>
 
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
-                  Thông Tin Định Danh & Ảnh
-                </h3>
+                  <ImageUploadField
+                    name="img_cccd_top"
+                    label="Ảnh CCCD (Mặt trước)"
+                    imageUrl={formData.img_cccd_top}
+                    onChange={handleImageUpload}
+                    onRemove={handleRemoveImage}
+                  />
 
-                <div>
-                  <Label
-                    className={labelClass}
-                    htmlFor="cccd"
-                  >
-                    Số CCCD/CMND
-                  </Label>
-                  <Input
-                    id="cccd"
-                    name="cccd"
-                    value={formData.cccd}
-                    onChange={handleChange}
-                    className={inputClass}
-                    placeholder="001200xxxxxx"
+                  <ImageUploadField
+                    name="img_cccd_bottom"
+                    label="Ảnh CCCD (Mặt sau)"
+                    imageUrl={formData.img_cccd_bottom}
+                    onChange={handleImageUpload}
+                    onRemove={handleRemoveImage}
                   />
                 </div>
-
-                <ImageUploadField
-                  name="img_cccd_top"
-                  label="Ảnh CCCD (Mặt trước)"
-                  imageUrl={formData.img_cccd_top}
-                  onChange={handleImageUpload}
-                  onRemove={handleRemoveImage}
-                />
-
-                <ImageUploadField
-                  name="img_cccd_bottom"
-                  label="Ảnh CCCD (Mặt sau)"
-                  imageUrl={formData.img_cccd_bottom}
-                  onChange={handleImageUpload}
-                  onRemove={handleRemoveImage}
-                />
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-3 mt-4">
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={loading}
-            >
-              {loading ? "Đang cập nhật..." : "Cập nhật người dùng"}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={handleClose}
-            >
-              Thoát
-            </Button>
-          </div>
-        </form>
+            <div className="flex gap-3 mt-4">
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={loading}
+              >
+                {loading ? "Đang cập nhật..." : "Cập nhật người dùng"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={handleClose}
+              >
+                Thoát
+              </Button>
+            </div>
+          </form>
 
-        {toast && (
-          <NotificationToast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </CardContent>
-    </Card>
+          {toast && (
+            <NotificationToast
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast(null)}
+            />
+          )}
+        </div>
+      </div>
+    </ScrollArea>
   );
 }
