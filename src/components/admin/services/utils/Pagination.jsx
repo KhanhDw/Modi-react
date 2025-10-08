@@ -33,7 +33,7 @@ export default function Pagination({
           size="icon"
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((prev) => prev - 1)}
-          className="transition-all duration-200 hover:scale-105 disabled:opacity-50 admin-dark:border-gray-700 admin-dark:hover:bg-gray-700 border bg-white border-gray-300 admin-dark:bg-gray-700 cursor-pointer"
+          className="transition-all duration-200 disabled:opacity-50 admin-dark:border-gray-700 admin-dark:hover:bg-gray-700 border bg-white border-gray-300 admin-dark:bg-gray-700 cursor-pointer"
         >
           <span className="text-lg font-medium text-gray-600 admin-dark:text-gray-300">
             ←
@@ -51,7 +51,7 @@ export default function Pagination({
           size="icon"
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage((prev) => prev + 1)}
-          className="transition-all duration-200 hover:scale-105 disabled:opacity-50 admin-dark:border-gray-700 admin-dark:hover:bg-gray-700 border bg-white admin-dark:bg-gray-700 border-gray-300 cursor-pointer"
+          className="transition-all duration-200 disabled:opacity-50 admin-dark:border-gray-700 admin-dark:hover:bg-gray-700 border bg-white admin-dark:bg-gray-700 border-gray-300 cursor-pointer"
         >
           <span className="text-lg font-medium text-gray-600 admin-dark:text-gray-300">
             →
@@ -89,7 +89,7 @@ export default function Pagination({
           size="sm"
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((prev) => prev - 1)}
-          className="transition-all duration-200 hover:scale-105 disabled:opacity-50 border bg-white border-gray-300 cursor-pointer admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
+          className="transition-all duration-200 disabled:opacity-50 border bg-white border-gray-300 cursor-pointer admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
         >
           <span className="text-base font-medium text-gray-600 admin-dark:text-gray-300">
             ←
@@ -135,7 +135,7 @@ export default function Pagination({
           size="sm"
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage((prev) => prev + 1)}
-          className="transition-all cursor-pointer duration-200 hover:scale-105 disabled:opacity-50 border bg-white border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
+          className="transition-all cursor-pointer duration-200 disabled:opacity-50 border bg-white border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800"
         >
           <span className="text-base font-medium text-gray-600 admin-dark:text-gray-300">
             →
@@ -166,7 +166,7 @@ export default function Pagination({
         variant="outline"
         disabled={currentPage === 1}
         onClick={() => setCurrentPage((prev) => prev - 1)}
-        className="transition-all duration-200 hover:scale-105 disabled:opacity-50 border bg-white border-gray-300 hover:bg-gray-200 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 cursor-pointer"
+        className="transition-all duration-200 disabled:opacity-50 border bg-white border-gray-300 hover:bg-gray-200 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 cursor-pointer"
       >
         <span className="font-medium text-gray-600 admin-dark:text-gray-300">
           ← Trước
@@ -224,7 +224,7 @@ export default function Pagination({
         variant="outline"
         disabled={currentPage === totalPages}
         onClick={() => setCurrentPage((prev) => prev + 1)}
-        className="transition-all duration-200 hover:scale-105 disabled:opacity-50 border bg-white hover:bg-gray-200 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 cursor-pointer"
+        className="transition-all duration-200 disabled:opacity-50 border bg-white hover:bg-gray-200 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 cursor-pointer"
       >
         <span className="font-medium text-gray-600 admin-dark:text-gray-300">
           Sau →

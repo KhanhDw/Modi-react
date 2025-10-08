@@ -204,9 +204,9 @@ export default function EditPage() {
                         variant="outline"
                         onClick={() => navigate(-1)}
                         disabled={submitting}
-                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white hover:text-white hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer"
+                        className="border-gray-300 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:bg-gray-800 text-white bg-gray-700 hover:bg-gray-800 admin-dark:hover:bg-gray-700 text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer"
                     >
-                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Hủy</span>
+                        <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200 text-white">Hủy</span>
                     </Button>
                     <Button
                         onClick={onSubmit}

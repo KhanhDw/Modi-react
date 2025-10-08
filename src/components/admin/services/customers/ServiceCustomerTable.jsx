@@ -92,21 +92,33 @@ export default function ServiceCustomerTable() {
     setCurrentPage(1);
   };
 
-  const filteredCustomer = initDataCustomer.filter((customer) => {
-    const keyword = search.toLowerCase();
-    const isVip = customer.total_spent >= minSpent;
-    const groupType = isVip ? "vip" : "thuong";
+  // Hàm bỏ dấu tiếng Việt
+  const removeVietnameseTones = (str) => {
+    return str
+      .normalize("NFD") // tách ký tự base và dấu
+      .replace(/[\u0300-\u036f]/g, "") // xóa dấu
+      .replace(/đ/g, "d").replace(/Đ/g, "D"); // thay đ/Đ
+  };
 
-    // const groupType = customer.type === "vip" ? "vip" : "thuong";
+  const filteredCustomer = initDataCustomer.filter((customer) => {
+    const keyword = removeVietnameseTones(search.toLowerCase());
+    const type = (customer.type || "").toLowerCase();
+    const status = (customer.status || "").toLowerCase();
+
+    const name = removeVietnameseTones((customer.name || "").toLowerCase());
+    const phone = (customer.phone || "").toLowerCase();
+    const cccd = (customer.cccd || "").toLowerCase();
 
     const matchSearch =
-      customer.name.toLowerCase().includes(keyword) ||
-      groupType.includes(keyword);
+      name.includes(keyword) ||
+      phone.includes(keyword) ||
+      cccd.includes(keyword) ||
+      type.includes(keyword);
 
     const matchStatus =
       statusFilter === "all" ||
-      (statusFilter === "new" && groupType === "thuong") ||
-      (statusFilter === "vip" && groupType === "vip");
+      statusFilter === type ||
+      statusFilter === status;
 
     return matchSearch && matchStatus;
   });
@@ -124,10 +136,10 @@ export default function ServiceCustomerTable() {
         <CardHeader>
           <div className="flex flex-col md:flex-col xl:flex-row items-center justify-between">
             <div>
-              <CardTitle className="admin-dark:text-white text-xl xl:text-start text-center">
+              <CardTitle className="admin-dark:text-white text-base sm:text-lg font-bold xl:text-start text-center">
                 Danh sách khách hàng
               </CardTitle>
-              <CardDescription className="text-gray-600 mt-2 mb-2 xl:text-start text-center admin-dark:text-gray-400">
+              <CardDescription className="text-gray-600 mt-2 mb-2 xl:text-start text-center admin-dark:text-gray-400 text-xs sm:text-base md:text-[16px]">
                 Quản lý tất cả khách hàng đã sử dụng dịch vụ
               </CardDescription>
             </div>
@@ -147,21 +159,25 @@ export default function ServiceCustomerTable() {
               <CustomSelectFilter
                 value={statusFilter}
                 onValueChange={changeStatus}
-                placeholder="Trạng thái"
-                className="w-fit"
+                placeholder="Lọc khách hàng"
+                className="w-full md:w-50"
                 options={[
                   { value: "all", label: "Tất cả" },
-                  { value: "new", label: "Thường" },
-                  { value: "vip", label: "Vip" },
+                  { value: "new", label: "Khách mới" },
+                  { value: "regular", label: "Khách thường xuyên" },
+                  { value: "old", label: "Khách cũ" },
+                  { value: "vip", label: "Khách VIP" },
+                  { value: "active", label: "Hoạt động" },
+                  { value: "inactive", label: "Ngừng hoạt động" },
                 ]}
               />
 
               <button
-                className="bg-gray-800 hover:bg-slate-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 text-white font-bold py-1.5 px-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
+                className="bg-gray-800 hover:bg-slate-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 text-white font-bold py-1.5 px-4 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
                 onClick={() => setOpenDialogImportCustomer(true)}
               >
                 <span className="text-sm lg:text-base">
-                  Nhập dữ liệu khách hàng
+                  Nhập danh sách
                 </span>
               </button>
 
@@ -194,6 +210,9 @@ export default function ServiceCustomerTable() {
                   <TableHead className="text-black admin-dark:text-white">
                     Tên ngân hàng
                   </TableHead>
+                  {/* <TableHead className="text-black admin-dark:text-white">
+                    Trạng thái
+                  </TableHead> */}
                   <TableHead className="text-black admin-dark:text-white">
                     Đã đặt
                   </TableHead>
@@ -236,6 +255,13 @@ export default function ServiceCustomerTable() {
                     <TableCell className="text-black admin-dark:text-white">
                       {customer.name_bank || "Chưa cập nhật"}
                     </TableCell>
+                    {/* <TableCell className="text-black admin-dark:text-white">
+                      {customer.status === "active"
+                        ? "Hoạt động"
+                        : customer.status
+                          ? "Ngừng hoạt động"
+                          : "Chưa cập nhật"}
+                    </TableCell> */}
                     <TableCell className="text-black admin-dark:text-white pl-6">
                       {customer.booking_count || 0}
                     </TableCell>
@@ -254,7 +280,7 @@ export default function ServiceCustomerTable() {
                       )}{" "}
                       ₫
                     </TableCell>
-                    <TableCell className="flex items-center space-x-2">
+                    <TableCell className="flex items-center justify-center space-x-2">
                       <TableRowActions
                         actions={[
                           {
@@ -280,7 +306,7 @@ export default function ServiceCustomerTable() {
                 {currentData.length === 0 && (
                   <TableRow className="admin-dark:border-gray-700">
                     <TableCell
-                      colSpan={7}
+                      colSpan={12}
                       className="text-center py-4 text-gray-500 admin-dark:text-gray-400"
                     >
                       Không tìm thấy khách hàng

@@ -131,9 +131,9 @@ export default function ServiceForm() {
                 type="button"
                 variant="outline"
                 onClick={handleClose}
-                className="w-fit md:w-50 cursor-pointer bg-black admin-dark:hover:bg-black/70"
+                className="w-fit md:w-50 cursor-pointer bg-black hover:bg-black/80 admin-dark:hover:bg-black/70"
               >
-                <span className="text-sm sm:text-base font-semibold">Thoát</span>
+                <span className="text-sm sm:text-base font-semibold text-white">Thoát</span>
               </Button>
             </div>
           </form>

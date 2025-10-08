@@ -126,15 +126,23 @@ export default function UserDetailView({ user, onClose }) {
             {/* --- AVATAR & BASIC INFO HEADER --- */}
             <header className="flex flex-col sm:flex-row items-center sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 p-3 bg-blue-50 admin-dark:bg-gray-800 rounded-lg shadow-inner">
               <div className="flex-shrink-0 mx-5">
-                <img
-                  src={getImageUrl(userData.avatar_url)}
-                  alt="Avatar"
-                  className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-gray-700 shadow-lg"
-                  onError={(e) => {
-                    e.currentTarget.src = "/placeholder-avatar.png"; // Thay thế bằng placeholder thực tế
-                    e.currentTarget.classList.add("ring-2", "ring-red-500");
-                  }}
-                />
+                {
+                  userData.avatar_url ? (
+                    <img
+                      src={getImageUrl(userData.avatar_url)}
+                      alt="Avatar"
+                      className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-gray-700 shadow-lg"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder-avatar.png";
+                        e.currentTarget.classList.add("ring-2", "ring-red-500");
+                      }}
+                    />
+                  ) : (
+                    <div className="w-24 h-24 flex items-center justify-center bg-gray-300 text-white text-xl font-bold rounded-full shadow-lg admin-dark:bg-gray-700">
+                      {userData.name?.charAt(0) || "Avatar"}
+                    </div>
+                  )
+                }
               </div>
               <div className="text-center sm:text-left w-full">
                 <p className="text-base sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-white">

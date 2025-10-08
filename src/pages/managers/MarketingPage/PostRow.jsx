@@ -1,8 +1,8 @@
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Tag, User, SquarePen } from "lucide-react";
-import { Link, useOutletContext, useLocation } from "react-router-dom";
+import { Tag, User, SquarePen } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import DeleteDialog from "./DeleteDialog";
 import { TriangleAlert } from 'lucide-react';
 
@@ -69,8 +69,13 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
 
             {/* Trạng thái */}
             <TableCell>
-                <Badge className={`text-white font-medium ${post.status === "published" ? "bg-green-500" : post.status === "draft" ? "bg-gray-700" : "bg-orange-700"} `}>
-                    {post.status === "published" ? "Đã đăng" : post.status === "draft" ? "Nháp" : "Lưu trữ"}
+                <Badge className={`text-white font-medium ${post.status === "published" ? "bg-green-500" :
+                    post.status === "draft" ? "bg-gray-700" :
+                        "bg-orange-700"
+                    }`}>
+                    {post.status === "published" ? "Đã đăng" :
+                        post.status === "draft" ? "Nháp" :
+                            "Lưu trữ"}
                 </Badge>
             </TableCell>
 

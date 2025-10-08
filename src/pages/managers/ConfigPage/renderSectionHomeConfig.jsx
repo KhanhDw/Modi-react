@@ -28,8 +28,7 @@ export default function RenderHomeConfig({
   const FetchResetPositions = async () => {
     try {
       const res = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/service-header-config/positions/default`
       );
 
@@ -48,12 +47,10 @@ export default function RenderHomeConfig({
   };
 
   const FetchPositionComponentHome = async () => {
-    const sectionsUrl = `${
-      import.meta.env.VITE_MAIN_BE_URL
-    }/api/sections?slug=home`;
-    const statusPositionUrl = `${
-      import.meta.env.VITE_MAIN_BE_URL
-    }/api/status-position-home-page`;
+    const sectionsUrl = `${import.meta.env.VITE_MAIN_BE_URL
+      }/api/sections?slug=home`;
+    const statusPositionUrl = `${import.meta.env.VITE_MAIN_BE_URL
+      }/api/status-position-home-page`;
 
     try {
       const [resSections, resStatusPosition] = await Promise.all([
@@ -116,8 +113,7 @@ export default function RenderHomeConfig({
   const handleResetDefault = async () => {
     try {
       const res = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/service-header-config/positions/reset`,
         {
           method: "POST",
@@ -151,8 +147,7 @@ export default function RenderHomeConfig({
       }));
 
       const res = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/service-header-config/positions/update`,
         {
           method: "PUT",
@@ -293,16 +288,15 @@ export default function RenderHomeConfig({
                       JSON.stringify(normalizeVitri(defaultVitri))
                     }
                     className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
-                                        ${
-                                          JSON.stringify(
-                                            normalizeVitri(vitri)
-                                          ) ===
-                                          JSON.stringify(
-                                            normalizeVitri(defaultVitri)
-                                          )
-                                            ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
-                                            : "bg-blue-500 hover:bg-blue-700 text-white"
-                                        }`}
+                                        ${JSON.stringify(
+                      normalizeVitri(vitri)
+                    ) ===
+                        JSON.stringify(
+                          normalizeVitri(defaultVitri)
+                        )
+                        ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
+                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                      }`}
                   >
                     <span className="text-sm sm:text-base font-semibold">
                       Khôi phục
@@ -314,11 +308,10 @@ export default function RenderHomeConfig({
                     onClick={handleResetDefault}
                     disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
                     className={`font-bold w-full sm:w-60 md:w-full xl:w-60 cursor-pointer py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
-                                        ${
-                                          isVitriSameAsDefault(defaultVitri)
-                                            ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
-                                            : "bg-blue-500 hover:bg-blue-700 text-white"
-                                        }`}
+                                        ${isVitriSameAsDefault(defaultVitri)
+                        ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
+                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                      }`}
                   >
                     <span className="text-sm sm:text-base font-semibold">
                       Khôi phục lại mặc định
@@ -332,16 +325,15 @@ export default function RenderHomeConfig({
                       JSON.stringify(normalizeVitri(defaultVitri))
                     }
                     className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
-                                        ${
-                                          JSON.stringify(
-                                            normalizeVitri(vitri)
-                                          ) ===
-                                          JSON.stringify(
-                                            normalizeVitri(defaultVitri)
-                                          )
-                                            ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
-                                            : "bg-green-500 hover:bg-green-700 text-white"
-                                        }`}
+                                        ${JSON.stringify(
+                      normalizeVitri(vitri)
+                    ) ===
+                        JSON.stringify(
+                          normalizeVitri(defaultVitri)
+                        )
+                        ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
+                        : "bg-green-500 hover:bg-green-700 text-white"
+                      }`}
                   >
                     <span className="text-sm sm:text-base font-semibold">
                       Lưu vị trí
@@ -584,11 +576,10 @@ export default function RenderHomeConfig({
                         {[1, 2, 3, 4, 5, 6].map((num) => (
                           <span
                             key={num}
-                            className={`text-xs ${
-                              currentQuantity[0] === num
+                            className={`text-xs ${currentQuantity[0] === num
                                 ? "font-bold text-blue-600"
                                 : "text-gray-500 admin-dark:text-gray-400"
-                            }`}
+                              }`}
                           >
                             {num}
                           </span>
@@ -673,8 +664,7 @@ export default function RenderHomeConfig({
                             <SafeImage
                               src={
                                 previewBanner?.[d.id] ||
-                                `${import.meta.env.VITE_MAIN_BE_URL}${
-                                  d.image_url
+                                `${import.meta.env.VITE_MAIN_BE_URL}${d.image_url
                                 }`
                               }
                               alt={`image_url_dichvu-${d.id}`}

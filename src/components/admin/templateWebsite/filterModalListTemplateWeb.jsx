@@ -72,7 +72,7 @@ export default function FilterModalListTemplateWebAdmin({
           theme="admin"
           variant="outline"
           className="w-20 gap-2 relative cursor-pointer
-             border-gray-300 bg-black
+             border-gray-300 bg-black hover:bg-gray-800
              admin-dark:bg-gray-800 admin-dark:border-gray-600
              admin-dark:text-gray-100 admin-dark:hover:bg-gray-700 transition text-black"
         >

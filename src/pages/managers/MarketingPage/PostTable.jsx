@@ -29,14 +29,16 @@ export default function PostsTable({ posts, columns, handleDeletePost }) {
             <TableHead className="text-gray-900 admin-dark:text-white text-left">
               STT
             </TableHead>
-            {columns.map((col, index) => (
-              <TableHead
-                key={index}
-                className="text-gray-900 admin-dark:text-white text-left"
-              >
-                {col.label}
-              </TableHead>
-            ))}
+            {columns
+              .filter((col) => col.label !== "Ngôn ngữ")
+              .map((col, index) => (
+                <TableHead
+                  key={index}
+                  className="text-gray-900 admin-dark:text-white text-left"
+                >
+                  {col.label}
+                </TableHead>
+              ))}
             <TableHead className="text-gray-900 admin-dark:text-white text-right">
               Hành động
             </TableHead>

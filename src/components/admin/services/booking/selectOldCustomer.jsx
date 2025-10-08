@@ -47,7 +47,7 @@ export default function CustomerCombobox({ customers, formData, setFormData }) {
         <div
           className="absolute w-full top-full mt-1 p-2 max-h-60 overflow-auto border border-black/30
                      bg-white text-black admin-dark:bg-gray-800 admin-dark:text-gray-100
-                     admin-dark:border-gray-600 rounded-md shadow-lg z-50"
+                     admin-dark:border-gray-600 rounded-md shadow-lg z-50 scrollbar-hide"
         >
           {customers.length === 0 ? (
             <div className="px-4 py-2 text-sm text-gray-500 text-center">

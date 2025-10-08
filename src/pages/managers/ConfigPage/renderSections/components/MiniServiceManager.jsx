@@ -155,28 +155,28 @@ const MiniServiceManager = ({
                           setSelectedServiceMini(item);
                           setIsGroupServiceModalOpen(true);
                         }}
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-gray-200 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600"
                       >
-                        <Crosshair className="w-4 h-4" />
+                        <Crosshair className="w-4 h-4 text-gray-600 admin-dark:text-gray-200" />
                       </Button>
 
                       <Button
                         theme="admin"
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => setEditingItem(item.id)}
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-blue-200 hover:bg-blue-200/60 admin-dark:bg-blue-900 admin-dark:hover:bg-blue-800"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-4 h-4 text-blue-700 admin-dark:text-blue-300" />
                       </Button>
                       <Button
                         theme="admin"
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => triggerDeleteMiniService(item)}
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-red-200 hover:bg-red-100 admin-dark:bg-red-200 admin-dark:hover:bg-red-200/80"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4 text-red-600 admin-dark:text-red-500" />
                       </Button>
                     </div>
                   </>

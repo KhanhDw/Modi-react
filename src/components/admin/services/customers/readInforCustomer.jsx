@@ -109,31 +109,31 @@ function ReadInforCustomer({ data }) {
             {/* Ảnh CCCD */}
             <div className="sm:col-span-1">
               <span className="font-medium block mb-2">Ảnh CCCD mặt trước:</span>
-              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
-                <img
-                  src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_top}`}
-                  alt="CCCD mặt trước"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23eee' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='14'%3ELỗi tải ảnh%3C/text%3E%3C/svg%3E";
-                  }}
-                />
+              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden text-gray-500 admin-dark:text-gray-300">
+                {customer.img_cccd_top ? (
+                  <img
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_top}`}
+                    alt="CCCD mặt trước"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm md:text-base font-medium">Chưa có ảnh</span>
+                )}
               </div>
             </div>
 
             <div className="sm:col-span-1">
               <span className="font-medium block mb-2">Ảnh CCCD mặt sau:</span>
-              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
-                <img
-                  src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_bottom}`}
-                  alt="CCCD mặt sau"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23eee' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='14'%3ELỗi tải ảnh%3C/text%3E%3C/svg%3E";
-                  }}
-                />
+              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden text-gray-500 admin-dark:text-gray-300">
+                {customer.img_cccd_bottom ? (
+                  <img
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_bottom}`}
+                    alt="CCCD mặt sau"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm md:text-base font-medium">Chưa có ảnh</span>
+                )}
               </div>
             </div>
 
@@ -150,7 +150,7 @@ function ReadInforCustomer({ data }) {
               Chưa đặt dịch vụ nào.
             </p>
           ) : (
-            <div className="overflow-x-auto overflow-y-hidden rounded-lg border border-gray-200 admin-dark:border-gray-700">
+            <div className="overflow-x-auto w-full rounded-lg border border-gray-200 admin-dark:border-gray-700">
               <table className="w-full text-sm sm:text-base">
                 <thead className="bg-gray-100 admin-dark:bg-gray-900">
                   <tr>
@@ -206,6 +206,7 @@ function ReadInforCustomer({ data }) {
             </div>
           )}
         </div>
+
       </div>
 
     </ScrollArea>

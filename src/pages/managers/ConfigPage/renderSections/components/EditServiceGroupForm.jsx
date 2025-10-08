@@ -43,7 +43,7 @@ export default function EditServiceGroupForm({ item, onCancel, onReload }) {
                     <span className="font-semibold text-xs sm:text-sm text-white">Lưu</span>
                 </Button>
                 <Button size="sm" variant="outline" onClick={onCancel} className="cursor-pointer shadow border-none bg-red-500 hover:bg-red-600 admin-dark:bg-red-500 admin-dark:hover:bg-red-600">
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3 text-white" />
                     <span className="font-semibold text-xs sm:text-sm text-white">Hủy</span>
                 </Button>
             </div>
