@@ -110,7 +110,7 @@ const SortableStageItem = ({
               onClick={() => onEdit(stage.id)}
               className="cursor-pointer"
             >
-              <Edit2 className="w-4 h-4 text-gray-400" />
+              <Edit2 className="w-4 h-4 text-gray-500 admin-dark:text-gray-400" />
             </Button>
             <Button
               theme="admin"

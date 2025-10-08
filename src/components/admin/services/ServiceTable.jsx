@@ -31,14 +31,27 @@ export default function ServiceTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; // số dịch vụ trên 1 trang
 
+  // Hàm bỏ dấu tiếng Việt
+  const removeVietnameseTones = (str) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D");
+  };
+
   // Lọc theo search
   const filteredService = Array.isArray(initDataService)
-    ? initDataService.filter((service) =>
-        (service.translation?.ten_dich_vu || "")
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      )
+    ? initDataService.filter((service) => {
+      const keyword = removeVietnameseTones(search.toLowerCase());
+      const serviceName = removeVietnameseTones(
+        (service.translation?.ten_dich_vu || "").toLowerCase()
+      );
+
+      return serviceName.includes(keyword);
+    })
     : [];
+
   const totalPages = Math.ceil(filteredService.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredService.slice(
@@ -58,7 +71,7 @@ export default function ServiceTable() {
       <CardHeader className="px-2 sm:px-3 md:px-4">
         <div className="flex flex-col sm:flex-col md:flex-row items-center sm:items-center justify-between gap-3 sm:gap-4">
           <div className="">
-            <CardTitle className="text-sm sm:text-xl md:text-xl md:text-start font-bold text-gray-900 admin-dark:text-gray-100">
+            <CardTitle className="text-sm sm:text-lg md:text-start font-bold text-gray-900 admin-dark:text-gray-100">
               Danh sách dịch vụ
             </CardTitle>
             <CardDescription className="text-xs sm:text-base md:text-[16px] sm:text-center md:text-start text-gray-600 admin-dark:text-gray-400 mt-1">
@@ -147,9 +160,8 @@ export default function ServiceTable() {
                     <TableCell>
                       {item.image_url ? (
                         <img
-                          src={`${import.meta.env.VITE_MAIN_BE_URL}${
-                            item.image_url
-                          }`}
+                          src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url
+                            }`}
                           alt="Ảnh dịch vụ"
                           style={{
                             width: 60,
@@ -165,21 +177,19 @@ export default function ServiceTable() {
                       onClick={() =>
                         handleReaderDetailService(item.translation?.slug)
                       }
-                      className={`${
-                        !item.totalLanguages.includes("vi")
-                          ? "text-red-400"
-                          : "text-gray-900 admin-dark:text-gray-200"
-                      } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
+                      className={`${!item.totalLanguages.includes("vi")
+                        ? "text-red-400"
+                        : "text-gray-900 admin-dark:text-gray-200"
+                        } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
                     >
                       {item.translation?.ten_dich_vu ||
                         "Chưa có thông tin tiếng việt"}
                     </TableCell>
                     <TableCell
-                      className={`${
-                        !item.totalLanguages.includes("vi")
-                          ? "text-red-400"
-                          : "text-gray-900 admin-dark:text-gray-200"
-                      }  `}
+                      className={`${!item.totalLanguages.includes("vi")
+                        ? "text-red-400"
+                        : "text-gray-900 admin-dark:text-gray-200"
+                        }  `}
                     >
                       {item.translation?.mo_ta ||
                         "Chưa có thông tin tiếng việt"}
@@ -200,9 +210,8 @@ export default function ServiceTable() {
                           return (
                             <span
                               key={`${lang}-${index}`}
-                              className={`${
-                                lang === "vi" ? "bg-red-700" : "bg-blue-600"
-                              } px-2 py-1 text-xs text-white rounded`}
+                              className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"
+                                } px-2 py-1 text-xs text-white rounded`}
                             >
                               {lang}
                             </span>

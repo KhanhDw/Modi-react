@@ -37,7 +37,7 @@ const ServiceManager = ({
             onClick={() => setIsModalOpen(true)}
             variant="outline"
             size="default"
-            className="cursor-pointer"
+            className="cursor-pointer bg-gray-700 hover:bg-gray-600"
             disabled={stageMaster.length === 0}
           >
             <Plus className="w-4 h-4 text-gray-100 admin-dark:text-gray-300" />

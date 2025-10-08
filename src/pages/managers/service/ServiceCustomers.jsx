@@ -42,19 +42,19 @@ export default function ServiceCustomers() {
 
   const cardData = [
     {
-      title: "Số lượng khách hàng",
+      title: "Số lượng",
       icon: Users,
       value: initDataCustomer.length,
       iconSize: "h-4 w-4",
     },
     {
-      title: "Khách hàng mới trong tháng",
+      title: "Khách hàng mới",
       icon: UserPlus,
       value: newCustomersThisMonth.length,
       iconSize: "h-4 w-4",
     },
     {
-      title: "Khách hàng đang xử lý",
+      title: "Đang xử lý",
       icon: Clock,
       value: customersOrderingService.length,
       iconSize: "h-4 w-4",
@@ -105,7 +105,7 @@ export default function ServiceCustomers() {
               className="bg-white admin-dark:bg-[#374151] rounded-lg sm:rounded-xl shadow-sm sm:shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563] p-2 sm:p-4"
             >
               <CardHeader className="flex flex-row items-center justify-between p-0 sm:p-0 mb-1 sm:mb-0">
-                <CardTitle className="text-xs sm:text-sm font-medium admin-dark:text-gray-300 line-clamp-2">
+                <CardTitle className="text-xs sm:text-base md:text-sm xl:text-base font-medium admin-dark:text-gray-300 line-clamp-2">
                   {item.title}
                 </CardTitle>
                 <IconComponent

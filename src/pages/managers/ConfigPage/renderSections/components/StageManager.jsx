@@ -142,7 +142,7 @@ const StageManager = ({
             disabled={!newStageVi.trim() || !newStageEn.trim()}
             className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600"
           >
-            <Plus className="w-4 h-4 mr-1 cursor-pointer text-xs sm:text-base text-white" />{" "}
+            <Plus className="w-4 h-4 cursor-pointer text-xs sm:text-base text-white" />{" "}
             <span className="text-sm sm:text-base font-semibold text-white">
               Thêm
             </span>
@@ -180,7 +180,7 @@ const StageManager = ({
               theme="admin"
               variant="ghost"
               onClick={handleCancelOrder}
-              className="cursor-pointer bg-gray-700"
+              className="cursor-pointer bg-gray-700 hover:bg-gray-600"
             >
               <span className="text-sm sm:text-base font-semibold text-white">
                 Hủy sắp xếp
@@ -189,10 +189,10 @@ const StageManager = ({
             <Button
               theme="admin"
               onClick={handleSaveOrder}
-              className="cursor-pointer shadow"
+              className="cursor-pointer shadow bg-blue-500 hover:bg-blue-600"
             >
-              <Save className="w-4 h-4 mr-2" />
-              <span className="text-sm sm:text-base font-semibold text-gray-600">
+              <Save className="w-4 h-4 text-white" />
+              <span className="text-sm sm:text-base font-semibold text-white">
                 Lưu thứ tự
               </span>
             </Button>

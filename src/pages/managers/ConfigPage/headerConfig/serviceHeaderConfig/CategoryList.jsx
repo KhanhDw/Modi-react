@@ -44,7 +44,7 @@ function SortableCategoryItem({
       className={cn(
         "p-2 rounded-lg shadow text-gray-900 admin-dark:text-white font-semibold border flex items-center justify-between cursor-pointer transition-colors",
         selectedCategory?.id === cat.id
-          ? "bg-primary border-primary"
+          ? "bg-primary/90 border-none"
           : "bg-gray-50 hover:bg-gray-100 border-gray-200 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:border-gray-600"
       )}
       onClick={() => onSelect(cat)}
@@ -74,9 +74,9 @@ function SortableCategoryItem({
             e.stopPropagation();
             onEdit(cat);
           }}
-          className="cursor-pointer hover:bg-gray-800 bg-gray-900 admin-dark:bg-gray-900 admin-dark:hover:bg-gray-800"
+          className="cursor-pointer hover:bg-gray-700 bg-gray-900 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-800 border-none"
         >
-          <Pencil className="h-4 w-4 text-xs" />
+          <Pencil className="h-4 w-4 text-xs text-gray-400 admin-dark:text-gray-300" />
         </Button>
         <Button
           size="sm"
@@ -173,7 +173,7 @@ export default function CategoryList({
               size="sm"
               variant="outline"
               onClick={handleCancel}
-              className="cursor-pointer hover:text-gray-900 shadow"
+              className="cursor-pointer bg-gray-800 hover:bg-gray-700 shadow"
             >
               <span className="font-semibold text-xs xl:text-sm text-white">
                 Hủy

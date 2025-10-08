@@ -52,19 +52,19 @@ function transformBookingsToServices(bookings) {
 // Component StatCard tái sử dụng
 const StatCard = ({ title, icon: Icon, value, format = "count" }) => (
   <Card className="bg-white admin-dark:bg-gray-800 rounded-xl lg:p-2 shadow-md border border-gray-300 admin-dark:border-gray-700">
-    <CardHeader className="flex flex-row items-center justify-between">
-      <CardTitle className="xs:text-xs xs:font-semibold text-sm font-medium admin-dark:text-white text-black">
+    <div className="flex flex-row items-center justify-between px-4 lg:px-2 xl:px-4">
+      <CardTitle className="text-xs sm:text-base lg:text-base xs:font-semibold font-medium admin-dark:text-white text-black">
         {title}
       </CardTitle>
-      <Icon className="xs:hidden md:block  h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
-    </CardHeader>
+      <Icon className="xs:hidden md:block h-4 w-4 text-muted-foreground admin-dark:text-gray-400" />
+    </div>
     <CardContent>
-      <div className="mx-4 sm:mx-2 text-xl text-gray-800 admin-dark:text-white font-bold">
+      <div className="mx-2 lg:-mx-2 xl:mx-0 text-xl text-gray-800 admin-dark:text-white font-bold">
         {format === "currency"
           ? value.toLocaleString("vi-VN", {
-              style: "currency",
-              currency: "VND",
-            })
+            style: "currency",
+            currency: "VND",
+          })
           : value}
       </div>
     </CardContent>
@@ -78,31 +78,31 @@ const getStatsData = (
   initDataCustomer,
   totalRevenue
 ) => [
-  {
-    title: "Tổng dịch vụ",
-    icon: Layers,
-    value: initDataService.length,
-    format: "count",
-  },
-  {
-    title: "Tổng doanh thu",
-    icon: DollarSign,
-    value: totalRevenue,
-    format: "currency",
-  },
-  {
-    title: "Đơn đặt",
-    icon: Target,
-    value: initDataBooking.length,
-    format: "count",
-  },
-  {
-    title: "Khách hàng",
-    icon: Star,
-    value: initDataCustomer.filter((c) => c.status === "active").length,
-    format: "count",
-  },
-];
+    {
+      title: "Tổng dịch vụ",
+      icon: Layers,
+      value: initDataService.length,
+      format: "count",
+    },
+    {
+      title: "Tổng doanh thu",
+      icon: DollarSign,
+      value: totalRevenue,
+      format: "currency",
+    },
+    {
+      title: "Đơn đặt",
+      icon: Target,
+      value: initDataBooking.length,
+      format: "count",
+    },
+    {
+      title: "Khách hàng",
+      icon: Star,
+      value: initDataCustomer.filter((c) => c.status === "active").length,
+      format: "count",
+    },
+  ];
 
 export default function ServiceOverview() {
   useLenisLocal(".lenis-local");

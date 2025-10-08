@@ -165,9 +165,9 @@ export default function ServiceCustomerAnalytics() {
                 .map((customer, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 border border-gray-300 rounded-md bg-gray-100 admin-dark:bg-gray-700 admin-dark:border-gray-600"
+                    className="flex flex-col sm:flex-row md:flex-col xl:flex-row sm:items-center xl:items-center gap-3 items-start justify-center p-3 border border-gray-300 rounded-md bg-gray-100 admin-dark:bg-gray-700 admin-dark:border-gray-600"
                   >
-                    <div>
+                    <div className="w-full">
                       <p className="font-medium text-xs lg:text-sm text-black admin-dark:text-gray-200">
                         {customer.name}
                       </p>
@@ -175,7 +175,7 @@ export default function ServiceCustomerAnalytics() {
                         {customer.email || "Chưa có email"}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex justify-between sm:justify-end md:justify-between xl:justify-end items-center gap-2 xl:gap-5 w-full">
                       <Badge
                         variant="secondary"
                         className="bg-blue-200 shadow text-blue-700 px-2 py-1 admin-dark:bg-blue-900 admin-dark:text-gray-200"
@@ -239,7 +239,7 @@ export default function ServiceCustomerAnalytics() {
                   className="admin-dark:stroke-gray-300"
                 />
                 <Tooltip
-                  formatter={(value) => `${value} đơn`}
+                  formatter={(value, name) => [value + " đơn", "Số lượt đặt"]}
                   labelFormatter={(label) => `Tháng: ${label}`}
                   contentStyle={{
                     backgroundColor: "#fff",
@@ -251,6 +251,7 @@ export default function ServiceCustomerAnalytics() {
                 />
                 <Bar
                   dataKey="totalBookings"
+                  label="sl"
                   fill="#4F46E5"
                   radius={[6, 6, 0, 0]}
                   className="admin-dark:fill-indigo-500"

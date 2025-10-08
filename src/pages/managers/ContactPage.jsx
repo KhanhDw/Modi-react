@@ -2,6 +2,7 @@ import PageList from "@/components/feature/pagination.jsx";
 import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/admin/common/Table";
 import ContactDetail from "../../components/admin/contact/ContactDetail";
+import CustomSelect from "./MarketingPage/OptionsSelect";
 
 export default function ContactPage() {
   const [contacts, setContacts] = useState([]);
@@ -182,18 +183,16 @@ export default function ContactPage() {
         className: "overflow-hidden",
         render: (value) => (
           <span
-            className={` inline-flex items-center px-1 sm:px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap truncate ${
-              value === "Đã phản hồi"
-                ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200"
-                : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
-            }`}
+            className={` inline-flex items-center px-1 sm:px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap truncate ${value === "Đã phản hồi"
+              ? "admin-dark:bg-emerald-900 admin-dark:text-emerald-300 admin-dark:border-emerald-700 bg-emerald-100 text-emerald-800 border border-emerald-200"
+              : "admin-dark:bg-amber-900 admin-dark:text-amber-300 admin-dark:border-amber-700 bg-amber-100 text-amber-800 border border-amber-200"
+              }`}
           >
             <div
-              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mr-1 sm:mr-2 flex-shrink-0 ${
-                value === "Đã phản hồi"
-                  ? "admin-dark:bg-emerald-400 bg-emerald-400"
-                  : "admin-dark:bg-amber-400 bg-amber-400"
-              }`}
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mr-1 sm:mr-2 flex-shrink-0 ${value === "Đã phản hồi"
+                ? "admin-dark:bg-emerald-400 bg-emerald-400"
+                : "admin-dark:bg-amber-400 bg-amber-400"
+                }`}
             ></div>
             {value}
           </span>
@@ -286,39 +285,39 @@ export default function ContactPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm theo tên, số điện thoại, email..."
-              className="px-3 sm:px-1 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-65 md:w-70 focus:border-none"
+              className="px-3 py-1 border-2 admin-dark:border-gray-600 admin-dark:bg-gray-800 admin-dark:text-gray-200 admin-dark:placeholder-gray-400 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-60 md:w-70 focus:border-none"
             />
-            <select
+            <CustomSelect
               value={dateFilter}
-              onChange={(e) => handleFilterChange(e.target.value)}
-              className="px-3 sm:px-3 py-2 border admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:focus:ring-blue-400 admin-dark:focus:border-blue-400 admin-dark:hover:bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 w-full sm:w-40 focus:border-none cursor-pointer"
-            >
-              <option value="all">Tất cả thời gian</option>
-              <option value="today">Hôm nay</option>
-              <option value="week">Tuần này</option>
-              <option value="month">Tháng này</option>
-            </select>
+              onValueChange={handleFilterChange}
+              placeholder="Lọc theo thời gian"
+              options={[
+                { label: "Tất cả thời gian", value: "all" },
+                { label: "Hôm nay", value: "today" },
+                { label: "Tuần này", value: "week" },
+                { label: "Tháng này", value: "month" },
+              ]}
+              className="sm:w-45 lg:w-50 w-full"
+            />
           </div>
         </div>
 
         <div className="mb-4 sm:mb-6 xs:grid xs:grid-cols-1 md:grid-cols-6 gap-3 sm:gap-3">
           <div
-            className={`col-span-2 admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-              statusFilter === "all" && dateFilter === "all"
-                ? "admin-dark:border-blue-500 admin-dark:bg-blue-900/20 border-blue-400 bg-blue-50"
-                : "admin-dark:border-gray-600 admin-dark:hover:border-blue-400 border-gray-200 hover:border-blue-300"
-            }`}
+            className={`col-span-2 admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${statusFilter === "all" && dateFilter === "all"
+              ? "admin-dark:border-blue-500 admin-dark:bg-blue-900/20 border-blue-400 bg-blue-50"
+              : "admin-dark:border-gray-600 admin-dark:hover:border-blue-400 border-gray-200 hover:border-blue-300"
+              }`}
             onClick={handleShowAll}
           >
             <div className="p-3 sm:p-4">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div
-                    className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center ${
-                      statusFilter === "all" && dateFilter === "all"
-                        ? "bg-blue-600"
-                        : "bg-blue-500"
-                    }`}
+                    className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center ${statusFilter === "all" && dateFilter === "all"
+                      ? "bg-blue-600"
+                      : "bg-blue-500"
+                      }`}
                   >
                     <svg
                       className="w-4 sm:w-5 h-4 sm:h-5 text-white"
@@ -355,11 +354,10 @@ export default function ContactPage() {
           </div>
           <div className="xs:grid xs:grid-cols-2 md:col-span-4 gap-3 sm:gap-3">
             <div
-              className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-                statusFilter === "pending"
-                  ? "admin-dark:border-amber-500 admin-dark:bg-amber-900/20 border-amber-400 bg-amber-50"
-                  : "admin-dark:border-gray-600 admin-dark:hover:border-amber-400 border-gray-200 hover:border-amber-300"
-              }`}
+              className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${statusFilter === "pending"
+                ? "admin-dark:border-amber-500 admin-dark:bg-amber-900/20 border-amber-400 bg-amber-50"
+                : "admin-dark:border-gray-600 admin-dark:hover:border-amber-400 border-gray-200 hover:border-amber-300"
+                }`}
               onClick={() =>
                 handleStatusFilterChange(
                   statusFilter === "pending" ? "all" : "pending"
@@ -370,11 +368,10 @@ export default function ContactPage() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div
-                      className={`xs:hidden  w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:flex items-center justify-center ${
-                        statusFilter === "pending"
-                          ? "bg-amber-600"
-                          : "bg-amber-500"
-                      }`}
+                      className={`xs:hidden  w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:flex items-center justify-center ${statusFilter === "pending"
+                        ? "bg-amber-600"
+                        : "bg-amber-500"
+                        }`}
                     >
                       <svg
                         className="w-4 sm:w-5 h-4 sm:h-5 text-white"
@@ -411,11 +408,10 @@ export default function ContactPage() {
             </div>
 
             <div
-              className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${
-                statusFilter === "responded"
-                  ? "admin-dark:border-emerald-500 admin-dark:bg-emerald-900/20 border-emerald-400 bg-emerald-50"
-                  : "admin-dark:border-gray-600 admin-dark:hover:border-emerald-400 border-gray-200 hover:border-emerald-300"
-              }`}
+              className={`admin-dark:bg-gray-800 bg-white overflow-hidden shadow-sm rounded-lg border-2 hover:shadow-md transition-all duration-200 cursor-pointer ${statusFilter === "responded"
+                ? "admin-dark:border-emerald-500 admin-dark:bg-emerald-900/20 border-emerald-400 bg-emerald-50"
+                : "admin-dark:border-gray-600 admin-dark:hover:border-emerald-400 border-gray-200 hover:border-emerald-300"
+                }`}
               onClick={() =>
                 handleStatusFilterChange(
                   statusFilter === "responded" ? "all" : "responded"
@@ -426,11 +422,10 @@ export default function ContactPage() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div
-                      className={`xs:hidden  w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:flex items-center justify-center ${
-                        statusFilter === "responded"
-                          ? "bg-emerald-600"
-                          : "bg-emerald-500"
-                      }`}
+                      className={`xs:hidden  w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:flex items-center justify-center ${statusFilter === "responded"
+                        ? "bg-emerald-600"
+                        : "bg-emerald-500"
+                        }`}
                     >
                       <svg
                         className="w-4 sm:w-5 h-4 sm:h-5 text-white"

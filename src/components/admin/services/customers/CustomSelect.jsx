@@ -8,11 +8,12 @@ export default function CustomSelect({
   placeholder = "Lọc theo trạng thái",
   options,
   className,
+  openUp = false,
 }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef(null);
 
-  // Đóng khi click ra ngoài
+  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     function handleClickOutside(event) {
       if (triggerRef.current && !triggerRef.current.contains(event.target)) {
@@ -30,10 +31,10 @@ export default function CustomSelect({
       className={cn("relative inline-block w-full", className)}
       ref={triggerRef}
     >
-      {/* Trigger */}
+      {/* Trigger button */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-gray-300 bg-white px-3 py-1.5 text-gray-800 text-sm focus:ring-2 focus:border-none focus:ring-blue-500 cursor-pointer admin-dark:bg-gray-800 admin-dark:border-gray-600"
+        className="flex w-full items-center justify-between gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-gray-800 text-sm focus:ring-2 focus:border-none focus:ring-blue-500 cursor-pointer admin-dark:bg-gray-700 admin-dark:border-gray-600"
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -51,20 +52,22 @@ export default function CustomSelect({
         )}
       </button>
 
-      {/* Dropdown */}
+      {/* Dropdown list */}
       {open && (
         <ul
           role="listbox"
           tabIndex={-1}
           style={{
             position: "absolute",
-            top: "calc(100% + 4px)",
             left: 0,
             minWidth: "100%",
             width: "max-content",
             maxHeight: "200px",
+            ...(openUp
+              ? { bottom: "calc(100% + 4px)" } // mở lên trên
+              : { top: "calc(100% + 4px)" }),  // mở xuống dưới
           }}
-          className="z-50 overflow-auto rounded-md border border-gray-200 bg-white text-sm md:text-base font-normal text-gray-700 shadow-lg admin-dark:border-gray-700 admin-dark:bg-gray-800 admin-dark:text-white scrollbar-hide"
+          className="z-50 overflow-auto rounded-md border border-gray-200 bg-white text-sm md:text-base font-normal text-gray-700 shadow-lg admin-dark:border-gray-700 admin-dark:bg-gray-800 admin-dark:text-white"
         >
           {options.map((opt) => (
             <li

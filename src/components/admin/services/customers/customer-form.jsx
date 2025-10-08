@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useOutletContext } from "react-router-dom";
@@ -14,18 +7,21 @@ import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { X, Upload, Trash2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useLenisLocal from "@/hook/useLenisLocal";
+import CustomSelect from "./CustomSelect";
+import BankDropdown from "@/components/feature/SelectBank";
 
-const VIETNAMESE_BANKS = [
-  { code: "", name: "--- Chọn Ngân hàng ---" },
-  { code: "VCB", name: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)" },
-  { code: "TCB", name: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)" },
-  { code: "BIDV", name: "BIDV (Ngân hàng TMCP Đầu tư và Phát triển Việt Nam)" },
-  { code: "CTG", name: "VietinBank (Ngân hàng TMCP Công Thương Việt Nam)" },
-  { code: "ACB", name: "ACB (Ngân hàng TMCP Á Châu)" },
-  { code: "MB", name: "MBBank (Ngân hàng TMCP Quân đội)" },
-  { code: "VPB", name: "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)" },
-  { code: "STB", name: "Sacombank (Ngân hàng TMCP Sài Gòn Thương Tín)" },
-  { code: "TPB", name: "TPBank (Ngân hàng TMCP Tiên Phong)" },
+// options cho type
+const typeOptions = [
+  { value: "new", label: "Khách mới" },
+  { value: "regular", label: "Khách thường xuyên" },
+  { value: "vip", label: "Khách VIP" },
+  { value: "old", label: "Khách cũ" }
+];
+
+// options cho status
+const statusOptions = [
+  { value: "active", label: "Hoạt động" },
+  { value: "inactive", label: "Ngừng hoạt động" },
 ];
 
 export default function CustomerForm() {
@@ -37,6 +33,7 @@ export default function CustomerForm() {
   } = useOutletContext();
 
   useLenisLocal(".lenis-local");
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -295,7 +292,7 @@ export default function CustomerForm() {
     <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
       <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5">
         <div className="relative">
-          <span className="flex gap-2 items-center sm:text-lg md:text-lg font-bold uppercase text-gray-900 admin-dark:text-gray-100">
+          <span className="flex items-center sm:text-lg md:text-lg font-bold uppercase text-gray-900 admin-dark:text-gray-100">
             Chỉnh sửa người dùng
           </span>
           <span className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
@@ -310,7 +307,7 @@ export default function CustomerForm() {
           </button>
         </div>
 
-        <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto">
+        <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto mt-2">
           <form
             onSubmit={handleSubmit}
             className="space-y-4"
@@ -440,64 +437,35 @@ export default function CustomerForm() {
                       >
                         Tên ngân hàng
                       </Label>
-                      <select
-                        id="name_bank"
-                        name="name_bank"
-                        value={formData.name_bank}
-                        onChange={handleChange}
-                        className={inputClass}
-                      >
-                        {VIETNAMESE_BANKS.map((b) => (
-                          <option
-                            key={b.code}
-                            value={b.code}
-                          >
-                            {b.name}
-                          </option>
-                        ))}
-                      </select>
+                      <BankDropdown
+                        formData={formData}
+                        setFormData={setFormData}
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <Label
-                      className={labelClass}
-                      htmlFor="type"
-                    >
-                      Loại khách hàng
-                    </Label>
-                    <select
-                      id="type"
-                      name="type"
+                    <Label className={labelClass}>Loại khách hàng</Label>
+                    <CustomSelect
                       value={formData.type}
-                      onChange={handleChange}
-                      className={inputClass}
-                    >
-                      <option value="new">Khách mới</option>
-                      <option value="regular">Khách thường xuyên</option>
-                      <option value="vip">Khách VIP</option>
-                    </select>
+                      onValueChange={(val) => setFormData(prev => ({ ...prev, type: val }))}
+                      placeholder="Chọn loại khách hàng"
+                      options={typeOptions}
+                      openUp={true}
+                    />
                   </div>
 
                   <div>
-                    <Label
-                      className={labelClass}
-                      htmlFor="status"
-                    >
-                      Trạng thái
-                    </Label>
-                    <select
-                      id="status"
-                      name="status"
+                    <Label className={labelClass}>Trạng thái</Label>
+                    <CustomSelect
                       value={formData.status}
-                      onChange={handleChange}
-                      className={inputClass}
-                    >
-                      <option value="active">Hoạt động</option>
-                      <option value="inactive">Ngừng hoạt động</option>
-                    </select>
+                      onValueChange={(val) => setFormData(prev => ({ ...prev, status: val }))}
+                      placeholder="Chọn trạng thái"
+                      options={statusOptions}
+                      openUp={true}
+                    />
                   </div>
                 </div>
               </div>
@@ -544,10 +512,10 @@ export default function CustomerForm() {
               </div>
             </div>
 
-            <div className="flex gap-3 mt-4">
+            <div className="flex justify-end sm:justify-center md:justify-end gap-3 mt-4">
               <Button
                 type="submit"
-                className="flex-1"
+                className="w-fit cursor-pointer"
                 disabled={loading}
               >
                 {loading ? "Đang cập nhật..." : "Cập nhật người dùng"}
@@ -555,7 +523,7 @@ export default function CustomerForm() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1"
+                className="w-fit cursor-pointer bg-gray-200 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600"
                 onClick={handleClose}
               >
                 Thoát

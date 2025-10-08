@@ -1,7 +1,7 @@
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { useState } from "react";
 import { X } from "lucide-react";
-import BankDropdown from "@/components/feature/SelectBank.jsx";
+import BankDropdown from "@/components/feature/SelectBank";
 
 function FormAddCustomer({ onCancel, onSuccess }) {
   const [toast, setToast] = useState(null);
@@ -30,7 +30,7 @@ function FormAddCustomer({ onCancel, onSuccess }) {
       [name]:
         (type === "number" ||
           ["total_spent", "booking_count"].includes(name)) &&
-        value !== ""
+          value !== ""
           ? Number(value)
           : value,
     }));
@@ -329,6 +329,7 @@ function FormAddCustomer({ onCancel, onSuccess }) {
                       formData={formData}
                       setFormData={setFormData}
                     />
+
                   </div>
                 </div>
               </div>
@@ -467,11 +468,10 @@ function FormAddCustomer({ onCancel, onSuccess }) {
           {/* Hiển thị thông báo trạng thái */}
           {message && (
             <div
-              className={`mt-4 text-center font-medium p-3 rounded-lg ${
-                message.startsWith("Xử lý thất bại")
-                  ? "bg-red-100 text-red-700 admin-dark:bg-red-900 admin-dark:text-red-300"
-                  : "bg-green-100 text-green-700 admin-dark:bg-green-900 admin-dark:text-green-300"
-              }`}
+              className={`mt-4 text-center font-medium p-3 rounded-lg ${message.startsWith("Xử lý thất bại")
+                ? "bg-red-100 text-red-700 admin-dark:bg-red-900 admin-dark:text-red-300"
+                : "bg-green-100 text-green-700 admin-dark:bg-green-900 admin-dark:text-green-300"
+                }`}
             >
               {message}
             </div>
