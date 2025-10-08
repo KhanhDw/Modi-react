@@ -31,51 +31,66 @@ export default function WebsiteTemplateList() {
 
   const availableTags = [...new Set(templates?.flatMap((t) => t.tags || []))];
   const availableTech = [...new Set(templates?.flatMap((t) => t.tech || []))];
-  const availableTopFeatures = [...new Set(templates?.flatMap((t) => t.top_features || []))];
+  const availableTopFeatures = [
+    ...new Set(templates?.flatMap((t) => t.top_features || [])),
+  ];
   const availableAuthors = [...new Set(templates?.map(() => "Admin"))];
 
-  const filteredTemplates = templates?.filter((t) => {
-    const search = searchTerm.toLowerCase();
+  const filteredTemplates =
+    templates?.filter((t) => {
+      const search = searchTerm.toLowerCase();
 
-    const matchesSearch =
-      !searchTerm ||
-      t.name?.toLowerCase().includes(search) ||
-      t.description?.toLowerCase().includes(search) ||
-      t.category?.toLowerCase().includes(search) ||
-      t.tags?.some((tag) => tag.toLowerCase().includes(search)) ||
-      t.tech?.some((tech) => tech.toLowerCase().includes(search)) ||
-      t.top_features?.some((f) => f.toLowerCase().includes(search));
+      const matchesSearch =
+        !searchTerm ||
+        t.name?.toLowerCase().includes(search) ||
+        t.description?.toLowerCase().includes(search) ||
+        t.category?.toLowerCase().includes(search) ||
+        t.tags?.some((tag) => tag.toLowerCase().includes(search)) ||
+        t.tech?.some((tech) => tech.toLowerCase().includes(search)) ||
+        t.top_features?.some((f) => f.toLowerCase().includes(search));
 
-    const matchesTechnology =
-      filters.technologies.length === 0 ||
-      filters.technologies.some((tech) => t.tech?.includes(tech));
+      const matchesTechnology =
+        filters.technologies.length === 0 ||
+        filters.technologies.some((tech) => t.tech?.includes(tech));
 
-    const matchesTags =
-      filters.tags.length === 0 ||
-      filters.tags.some((tag) => t.tags?.includes(tag));
+      const matchesTags =
+        filters.tags.length === 0 ||
+        filters.tags.some((tag) => t.tags?.includes(tag));
 
-    const matchesAuthor =
-      filters.authors.length === 0 || filters.authors.includes("Admin");
+      const matchesAuthor =
+        filters.authors.length === 0 || filters.authors.includes("Admin");
 
-    const matchesStatus =
-      !filters.publishStatus ||
-      (filters.publishStatus === "published" && t.export_state) ||
-      (filters.publishStatus === "draft" && !t.export_state);
+      const matchesStatus =
+        !filters.publishStatus ||
+        (filters.publishStatus === "published" && t.export_state) ||
+        (filters.publishStatus === "draft" && !t.export_state);
 
-    return matchesSearch && matchesTechnology && matchesTags && matchesAuthor && matchesStatus;
-  }) || [];
+      return (
+        matchesSearch &&
+        matchesTechnology &&
+        matchesTags &&
+        matchesAuthor &&
+        matchesStatus
+      );
+    }) || [];
 
   const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentTemplates = filteredTemplates.slice(startIndex, startIndex + itemsPerPage);
+  const currentTemplates = filteredTemplates.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
+    return `${String(date.getDate()).padStart(2, "0")}/${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}/${date.getFullYear()}`;
   };
 
   const ProductPrice = ({ price }) => {
-    if (price == null) return <span className="text-gray-500 text-xs">Chưa cập nhật giá</span>;
+    if (price == null)
+      return <span className="text-gray-500 text-xs">Chưa cập nhật giá</span>;
     return <span>{Number(price).toLocaleString("vi-VN")}</span>;
   };
 
@@ -93,13 +108,17 @@ export default function WebsiteTemplateList() {
     <div className="mx-auto">
       <div className="flex flex-col gap-6 mb-3 w-full">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
-          <h1 className="text-2xl font-bold xs:text-xl sm:text-xl">Quản lý mẫu Website</h1>
+          <h1 className="text-2xl font-bold xs:text-xl sm:text-xl">
+            Quản lý mẫu Website
+          </h1>
           <Button
             onClick={() => navigate("new")}
             className="flex items-center shadow gap-2 cursor-pointer bg-[#B6EADA] hover:bg-[#5B8FB9] text-black"
           >
             <Plus className="h-4 w-4 text-gray-700 admin-dark:text-gray-800" />
-            <span className="text-sm sm:text-base font-semibold text-gray-700 admin-dark:text-gray-800">Thêm mẫu mới</span>
+            <span className="text-sm sm:text-base font-semibold text-gray-700 admin-dark:text-gray-800">
+              Thêm mẫu mới
+            </span>
           </Button>
         </div>
 
@@ -125,7 +144,9 @@ export default function WebsiteTemplateList() {
             </div>
           </div>
           <div className="w-full flex items-center justify-end gap-1 text-gray-600 admin-dark:text-white font-semibold">
-            <p className="text-sm sm:text-base">Hiện có {templates.length} website mẫu</p>
+            <p className="text-sm sm:text-base">
+              Hiện có {templates.length} website mẫu
+            </p>
           </div>
         </div>
       </div>
@@ -134,13 +155,20 @@ export default function WebsiteTemplateList() {
         {currentTemplates.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-500 admin-dark:text-gray-400 mb-4 text-sm sm:text-base">
-              {searchTerm ? "Không tìm thấy mẫu website nào phù hợp" : "Chưa có mẫu website nào"}
+              {searchTerm
+                ? "Không tìm thấy mẫu website nào phù hợp"
+                : "Chưa có mẫu website nào"}
             </div>
-            {!searchTerm &&
-              <Button className="cursor-pointer bg-blue-700 hover:bg-blue-800 text-white" onClick={() => navigate("new")}>
-                <span className="text-sm sm:text-base font-semibold">Thêm mẫu đầu tiên</span>
+            {!searchTerm && (
+              <Button
+                className="cursor-pointer bg-blue-700 hover:bg-blue-800 text-white"
+                onClick={() => navigate("new")}
+              >
+                <span className="text-sm sm:text-base font-semibold">
+                  Thêm mẫu đầu tiên
+                </span>
               </Button>
-            }
+            )}
           </div>
         ) : (
           currentTemplates.map((t) => (
@@ -154,7 +182,9 @@ export default function WebsiteTemplateList() {
                   <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-50 ">
                     {t.image_url ? (
                       <img
-                        src={`${import.meta.env.VITE_MAIN_BE_URL}${t.image_url}`}
+                        src={`${import.meta.env.VITE_MAIN_BE_URL}${
+                          t.image_url
+                        }`}
                         alt={t.name}
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -164,7 +194,10 @@ export default function WebsiteTemplateList() {
                       </div>
                     )}
                     <div className="absolute top-2 left-2">
-                      <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
+                      <Badge
+                        variant="secondary"
+                        className="bg-orange-100 text-orange-800 border-orange-200"
+                      >
                         {t.category}
                       </Badge>
                     </div>
@@ -173,29 +206,55 @@ export default function WebsiteTemplateList() {
                   {/* Nội dung */}
                   <div className="w-full flex flex-col md:flex-row md:items-start gap-2">
                     <div className="flex-1 px-0 sm:px-auto pr-0">
-                      <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-base sm:text-lg mb-1 line-clamp-2">{t.name}</h3>
+                      <h3 className="font-semibold text-gray-900 admin-dark:text-gray-100 text-base sm:text-lg mb-1 line-clamp-2">
+                        {t.name}
+                      </h3>
                       <p className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-400 font-semibold">
-                        Người đăng: <span className="text-xs sm:text-sm text-blue-600 font-medium ">Admin</span>
+                        Người đăng:{" "}
+                        <span className="text-xs sm:text-sm text-blue-600 font-medium ">
+                          Admin
+                        </span>
                       </p>
-                      <p className="mt-2 text-xs sm:text-sm text-gray-700 admin-dark:text-gray-100 font-semibold">Danh mục: {t.category}</p>
+                      <p className="mt-2 text-xs sm:text-sm text-gray-700 admin-dark:text-gray-100 font-semibold">
+                        Danh mục: {t.category}
+                      </p>
 
                       <div className="mt-2">
-                        <p className="text-xs sm:text-sm font-medium text-gray-700 admin-dark:text-gray-100 ">Công nghệ:</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-700 admin-dark:text-gray-100 ">
+                          Công nghệ:
+                        </p>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {t.tech?.map((item) => (
-                            <Badge key={item} variant="outline" className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5">{item}</Badge>
+                            <Badge
+                              key={item}
+                              variant="outline"
+                              className="text-xs text-gray-900 admin-dark:text-gray-100 mt-0.5"
+                            >
+                              {item}
+                            </Badge>
                           ))}
                         </div>
                       </div>
 
                       <div className="mt-3">
-                        <p className="text-xs sm:text-sm font-medium text-gray-700 admin-dark:text-gray-100 ">Các loại File:</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-700 admin-dark:text-gray-100 ">
+                          Các loại File:
+                        </p>
                         <div className="flex flex-wrap gap-2">
                           {t.tags?.slice(0, 6).map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 mt-1">{tag}</Badge>
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="text-xs text-gray-800 admin-dark:text-gray-200 mt-1"
+                            >
+                              {tag}
+                            </Badge>
                           ))}
                           {t.tags?.length > 6 && (
-                            <Badge variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 mt-1">
+                            <Badge
+                              variant="outline"
+                              className="text-xs text-gray-800 admin-dark:text-gray-200 mt-1"
+                            >
                               +{t.tags.length - 6} more
                             </Badge>
                           )}
@@ -208,9 +267,15 @@ export default function WebsiteTemplateList() {
                       <div className="h-fit md:pl-2 pt-2 md:pt-0">
                         <div className="flex items-center justify-end md:justify-center gap-2 mb-2">
                           <div
-                            className={`${t.export_state ? "bg-green-600 text-white" : "bg-gray-400 text-gray-900"} flex mr-4 items-center gap-1 px-2 py-1 rounded-sm`}
+                            className={`${
+                              t.export_state
+                                ? "bg-green-600 text-white"
+                                : "bg-gray-400 text-gray-900"
+                            } flex mr-4 items-center gap-1 px-2 py-1 rounded-sm`}
                           >
-                            <span className="text-sm sm:text-sm font-semibold text-white">{t.export_state ? "Đã xuất bản" : "Chưa xuất bản"}</span>
+                            <span className="text-sm sm:text-sm font-semibold text-white">
+                              {t.export_state ? "Đã xuất bản" : "Chưa xuất bản"}
+                            </span>
                           </div>
 
                           <Button
@@ -233,22 +298,59 @@ export default function WebsiteTemplateList() {
                             handleDelete={handleDelete}
                             className="shadow-lg"
                           />
-
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm sm:text-lg font-bold mb-2 text-gray-900 admin-dark:text-gray-100 ">
-                            {t.price ? <ProductPrice price={t.price} /> : 0}
-                            <span className="text-sm sm:text-lg ml-1">VND</span>
+                        <div className="bg-white admin-dark:bg-gray-900 rounded-xl shadow-sm p-4 space-y-3 text-sm sm:text-base">
+                          {/* Giá */}
+                          <div className="flex justify-between items-center border-b border-gray-200 admin-dark:border-gray-700 pb-2">
+                            <span className="text-gray-500 admin-dark:text-gray-400">
+                              Giá
+                            </span>
+                            <span className="font-bold text-gray-900 admin-dark:text-gray-100">
+                              {t.price ? <ProductPrice price={t.price} /> : 0}{" "}
+                              VND
+                            </span>
                           </div>
-                          <p className="text-xs text-gray-900 admin-dark:text-gray-100 ">Lượt xem:
-                            <span className="font-semibold text-gray-900 admin-dark:text-gray-100 "> {t.views}</span>
-                          </p>
-                          <p className="mt-2 text-xs text-gray-900 admin-dark:text-gray-100 ">Cập nhật: {formatDate(t.updated_at)}</p>
+
+                          {/* Lượt xem */}
+                          <div className="flex justify-between items-center border-b border-gray-200 admin-dark:border-gray-700 pb-2">
+                            <span className="text-gray-500 admin-dark:text-gray-400">
+                              Lượt xem
+                            </span>
+                            <span className="font-semibold text-gray-900 admin-dark:text-gray-100">
+                              {t.views}
+                            </span>
+                          </div>
+
+                          {/* Cập nhật */}
+                          <div className="flex justify-between items-center border-b border-gray-200 admin-dark:border-gray-700 pb-2">
+                            <span className="text-gray-500 admin-dark:text-gray-400">
+                              Cập nhật
+                            </span>
+                            <span className="text-gray-900 admin-dark:text-gray-100">
+                              {formatDate(t.updated_at)}
+                            </span>
+                          </div>
+
+                          {/* Ngôn ngữ */}
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-500 admin-dark:text-gray-400">
+                              Ngôn ngữ
+                            </span>
+                            <span className="text-gray-900 admin-dark:text-gray-100">
+                              {t.available_langs?.join(", ") || "-"}
+                            </span>
+                          </div>
                         </div>
 
                         <div className="w-full mt-4 flex justify-center">
-                          <Button size="sm" onClick={() => navigate(`${t.id}`)} className="w-full sm:w-50 md:w-full bg-blue-500 text-white gap cursor-pointer hover:bg-blue-600">
-                            <span className="text-sm sm:text-base font-semibold text-white">Xem mẫu</span>
+                          <Button
+                            size="sm"
+                            onClick={() => navigate(`${t.id}`)}
+                            className="w-full sm:w-50 md:w-full bg-blue-500 text-white gap cursor-pointer hover:bg-blue-600"
+                          >
+                            <span className="text-sm sm:text-base font-semibold text-white">
+                              Xem mẫu
+                            </span>
                           </Button>
                         </div>
                       </div>
@@ -264,11 +366,23 @@ export default function WebsiteTemplateList() {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-6">
-          <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
             Prev
           </Button>
-          <span className="text-sm">Trang {currentPage} / {totalPages}</span>
-          <Button variant="outline" size="sm" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>
+          <span className="text-sm">
+            Trang {currentPage} / {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
             Next
           </Button>
         </div>
