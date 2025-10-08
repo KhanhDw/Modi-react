@@ -9,7 +9,7 @@ function formatLargeNumber(num) {
 }
 
 function formatCurrency(number) {
-  // Chuyển số thành chuỗi và sử dụng biểu thức chính quy 
+  // Chuyển số thành chuỗi và sử dụng biểu thức chính quy
   // để chèn dấu phẩy (,) sau mỗi 3 chữ số từ cuối lên.
   // Điều này hoạt động cho định dạng tiếng Anh/Mỹ.
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -17,8 +17,6 @@ function formatCurrency(number) {
 
 // Helper: format % thay đổi
 function formatChange(current, before, unit = "") {
-
-
   if (before === 0) {
     if (current === 0) return "0";
     const formattedCurrent = formatCurrency(current);
@@ -39,7 +37,11 @@ export default function KpiCards({
   visitsLastMonth,
 }) {
   // Liên hệ
-  const contactsChange = formatChange(contacts ?? 0, contactsLastMonth ?? 0, " lượt");
+  const contactsChange = formatChange(
+    contacts ?? 0,
+    contactsLastMonth ?? 0,
+    " lượt"
+  );
 
   // Đơn hàng
   const bookingChange = formatChange(
@@ -85,33 +87,41 @@ export default function KpiCards({
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
       {cards.map(({ title, value, change, icon: Icon }, i) => {
         const isNeutral = change === "Không thay đổi" || change === "N/A";
         const isNegative = change.startsWith("Giảm") || change.startsWith("-");
         const textColor = isNeutral
           ? "text-gray-500 admin-dark:text-gray-400"
           : isNegative
-            ? "text-red-600 admin-dark:text-red-400"
-            : "text-green-600 admin-dark:text-green-400";
+          ? "text-red-600 admin-dark:text-red-400"
+          : "text-green-600 admin-dark:text-green-400";
 
         return (
           <Card
             key={i}
-            className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 shadow-sm"
+            className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 shadow-sm p-3 sm:p-4"
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-800 admin-dark:text-gray-100">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 pb-2 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium text-gray-800 admin-dark:text-gray-100 line-clamp-2">
                 {title}
               </CardTitle>
-              <Icon className="h-4 w-4 text-gray-500 admin-dark:text-gray-400" />
+              <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 admin-dark:text-gray-400 flex-shrink-0 ml-1" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-800 admin-dark:text-gray-100">
+            <CardContent className="p-0">
+              <div className="text-lg sm:text-2xl font-bold text-gray-800 admin-dark:text-gray-100">
                 {value}
               </div>
-              <p className="text-xs mt-2">
-                <span className={textColor}>{change} so với tháng trước</span>
+              <p className="text-xs mt-1 sm:mt-2">
+                <span className={textColor}>{change}</span>
+                <span className="text-gray-500 admin-dark:text-gray-400 text-xs hidden sm:inline">
+                  {" "}
+                  so với tháng trước
+                </span>
+                <span className="text-gray-500 admin-dark:text-gray-400 text-xs sm:hidden">
+                  {" "}
+                  vs T.trước
+                </span>
               </p>
             </CardContent>
           </Card>
