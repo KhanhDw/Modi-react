@@ -83,59 +83,35 @@ const VideoUpload = ({ onUploadSuccess, onUploadError }) => {
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        backgroundColor: "#f9f9f9",
-        marginBottom: "20px",
-      }}
-    >
-      <h2 style={{ color: "#555", marginBottom: "15px" }}>Upload Video</h2>
+    <div className="admin-light:bg-gray-50 admin-dark:bg-gray-800 p-5 border border-gray-300 admin-dark:border-gray-600 rounded-lg mb-5">
+      <h2 className="admin-light:text-gray-700 admin-dark:text-gray-200 mb-4">
+        Upload Video
+      </h2>
 
-      <div style={{ marginBottom: "15px" }}>
+      <div className="mb-4">
         <input
           type="file"
           accept="video/*"
           onChange={handleUpload}
           disabled={uploading}
           ref={fileInputRef}
-          style={{
-            marginBottom: "10px",
-            padding: "10px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            width: "100%",
-          }}
+          className="mb-3 p-3 border border-gray-400 admin-dark:border-gray-500 rounded w-full admin-light:bg-white admin-dark:bg-gray-700 admin-light:text-gray-800 admin-dark:text-gray-200"
         />
-        <div style={{ fontSize: "12px", color: "#666" }}>
+        <div className="text-xs admin-light:text-gray-600 admin-dark:text-gray-400">
           <p>• Hỗ trợ: MP4, AVI, MKV, MOV, WEBM, MPEG</p>
           <p>• Kích thước tối đa: 100MB</p>
         </div>
       </div>
 
       {uploading && (
-        <div style={{ marginTop: "10px" }}>
-          <p style={{ marginBottom: "5px", fontSize: "14px" }}>
+        <div className="mt-3">
+          <p className="mb-2 text-sm admin-light:text-gray-700 admin-dark:text-gray-300">
             Đang upload... {uploadProgress}%
           </p>
-          <div
-            style={{
-              width: "100%",
-              height: "10px",
-              backgroundColor: "#e0e0e0",
-              borderRadius: "5px",
-              overflow: "hidden",
-            }}
-          >
+          <div className="w-full h-2.5 bg-gray-300 admin-dark:bg-gray-600 rounded-full overflow-hidden">
             <div
-              style={{
-                width: `${uploadProgress}%`,
-                height: "100%",
-                backgroundColor: "#4CAF50",
-                transition: "width 0.3s ease",
-              }}
+              className="h-full bg-green-500 admin-dark:bg-green-400 transition-all duration-300 ease-in-out"
+              style={{ width: `${uploadProgress}%` }}
             />
           </div>
         </div>

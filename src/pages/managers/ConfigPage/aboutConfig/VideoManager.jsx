@@ -148,7 +148,7 @@ const VideoManager = () => {
         Cấu hình video banner
       </h1>
 
-      <div className="flex items-center justify-between w-full gap-10 px-10">
+      <div className="flex flex-col lg:flex-row items-start justify-between w-full gap-10 px-4 sm:px-6 lg:px-10">
         <div className="self-start w-full">
           <VideoUpload
             onUploadSuccess={handleUploadSuccess}
@@ -164,8 +164,11 @@ const VideoManager = () => {
             onDeleteVideo={handleDeleteRequest}
           />
         </div>
-        <div className="w-full self-start flex flex-col">
-          <div>Video đang sử dụng: {videoUsing.video_url}</div>
+        <div className="w-full self-start flex flex-col mt-8 lg:mt-0">
+          <div className="px-2 py-1 mb-3 border-2 border-gray-400 rounded-md flex flex-col sm:flex-row w-full gap-2">
+            Video đang sử dụng:
+            <p className="font-semibold break-all">{videoUsing.video_url}</p>
+          </div>
 
           <VideoPlayer
             selectedVideo={selectedVideo}
