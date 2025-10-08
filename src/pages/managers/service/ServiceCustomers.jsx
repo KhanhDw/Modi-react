@@ -40,6 +40,33 @@ export default function ServiceCustomers() {
     setOpenAddCustomer(true);
   };
 
+  const cardData = [
+    {
+      title: "Số lượng khách hàng",
+      icon: Users,
+      value: initDataCustomer.length,
+      iconSize: "h-4 w-4",
+    },
+    {
+      title: "Khách hàng mới trong tháng",
+      icon: UserPlus,
+      value: newCustomersThisMonth.length,
+      iconSize: "h-4 w-4",
+    },
+    {
+      title: "Khách hàng đang xử lý",
+      icon: Clock,
+      value: customersOrderingService.length,
+      iconSize: "h-4 w-4",
+    },
+    {
+      title: "Khách hàng VIP",
+      icon: Star,
+      value: initDataCustomer.filter((c) => c.isVIP).length,
+      iconSize: "h-4 w-4",
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between">
@@ -69,65 +96,30 @@ export default function ServiceCustomers() {
           </span>
         </button>
       </div>
-      <div className="grid gap-2 sm:gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-        <Card className="bg-white admin-dark:bg-[#374151] rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]">
-          <CardHeader className="flex flex-row xl:flex-row sm:flex-col-reverse lg:flex-col-reverse  md:flex-row items-start justify-between">
-            <CardTitle className="text-sm font-medium admin-dark:text-gray-300">
-              Số lượng khách hàng
-            </CardTitle>
-            <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground admin-dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
-              {initDataCustomer.length}
-            </div>
-            {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white admin-dark:bg-[#374151] rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]">
-          <CardHeader className="flex flex-row xl:flex-row sm:flex-col-reverse lg:flex-col-reverse md:flex-row items-start justify-between">
-            <CardTitle className="text-sm font-medium admin-dark:text-gray-300">
-              Khách hàng mới trong tháng
-            </CardTitle>
-            <UserPlus className="h-4 w-4 md:h-5 md:w-5 sm:h-6 sm:w-6 text-muted-foreground admin-dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
-              {newCustomersThisMonth.length}
-            </div>
-            {/* <p className="text-xs text-[#5ea25e]">+3 từ tháng trước</p> */}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white admin-dark:bg-[#374151] rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]">
-          <CardHeader className="flex flex-row xl:flex-row sm:flex-col-reverse lg:flex-col-reverse md:flex-row items-start justify-between">
-            <CardTitle className="text-sm font-medium admin-dark:text-gray-300">
-              Khách hàng đang xử lý
-            </CardTitle>
-            <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground admin-dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
-              {customersOrderingService.length}
-            </div>
-            {/* <p className="text-xs text-[#ac9a00]">+2 từ tháng trước</p> */}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white admin-dark:bg-[#374151] rounded-xl shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563]">
-          <CardHeader className="flex flex-row xl:flex-row sm:flex-col-reverse lg:flex-col-reverse md:flex-row items-start justify-between">
-            <CardTitle className="text-sm font-medium admin-dark:text-gray-300">
-              Khách hàng VIP
-            </CardTitle>
-            <Star className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground admin-dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl px-2 font-bold text-black admin-dark:text-white">
-              {initDataCustomer.filter((c) => c.isVIP).length}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid gap-2 grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
+        {cardData.map((item, index) => {
+          const IconComponent = item.icon;
+          return (
+            <Card
+              key={index}
+              className="bg-white admin-dark:bg-[#374151] rounded-lg sm:rounded-xl shadow-sm sm:shadow-md shadow-gray-300/50 admin-dark:shadow-gray-900/30 border border-[#e5e7eb] admin-dark:border-[#4b5563] p-2 sm:p-4"
+            >
+              <CardHeader className="flex flex-row items-center justify-between p-0 sm:p-0 mb-1 sm:mb-0">
+                <CardTitle className="text-xs sm:text-sm font-medium admin-dark:text-gray-300 line-clamp-2">
+                  {item.title}
+                </CardTitle>
+                <IconComponent
+                  className={`${item.iconSize} text-muted-foreground admin-dark:text-gray-400 flex-shrink-0 ml-1`}
+                />
+              </CardHeader>
+              <CardContent className="p-0 sm:p-0">
+                <div className="text-lg sm:text-xl font-bold text-black admin-dark:text-white px-1">
+                  {item.value}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       <ServiceCustomerTable />

@@ -3,11 +3,11 @@ import PricingPage from "@/components/home/PricingSlider.jsx";
 import VitriTable from "@/pages/managers/ConfigPage/homeConfig/PositionConfig.jsx";
 import ChitietdichvuSection from "@/pages/managers/ConfigPage/renderSections/chitietdichvuSection.jsx";
 import { motion } from "framer-motion";
-import { Eye } from "lucide-react";
+import { Eye, Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { InputField, SafeImage, TextareaField } from "./componentHomeConfig";
-
+import { Slider } from "@/components/ui/slider";
 export default function RenderHomeConfig({
   activeSection,
   currentData,
@@ -28,7 +28,8 @@ export default function RenderHomeConfig({
   const FetchResetPositions = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/service-header-config/positions/default`
       );
 
@@ -47,10 +48,12 @@ export default function RenderHomeConfig({
   };
 
   const FetchPositionComponentHome = async () => {
-    const sectionsUrl = `${import.meta.env.VITE_MAIN_BE_URL
-      }/api/sections?slug=home`;
-    const statusPositionUrl = `${import.meta.env.VITE_MAIN_BE_URL
-      }/api/status-position-home-page`;
+    const sectionsUrl = `${
+      import.meta.env.VITE_MAIN_BE_URL
+    }/api/sections?slug=home`;
+    const statusPositionUrl = `${
+      import.meta.env.VITE_MAIN_BE_URL
+    }/api/status-position-home-page`;
 
     try {
       const [resSections, resStatusPosition] = await Promise.all([
@@ -113,7 +116,8 @@ export default function RenderHomeConfig({
   const handleResetDefault = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/service-header-config/positions/reset`,
         {
           method: "POST",
@@ -147,7 +151,8 @@ export default function RenderHomeConfig({
       }));
 
       const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/service-header-config/positions/update`,
         {
           method: "PUT",
@@ -180,6 +185,62 @@ export default function RenderHomeConfig({
   // ========== kết thúc chi tiết dịch vụ ===================
 
   ///////////////////////////////////////////////
+
+  // ========== dịch vụ =============
+  const [initialQuantity, setInitialQuantity] = useState([6]); // giá trị BE trả về
+  const [currentQuantity, setCurrentQuantity] = useState([6]);
+  const [displayQuantity, setDisplayQuantity] = useState([3]); // số lượng thực sự render
+
+  async function fetchData() {
+    const res = await fetch(
+      `${import.meta.env.VITE_MAIN_BE_URL}/api/service-home-page-ui`
+    );
+    const data = await res.json();
+    setInitialQuantity([data.data.quantity]);
+    setCurrentQuantity([data.data.quantity]);
+  }
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // debounce khi thay đổi số lượng
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setDisplayQuantity(currentQuantity);
+      setLoading(false);
+    }, 500); // chờ 500ms mới hiển thị
+
+    return () => clearTimeout(timer);
+  }, [currentQuantity]);
+
+  const isChanged = currentQuantity[0] !== initialQuantity[0];
+
+  const handleSubmitChangeQuantity = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/service-home-page-ui`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity: currentQuantity[0] }),
+        }
+      );
+      if (!res.ok) {
+        throw new Error(`Lỗi HTTP: ${res.status}`);
+      }
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.error || "Cập nhật số lượng thất bại");
+      }
+      fetchData();
+      setToast({ message: "Cập nhật số lượng thành công", type: "success" });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const renderSection = () => {
     switch (activeSection) {
@@ -232,15 +293,16 @@ export default function RenderHomeConfig({
                       JSON.stringify(normalizeVitri(defaultVitri))
                     }
                     className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 cursor-pointer px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
-                                        ${JSON.stringify(
-                      normalizeVitri(vitri)
-                    ) ===
-                        JSON.stringify(
-                          normalizeVitri(defaultVitri)
-                        )
-                        ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
-                        : "bg-blue-500 hover:bg-blue-700 text-white"
-                      }`}
+                                        ${
+                                          JSON.stringify(
+                                            normalizeVitri(vitri)
+                                          ) ===
+                                          JSON.stringify(
+                                            normalizeVitri(defaultVitri)
+                                          )
+                                            ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
+                                            : "bg-blue-500 hover:bg-blue-700 text-white"
+                                        }`}
                   >
                     <span className="text-sm sm:text-base font-semibold">
                       Khôi phục
@@ -252,10 +314,11 @@ export default function RenderHomeConfig({
                     onClick={handleResetDefault}
                     disabled={isVitriSameAsDefault(defaultVitri)} // nếu DB đã đúng mặc định thì disable
                     className={`font-bold w-full sm:w-60 md:w-full xl:w-60 cursor-pointer py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105
-                                        ${isVitriSameAsDefault(defaultVitri)
-                        ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
-                        : "bg-blue-500 hover:bg-blue-700 text-white"
-                      }`}
+                                        ${
+                                          isVitriSameAsDefault(defaultVitri)
+                                            ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
+                                            : "bg-blue-500 hover:bg-blue-700 text-white"
+                                        }`}
                   >
                     <span className="text-sm sm:text-base font-semibold">
                       Khôi phục lại mặc định
@@ -269,15 +332,16 @@ export default function RenderHomeConfig({
                       JSON.stringify(normalizeVitri(defaultVitri))
                     }
                     className={`font-bold w-full sm:w-60 md:w-90 xl:w-60 py-2 px-6 cursor-pointer rounded-full transition duration-300 ease-in-out transform hover:scale-105
-                                        ${JSON.stringify(
-                      normalizeVitri(vitri)
-                    ) ===
-                        JSON.stringify(
-                          normalizeVitri(defaultVitri)
-                        )
-                        ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
-                        : "bg-green-500 hover:bg-green-700 text-white"
-                      }`}
+                                        ${
+                                          JSON.stringify(
+                                            normalizeVitri(vitri)
+                                          ) ===
+                                          JSON.stringify(
+                                            normalizeVitri(defaultVitri)
+                                          )
+                                            ? "bg-gray-200 hover:bg-gray-300 cursor-not-allowed admin-dark:bg-gray-500"
+                                            : "bg-green-500 hover:bg-green-700 text-white"
+                                        }`}
                   >
                     <span className="text-sm sm:text-base font-semibold">
                       Lưu vị trí
@@ -485,65 +549,155 @@ export default function RenderHomeConfig({
                 Cấu hình thông tin cho nhóm dịch vụ chính
               </h1>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {(currentData.dichVu || []).map((d, i) => (
-                <div
-                  key={d.id ?? `dv-${i}`}
-                  className="border border-gray-200 admin-dark:border-gray-600 rounded-xl p-4 shadow space-y-2"
-                >
-                  <InputField
-                    label="Tiêu đề"
-                    value={d.title?.[activeLang] || ""}
-                    onChange={(e) =>
-                      handleChange("dichVu", d.id, "title", e.target.value)
-                    }
-                  />
-                  <TextareaField
-                    label="Mô tả"
-                    value={d.description?.[activeLang] || ""}
-                    onChange={(e) =>
-                      handleChange(
-                        "dichVu",
-                        d.id,
-                        "description",
-                        e.target.value
-                      )
-                    }
-                  />
-                  <div className="flex w-full items-center justify-center">
+            <div className="flex items-center justify-center w-full">
+              <div
+                className="
+      flex items-center justify-center gap-10 rounded-2xl border-2
+      border-gray-300 bg-white
+      admin-dark:border-gray-800 admin-dark:bg-slate-800
+      w-fit px-10 py-4
+    "
+              >
+                <div className="flex flex-col">
+                  <h1
+                    className="
+          uppercase font-bold text-base md:text-md pb-6 text-center
+          text-gray-800 admin-dark:text-gray-100
+        "
+                  >
+                    Số lượng nội dung hiển thị
+                  </h1>
+
+                  <div className="mx-auto w-full max-w-md gap-2 flex items-center justify-centers">
                     <div className="w-full">
-                      <InputField
-                        label="Chọn ảnh"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                          handleFileChange("dichVu", d.id, e.target.files[0])
-                        }
+                      <Slider
+                        value={currentQuantity}
+                        onValueChange={setCurrentQuantity}
+                        max={6}
+                        min={1}
+                        step={1}
                         className="w-full"
                       />
-                      <SafeImage
-                        src={
-                          previewBanner?.[d.id] ||
-                          `${import.meta.env.VITE_MAIN_BE_URL}${d.image_url}`
-                        }
-                        alt={`image_url_dichvu-${d.id}`}
-                        className="rounded-xl shadow-md w-full h-52 object-cover mt-4"
-                      />
+
+                      {/* Các số hiển thị phía dưới */}
+                      <div className="flex justify-between mt-2">
+                        {[1, 2, 3, 4, 5, 6].map((num) => (
+                          <span
+                            key={num}
+                            className={`text-xs ${
+                              currentQuantity[0] === num
+                                ? "font-bold text-blue-600"
+                                : "text-gray-500 admin-dark:text-gray-400"
+                            }`}
+                          >
+                            {num}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
+
+                {/* Chỉ hiển thị khi có thay đổi */}
+                {isChanged && (
+                  <div>
+                    <button
+                      type="submit"
+                      onClick={handleSubmitChangeQuantity}
+                      className="
+            border rounded-full bg-green-600/70 p-3
+            hover:bg-green-700 transition-all cursor-pointer
+            admin-dark:bg-green-700/50 admin-dark:hover:bg-green-700
+          "
+                    >
+                      <Check className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="text-center md:text-right">
-              <button
-                onClick={() => handleSave("dichVu")}
-                className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
-              >
-                <span className="font-semibold text-sm sm:text-base">
-                  Lưu Dịch vụ
-                </span>
-              </button>
-            </div>
+
+            {/* Nếu đang loading thì hiển thị chữ "Tải nội dung..." */}
+            {loading ? (
+              <div className="text-center text-gray-500 italic">
+                Tải nội dung...
+              </div>
+            ) : (
+              <div className="flex flex-col  w-full gap-10 ">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {(currentData.dichVu.slice(0, displayQuantity) || []).map(
+                    (d, i) => (
+                      <div
+                        key={d.id ?? `dv-${i}`}
+                        className="border border-gray-200 admin-dark:border-gray-600 rounded-xl p-4 shadow space-y-2 admin-dark:bg-slate-800"
+                      >
+                        <InputField
+                          label="Tiêu đề"
+                          value={d.title?.[activeLang] || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "dichVu",
+                              d.id,
+                              "title",
+                              e.target.value
+                            )
+                          }
+                        />
+                        <TextareaField
+                          label="Mô tả"
+                          value={d.description?.[activeLang] || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "dichVu",
+                              d.id,
+                              "description",
+                              e.target.value
+                            )
+                          }
+                        />
+                        <div className="flex w-full items-center justify-center">
+                          <div className="w-full">
+                            <InputField
+                              label="Chọn ảnh"
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) =>
+                                handleFileChange(
+                                  "dichVu",
+                                  d.id,
+                                  e.target.files[0]
+                                )
+                              }
+                              className="w-full"
+                            />
+                            <SafeImage
+                              src={
+                                previewBanner?.[d.id] ||
+                                `${import.meta.env.VITE_MAIN_BE_URL}${
+                                  d.image_url
+                                }`
+                              }
+                              alt={`image_url_dichvu-${d.id}`}
+                              className="rounded-xl shadow-md w-full h-52 object-cover mt-4"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+                <div className="text-center md:text-right">
+                  <button
+                    onClick={() => handleSave("dichVu")}
+                    className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 cursor-pointer"
+                  >
+                    <span className="font-semibold text-sm sm:text-base">
+                      Lưu Dịch vụ
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         );
 

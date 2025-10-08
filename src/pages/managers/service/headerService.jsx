@@ -19,8 +19,8 @@ export default function ServiceNav() {
 
   useEffect(() => {
     // check initial size
-    setIsMd(window.innerWidth < 769); // xs < 640px
-    const handleResize = () => setIsMd(window.innerWidth < 640);
+    setIsMd(window.innerWidth < 769); // xs < 640px, md < 768
+    const handleResize = () => setIsMd(window.innerWidth < 769);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
