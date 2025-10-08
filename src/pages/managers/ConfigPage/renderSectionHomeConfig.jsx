@@ -550,11 +550,24 @@ export default function RenderHomeConfig({
               </h1>
             </div>
             <div className="flex items-center justify-center w-full">
-              <div className="flex items-center justify-center gap-10 rounded-2xl border-2 border-gray-800 bg-slate-800 w-fit px-10 py-4 ">
-                <div className="flex flex-col ">
-                  <h1 className="uppercase font-bold text-base md:text-md pb-6 text-center ">
+              <div
+                className="
+      flex items-center justify-center gap-10 rounded-2xl border-2
+      border-gray-300 bg-white
+      admin-dark:border-gray-800 admin-dark:bg-slate-800
+      w-fit px-10 py-4
+    "
+              >
+                <div className="flex flex-col">
+                  <h1
+                    className="
+          uppercase font-bold text-base md:text-md pb-6 text-center
+          text-gray-800 admin-dark:text-gray-100
+        "
+                  >
                     Số lượng nội dung hiển thị
                   </h1>
+
                   <div className="mx-auto w-full max-w-md gap-2 flex items-center justify-centers">
                     <div className="w-full">
                       <Slider
@@ -574,7 +587,7 @@ export default function RenderHomeConfig({
                             className={`text-xs ${
                               currentQuantity[0] === num
                                 ? "font-bold text-blue-600"
-                                : "text-gray-500"
+                                : "text-gray-500 admin-dark:text-gray-400"
                             }`}
                           >
                             {num}
@@ -584,15 +597,18 @@ export default function RenderHomeConfig({
                     </div>
                   </div>
                 </div>
+
                 {/* Chỉ hiển thị khi có thay đổi */}
                 {isChanged && (
-                  <div className="">
+                  <div>
                     <button
                       type="submit"
                       onClick={handleSubmitChangeQuantity}
-                      className="border rounded-full bg-green-700/50 p-3
-                      hover:bg-green-700 duration-300 transition-all
-                      cursor-pointer"
+                      className="
+            border rounded-full bg-green-600/70 p-3
+            hover:bg-green-700 transition-all cursor-pointer
+            admin-dark:bg-green-700/50 admin-dark:hover:bg-green-700
+          "
                     >
                       <Check className="w-4 h-4 text-white" />
                     </button>
