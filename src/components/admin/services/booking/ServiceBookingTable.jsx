@@ -114,7 +114,7 @@ export default function ServiceBookingTable() {
               value={statusFilter}
               onValueChange={changeStatus}
               placeholder="Trạng thái"
-              className={'w-full sm:w-48 lg:w-40'}
+              className={'w-full sm:w-48 lg:w-40 xl:w-50'}
               options={[
                 { value: "all", label: "Tất cả đơn hàng" },
                 { value: "pending", label: "Chờ xác nhận" },

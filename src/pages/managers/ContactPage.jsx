@@ -336,7 +336,7 @@ export default function ContactPage() {
                 </div>
                 <div className="ml-2 sm:ml-4 w-0 flex-1">
                   <dl>
-                    <dt className="text-xs font-medium admin-dark:text-gray-400 text-gray-500 truncate">
+                    <dt className="text-xs sm:text-base font-medium admin-dark:text-gray-400 text-gray-500 truncate">
                       Tổng liên hệ
                     </dt>
                     <dd className="text-lg sm:text-xl font-bold admin-dark:text-gray-100 text-gray-900">
@@ -390,7 +390,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-2 sm:ml-4 w-0 flex-1">
                     <dl>
-                      <dt className="text-xs font-medium admin-dark:text-gray-400 text-gray-500 truncate">
+                      <dt className="text-xs sm:text-base lg:text-base font-medium admin-dark:text-gray-400 text-gray-500 truncate">
                         Chờ phản hồi
                       </dt>
                       <dd className="text-lg sm:text-xl font-bold admin-dark:text-gray-100 text-gray-900">
@@ -444,7 +444,7 @@ export default function ContactPage() {
                   </div>
                   <div className="ml-2 sm:ml-4 w-0 flex-1">
                     <dl>
-                      <dt className="text-xs font-medium admin-dark:text-gray-400 text-gray-500 truncate">
+                      <dt className="text-xs sm:text-base lg:text-base font-medium admin-dark:text-gray-400 text-gray-500 truncate">
                         Đã phản hồi
                       </dt>
                       <dd className="text-lg sm:text-xl font-bold admin-dark:text-gray-100 text-gray-900">

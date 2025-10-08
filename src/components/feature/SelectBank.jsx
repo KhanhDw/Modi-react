@@ -56,7 +56,7 @@ export default function BankDropdown({ formData, setFormData }) {
         className={`
           w-full justify-between border h-[40px]
           border-black/30 text-black bg-white
-          admin-dark:text-gray-100 admin-dark:bg-gray-800
+          admin-dark:text-gray-100 admin-dark:bg-gray-700
           admin-dark:border-gray-600
           hover:bg-gray-100 admin-dark:hover:bg-gray-700 cursor-pointer hover:text-gray-700
           truncate

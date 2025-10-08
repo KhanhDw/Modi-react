@@ -67,8 +67,8 @@ export default function VisitorChart() {
                             <CardDescription className="xs:text-center sm:text-start">Lượt truy cập trong tuần</CardDescription>
                         </div>
                         <div>
-                            <button onClick={() => setOpenVistor(true)} className="text-blue-500 admin-dark:text-blue-400 hover:text-black border border-gray-600 px-3 py-2 rounded-sm cursor-pointer shadow-sm admin-dark:hover:bg-black hover:bg-gray-200  transition-colors duration-200">
-                                <p className="text-xs font-medium">Xem thống kê</p>
+                            <button onClick={() => setOpenVistor(true)} className="px-3 py-2 rounded-sm cursor-pointer shadow-sm admin-dark:hover:bg-blue-600 admin-dark:bg-blue-400 transition-colors duration-200 bg-blue-400 hover:bg-blue-500">
+                                <p className="text-xs font-medium text-white">Xem thống kê</p>
                             </button>
                         </div>
                     </div>
