@@ -165,21 +165,20 @@ export default function ServiceCustomerAnalytics() {
                 .map((customer, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 border rounded-lg bg-gray-100
-                      admin-dark:bg-gray-700 admin-dark:border-gray-600"
+                    className="flex items-center justify-between p-3 border border-gray-300 rounded-md bg-gray-100 admin-dark:bg-gray-700 admin-dark:border-gray-600"
                   >
                     <div>
-                      <p className="font-medium text-black admin-dark:text-gray-200">
+                      <p className="font-medium text-xs lg:text-sm text-black admin-dark:text-gray-200">
                         {customer.name}
                       </p>
-                      <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+                      <p className="text-xs lg:text-sm text-gray-500 admin-dark:text-gray-400">
                         {customer.email || "Chưa có email"}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge
                         variant="secondary"
-                        className="bg-primary/10 text-gray-800 admin-dark:bg-blue-900/30 admin-dark:text-gray-200"
+                        className="bg-blue-200 shadow text-blue-700 px-2 py-1 admin-dark:bg-blue-900 admin-dark:text-gray-200"
                       >
                         {
                           initDataBooking.filter(
@@ -188,10 +187,10 @@ export default function ServiceCustomerAnalytics() {
                               o.customer_id === customer.id
                           ).length
                         }
-                        <span className="ml-1">đơn</span>
+                        <span className="ml-1 text-xs">đơn</span>
                       </Badge>
                       <div className="text-right">
-                        <p className="text-sm font-medium text-[#5ea25e] admin-dark:text-green-400">
+                        <p className="text-xs font-medium text-[#5ea25e] admin-dark:text-green-400">
                           {formatRelativeTime(customer.created_at)}
                         </p>
                       </div>
@@ -200,7 +199,7 @@ export default function ServiceCustomerAnalytics() {
                 ))}
             </div>
             {sortCustomersByCreatedAt.length === 0 && (
-              <p className="text-sm text-gray-500 admin-dark:text-gray-400">
+              <p className="text-xs text-gray-500 admin-dark:text-gray-400">
                 Chưa có khách hàng mới
               </p>
             )}

@@ -86,7 +86,7 @@ export default function ServiceBooking() {
           <h2 className="text-lg sm:text-xl md:text-[22px] font-bold text-gray-900 admin-dark:text-white">
             Quản lý đơn
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground admin-dark:text-gray-400 mt-1">
+          <p className="text-xs text-center md:text-base sm:text-start xs:text-sm text-muted-foreground admin-dark:text-gray-400 mt-1">
             Quản lý và theo dõi đơn đặt dịch vụ hiệu quả.
           </p>
         </div>
