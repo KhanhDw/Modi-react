@@ -107,7 +107,7 @@ const VideoManager = () => {
         title: "Lỗi",
         message:
           "Lỗi khi xóa video: " +
-            (error.response?.data?.message || error.message),
+          (error.response?.data?.message || error.message),
       });
     } finally {
       setIsConfirmModalOpen(false);
@@ -115,6 +115,32 @@ const VideoManager = () => {
       setVideoToDelete(null);
     }
   };
+
+  //============================================
+  const [videoUsing, setVideoUsing] = useState({
+    video_url: "",
+  });
+  // Fetch banner từ API
+  useEffect(() => {
+    fetch(
+      `${
+        import.meta.env.VITE_MAIN_BE_URL
+      }/api/section-items/type/about_intro?slug=about`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.length > 0) {
+          const item = data[0];
+
+          setVideoUsing({
+            video_url: item.image_url || "", // video
+          });
+        }
+      })
+      .catch((err) => console.error("Lỗi khi fetch banner:", err));
+  }, []);
+
+  //============================================
 
   return (
     <div className="w-full flex items-center justify-center flex-col ">
@@ -128,6 +154,7 @@ const VideoManager = () => {
             onUploadSuccess={handleUploadSuccess}
             onUploadError={handleUploadError}
           />
+
           <VideoList
             videos={videos}
             selectedVideo={selectedVideo}
@@ -137,7 +164,9 @@ const VideoManager = () => {
             onDeleteVideo={handleDeleteRequest}
           />
         </div>
-        <div className="w-full self-start">
+        <div className="w-full self-start flex flex-col">
+          <div>Video đang sử dụng: {videoUsing.video_url}</div>
+
           <VideoPlayer
             selectedVideo={selectedVideo}
             onDeleteVideo={handleDeleteRequest}

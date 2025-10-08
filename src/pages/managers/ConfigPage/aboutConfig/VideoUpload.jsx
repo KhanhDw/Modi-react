@@ -1,10 +1,13 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import useUpdateImageUrl from "./updateImage_url";
 
 const VideoUpload = ({ onUploadSuccess, onUploadError }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
+  const { item, loading, updating, error, handleUpdateImageUrl } =
+    useUpdateImageUrl();
 
   const handleUpload = async (event) => {
     const file = event.target.files[0];
@@ -20,7 +23,9 @@ const VideoUpload = ({ onUploadSuccess, onUploadError }) => {
       "video/mpeg",
     ];
     if (!validTypes.includes(file.type)) {
-      onUploadError("Chỉ chấp nhận file video (MP4, AVI, MKV, MOV, WEBM, MPEG)");
+      onUploadError(
+        "Chỉ chấp nhận file video (MP4, AVI, MKV, MOV, WEBM, MPEG)"
+      );
       return;
     }
 
@@ -55,6 +60,9 @@ const VideoUpload = ({ onUploadSuccess, onUploadError }) => {
 
       if (response.data.success) {
         if (onUploadSuccess) {
+          handleUpdateImageUrl(response.data.data.filename).then((e) => {
+            console.log(response.data.data.filename);
+          });
           onUploadSuccess();
         }
       } else {
