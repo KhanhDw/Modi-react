@@ -106,11 +106,16 @@ const getStatsData = (
 
 export default function ServiceOverview() {
   useLenisLocal(".lenis-local");
-  const { initDataService, initDataBooking, initDataCustomer } =
-    useOutletContext();
+  const {
+    initDataService,
+    initDataBooking,
+    initDataBookingAll,
+    initDataCustomer,
+  } = useOutletContext(); // src\pages\managers\ServicesPage.jsx
 
   // Gom dữ liệu
-  const services = transformBookingsToServices(initDataBooking);
+  const services = transformBookingsToServices(initDataBookingAll);
+  console.log(services);
 
   // Top dịch vụ nhiều booking nhất
   const topServices = services
@@ -141,17 +146,14 @@ export default function ServiceOverview() {
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
   };
 
-  const totalRevenue = initDataBooking
-    .filter((b) => b.status === "completed" && b.is_deleted === 0)
-    .reduce(
-      (sum, b) => sum + Number(b.total || b.price) * (b.quantity || 1),
-      0
-    );
+  const totalRevenue = initDataBookingAll
+    .filter((b) => b.status === "completed")
+    .reduce((sum, b) => sum + Number(b.total || 0) * (b.quantity || 1), 0);
 
   // Lấy dữ liệu cho stats cards
   const statsData = getStatsData(
     initDataService,
-    initDataBooking,
+    initDataBookingAll,
     initDataCustomer,
     totalRevenue
   );

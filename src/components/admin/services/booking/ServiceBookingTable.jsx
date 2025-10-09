@@ -23,11 +23,9 @@ import { useOutletContext } from "react-router-dom";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
 
-
-
 export default function ServiceBookingTable() {
   const { initDataBooking, handleDeleteBooking, openEditBookingForm } =
-    useOutletContext();
+    useOutletContext(); // src\pages\managers\ServicesPage.jsx
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
@@ -39,7 +37,6 @@ export default function ServiceBookingTable() {
     setCurrentPage(1);
   };
 
-
   // Filter theo search + status
   const filteredBooking = initDataBooking.filter((booking) => {
     const keyword = search.toLowerCase();
@@ -50,8 +47,6 @@ export default function ServiceBookingTable() {
       statusFilter === "all" || booking.status === statusFilter;
     return matchSearch && matchStatus;
   });
-
-
 
   // Phân trang
   const totalPages = Math.ceil(filteredBooking.length / itemsPerPage);
@@ -105,7 +100,6 @@ export default function ServiceBookingTable() {
                 { value: "destroy", label: "Hủy" },
               ]}
             />
-
           </div>
         </div>
       </CardHeader>
@@ -153,7 +147,9 @@ export default function ServiceBookingTable() {
                   key={`${item.id}${index}`}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
-                  <TableCell className={`text-gray-900 admin-dark:text-gray-200`}>
+                  <TableCell
+                    className={`text-gray-900 admin-dark:text-gray-200`}
+                  >
                     {startIndex + index + 1}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
@@ -164,19 +160,30 @@ export default function ServiceBookingTable() {
                   </TableCell>
                   <TableCell>
                     {item.status === "pending" ? (
-                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">Chờ xác nhận</Badge>
+                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">
+                        Chờ xác nhận
+                      </Badge>
                     ) : item.status === "completed" ? (
-                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">Hoàn thành</Badge>
+                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">
+                        Hoàn thành
+                      </Badge>
                     ) : item.status === "cancelled" ? (
-                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">Hủy</Badge>
+                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">
+                        Hủy
+                      </Badge>
                     ) : item.status === "processing" ? (
-                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">Đang xử lý</Badge>
+                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">
+                        Đang xử lý
+                      </Badge>
                     ) : item.status === "confirmed" ? (
-                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">Đã xác nhận</Badge>
+                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">
+                        Đã xác nhận
+                      </Badge>
                     ) : (
-                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">Không xác định</Badge>
-                    )
-                    }
+                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">
+                        Không xác định
+                      </Badge>
+                    )}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {Number(item.price).toLocaleString("vi-VN")} ₫
@@ -186,7 +193,9 @@ export default function ServiceBookingTable() {
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {item.completed_date
-                      ? new Date(item.completed_date).toLocaleDateString("vi-VN")
+                      ? new Date(item.completed_date).toLocaleDateString(
+                          "vi-VN"
+                        )
                       : "Không có"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center space-x-2">
@@ -219,7 +228,6 @@ export default function ServiceBookingTable() {
                 </TableRow>
               )}
             </TableBody>
-
           </Table>
         </div>
 
@@ -234,7 +242,6 @@ export default function ServiceBookingTable() {
             setCurrentPage={setCurrentPage}
           />
         </div>
-
       </CardContent>
     </Card>
   );

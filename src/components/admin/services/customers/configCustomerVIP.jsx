@@ -9,7 +9,7 @@ const formatCurrency = (value) => {
     return Number(numericValue).toLocaleString("vi-VN");
 };
 
-function ConfigCustomerVIP({ setOpenConfigCustomerVIP }) {
+function ConfigCustomerVIP({ setOpenConfigCustomerVIP, onSaveSuccess }) {
     const { minSpent, setMinSpent, loading, updateVipConfig } = useVipConfig();
     const [displayAmount, setDisplayAmount] = useState("");
     const [isSaving, setIsSaving] = useState(false);
@@ -35,6 +35,9 @@ function ConfigCustomerVIP({ setOpenConfigCustomerVIP }) {
             setIsSaving(true);
             await updateVipConfig(minSpent);
             setToast({ message: "✅ Lưu thành công!", type: "success" });
+            if (onSaveSuccess) {
+                onSaveSuccess();
+            }
             setOpenConfigCustomerVIP(false);
         } catch (err) {
             setToast({ message: "❌ Lỗi khi lưu: " + err.message, type: "error" });

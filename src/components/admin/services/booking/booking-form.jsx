@@ -201,7 +201,6 @@ export default function BookingForm() {
 
     if (!isValid) return;
     if (!editingBooking) {
-      console.log("-->>>", formData);
       handleCreateBooking(formData);
     } else {
       handleEditingBooking(formData, editingBooking.id);
@@ -218,7 +217,10 @@ export default function BookingForm() {
   };
 
   return (
-    <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
+    <ScrollArea
+      className="lenis-local w-full h-full"
+      data-lenis-prevent
+    >
       {/* Header */}
       <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5 flex justify-between items-center flex-col md:flex-row">
         <div className="flex flex-col items-center md:items-start">
@@ -240,10 +242,11 @@ export default function BookingForm() {
               type="button"
               onClick={() => setCustomerMode(mode)}
               className={`cursor-pointer shadow border-none transition-all
-              ${customerMode === mode
+              ${
+                customerMode === mode
                   ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
                   : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
-                }
+              }
             `}
             >
               <span className="text-xs sm:text-sm md:text-base font-semibold">
@@ -256,11 +259,16 @@ export default function BookingForm() {
 
       {/* Form */}
       <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto px-3 md:px-5">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
           {/* Khách hàng cũ */}
           {customerMode === "existing" && (
             <div className="space-y-2">
-              <Label className="text-black admin-dark:text-gray-100">Khách hàng *</Label>
+              <Label className="text-black admin-dark:text-gray-100">
+                Khách hàng *
+              </Label>
               <CustomerCombobox
                 customers={initDataCustomer}
                 formData={formData}
@@ -271,7 +279,10 @@ export default function BookingForm() {
 
           {/* Số điện thoại */}
           <div className="space-y-2">
-            <Label htmlFor="cusPhone" className="text-black admin-dark:text-gray-100">
+            <Label
+              htmlFor="cusPhone"
+              className="text-black admin-dark:text-gray-100"
+            >
               Số điện thoại *
             </Label>
             <Input
@@ -284,12 +295,17 @@ export default function BookingForm() {
               placeholder="Nhập số điện thoại của khách hàng..."
               readOnly={customerMode === "existing" || editingBooking}
             />
-            {errors.cusPhone && <p className="text-red-500 text-sm">{errors.cusPhone}</p>}
+            {errors.cusPhone && (
+              <p className="text-red-500 text-sm">{errors.cusPhone}</p>
+            )}
           </div>
 
           {/* Tên khách hàng */}
           <div className="space-y-2">
-            <Label htmlFor="cusName" className="text-black admin-dark:text-gray-100">
+            <Label
+              htmlFor="cusName"
+              className="text-black admin-dark:text-gray-100"
+            >
               Tên khách hàng *
             </Label>
             <Input
@@ -300,14 +316,19 @@ export default function BookingForm() {
               placeholder="Nhập Họ và Tên khách hàng..."
               readOnly={customerMode === "existing" || editingBooking}
             />
-            {errors.cusName && <p className="text-red-500 text-sm">{errors.cusName}</p>}
+            {errors.cusName && (
+              <p className="text-red-500 text-sm">{errors.cusName}</p>
+            )}
           </div>
 
           {/* Email + Địa chỉ (khi tạo mới) */}
           {!editingBooking && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="cusEmail" className="text-black admin-dark:text-gray-100">
+                <Label
+                  htmlFor="cusEmail"
+                  className="text-black admin-dark:text-gray-100"
+                >
                   Email
                 </Label>
                 <Input
@@ -318,11 +339,16 @@ export default function BookingForm() {
                   placeholder="Nhập email của khách hàng..."
                   readOnly={customerMode === "existing" || editingBooking}
                 />
-                {errors.cusEmail && <p className="text-red-500 text-sm">{errors.cusEmail}</p>}
+                {errors.cusEmail && (
+                  <p className="text-red-500 text-sm">{errors.cusEmail}</p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cusAddress" className="text-black admin-dark:text-gray-100">
+                <Label
+                  htmlFor="cusAddress"
+                  className="text-black admin-dark:text-gray-100"
+                >
                   Địa chỉ *
                 </Label>
                 <Input
@@ -333,11 +359,15 @@ export default function BookingForm() {
                   placeholder="Nhập địa chỉ của khách hàng..."
                   readOnly={
                     (!!formData.cusPhone &&
-                      initDataCustomer.some((c) => c.phone === formData.cusPhone)) ||
+                      initDataCustomer.some(
+                        (c) => c.phone === formData.cusPhone
+                      )) ||
                     editingBooking
                   }
                 />
-                {errors.cusAddress && <p className="text-red-500 text-sm">{errors.cusAddress}</p>}
+                {errors.cusAddress && (
+                  <p className="text-red-500 text-sm">{errors.cusAddress}</p>
+                )}
               </div>
             </>
           )}
@@ -345,7 +375,10 @@ export default function BookingForm() {
           {/* Trạng thái (chỉ khi chỉnh sửa) */}
           {editingBooking && (
             <div className="space-y-2">
-              <Label htmlFor="status" className="text-black admin-dark:text-gray-100">
+              <Label
+                htmlFor="status"
+                className="text-black admin-dark:text-gray-100"
+              >
                 Trạng thái
               </Label>
 
@@ -368,7 +401,9 @@ export default function BookingForm() {
           {/* Dịch vụ */}
           {initDataService && (
             <div className="space-y-2">
-              <Label className="text-black admin-dark:text-gray-100">Chọn dịch vụ *</Label>
+              <Label className="text-black admin-dark:text-gray-100">
+                Chọn dịch vụ *
+              </Label>
 
               <CustomSelect
                 value={formData.service || ""}
@@ -376,7 +411,8 @@ export default function BookingForm() {
                 placeholder="Chọn dịch vụ"
                 options={initDataService.map((service) => ({
                   value: String(service?.id ?? ""),
-                  label: service?.translation?.ten_dich_vu || "Dịch vụ không tên",
+                  label:
+                    service?.translation?.ten_dich_vu || "Dịch vụ không tên",
                 }))}
                 className="w-full"
               />
@@ -389,7 +425,10 @@ export default function BookingForm() {
 
           {/* Giá */}
           <div className="space-y-2">
-            <Label htmlFor="price" className="text-black admin-dark:text-gray-100 flex items-center justify-between sm:flex-row sm:items-center sm:justify-between gap-3">
+            <Label
+              htmlFor="price"
+              className="text-black admin-dark:text-gray-100 flex items-center justify-between sm:flex-row sm:items-center sm:justify-between gap-3"
+            >
               <span>Giá *</span>
               <span className="text-sm text-gray-600 admin-dark:text-gray-300">
                 Giá thấp nhất:{" "}
@@ -407,7 +446,9 @@ export default function BookingForm() {
               onChange={(e) => handlePriceChange(e.target.value)}
               placeholder="Nhập giá dịch vụ..."
             />
-            {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+            {errors.price && (
+              <p className="text-red-500 text-sm">{errors.price}</p>
+            )}
           </div>
 
           {/* Ngày đặt & Ngày bàn giao */}
@@ -416,8 +457,13 @@ export default function BookingForm() {
               ["bookingDate", "Ngày đặt đơn", errors.bookingDate],
               ["completedDate", "Ngày bàn giao", errors.completedDate],
             ].map(([field, label, err]) => (
-              <div key={field} className="w-full space-y-2">
-                <Label className="text-black admin-dark:text-gray-100">{label}</Label>
+              <div
+                key={field}
+                className="w-full space-y-2"
+              >
+                <Label className="text-black admin-dark:text-gray-100">
+                  {label}
+                </Label>
                 <div className="relative w-full">
                   <input
                     type="date"
@@ -428,7 +474,9 @@ export default function BookingForm() {
                   <Calendar
                     size={18}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 admin-dark:hidden cursor-pointer"
-                    onClick={(e) => e.currentTarget.previousSibling.showPicker?.()}
+                    onClick={(e) =>
+                      e.currentTarget.previousSibling.showPicker?.()
+                    }
                   />
                 </div>
                 {err && <p className="text-red-500 text-sm">{err}</p>}
@@ -458,5 +506,4 @@ export default function BookingForm() {
       </div>
     </ScrollArea>
   );
-
 }

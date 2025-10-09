@@ -11,6 +11,7 @@ export default function ServicesPage() {
   const [showForm, setShowForm] = useState(false);
   const [loadingServices, setLoadingServices] = useState(true);
   const [loadingBookings, setLoadingBookings] = useState(true);
+  const [loadingBookingsAll, setLoadingBookingsAll] = useState(true);
   const [loadingCustomers, setLoadingCustomers] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [editingService, setEditingService] = useState(null);
   // BOOKING LIST
+  const [bookingsAll, setBookingAll] = useState([]);
   const [bookings, setBooking] = useState([]);
   const [editingBooking, setEditingBooking] = useState(null);
   // CUSTOMER LIST
@@ -206,8 +208,24 @@ export default function ServicesPage() {
     }
   };
 
+  const fetchBookingAlldeteletAndNodelete = async () => {
+    setLoadingBookingsAll(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/bookings/all`
+      );
+      const data = await res.json();
+      setBookingAll(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error when try get booking data:", err);
+    } finally {
+      setLoadingBookingsAll(false);
+    }
+  };
+
   useEffect(() => {
     fetchBooking();
+    fetchBookingAlldeteletAndNodelete();
   }, []);
 
   const handleCreateBooking = async (formData) => {
@@ -234,8 +252,11 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when try to create new booking");
       }
-      await fetchBooking();
-      await fetchCustomer();
+
+      // Signal data change using localStorage for cross-page communication
+      localStorage.setItem("customerDataUpdated", Date.now());
+
+      await Promise.all([fetchBooking(), fetchCustomer()]);
       handleClose();
     } catch (err) {
       console.error("Error: ", err);
@@ -269,6 +290,7 @@ export default function ServicesPage() {
       if (!res.ok) {
         throw new Error("Error when edit booking data");
       }
+
       await fetchBooking();
       handleClose();
     } catch (err) {
@@ -380,6 +402,7 @@ export default function ServicesPage() {
           handleEditService,
           handleDeleteService,
           initDataBooking: bookings,
+          initDataBookingAll: bookingsAll,
           handleCreateBooking,
           handleDeleteBooking,
           openEditBookingForm,

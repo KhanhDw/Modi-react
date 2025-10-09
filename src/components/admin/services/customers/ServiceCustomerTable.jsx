@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { Edit, Eye, Search, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
@@ -28,13 +28,16 @@ import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
 import { X } from "lucide-react";
 import "@/styles/styleVIP.css";
+
 export default function ServiceCustomerTable() {
   const {
     initDataCustomer,
     initDataBooking,
     openEditCustomerForm,
     handleDeleteCustomer,
-  } = useOutletContext(); //src\pages\managers\ServicesPage.jsx
+    handleRefetchCustomer,
+  } = useOutletContext();
+
   useLenisLocal(".lenis-local");
   const [openConfigCustomerVIP, setOpenConfigCustomerVIP] = useState(false);
   const [openDialogImportCustomer, setOpenDialogImportCustomer] =
@@ -50,35 +53,130 @@ export default function ServiceCustomerTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const checkUpdateCustomerFitIsVip = async () => {
-    const data = await fetchVipConfig();
-    console.log(data.min_spent); // là số.
-    initDataCustomer.filter(async (customer) => {
-      if (customer.total_spent >= data.min_spent) {
-        await updateCustomerFitIsVip(customer.id);
-      }
-    });
-  };
+  // Sử dụng ref để lưu trữ data mới nhất
+  const initDataCustomerRef = useRef(initDataCustomer);
+  const minSpentRef = useRef(minSpent);
 
-  const updateCustomerFitIsVip = async (id_customer) => {
-    await fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
-      }/api/customers/update_vip/${id_customer}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  };
-
+  // Cập nhật ref khi data thay đổi
   useEffect(() => {
-    checkUpdateCustomerFitIsVip();
-  }, [initDataCustomer, initDataBooking]);
+    initDataCustomerRef.current = initDataCustomer;
+    minSpentRef.current = minSpent;
+  }, [initDataCustomer, minSpent]);
 
-  // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
+  // Sử dụng useCallback để tránh tạo hàm mới mỗi lần render
+  const updateCustomerFitIsVip = useCallback(async (id_customer) => {
+    try {
+      await fetch(
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/customers/update_vip/${id_customer}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating customer to VIP:", error);
+    }
+  }, []);
+
+  const updateCustomerIsVipToOld = useCallback(async (id_customer) => {
+    try {
+      await fetch(
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/customers/update_vip_to_old/${id_customer}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating VIP customer to old:", error);
+    }
+  }, []);
+
+  // Sửa lại hàm checkUpdateCustomerFitIsVip
+  const checkUpdateCustomerFitIsVip = useCallback(async () => {
+    try {
+      console.log("🔄 Checking VIP customer updates...");
+
+      // Fetch config mới nhất
+      const vipConfig = await fetchVipConfig();
+      const currentMinSpent = vipConfig.min_spent;
+
+      // Sử dụng data từ ref để đảm bảo luôn có data mới nhất
+      const currentCustomers = initDataCustomerRef.current;
+
+      if (!currentCustomers || currentCustomers.length === 0) {
+        console.log("❌ No customer data available");
+        return;
+      }
+
+      console.log(
+        `📊 Checking ${currentCustomers.length} customers against min spent: ${currentMinSpent}`
+      );
+
+      // Sử dụng Promise.all để xử lý bất đồng bộ hiệu quả
+      const updatePromises = currentCustomers.map(async (customer) => {
+        const shouldBeVip = customer.total_spent >= currentMinSpent;
+        const isCurrentlyVip = customer.type === "vip";
+
+        if (!isCurrentlyVip && shouldBeVip) {
+          console.log(
+            `🔼 Updating customer ${customer.id} to VIP (spent: ${customer.total_spent})`
+          );
+          await updateCustomerFitIsVip(customer.id);
+          return { id: customer.id, action: "upgraded" };
+        } else if (isCurrentlyVip && !shouldBeVip) {
+          console.log(
+            `🔽 Downgrading customer ${customer.id} from VIP (spent: ${customer.total_spent})`
+          );
+          await updateCustomerIsVipToOld(customer.id);
+          return { id: customer.id, action: "downgraded" };
+        }
+        return null;
+      });
+
+      const results = await Promise.all(updatePromises);
+      const changes = results.filter((result) => result !== null);
+
+      console.log(`✅ VIP check completed. Changes made: ${changes.length}`);
+      if (changes.length > 0) {
+        console.log("Changes details:", changes);
+        handleRefetchCustomer();
+      }
+    } catch (error) {
+      console.error("❌ Error in VIP customer check:", error);
+    }
+  }, [
+    fetchVipConfig,
+    updateCustomerFitIsVip,
+    updateCustomerIsVipToOld,
+    handleRefetchCustomer,
+  ]);
+
+  // Listen for storage events to trigger VIP check, and check on mount.
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      if (event.key === "customerDataUpdated") {
+        checkUpdateCustomerFitIsVip();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    checkUpdateCustomerFitIsVip(); // Initial check on mount
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [checkUpdateCustomerFitIsVip]);
+
+  // Function load dữ liệu khách hàng
   const getFullInforCustomer = async (id) => {
     try {
       setLoadingCustomer(true);
@@ -93,19 +191,14 @@ export default function ServiceCustomerTable() {
 
       const data = await res.json();
 
-      // Sử dụng setTimeout để đảm bảo state được cập nhật tuần tự
       setCustomerDetail(data);
-
-      // Sử dụng setTimeout 0 để đảm bảo state update hoàn tất trước khi mở modal
-      setTimeout(() => {
-        setLoadingCustomer(false);
-        setOpenReadInforCustomer(true);
-      }, 0);
+      setOpenReadInforCustomer(true);
     } catch (err) {
+      console.error("Error fetching customer details:", err);
       setCustomerDetail(null);
-      setLoadingCustomer(false);
-      setOpenReadInforCustomer(false);
       // Có thể thêm toast notification ở đây
+    } finally {
+      setLoadingCustomer(false);
     }
   };
 
@@ -242,7 +335,7 @@ export default function ServiceCustomerTable() {
                     <TableCell className="text-black admin-dark:text-white flex gap-2">
                       {customer.type === "vip" ? (
                         <div className="vip-badge  rounded-sm px-1 bg-yellow-300">
-                          <span className="badge-text text-xs font-semibold text-gray-700 admin-dark:text-gray-800">
+                          <span className="badge-text text-xs font-semibold text-black admin-dark:text-black">
                             VIP
                           </span>
                         </div>
@@ -359,6 +452,7 @@ export default function ServiceCustomerTable() {
             </button>
             <ConfigCustomerVIP
               setOpenConfigCustomerVIP={setOpenConfigCustomerVIP}
+              onSaveSuccess={checkUpdateCustomerFitIsVip}
             />
           </div>
         </div>
