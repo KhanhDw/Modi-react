@@ -243,7 +243,7 @@ export default function ServiceOverview() {
 
                     <div className="text-right h-full gap-2 flex flex-wrap flex-row items-center justify-end">
                       <p className="text-xs text-gray-500 admin-dark:text-gray-400 font-medium">
-                        Giá dịch vụ
+                        Khách hàng vừa đặt:
                       </p>
                       <p className="text-xs sm:text-sm font-semibold text-emerald-600 admin-dark:text-emerald-400">
                         {Number(service.price).toLocaleString("vi-VN")} ₫

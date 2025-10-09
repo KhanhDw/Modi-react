@@ -38,13 +38,23 @@ export default function RevenueChart({ bookings }) {
         <CardDescription>Biểu đồ doanh thu website theo tháng</CardDescription>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer
+          width="100%"
+          height={300}
+        >
           <LineChart data={months}>
-            <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              className="opacity-20"
+            />
             <XAxis dataKey="month" />
             <YAxis tickFormatter={(v) => `${v / 1000000}M`} />
             <Tooltip
               formatter={(value) => [`${value.toLocaleString()}`, "Doanh thu"]}
+              labelFormatter={(label) => {
+                label = label.slice(1);
+                return "Tháng " + label;
+              }}
             />
             <Line
               type="monotone"

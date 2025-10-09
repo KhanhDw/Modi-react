@@ -290,8 +290,9 @@ export default function ServicesPage() {
       console.log("Error: ", err);
     }
   };
-
+  // ===================================
   // All part of customer
+  // ===================================
   const fetchCustomer = async () => {
     setLoadingCustomers(true);
     try {

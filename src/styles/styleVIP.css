@@ -1,0 +1,31 @@
+.vip-badge-simple {
+  /* Cấu trúc và kích thước */
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px; /* Giảm khoảng cách bên trong */
+  border-radius: 4px; /* Góc vuông nhẹ nhàng */
+
+  /* Màu sắc */
+  background-color: #3498db; /* Màu Xanh dương (hoặc #2c3e50 cho màu tối) */
+  color: #ffffff; /* Màu chữ trắng */
+  border: 1px solid rgba(255, 255, 255, 0.4); /* Viền mỏng */
+
+  /* Phông chữ */
+  font-family: "Arial", sans-serif;
+  font-weight: 600; /* Bán đậm */
+  text-transform: uppercase;
+  font-size: 0.75rem; /* Rất nhỏ và gọn */
+  letter-spacing: 0.5px;
+
+  /* Hiệu ứng (Đơn giản hóa) */
+  transition: background-color 0.2s;
+}
+
+.vip-badge-simple:hover {
+  background-color: #2980b9; /* Hơi tối hơn khi di chuột */
+}
+
+.badge-text-simple {
+  /* Đảm bảo văn bản được căn chỉnh tốt */
+  line-height: 1;
+}

@@ -18,13 +18,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useLenisLocal from "@/hook/useLenisLocal";
-import {
-  Edit,
-  Eye,
-  Search,
-  Trash2,
-} from "lucide-react";
-import { useState } from "react";
+import { Edit, Eye, Search, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
@@ -32,29 +27,56 @@ import ReadInforCustomer from "./readInforCustomer";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
 import { X } from "lucide-react";
-
+import "@/styles/styleVIP.css";
 export default function ServiceCustomerTable() {
   const {
     initDataCustomer,
     initDataBooking,
     openEditCustomerForm,
     handleDeleteCustomer,
-  } = useOutletContext();
+  } = useOutletContext(); //src\pages\managers\ServicesPage.jsx
   useLenisLocal(".lenis-local");
   const [openConfigCustomerVIP, setOpenConfigCustomerVIP] = useState(false);
   const [openDialogImportCustomer, setOpenDialogImportCustomer] =
     useState(false);
   const [openReadInforCustomer, setOpenReadInforCustomer] = useState(false);
   const [customerDetail, setCustomerDetail] = useState(null);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [loadingCustomer, setLoadingCustomer] = useState(false);
 
-  const { minSpent } = useVipConfig();
+  const { minSpent, fetchVipConfig } = useVipConfig();
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  const checkUpdateCustomerFitIsVip = async () => {
+    const data = await fetchVipConfig();
+    console.log(data.min_spent); // là số.
+    initDataCustomer.filter(async (customer) => {
+      if (customer.total_spent >= data.min_spent) {
+        await updateCustomerFitIsVip(customer.id);
+      }
+    });
+  };
+
+  const updateCustomerFitIsVip = async (id_customer) => {
+    await fetch(
+      `${
+        import.meta.env.VITE_MAIN_BE_URL
+      }/api/customers/update_vip/${id_customer}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    checkUpdateCustomerFitIsVip();
+  }, [initDataCustomer, initDataBooking]);
 
   // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
   const getFullInforCustomer = async (id) => {
@@ -164,7 +186,6 @@ export default function ServiceCustomerTable() {
                   Nhập dữ liệu khách hàng
                 </span>
               </button>
-
             </div>
           </div>
         </CardHeader>
@@ -218,7 +239,14 @@ export default function ServiceCustomerTable() {
                       {startIndex + index + 1}
                     </TableCell>
 
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white flex gap-2">
+                      {customer.type === "vip" ? (
+                        <div className="vip-badge  rounded-sm px-1 bg-yellow-300">
+                          <span className="badge-text text-xs font-semibold text-gray-700 admin-dark:text-gray-800">
+                            VIP
+                          </span>
+                        </div>
+                      ) : null}
                       {customer.name}
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white">
@@ -278,9 +306,9 @@ export default function ServiceCustomerTable() {
                   </TableRow>
                 ))}
                 {currentData.length === 0 && (
-                  <TableRow className="admin-dark:border-gray-700">
+                  <TableRow className="admin-dark:border-gray-700 w-full ">
                     <TableCell
-                      colSpan={7}
+                      colSpan={11}
                       className="text-center py-4 text-gray-500 admin-dark:text-gray-400"
                     >
                       Không tìm thấy khách hàng
@@ -390,7 +418,10 @@ export default function ServiceCustomerTable() {
              transition-all duration-200 cursor-pointer backdrop-blur-sm z-50"
               aria-label="Đóng"
             >
-              <X className="h-5 w-5" strokeWidth={2.2} />
+              <X
+                className="h-5 w-5"
+                strokeWidth={2.2}
+              />
             </button>
 
             {/* Nội dung */}
@@ -399,7 +430,9 @@ export default function ServiceCustomerTable() {
                 return (
                   <div className="flex flex-col items-center justify-center py-10 text-gray-700 admin-dark:text-gray-200">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800 admin-dark:border-gray-300"></div>
-                    <p className="mt-4 text-sm font-medium">Đang tải dữ liệu...</p>
+                    <p className="mt-4 text-sm font-medium">
+                      Đang tải dữ liệu...
+                    </p>
                   </div>
                 );
               } else if (customerDetail) {
@@ -415,7 +448,6 @@ export default function ServiceCustomerTable() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

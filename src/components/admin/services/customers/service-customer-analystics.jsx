@@ -239,7 +239,7 @@ export default function ServiceCustomerAnalytics() {
                   className="admin-dark:stroke-gray-300"
                 />
                 <Tooltip
-                  formatter={(value) => `${value} đơn`}
+                  formatter={(value, name) => [`${value} đơn`, "Đơn đặt"]}
                   labelFormatter={(label) => `Tháng: ${label}`}
                   contentStyle={{
                     backgroundColor: "#fff",
