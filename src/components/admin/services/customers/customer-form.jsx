@@ -291,19 +291,18 @@ export default function CustomerForm() {
   return (
     <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
       <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5">
-        <div className="relative">
-          <span className="flex items-center sm:text-lg md:text-lg font-bold uppercase text-gray-900 admin-dark:text-gray-100">
-            Chỉnh sửa người dùng
-          </span>
-          <span className="text-xs sm:text-sm text-gray-600 admin-dark:text-gray-300">
-            Cập nhật thông tin người dùng
-          </span>
+        <div className="relative w-full">
+          <div className="flex flex-col items-start sm:items-center w-full mb-8 mt-2">
+            <span className="text-base sm:text-lg md:text-xl font-bold uppercase text-gray-900 admin-dark:text-gray-100">
+              Chỉnh sửa người dùng
+            </span>
+          </div>
           <button
             aria-label="Đóng"
             onClick={handleClose}
-            className="absolute top-4 right-4 p-1 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 admin-dark:hover:bg-gray-700 admin-dark:text-gray-300 transition-colors cursor-pointer"
+            className="absolute -top-1 right-0 rounded-full p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 admin-dark:hover:bg-gray-700 admin-dark:text-gray-300 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 sm:h-6 sm:w-6" />
           </button>
         </div>
 
@@ -315,7 +314,7 @@ export default function CustomerForm() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                  <h3 className="text-base md:text-lg font-semibold border-b border-gray-300 admin-dark:border-gray-700 pb-2 text-blue-600 admin-dark:text-blue-400">
                     Thông Tin Liên Hệ
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -409,7 +408,7 @@ export default function CustomerForm() {
                 </div>
 
                 <div className="space-y-4 pt-2">
-                  <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                  <h3 className="text-base md:text-lg font-semibold border-b border-gray-300 admin-dark:border-gray-700 pb-2 text-blue-600 admin-dark:text-blue-400">
                     Thông Tin Ngân Hàng
                   </h3>
                   <div className="space-y-4">
@@ -472,7 +471,7 @@ export default function CustomerForm() {
 
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2 text-blue-600 admin-dark:text-blue-400">
+                  <h3 className="text-base md:text-lg font-semibold border-b border-gray-300 admin-dark:border-gray-700 pb-2 text-blue-600 admin-dark:text-blue-400">
                     Thông Tin Định Danh & Ảnh
                   </h3>
 
@@ -512,21 +511,21 @@ export default function CustomerForm() {
               </div>
             </div>
 
-            <div className="flex justify-end sm:justify-center md:justify-end gap-3 mt-4">
+            <div className="flex justify-center items-center gap-3 mt-4 w-full">
               <Button
                 type="submit"
-                className="w-fit cursor-pointer"
+                className="w-fit text-white bg-blue-500 hover:bg-blue-600 cursor-pointer"
                 disabled={loading}
               >
-                {loading ? "Đang cập nhật..." : "Cập nhật người dùng"}
+                <span className="text-sm md:text-base font-semibold">{loading ? "Đang cập nhật..." : "Cập nhật người dùng"}</span>
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="w-fit cursor-pointer bg-gray-200 hover:bg-gray-100 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600"
+                className="w-fit sm:w-40 cursor-pointer bg-black hover:bg-black/80 admin-dark:hover:bg-black/70"
                 onClick={handleClose}
               >
-                Thoát
+                <span className="text-sm md:text-base font-semibold">Thoát</span>
               </Button>
             </div>
           </form>

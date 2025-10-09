@@ -59,7 +59,7 @@ function SortableCategoryItem({
         </span>
         {/* <span className="truncate">{cat.name?.[lang] || cat.name}</span> */}
         <span
-          className={`text-xs lg:text-sm  admin-dark:text-white ${selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
+          className={`text-xs lg:text-sm text-gray-700 admin-dark:text-white ${selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
             }`}
         >
           {cat.name?.[lang] || cat.name}

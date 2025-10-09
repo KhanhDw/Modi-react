@@ -64,10 +64,10 @@ export default function VisitorChart() {
                     <div className="flex items-center xs:flex-col sm:flex-row sm:justify-between xs:gap-2 xs:justify-center justify-between">
                         <div>
                             <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-900 admin-dark:text-gray-100">Số lượng khách truy cập</CardTitle>
-                            <CardDescription className="xs:text-center sm:text-start">Lượt truy cập trong tuần</CardDescription>
+                            <CardDescription className="xs:text-center sm:text-start admin-dark:text-gray-400">Lượt truy cập trong tuần</CardDescription>
                         </div>
                         <div>
-                            <button onClick={() => setOpenVistor(true)} className="px-3 py-2 rounded-sm cursor-pointer shadow-sm admin-dark:hover:bg-blue-600 admin-dark:bg-blue-400 transition-colors duration-200 bg-blue-400 hover:bg-blue-500">
+                            <button onClick={() => setOpenVistor(true)} className="px-3 py-2 rounded-sm cursor-pointer shadow-sm admin-dark:hover:bg-blue-600 admin-dark:bg-blue-500 transition-colors duration-200 bg-blue-500 hover:bg-blue-600">
                                 <p className="text-xs font-medium text-white">Xem thống kê</p>
                             </button>
                         </div>

@@ -169,7 +169,7 @@ export default function Pagination({
         className="transition-all duration-200 disabled:opacity-50 border bg-white border-gray-300 hover:bg-gray-200 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 cursor-pointer"
       >
         <span className="font-medium text-gray-600 admin-dark:text-gray-300">
-          ← Trước
+          ←
         </span>
       </Button>
 
@@ -227,7 +227,7 @@ export default function Pagination({
         className="transition-all duration-200 disabled:opacity-50 border bg-white hover:bg-gray-200 border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-800 cursor-pointer"
       >
         <span className="font-medium text-gray-600 admin-dark:text-gray-300">
-          Sau →
+          →
         </span>
       </Button>
     </div>

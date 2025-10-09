@@ -32,10 +32,10 @@ export default function RevenueChart({ bookings }) {
   return (
     <Card className="bg-white text-gray-900 border border-gray-200 admin-dark:border-gray-700 admin-dark:bg-gray-900 admin-dark:text-gray-100">
       <CardHeader>
-        <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
+        <CardTitle className="text-base sm:text-[18px] md:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
           Website bán ra trong 12 tháng
         </CardTitle>
-        <CardDescription>Biểu đồ doanh thu website theo tháng</CardDescription>
+        <CardDescription className={'admin-dark:text-gray-400'}>Biểu đồ doanh thu website theo tháng</CardDescription>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

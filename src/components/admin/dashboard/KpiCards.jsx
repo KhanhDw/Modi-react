@@ -94,25 +94,25 @@ export default function KpiCards({
         const textColor = isNeutral
           ? "text-gray-500 admin-dark:text-gray-400"
           : isNegative
-          ? "text-red-600 admin-dark:text-red-400"
-          : "text-green-600 admin-dark:text-green-400";
+            ? "text-red-600 admin-dark:text-red-400"
+            : "text-green-600 admin-dark:text-green-400";
 
         return (
           <Card
             key={i}
             className="bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 shadow-sm p-3 sm:p-4"
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 pb-2 sm:pb-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0">
               <CardTitle className="text-xs sm:text-sm font-medium text-gray-800 admin-dark:text-gray-100 line-clamp-2">
                 {title}
               </CardTitle>
               <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 admin-dark:text-gray-400 flex-shrink-0 ml-1" />
             </CardHeader>
-            <CardContent className="p-0">
-              <div className="text-lg sm:text-2xl font-bold text-gray-800 admin-dark:text-gray-100">
+            <div className="p-0">
+              <div className="text-lg sm:text-xl font-bold text-gray-800 admin-dark:text-gray-100">
                 {value}
               </div>
-              <p className="text-xs mt-1 sm:mt-2">
+              <p className="text-xs mt-1 sm:mt-2 w-full">
                 <span className={textColor}>{change}</span>
                 <span className="text-gray-500 admin-dark:text-gray-400 text-xs hidden sm:inline">
                   {" "}
@@ -123,7 +123,7 @@ export default function KpiCards({
                   vs T.trước
                 </span>
               </p>
-            </CardContent>
+            </div>
           </Card>
         );
       })}

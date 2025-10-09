@@ -59,7 +59,7 @@ function DialogOverlay({ className, ...props }) {
     <div
       onClick={() => setOpen(false)}
       className={cn(
-        "fixed inset-0 z-40 h-screen w-screen overflow-y-hidden bg-black/50 backdrop-blur-sm transition-opacity animate-in fade-in-0",
+        "fixed inset-0 z-50 h-screen w-screen overflow-y-hidden bg-black/50 backdrop-blur-sm transition-opacity animate-in fade-in-0",
         className
       )}
       {...props}

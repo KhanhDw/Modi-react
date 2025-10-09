@@ -76,7 +76,7 @@ export default function ServiceCustomers() {
           </h2>
           <p className="text-xs text-center md:text-base md:text-start xs:text-sm admin-dark:text-gray-400">
             Quản lý thông tin khách hàng, lịch sử dịch vụ và tương tác với khách
-            hàng.
+            hàng
           </p>
         </div>
         <button
@@ -127,14 +127,28 @@ export default function ServiceCustomers() {
       <ServiceCustomerAnalytics />
 
       {openAddCustomer && (
-        <div className="fixed inset-0 bg-black/50 admin-dark:bg-black/70 flex items-center justify-center z-50">
-          {/* Nội dung form */}
-          <FormAddCustomer
-            onCancel={() => setOpenAddCustomer(false)}
-            onSuccess={handleRefetchCustomer}
-          />
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 admin-dark:bg-black/60 px-3 sm:px-5 md:px-8"
+          onClick={() => setOpenAddCustomer(false)}
+        >
+          <div
+            className="relative w-full max-w-5xl max-h-[97vh] overflow-y-auto rounded-xl shadow-2xl
+                 bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700
+                   transition-all duration-300 scrollbar-hide"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Form Thêm Khách Hàng */}
+            <FormAddCustomer
+              onCancel={() => setOpenAddCustomer(false)}
+              onSuccess={() => {
+                handleRefetchCustomer();
+                setOpenAddCustomer(false);
+              }}
+            />
+          </div>
         </div>
       )}
+
     </div>
   );
 }

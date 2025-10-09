@@ -175,7 +175,7 @@ export default function ServiceCustomerAnalytics() {
                         {customer.email || "Chưa có email"}
                       </p>
                     </div>
-                    <div className="flex justify-between sm:justify-end md:justify-between xl:justify-end items-center gap-2 xl:gap-5 w-full">
+                    <div className="flex justify-between items-center gap-2 xl:gap-5 w-full sm:w-60 md:w-full xl:w-60">
                       <Badge
                         variant="secondary"
                         className="bg-blue-200 shadow text-blue-700 px-2 py-1 admin-dark:bg-blue-900 admin-dark:text-gray-200"

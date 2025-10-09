@@ -36,7 +36,7 @@ export default function MostViewedProducts() {
                     <CardDescription>Danh sách Top sản phẩm theo lượt xem</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                    <div className="text-center text-gray-500 admin-dark:text-gray-400 text-sm font-medium">
+                    <div className="text-center text-gray-500 admin-dark:text-gray-400 text-sm">
                         Chưa Có Dữ Liệu
                     </div>
                 </CardContent>
@@ -48,7 +48,7 @@ export default function MostViewedProducts() {
         <Card className="bg-white text-gray-900 border border-gray-200 admin-dark:border-gray-700 admin-dark:bg-gray-900 admin-dark:text-gray-100">
             <CardHeader>
                 <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-900 admin-dark:text-gray-300">Sản phẩm được xem nhiều nhất</CardTitle>
-                <CardDescription>Danh sách Top sản phẩm theo lượt xem</CardDescription>
+                <CardDescription className={'admin-dark:text-gray-300'}>Danh sách Top sản phẩm theo lượt xem</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
                 {topSamples.map((p, i) => (

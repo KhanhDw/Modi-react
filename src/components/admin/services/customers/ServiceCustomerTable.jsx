@@ -54,7 +54,7 @@ export default function ServiceCustomerTable() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
   const getFullInforCustomer = async (id) => {
@@ -188,7 +188,7 @@ export default function ServiceCustomerTable() {
           <div className="rounded-md border border-gray-300 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800 shadow-sm">
             <Table>
               <TableHeader>
-                <TableRow className="admin-dark:border-gray-700">
+                <TableRow className="admin-dark:border-gray-700 bg-gray-100 admin-dark:bg-gray-800">
                   <TableHead className="text-black admin-dark:text-white">
                     STT
                   </TableHead>

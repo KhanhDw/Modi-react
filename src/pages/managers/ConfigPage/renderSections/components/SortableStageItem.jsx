@@ -72,9 +72,9 @@ const SortableStageItem = ({
             size="sm"
             variant="outline"
             onClick={onCancelEdit}
-            className="cursor-pointer"
+            className="cursor-pointer shadow border-none bg-gray-100 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-gray-700" />
           </Button>
         </div>
       ) : (
@@ -108,7 +108,7 @@ const SortableStageItem = ({
               size="icon"
               variant="ghost"
               onClick={() => onEdit(stage.id)}
-              className="cursor-pointer"
+              className="cursor-pointer shadow bg-gray-100 hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600"
             >
               <Edit2 className="w-4 h-4 text-gray-500 admin-dark:text-gray-400" />
             </Button>
@@ -116,7 +116,7 @@ const SortableStageItem = ({
               theme="admin"
               size="icon"
               variant="ghost"
-              className="text-red-600 hover:text-red-700 admin-dark:text-red-500 admin-dark:hover:text-red-400 cursor-pointer"
+              className="text-red-600 shadow bg-red-200 hover:bg-red-200/80 hover:text-red-600 admin-dark:bg-red-200 admin-dark:hover:bg-red-300 admin-dark:hover:text-red-600 cursor-pointer"
               onClick={() => onDelete(stage)}
             >
               <Trash2 className="w-4 h-4" />
