@@ -194,7 +194,9 @@ export default function ServicesPage() {
     setShowForm(true);
   };
 
+  // =======================
   // All part of booking
+  // ========================
   const fetchBooking = async () => {
     setLoadingBookings(true);
     try {
@@ -234,6 +236,9 @@ export default function ServicesPage() {
       phone: formData.cusPhone,
       email: formData.cusEmail,
       address: formData.cusAddress,
+      cccd: formData.cccd,
+      number_bank: formData.bankAccount,
+      name_bank: formData.bankName,
       service: formData.service,
       price: formData.price,
       bookingDate: formData.bookingDate,
@@ -321,6 +326,7 @@ export default function ServicesPage() {
       const res = await fetch(CustomerAPI.getALL());
       const data = await res.json();
       setCustomers(Array.isArray(data) ? data : []);
+      console.log(data);
     } catch (err) {
       console.error("Error when try get customer data:", err);
     } finally {

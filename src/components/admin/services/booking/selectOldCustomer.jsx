@@ -67,6 +67,9 @@ export default function CustomerCombobox({ customers, formData, setFormData }) {
                       cusPhone: c.phone,
                       cusEmail: c.email,
                       cusAddress: c.address,
+                      cccd: c.cccd,
+                      bankAccount: c.number_bank,
+                      bankName: c.name_bank,
                     });
                     setOpen(false);
                   }}

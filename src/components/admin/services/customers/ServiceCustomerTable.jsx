@@ -103,8 +103,6 @@ export default function ServiceCustomerTable() {
   // Sửa lại hàm checkUpdateCustomerFitIsVip
   const checkUpdateCustomerFitIsVip = useCallback(async () => {
     try {
-      console.log("🔄 Checking VIP customer updates...");
-
       // Fetch config mới nhất
       const vipConfig = await fetchVipConfig();
       const currentMinSpent = vipConfig.min_spent;
@@ -112,30 +110,15 @@ export default function ServiceCustomerTable() {
       // Sử dụng data từ ref để đảm bảo luôn có data mới nhất
       const currentCustomers = initDataCustomerRef.current;
 
-      if (!currentCustomers || currentCustomers.length === 0) {
-        console.log("❌ No customer data available");
-        return;
-      }
-
-      console.log(
-        `📊 Checking ${currentCustomers.length} customers against min spent: ${currentMinSpent}`
-      );
-
       // Sử dụng Promise.all để xử lý bất đồng bộ hiệu quả
       const updatePromises = currentCustomers.map(async (customer) => {
         const shouldBeVip = customer.total_spent >= currentMinSpent;
         const isCurrentlyVip = customer.type === "vip";
 
         if (!isCurrentlyVip && shouldBeVip) {
-          console.log(
-            `🔼 Updating customer ${customer.id} to VIP (spent: ${customer.total_spent})`
-          );
           await updateCustomerFitIsVip(customer.id);
           return { id: customer.id, action: "upgraded" };
         } else if (isCurrentlyVip && !shouldBeVip) {
-          console.log(
-            `🔽 Downgrading customer ${customer.id} from VIP (spent: ${customer.total_spent})`
-          );
           await updateCustomerIsVipToOld(customer.id);
           return { id: customer.id, action: "downgraded" };
         }
@@ -145,9 +128,7 @@ export default function ServiceCustomerTable() {
       const results = await Promise.all(updatePromises);
       const changes = results.filter((result) => result !== null);
 
-      console.log(`✅ VIP check completed. Changes made: ${changes.length}`);
       if (changes.length > 0) {
-        console.log("Changes details:", changes);
         handleRefetchCustomer();
       }
     } catch (error) {

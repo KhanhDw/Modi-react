@@ -9,6 +9,8 @@ import { useOutletContext } from "react-router-dom";
 import CustomerCombobox from "./selectOldCustomer";
 import CustomSelect from "./CustomSelect";
 
+import { banks } from "@/data/banks.js";
+
 export default function BookingForm() {
   useLenisLocal(".lenis-local");
   const {
@@ -19,7 +21,26 @@ export default function BookingForm() {
     handleCreateBooking,
     handleEditingBooking,
   } = useOutletContext(); //src\pages\managers\ServicesPage.jsx
-  const [formData, setFormData] = useState({});
+
+  const initialFormData = {
+    cusName: "",
+    cusPhone: "",
+    cusEmail: "",
+    cusAddress: "",
+    cccd: "",
+    bankAccount: "",
+    bankName: "",
+    service: "",
+    price: "",
+    quantity: 1,
+    total: "",
+    status: "pending",
+    bookingDate: new Date().toISOString().split("T")[0],
+    completedDate: "",
+    customerId: null,
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({}); // 👈 state chứa lỗi
   const [customerMode, setCustomerMode] = useState("new");
   const [floorPriceOfservice, setFloorPriceOfservice] = useState(0);
@@ -38,28 +59,53 @@ export default function BookingForm() {
         ? formatDate(editingBooking.booking_date)
         : formatDate(new Date());
 
-      console.log("--1>", editingBooking);
-
       setFormData({
-        cusName: editingBooking.customer_name || "",
-        cusPhone: editingBooking.phone || "",
-        cusEmail: editingBooking.email || "",
-        cusAddress: editingBooking.address || "",
+        cusName: editingBooking.customer_name ?? "",
+        cusPhone: editingBooking.phone ?? "",
+        cusEmail: editingBooking.customer_email ?? editingBooking.email ?? "",
+        cusAddress:
+          editingBooking.customer_address ?? editingBooking.address ?? "",
+        cccd: editingBooking.customer_cccd ?? editingBooking.cccd ?? "",
+        bankAccount:
+          editingBooking.customer_number_bank ??
+          editingBooking.bank_account ??
+          "",
+        bankName:
+          editingBooking.customer_name_bank ?? editingBooking.bank_name ?? "",
         service: editingBooking.service_id
           ? editingBooking.service_id.toString()
           : "",
-        price: editingBooking.price || "",
+        price: editingBooking.price ?? "",
+        quantity: editingBooking.quantity ?? 1,
+        total: editingBooking.total ?? "",
         status: editingBooking.status?.toLowerCase() || "",
         bookingDate: dateOnly,
         completedDate: editingBooking.completed_date
           ? formatDate(editingBooking.completed_date)
           : "",
       });
-    } else {
-      const today = new Date().toISOString().split("T")[0];
-      setFormData((prev) => ({ ...prev, bookingDate: today }));
     }
-  }, [editingBooking, initDataService]);
+  }, [editingBooking]);
+
+  // Recalculate total whenever price or quantity changes
+  useEffect(() => {
+    const price = parseFloat(formData.price) || 0;
+    const quantity = parseInt(formData.quantity, 10) || 0;
+    const newTotal = price * quantity;
+
+    // Only update if the total is different to avoid re-renders
+    if (formData.total !== newTotal) {
+      setFormData((prev) => ({ ...prev, total: newTotal }));
+    }
+  }, [formData.price, formData.quantity, formData.total]);
+
+  const handleModeChange = (mode) => {
+    setCustomerMode(mode);
+    if (mode === "new") {
+      setFormData(initialFormData); // Reset form to initial state
+      setErrors({}); // Clear any validation errors
+    }
+  };
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -126,9 +172,12 @@ export default function BookingForm() {
       // Nếu có khách cũ → fill vào form + khóa field
       setFormData((prev) => ({
         ...prev,
-        cusName: existCustomer.customer_name || prev.cusName,
+        cusName: existCustomer.name || prev.cusName,
         cusEmail: existCustomer.email || prev.cusEmail,
         cusAddress: existCustomer.address || prev.cusAddress,
+        cccd: existCustomer.cccd || "",
+        bankAccount: existCustomer.number_bank || "",
+        bankName: existCustomer.name_bank || "",
       }));
       setCustomerMode("existing");
     } else {
@@ -137,6 +186,7 @@ export default function BookingForm() {
       setCustomerMode("new");
     }
   };
+
 
   // Validation logic
   const validateForm = () => {
@@ -207,15 +257,6 @@ export default function BookingForm() {
     }
   };
 
-  const floor_price_service = (id) => {
-    const service = initDataService.find((s) => String(s.id) === String(id));
-    if (service) {
-      setFloorPriceOfservice(service.floor_price);
-    } else {
-      setFloorPriceOfservice(0); // fallback khi không tìm thấy
-    }
-  };
-
   return (
     <ScrollArea
       className="lenis-local w-full h-full"
@@ -233,96 +274,106 @@ export default function BookingForm() {
               : "Điền thông tin để tạo đơn mới"}
           </span>
         </div>
-
-        {/* Mode Switch */}
-        <div className="flex gap-4 mt-3 mb-2">
-          {["existing", "new"].map((mode) => (
-            <Button
-              key={mode}
-              type="button"
-              onClick={() => setCustomerMode(mode)}
-              className={`cursor-pointer shadow border-none transition-all
-              ${
-                customerMode === mode
-                  ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
-                  : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
-              }
-            `}
-            >
-              <span className="text-xs sm:text-sm md:text-base font-semibold">
-                {mode === "existing" ? "Khách hàng cũ" : "Khách hàng mới"}
-              </span>
-            </Button>
-          ))}
-        </div>
       </div>
 
       {/* Form */}
       <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto px-3 md:px-5">
         <form
           onSubmit={handleSubmit}
-          className="space-y-4"
+          className="space-y-6"
         >
-          {/* Khách hàng cũ */}
-          {customerMode === "existing" && (
+          {/* Customer Information Group */}
+          <fieldset className="border p-4 rounded-md space-y-4">
+            <legend className="text-lg font-semibold px-2 text-gray-800 admin-dark:text-gray-200">
+              Thông tin khách hàng
+            </legend>
+
+            {/* Mode Switch */}
+            {!editingBooking && (
+              <div className="flex gap-4 mt-3 mb-2">
+                {["existing", "new"].map((mode) => (
+                  <Button
+                    key={mode}
+                    type="button"
+                    onClick={() => handleModeChange(mode)}
+                    className={`cursor-pointer shadow border-none transition-all
+                    ${
+                      customerMode === mode
+                        ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+                        : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
+                    }
+                  `}
+                  >
+                    <span className="text-xs sm:text-sm md:text-base font-semibold">
+                      {mode === "existing"
+                        ? "Khách hàng cũ"
+                        : "Khách hàng mới"}
+                    </span>
+                  </Button>
+                ))}
+              </div>
+            )}
+
+            {/* Khách hàng cũ */}
+            {customerMode === "existing" && !editingBooking && (
+              <div className="space-y-2">
+                <Label className="text-black admin-dark:text-gray-100">
+                  Khách hàng *
+                </Label>
+                <CustomerCombobox
+                  customers={initDataCustomer}
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              </div>
+            )}
+
+            {/* Số điện thoại */}
             <div className="space-y-2">
-              <Label className="text-black admin-dark:text-gray-100">
-                Khách hàng *
+              <Label
+                htmlFor="cusPhone"
+                className="text-black admin-dark:text-gray-100"
+              >
+                Số điện thoại *
               </Label>
-              <CustomerCombobox
-                customers={initDataCustomer}
-                formData={formData}
-                setFormData={setFormData}
+              <Input
+                id="cusPhone"
+                maxLength={10}
+                className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                value={formData.cusPhone || ""}
+                onChange={(e) => handleChange("cusPhone", e.target.value)}
+                onBlur={handleCheckCustomer}
+                placeholder="Nhập số điện thoại của khách hàng..."
+                readOnly={customerMode === "existing"}
               />
+              {errors.cusPhone && (
+                <p className="text-red-500 text-sm">{errors.cusPhone}</p>
+              )}
             </div>
-          )}
 
-          {/* Số điện thoại */}
-          <div className="space-y-2">
-            <Label
-              htmlFor="cusPhone"
-              className="text-black admin-dark:text-gray-100"
-            >
-              Số điện thoại *
-            </Label>
-            <Input
-              id="cusPhone"
-              maxLength={10}
-              className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-              value={formData.cusPhone || ""}
-              onChange={(e) => handleChange("cusPhone", e.target.value)}
-              onBlur={handleCheckCustomer}
-              placeholder="Nhập số điện thoại của khách hàng..."
-              readOnly={customerMode === "existing" || editingBooking}
-            />
-            {errors.cusPhone && (
-              <p className="text-red-500 text-sm">{errors.cusPhone}</p>
-            )}
-          </div>
+            {/* Tên khách hàng */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="cusName"
+                className="text-black admin-dark:text-gray-100"
+              >
+                Tên khách hàng *
+              </Label>
+              <Input
+                id="cusName"
+                className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                value={formData.cusName || ""}
+                onChange={(e) => handleChange("cusName", e.target.value)}
+                placeholder="Nhập Họ và Tên khách hàng..."
+                readOnly={customerMode === "existing"}
+              />
+              {errors.cusName && (
+                <p className="text-red-500 text-sm">{errors.cusName}</p>
+              )}
+            </div>
 
-          {/* Tên khách hàng */}
-          <div className="space-y-2">
-            <Label
-              htmlFor="cusName"
-              className="text-black admin-dark:text-gray-100"
-            >
-              Tên khách hàng *
-            </Label>
-            <Input
-              id="cusName"
-              className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-              value={formData.cusName || ""}
-              onChange={(e) => handleChange("cusName", e.target.value)}
-              placeholder="Nhập Họ và Tên khách hàng..."
-              readOnly={customerMode === "existing" || editingBooking}
-            />
-            {errors.cusName && (
-              <p className="text-red-500 text-sm">{errors.cusName}</p>
-            )}
-          </div>
+            {/* Email + Địa chỉ (khi tạo mới) */}
 
-          {/* Email + Địa chỉ (khi tạo mới) */}
-          {!editingBooking && (
             <>
               <div className="space-y-2">
                 <Label
@@ -337,7 +388,7 @@ export default function BookingForm() {
                   value={formData.cusEmail || ""}
                   onChange={(e) => handleChange("cusEmail", e.target.value)}
                   placeholder="Nhập email của khách hàng..."
-                  readOnly={customerMode === "existing" || editingBooking}
+                  readOnly={customerMode === "existing"}
                 />
                 {errors.cusEmail && (
                   <p className="text-red-500 text-sm">{errors.cusEmail}</p>
@@ -357,132 +408,219 @@ export default function BookingForm() {
                   value={formData.cusAddress || ""}
                   onChange={(e) => handleChange("cusAddress", e.target.value)}
                   placeholder="Nhập địa chỉ của khách hàng..."
-                  readOnly={
-                    (!!formData.cusPhone &&
-                      initDataCustomer.some(
-                        (c) => c.phone === formData.cusPhone
-                      )) ||
-                    editingBooking
-                  }
+                  readOnly={customerMode === "existing"}
                 />
                 {errors.cusAddress && (
                   <p className="text-red-500 text-sm">{errors.cusAddress}</p>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="cccd"
+                  className="text-black admin-dark:text-gray-100"
+                >
+                  CCCD/CMND
+                </Label>
+                <Input
+                  id="cccd"
+                  className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                  value={formData.cccd || ""}
+                  onChange={(e) => handleChange("cccd", e.target.value)}
+                  placeholder="Nhập số CCCD/CMND..."
+                  readOnly={customerMode === "existing"}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="bankAccount"
+                  className="text-black admin-dark:text-gray-100"
+                >
+                  Số tài khoản ngân hàng
+                </Label>
+                <Input
+                  id="bankAccount"
+                  className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                  value={formData.bankAccount || ""}
+                  onChange={(e) =>
+                    handleChange("bankAccount", e.target.value)
+                  }
+                  placeholder="Nhập số tài khoản..."
+                  readOnly={customerMode === "existing"}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="bankName"
+                  className="text-black admin-dark:text-gray-100"
+                >
+                  Tên ngân hàng
+                </Label>
+                <CustomSelect
+                  value={formData.bankName || ""}
+                  onValueChange={(value) => handleChange("bankName", value)}
+                  placeholder="Chọn ngân hàng..."
+                  options={banks}
+                  className="w-full"
+                  disabled={customerMode === "existing"}
+                />
+              </div>
             </>
-          )}
+          </fieldset>
 
-          {/* Trạng thái (chỉ khi chỉnh sửa) */}
-          {editingBooking && (
+          {/* Service and Time Information Group */}
+          <fieldset className="border p-4 rounded-md space-y-4">
+            <legend className="text-lg font-semibold px-2 text-gray-800 admin-dark:text-gray-200">
+              Thông tin dịch vụ & thời gian
+            </legend>
+
+            {/* Trạng thái (chỉ khi chỉnh sửa) */}
+            {editingBooking && (
+              <div className="space-y-2 p-3 rounded-lg bg-blue-50 admin-dark:bg-blue-900/20 border-2 border-dashed border-blue-400 shadow-md">
+                <Label
+                  htmlFor="status"
+                  className="text-black admin-dark:text-gray-100 font-semibold"
+                >
+                  Cập nhật trạng thái
+                </Label>
+
+                <CustomSelect
+                  value={formData.status || ""}
+                  onValueChange={(value) => handleChange("status", value)}
+                  placeholder="Chọn trạng thái"
+                  options={[
+                    { value: "pending", label: "Chờ xác nhận" },
+                    { value: "confirmed", label: "Đã xác nhận" },
+                    { value: "processing", label: "Đang xử lý" },
+                    { value: "completed", label: "Hoàn thành" },
+                    { value: "cancelled", label: "Hủy" },
+                  ]}
+                  className="w-full"
+                />
+              </div>
+            )}
+
+            {/* Dịch vụ */}
+            {initDataService && (
+              <div className="space-y-2">
+                <Label className="text-black admin-dark:text-gray-100">
+                  Chọn dịch vụ *
+                </Label>
+
+                <CustomSelect
+                  value={formData.service || ""}
+                  onValueChange={(value) => handleChange("service", value)}
+                  placeholder="Chọn dịch vụ"
+                  options={initDataService.map((service) => ({
+                    value: String(service?.id ?? ""),
+                    label:
+                      service?.translation?.ten_dich_vu || "Dịch vụ không tên",
+                  }))}
+                  className="w-full"
+                />
+
+                {errors.service && (
+                  <p className="text-red-500 text-sm">{errors.service}</p>
+                )}
+              </div>
+            )}
+
+            {/* Giá */}
             <div className="space-y-2">
               <Label
-                htmlFor="status"
-                className="text-black admin-dark:text-gray-100"
+                htmlFor="price"
+                className="text-black admin-dark:text-gray-100 flex items-center justify-between sm:flex-row sm:items-center sm:justify-between gap-3"
               >
-                Trạng thái
+                <span>Giá *</span>
+                <span className="text-sm text-gray-600 admin-dark:text-gray-300">
+                  Giá thấp nhất:{" "}
+                  {Number(floorPriceOfservice).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </span>
               </Label>
-
-              <CustomSelect
-                value={formData.status || ""}
-                onValueChange={(value) => handleChange("status", value)}
-                placeholder="Chọn trạng thái"
-                options={[
-                  { value: "pending", label: "Chờ xác nhận" },
-                  { value: "confirmed", label: "Đã xác nhận" },
-                  { value: "processing", label: "Đang xử lý" },
-                  { value: "completed", label: "Hoàn thành" },
-                  { value: "cancelled", label: "Hủy" },
-                ]}
-                className="w-full"
+              <Input
+                id="price"
+                type="text"
+                className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                value={formatCurrency(String(formData.price))}
+                onChange={(e) => handlePriceChange(e.target.value)}
+                placeholder="Nhập giá dịch vụ..."
               />
-            </div>
-          )}
-
-          {/* Dịch vụ */}
-          {initDataService && (
-            <div className="space-y-2">
-              <Label className="text-black admin-dark:text-gray-100">
-                Chọn dịch vụ *
-              </Label>
-
-              <CustomSelect
-                value={formData.service || ""}
-                onValueChange={(value) => handleChange("service", value)}
-                placeholder="Chọn dịch vụ"
-                options={initDataService.map((service) => ({
-                  value: String(service?.id ?? ""),
-                  label:
-                    service?.translation?.ten_dich_vu || "Dịch vụ không tên",
-                }))}
-                className="w-full"
-              />
-
-              {errors.service && (
-                <p className="text-red-500 text-sm">{errors.service}</p>
+              {errors.price && (
+                <p className="text-red-500 text-sm">{errors.price}</p>
               )}
             </div>
-          )}
 
-          {/* Giá */}
-          <div className="space-y-2">
-            <Label
-              htmlFor="price"
-              className="text-black admin-dark:text-gray-100 flex items-center justify-between sm:flex-row sm:items-center sm:justify-between gap-3"
-            >
-              <span>Giá *</span>
-              <span className="text-sm text-gray-600 admin-dark:text-gray-300">
-                Giá thấp nhất:{" "}
-                {Number(floorPriceOfservice).toLocaleString("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                })}
-              </span>
-            </Label>
-            <Input
-              id="price"
-              type="text"
-              className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-              value={formatCurrency(String(formData.price))}
-              onChange={(e) => handlePriceChange(e.target.value)}
-              placeholder="Nhập giá dịch vụ..."
-            />
-            {errors.price && (
-              <p className="text-red-500 text-sm">{errors.price}</p>
-            )}
-          </div>
-
-          {/* Ngày đặt & Ngày bàn giao */}
-          <div className="flex flex-col sm:flex-row sm:gap-4">
-            {[
-              ["bookingDate", "Ngày đặt đơn", errors.bookingDate],
-              ["completedDate", "Ngày bàn giao", errors.completedDate],
-            ].map(([field, label, err]) => (
-              <div
-                key={field}
-                className="w-full space-y-2"
+            {/* Số lượng */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="quantity"
+                className="text-black admin-dark:text-gray-100"
               >
-                <Label className="text-black admin-dark:text-gray-100">
-                  {label}
-                </Label>
-                <div className="relative w-full">
-                  <input
-                    type="date"
-                    value={formData[field] || ""}
-                    onChange={(e) => handleChange(field, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-950/30 admin-dark:border-gray-600 rounded-lg text-black admin-dark:text-gray-100 focus:outline-none"
-                  />
-                  <Calendar
-                    size={18}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 admin-dark:hidden cursor-pointer"
-                    onClick={(e) =>
-                      e.currentTarget.previousSibling.showPicker?.()
-                    }
-                  />
+                Số lượng
+              </Label>
+              <Input
+                id="quantity"
+                type="number"
+                min="1"
+                className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                value={formData.quantity}
+                onChange={(e) => handleChange("quantity", e.target.value)}
+                placeholder="1"
+              />
+            </div>
+
+            {/* Tổng tiền */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="total"
+                className="text-black admin-dark:text-gray-100"
+              >
+                Tổng tiền
+              </Label>
+              <Input
+                id="total"
+                type="text"
+                className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none bg-gray-100 admin-dark:bg-gray-700"
+                value={formatCurrency(String(formData.total))}
+                readOnly
+              />
+            </div>
+
+            {/* Ngày đặt & Ngày bàn giao */}
+            <div className="flex flex-col sm:flex-row sm:gap-4">
+              {[
+                ["bookingDate", "Ngày đặt đơn", errors.bookingDate],
+                ["completedDate", "Ngày bàn giao", errors.completedDate],
+              ].map(([field, label, err]) => (
+                <div
+                  key={field}
+                  className="w-full space-y-2"
+                >
+                  <Label className="text-black admin-dark:text-gray-100">
+                    {label}
+                  </Label>
+                  <div className="relative w-full">
+                    <input
+                      type="date"
+                      value={formData[field] || ""}
+                      onChange={(e) => handleChange(field, e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-950/30 admin-dark:border-gray-600 rounded-lg text-black admin-dark:text-gray-100 focus:outline-none"
+                    />
+                    <Calendar
+                      size={18}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 admin-dark:hidden cursor-pointer"
+                      onClick={(e) =>
+                        e.currentTarget.previousSibling.showPicker?.()
+                      }
+                    />
+                  </div>
+                  {err && <p className="text-red-500 text-sm">{err}</p>}
                 </div>
-                {err && <p className="text-red-500 text-sm">{err}</p>}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </fieldset>
 
           {/* Buttons */}
           <div className="flex flex-wrap justify-center gap-4 pb-5">
