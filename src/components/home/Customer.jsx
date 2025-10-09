@@ -9,7 +9,7 @@ function Customer({ data, activeLang }) {
   const isInView = useInView(ref, { once: true, threshold: 0.8 });
 
   return (
-    <div className="w-full  rounded-lg bg-transparent p-6 shadow-lg md:p-10">
+    <div className="w-full  rounded-lg bg-transparent p-6  md:p-10">
       <div ref={ref}>
         <div className="flex flex-col items-center justify-center w-full xs:gap-2 md:p-4 xs:px-3 xs:py-6 md:px-3 mb-10 bg-transparent rounded-lg md:flex-row">
           {/* Hình ảnh khách hàng cho màn hình nhỏ (ẩn trên md:) */}

@@ -7,15 +7,16 @@ export default function CategoryServiceSelector({
   disableItemSelectedbyName_groupServices,
   dialog,
 }) {
-
-
   const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
   const fetchGroupServiceByType = async (type) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/service-header-config/group-service/${type}`);
+      const res = await fetch(
+        `${API_BASE_URL}/api/service-header-config/group-service/${type}`
+      );
       if (!res.ok) throw new Error("Không thể tải danh sách group service");
       const data = await res.json();
-      if (!data.success) throw new Error(data.error || "Không thể tải group service");
+      if (!data.success)
+        throw new Error(data.error || "Không thể tải group service");
       return data.data;
     } catch (err) {
       console.error(err);
@@ -23,25 +24,22 @@ export default function CategoryServiceSelector({
     }
   };
 
-
   const [groupServices, setGroupServices] = useState([]);
   const [dialogChildren, setDialogChildren] = useState([]);
 
-
   useEffect(() => {
     if (dialog && dialog.target && dialog.target.type) {
-
       setDialogChildren(dialog.target.children || []);
 
-
-      fetchGroupServiceByType(dialog.target.type).then(data => {
-        setGroupServices(data.map(item => item.groupServices));
-      }).catch(err => {
-        console.error("Error fetching group service data:", err)
-      })
+      fetchGroupServiceByType(dialog.target.type)
+        .then((data) => {
+          setGroupServices(data.map((item) => item.groupServices));
+        })
+        .catch((err) => {
+          console.error("Error fetching group service data:", err);
+        });
     }
   }, [dialog]);
-
 
   useEffect(() => {
     if (groupServices.length > 0 && dialogChildren.length > 0) {
@@ -50,18 +48,16 @@ export default function CategoryServiceSelector({
     }
   }, [groupServices, dialogChildren]);
 
-
-
-
   const [localList, setLocalList] = useState(listIdServices || []);
   const [disabledSlugs, setDisabledSlugs] = useState([]);
 
   // lấy danh sách slug đã chọn ở group khác
   const getServiceSelectedByOtherGroupService = () => {
     const arrayServiceSelected =
-      disableItemSelectedbyName_groupServices.flatMap((item) =>
-        item.name.groupServices.split(",")
-      );
+      disableItemSelectedbyName_groupServices.flatMap((item) => {
+        const groupServices = item?.name?.groupServices;
+        return groupServices ? groupServices.split(",") : [];
+      });
 
     setDisabledSlugs(arrayServiceSelected); // lưu vào state
 
@@ -94,15 +90,18 @@ export default function CategoryServiceSelector({
         const slug = s.translation.slug;
         const checked = localList.includes(slug);
         const disabled = disabledSlugs.includes(slug);
-        const isUsedByChild = dialogChildren.some(child => child.description.en === slug);
+        const isUsedByChild = dialogChildren.some(
+          (child) => child.description.en === slug
+        );
 
         return (
           <div
             key={s.id}
-            className={`flex items-center space-x-2 px-2 ${!disabled
-              ? "hover:bg-gray-800/50 admin-dark:hover:bg-gray-300/50"
-              : "opacity-50 cursor-not-allowed"
-              }`}
+            className={`flex items-center space-x-2 px-2 ${
+              !disabled
+                ? "hover:bg-gray-800/50 admin-dark:hover:bg-gray-300/50"
+                : "opacity-50 cursor-not-allowed"
+            }`}
           >
             <label
               htmlFor={`service-${s.id}`}
@@ -118,7 +117,11 @@ export default function CategoryServiceSelector({
                 className="checkbox w-5 h-5 rounded border border-gray-400 bg-gray-100 accent-blue-600 checked:bg-blue-600"
               />
               <span> {s.translation.ten_dich_vu}</span>
-              {isUsedByChild && <span className="text-red-500 text-xs ml-2">(mục con đang dùng)</span>}
+              {isUsedByChild && (
+                <span className="text-red-500 text-xs ml-2">
+                  (mục con đang dùng)
+                </span>
+              )}
             </label>
           </div>
         );

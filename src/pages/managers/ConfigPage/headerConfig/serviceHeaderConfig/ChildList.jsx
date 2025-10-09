@@ -180,6 +180,7 @@ export default function ChildList({
   onDelete,
   onEdit,
   onSortEnd,
+  dialog,
 }) {
   // State cục bộ để quản lý thứ tự các mục con cho việc kéo thả
   const [childrenItems, setChildrenItems] = useState(
@@ -270,88 +271,93 @@ export default function ChildList({
   const hasChildren = childrenItems.length > 0;
 
   return (
-    <Card className="bg-white admin-dark:bg-gray-900 h-full">
-      {/* Bắt đầu CardHeader: Bao bọc tiêu đề và các nút điều khiển */}
-      <CardHeader className="pb-4 w-full flex flex-col sm:flex-col xl:flex-row xl:gap-2 justify-between items-center">
-        {/* CardTitle đã được thêm 'min-w-0' để đảm bảo co lại bên trong flex container */}
-        <CardTitle className="flex w-full justify-center xl:justify-start items-center gap-2 text-gray-800 admin-dark:text-gray-100 font-semibold text-sm md:text-base">
-          <FileText className="text-blue-500" /> {/* Icon nổi bật hơn */}
-          {/* Thẻ p được thêm 'truncate' và 'min-w-0' để xử lý nội dung quá dài */}
-          <p className="text-sm xl:text-base font-medium text-gray-800 admin-dark:text-gray-100 truncate min-w-0">
-            {selectedCategory
-              ? `Mục con của "${selectedCategory.name?.[lang] || selectedCategory.name
-              }"`
-              : "Chọn danh mục cha"}
-          </p>
-        </CardTitle>
+    <div className="relative h-full">
+      {!!dialog && (
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-10 rounded-xl" />
+      )}
+      <Card className="bg-white admin-dark:bg-gray-900 h-full">
+        {/* Bắt đầu CardHeader: Bao bọc tiêu đề và các nút điều khiển */}
+        <CardHeader className="pb-4 w-full flex flex-col sm:flex-col xl:flex-row xl:gap-2 justify-between items-center">
+          {/* CardTitle đã được thêm 'min-w-0' để đảm bảo co lại bên trong flex container */}
+          <CardTitle className="flex w-full justify-center xl:justify-start items-center gap-2 text-gray-800 admin-dark:text-gray-100 font-semibold text-sm md:text-base">
+            <FileText className="text-blue-500" /> {/* Icon nổi bật hơn */}
+            {/* Thẻ p được thêm 'truncate' và 'min-w-0' để xử lý nội dung quá dài */}
+            <p className="text-sm xl:text-base font-medium text-gray-800 admin-dark:text-gray-100 truncate min-w-0">
+              {selectedCategory
+                ? `Mục con của "${selectedCategory.name?.[lang] || selectedCategory.name
+                }"`
+                : "Chọn danh mục cha"}
+            </p>
+          </CardTitle>
 
-        {selectedCategory && (
-          <div className="flex gap-3 whitespace-nowrap">
-            {isSortingPending ? (
-              <>
-                {/* Nút Hủy (Outline) */}
-                <button
-                  onClick={handleCancelSort}
-                  className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700
+          {selectedCategory && (
+            <div className="flex gap-3 whitespace-nowrap">
+              {isSortingPending ? (
+                <>
+                  {/* Nút Hủy (Outline) */}
+                  <button
+                    onClick={handleCancelSort}
+                    className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700
 hover:bg-gray-100 admin-dark:border-gray-600 admin-dark:text-gray-100 admin-dark:hover:bg-gray-800
 text-sm font-medium transition-colors cursor-pointer mt-2"
-                >
-                  <span className="text-xs xl:text-sm font-medium">Hủy</span>
-                </button>
+                  >
+                    <span className="text-xs xl:text-sm font-medium">Hủy</span>
+                  </button>
 
-                {/* Nút Lưu (Primary Green) */}
-                <button
-                  onClick={handleSaveSort}
-                  className="px-3 py-2 rounded-lg bg-green-600 text-white
+                  {/* Nút Lưu (Primary Green) */}
+                  <button
+                    onClick={handleSaveSort}
+                    className="px-3 py-2 rounded-lg bg-green-600 text-white
 hover:bg-green-700 active:scale-95 text-sm font-medium shadow-md transition-transform cursor-pointer mt-2"
-                >
-                  <span className="text-xs xl:text-sm font-medium">Lưu</span>
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={onAdd}
-                className="whitespace-nowrap flex items-center px-3 py-2 rounded-lg
+                  >
+                    <span className="text-xs xl:text-sm font-medium">Lưu</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={onAdd}
+                  className="whitespace-nowrap flex items-center px-3 py-2 rounded-lg
 bg-blue-600 text-white hover:bg-blue-700 active:scale-95 transition-transform shadow-md cursor-pointer mt-2"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  <span className="text-xs xl:text-sm font-medium">Thêm</span>
+                </button>
+              )}
+            </div>
+          )}
+        </CardHeader>{" "}
+        {/* Kết thúc CardHeader */}
+        <CardContent className="space-y-3 max-h-[480px] overflow-y-auto">
+          {hasSelectedCategory ? (
+            hasChildren ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                <Plus className="h-4 w-4 mr-1" />
-                <span className="text-xs xl:text-sm font-medium">Thêm</span>
-              </button>
-            )}
-          </div>
-        )}
-      </CardHeader>{" "}
-      {/* Kết thúc CardHeader */}
-      <CardContent className="space-y-3 max-h-[480px] overflow-y-auto">
-        {hasSelectedCategory ? (
-          hasChildren ? (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={itemsIds} // Phải là một mảng ID
-                strategy={verticalListSortingStrategy}
-              >
-                {childrenItems.map((child) => (
-                  <SortableChildItem
-                    key={child.id}
-                    child={child}
-                    lang={lang}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                  />
-                ))}
-              </SortableContext>
-            </DndContext>
+                <SortableContext
+                  items={itemsIds} // Phải là một mảng ID
+                  strategy={verticalListSortingStrategy}
+                >
+                  {childrenItems.map((child) => (
+                    <SortableChildItem
+                      key={child.id}
+                      child={child}
+                      lang={lang}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              <EmptyState text="Chưa có mục con nào. Hãy thêm một mục mới!" />
+            )
           ) : (
-            <EmptyState text="Chưa có mục con nào. Hãy thêm một mục mới!" />
-          )
-        ) : (
-          <EmptyState text="Chọn danh mục cha để xem mục con" />
-        )}
-      </CardContent>
-    </Card>
+            <EmptyState text="Chọn danh mục cha để xem mục con" />
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

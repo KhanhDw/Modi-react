@@ -159,79 +159,86 @@ export default function CategoryList({
   }
 
   return (
-    <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700 h-full">
-      <CardHeader className="flex flex-col sm:flex-row justify-between items-center gap-3">
-        <div className="flex items-center gap-2">
-          <Folder className="h-5 w-5 text-gray-700 admin-dark:text-gray-300" />
-          <CardTitle className="text-gray-800 admin-dark:text-gray-100 font-semibold">
-            Danh mục cha
-          </CardTitle>
-        </div>
-        {isChanged ? (
-          <div className="flex gap-2">
+    <div className="relative h-full">
+      {!!dialog && (
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-10 rounded-xl" />
+      )}
+      <Card className="bg-white admin-dark:bg-gray-900 shadow-md border border-gray-200 admin-dark:border-gray-700 h-full">
+        <CardHeader className="flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Folder className="h-5 w-5 text-gray-700 admin-dark:text-gray-300" />
+            <CardTitle className="text-gray-800 admin-dark:text-gray-100 font-semibold">
+              Danh mục cha
+            </CardTitle>
+          </div>
+          {isChanged ? (
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleCancel}
+                className="cursor-pointer hover:text-gray-900 shadow"
+              >
+                <span className="font-semibold text-xs xl:text-sm text-white">
+                  Hủy
+                </span>
+              </Button>
+              <Button
+                size="sm"
+                className="bg-blue-500 shadow text-black/80 admin-dark:text-white hover:bg-blue-600 cursor-pointer"
+                onClick={handleSave}
+              >
+                <span className="font-semibold text-xs xl:text-sm text-white">
+                  Lưu
+                </span>
+              </Button>
+            </div>
+          ) : (
             <Button
               size="sm"
-              variant="outline"
-              onClick={handleCancel}
-              className="cursor-pointer hover:text-gray-900 shadow"
+              className="bg-blue-500 shadow hover:bg-blue-600 transition-colors cursor-pointer"
+              onClick={onAdd}
             >
+              <Plus className="h-4 w-4 text-white" />
               <span className="font-semibold text-xs xl:text-sm text-white">
-                Hủy
+                Thêm
               </span>
             </Button>
-            <Button
-              size="sm"
-              className="bg-blue-500 shadow text-black/80 admin-dark:text-white hover:bg-blue-600 cursor-pointer"
-              onClick={handleSave}
-            >
-              <span className="font-semibold text-xs xl:text-sm text-white">Lưu</span>
-            </Button>
-          </div>
-        ) : (
-          <Button
-            size="sm"
-            className="bg-blue-500 shadow hover:bg-blue-600 transition-colors cursor-pointer"
-            onClick={onAdd}
-          >
-            <Plus className="h-4 w-4 text-white" />
-            <span className="font-semibold text-xs xl:text-sm text-white">
-              Thêm
-            </span>
-          </Button>
-        )}
-      </CardHeader>
+          )}
+        </CardHeader>
 
-      <CardContent
-        data-lenis-prevent
-        className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-2"
-      >
-        {items?.length > 0 ? (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={items.map((c) => c.id)}
-              strategy={verticalListSortingStrategy}
+        <CardContent
+          data-lenis-prevent
+          className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-2"
+        >
+          {items?.length > 0 ? (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              {items.map((cat) => (
-                <SortableCategoryItem
-                  key={cat.id}
-                  cat={cat}
-                  selectedCategory={selectedCategory}
-                  lang={lang}
-                  onSelect={onSelect}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-        ) : (
-          <EmptyState text="Chưa có danh mục cha" />
-        )}
-      </CardContent>
-    </Card>
+              <SortableContext
+                items={items.map((c) => c.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {items.map((cat) => (
+                  <SortableCategoryItem
+                    key={cat.id}
+                    cat={cat}
+                    selectedCategory={selectedCategory}
+                    lang={lang}
+                    onSelect={onSelect}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          ) : (
+            <EmptyState text="Chưa có danh mục cha" />
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
