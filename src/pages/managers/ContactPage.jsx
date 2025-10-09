@@ -3,6 +3,22 @@ import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/admin/common/Table";
 import ContactDetail from "../../components/admin/contact/ContactDetail";
 
+export async function fetchContacts() {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe`
+    );
+    if (!response.ok) {
+      throw new Error("Lỗi khi gọi API");
+    }
+    const data = await response.json();
+    return data; // trả dữ liệu về
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu:", error);
+    return []; // fallback nếu lỗi
+  }
+}
+
 export default function ContactPage() {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
@@ -54,15 +70,26 @@ export default function ContactPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, [calculateItemsPerPage]);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe`)
-      .then((response) => response.json())
-      .then((data) => {
-        setContacts(data);
-        setFilteredContacts(data);
-      })
-      .catch((error) => console.error("Lỗi khi lấy dữ liệu:", error));
+  // arrow function có thể gọi từ nhiều nơi
+  const loadContacts = useCallback(async () => {
+    const data = await fetchContacts();
+    setContacts(data);
+    setFilteredContacts(data);
   }, []);
+
+  useEffect(() => {
+    loadContacts(); // gọi lần đầu khi mount
+
+    const handleContactsUpdate = () => {
+      loadContacts();
+    };
+
+    window.addEventListener("contactsUpdated", handleContactsUpdate);
+
+    return () => {
+      window.removeEventListener("contactsUpdated", handleContactsUpdate);
+    };
+  }, [loadContacts]);
 
   useEffect(() => {
     let filtered = [...contacts];
@@ -122,11 +149,11 @@ export default function ContactPage() {
   }, [contacts, dateFilter, statusFilter, searchTerm]);
 
   const calculateStats = () => {
-    const total = filteredContacts.length;
-    const pending = filteredContacts.filter(
+    const total = contacts.length;
+    const pending = contacts.filter(
       (c) => c.trang_thai === "Chưa phản hồi"
     ).length;
-    const responded = filteredContacts.filter(
+    const responded = contacts.filter(
       (c) => c.trang_thai === "Đã phản hồi"
     ).length;
     return { total, pending, responded };
