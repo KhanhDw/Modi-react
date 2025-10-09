@@ -10,14 +10,11 @@ import {
 } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
 import {
-  ChevronLeft,
-  ChevronRight,
   DollarSign,
   Layers,
   Star,
   Target,
 } from "lucide-react";
-import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 // Hàm chuyển đổi bookings → services
@@ -128,24 +125,6 @@ export default function ServiceOverview() {
       created_at: s.created_at,
     }));
 
-  // Pagination logic
-  const pageSize = 4;
-  const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = Math.ceil(topServices.length / pageSize);
-
-  const pagedServices = topServices.slice(
-    currentPage * pageSize,
-    currentPage * pageSize + pageSize
-  );
-
-  const handlePrev = () => {
-    setCurrentPage((prev) => (prev > 0 ? prev - 1 : prev));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
-  };
-
   const totalRevenue = initDataBookingAll
     .filter((b) => b.status === "completed")
     .reduce((sum, b) => sum + Number(b.total || 0) * (b.quantity || 1), 0);
@@ -188,32 +167,12 @@ export default function ServiceOverview() {
                   Các dịch vụ có đơn đặt nhiều nhất
                 </CardDescription>
               </div>
-              {totalPages > 1 && (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    disabled={currentPage === 0}
-                    className="bg-transparent hover:bg-gray-600/30 px-3 py-2 rounded-xl disabled:opacity-40 cursor-pointer"
-                  >
-                    <ChevronLeft />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages - 1}
-                    className="bg-transparent hover:bg-gray-600/30 px-3 py-2 rounded-xl disabled:opacity-40 cursor-pointer"
-                  >
-                    <ChevronRight />
-                  </button>
-                </div>
-              )}
             </CardHeader>
             <CardContent
               data-lenis-prevent
-              className="space-y-2 overscroll-y-auto lenis-local"
+              className="space-y-2 overflow-y-auto overscroll-y-auto scrollbar-hide lenis-local h-[420px]"
             >
-              {pagedServices.map((service, index) => (
+              {topServices.map((service, index) => (
                 <div
                   key={index}
                   className="flex w-full items-start justify-between gap-3 flex-col p-2 rounded-xl border border-gray-300 bg-white shadow-sm hover:shadow-md transition-all duration-200 admin-dark:bg-gray-800 admin-dark:border-gray-700"
