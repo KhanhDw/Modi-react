@@ -23,6 +23,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
+import ExportCustomerData from "./ExportCustomerData";
 import ReadInforCustomer from "./readInforCustomer";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
@@ -251,6 +252,8 @@ export default function ServiceCustomerTable() {
                   { value: "vip", label: "Vip" },
                 ]}
               />
+
+              <ExportCustomerData data={initDataCustomer} />
 
               <button
                 className="bg-gray-800 hover:bg-slate-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 text-white font-bold py-1.5 px-2 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
