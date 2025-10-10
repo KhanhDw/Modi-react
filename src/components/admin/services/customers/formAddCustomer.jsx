@@ -448,6 +448,7 @@ function FormAddCustomer({ onCancel, onSuccess }) {
                   type="text"
                   id="cccd"
                   name="cccd"
+                  maxLength={14}
                   value={formData.cccd}
                   onChange={handleChange}
                   className={inputClass}

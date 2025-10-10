@@ -203,9 +203,12 @@ export default function ServiceCustomerTable() {
   };
 
   const filteredCustomer = initDataCustomer.filter((customer) => {
-    const keyword = search.toLowerCase();
-    const isVip = customer.total_spent >= minSpent;
-    const groupType = isVip ? "vip" : "thuong";
+    const keyword = removeVietnameseTones(search.toLowerCase());
+
+    const name = removeVietnameseTones(customer.name?.toLowerCase() || "");
+    const phone = customer.phone?.toLowerCase() || "";
+    const cccd = customer.cccd?.toLowerCase() || "";
+    const type = customer.type || "";
 
     const matchSearch =
       name.includes(keyword) ||
@@ -214,12 +217,11 @@ export default function ServiceCustomerTable() {
       type.includes(keyword);
 
     const matchStatus =
-      statusFilter === "all" ||
-      statusFilter === type ||
-      statusFilter === status;
+      statusFilter === "all" || statusFilter === type;
 
     return matchSearch && matchStatus;
   });
+
 
   const totalPages = Math.ceil(filteredCustomer.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -266,7 +268,7 @@ export default function ServiceCustomerTable() {
                     setCurrentPage(1);
                   }}
                   placeholder="Tìm kiếm khách hàng..."
-                  className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
+                  className="pl-10 w-64 md:w-50 lg:w-60 admin-dark:bg-gray-700 admin-dark:text-white admin-dark:border-gray-600 admin-dark:placeholder-gray-400"
                 />
               </div>
               <CustomSelectFilter
@@ -320,9 +322,6 @@ export default function ServiceCustomerTable() {
                   <TableHead className="text-black admin-dark:text-white">
                     Tên ngân hàng
                   </TableHead>
-                  {/* <TableHead className="text-black admin-dark:text-white">
-                    Trạng thái
-                  </TableHead> */}
                   <TableHead className="text-black admin-dark:text-white">
                     Đã đặt
                   </TableHead>
@@ -372,13 +371,6 @@ export default function ServiceCustomerTable() {
                     <TableCell className="text-black admin-dark:text-white">
                       {customer.name_bank || "Chưa cập nhật"}
                     </TableCell>
-                    {/* <TableCell className="text-black admin-dark:text-white">
-                      {customer.status === "active"
-                        ? "Hoạt động"
-                        : customer.status
-                          ? "Ngừng hoạt động"
-                          : "Chưa cập nhật"}
-                    </TableCell> */}
                     <TableCell className="text-black admin-dark:text-white pl-6">
                       {customer.booking_count || 0}
                     </TableCell>

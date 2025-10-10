@@ -485,6 +485,7 @@ export default function CustomerForm() {
                     <Input
                       id="cccd"
                       name="cccd"
+                      maxLength={14}
                       value={formData.cccd}
                       onChange={handleChange}
                       className={inputClass}

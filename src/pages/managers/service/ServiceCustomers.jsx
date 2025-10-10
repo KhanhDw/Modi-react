@@ -62,7 +62,7 @@ export default function ServiceCustomers() {
     {
       title: "Khách hàng VIP",
       icon: Star,
-      value: initDataCustomer.filter((c) => c.isVIP).length,
+      value: initDataCustomer.filter((c) => c.type === "vip").length,
       iconSize: "h-4 w-4",
     },
   ];
