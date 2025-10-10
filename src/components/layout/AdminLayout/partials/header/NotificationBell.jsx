@@ -7,9 +7,7 @@ import useLenisLocal from "@/hook/useLenisLocal";
 import { useAdminTheme } from "@/contexts/ThemeLocalContext";
 import fetchWithAuth from "@/utils/fetchWithAuth";
 import { io } from "socket.io-client";
-
 import NotificationAllDropdown from "@/components/layout/AdminLayout/partials/header/NotificationAllDropdown";
-
 const socket = io(`${import.meta.env.VITE_MAIN_BE_URL}`);
 
 export function NotificationBell() {
@@ -19,10 +17,9 @@ export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
-  const [userId, setUserId] = useState(null)
+  const [userId, setUserId] = useState(null);
 
   const [showAll, setShowAll] = useState(false);
-
 
   const fetchNotifications = async (id) => {
     try {
@@ -56,6 +53,7 @@ export function NotificationBell() {
   useEffect(() => {
     socket.on("newLienHe", () => {
       getCurrentUser();
+      window.dispatchEvent(new CustomEvent("contactsUpdated"));
     });
     return () => {
       socket.off("newLienHe");
@@ -82,7 +80,9 @@ export function NotificationBell() {
   const markAllAsRead = async (userId) => {
     try {
       await fetchWithAuth(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/notifications/user/${userId}/read-all`,
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/notifications/user/${userId}/read-all`,
         { method: "PATCH" }
       );
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
@@ -148,7 +148,8 @@ export function NotificationBell() {
         const customerName = nameParts[0];
         return (
           <>
-            khách hàng <span className="font-bold">{customerName}</span> vừa gửi liên hệ cho bạn
+            khách hàng <span className="font-bold">{customerName}</span> vừa gửi
+            liên hệ cho bạn
           </>
         );
       }
@@ -165,7 +166,10 @@ export function NotificationBell() {
         className="relative hover:bg-gray-100  admin-dark:hover:bg-gray-700 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Bell className="h-5 w-5" color={isDark ? "#ffffff" : "#1f2937"} />
+        <Bell
+          className="h-5 w-5"
+          color={isDark ? "#ffffff" : "#1f2937"}
+        />
         {unreadCount > 0 && (
           <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white admin-dark:bg-red-600 admin-dark:text-white">
             {unreadCount > 9 ? "9+" : unreadCount}
@@ -179,7 +183,11 @@ export function NotificationBell() {
           ref={dropdownRef}
           className={`
             z-50 border rounded-md shadow-lg
-            ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
+            ${
+              isDark
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
+            }
             transition-all
             /* mobile full screen */
             fixed inset-0 w-full h-full sm:inset-0 sm:w-full sm:h-full
@@ -217,7 +225,10 @@ export function NotificationBell() {
           </div>
 
           {/* Nội dung */}
-          <ScrollArea className="h-[calc(100vh-64px)] md:h-96 lenis-local  bg-gray-200 border-gray-400 admin-dark:bg-gray-800 admin-dark:border-gray-700 rounded-b-md" data-lenis-prevent>
+          <ScrollArea
+            className="h-[calc(100vh-64px)] md:h-96 lenis-local  bg-gray-200 border-gray-400 admin-dark:bg-gray-800 admin-dark:border-gray-700 rounded-b-md"
+            data-lenis-prevent
+          >
             {notifications.length === 0 ? (
               <div className="p-4 text-center text-gray-900 admin-dark:text-gray-400  ">
                 Không có thông báo nào
@@ -227,15 +238,20 @@ export function NotificationBell() {
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`p-4 hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors ${!notification.isRead
-                      ? "bg-blue-50 admin-dark:bg-blue-900/20"
-                      : "bg-white admin-dark:bg-gray-800"
-                      }`}
+                    className={`p-4 hover:bg-gray-50 admin-dark:hover:bg-gray-700 transition-colors ${
+                      !notification.isRead
+                        ? "bg-blue-50 admin-dark:bg-blue-900/20"
+                        : "bg-white admin-dark:bg-gray-800"
+                    }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className={`font-medium text-sm ${getTypeColor(notification.type)}`}>
+                          <h4
+                            className={`font-medium text-sm ${getTypeColor(
+                              notification.type
+                            )}`}
+                          >
                             {notification.title}
                           </h4>
                           {!notification.isRead && (
@@ -246,20 +262,26 @@ export function NotificationBell() {
                           {renderMessage(notification.message)}
                         </p>
                         <p className="text-xs text-gray-500 admin-dark:text-gray-400">
-                          {new Date(notification.createdAt).toLocaleString("vi-VN", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                          {new Date(notification.createdAt).toLocaleString("vi-VN", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {new Date(notification.createdAt).toLocaleString(
+                            "vi-VN",
+                            {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                          {new Date(notification.createdAt).toLocaleString(
+                            "vi-VN",
+                            {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
                         </p>
                       </div>
                       <div className="flex gap-1">
@@ -321,5 +343,4 @@ export function NotificationBell() {
       )}
     </div>
   );
-
 }

@@ -10,10 +10,13 @@ import {
 
 export default function OrderNeedToDone({ bookings }) {
   const getOrderStatus = (booking) => {
-    if (booking.status === "completed" || booking.status === "cancelled") return "Hoàn thành";
+    if (booking.status === "completed" || booking.status === "cancelled")
+      return "Hoàn thành";
 
     const now = new Date();
-    const dueDate = booking.completed_date ? new Date(booking.completed_date) : null;
+    const dueDate = booking.completed_date
+      ? new Date(booking.completed_date)
+      : null;
 
     if (!dueDate) return "Đang xử lý";
 
@@ -57,7 +60,8 @@ export default function OrderNeedToDone({ bookings }) {
   };
 
   const filteredBookings = bookings.filter(
-    (b) => b.status !== "completed" && b.status !== "cancelled" && b.is_deleted === 0
+    (b) =>
+      b.status !== "completed" && b.status !== "cancelled" && b.is_deleted === 0
   );
 
   const sortedOrders = filteredBookings.sort((a, b) => {
@@ -85,9 +89,9 @@ export default function OrderNeedToDone({ bookings }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left border border-gray-200 admin-dark:border-gray-700">
-            <thead>
+        <div className="overflow-x-auto h-70 scrollbar-hide">
+          <table className="w-full text-sm text-left ">
+            <thead className="sticky top-0 bg-white admin-dark:bg-gray-800">
               <tr className="border-b border-gray-200 admin-dark:border-gray-700">
                 <th className="py-2 px-4 font-medium text-gray-700 admin-dark:text-gray-300">
                   Dịch vụ
@@ -116,14 +120,21 @@ export default function OrderNeedToDone({ bookings }) {
                     >
                       <td className="py-3 px-4 flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                        <span className="truncate block max-w-30" title={order.service_name}>
+                        <span
+                          className="truncate block max-w-30"
+                          title={order.service_name}
+                        >
                           {order.service_name}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{order.customer_name || "-"}</td>
+                      <td className="py-3 px-4">
+                        {order.customer_name || "-"}
+                      </td>
                       <td className="py-3 px-4">
                         {order.completed_date
-                          ? new Date(order.completed_date).toLocaleDateString("vi-VN")
+                          ? new Date(order.completed_date).toLocaleDateString(
+                              "vi-VN"
+                            )
                           : "-"}
                       </td>
                       <td className={`py-3 px-4 ${getStatusTextStyle(status)}`}>
@@ -134,7 +145,10 @@ export default function OrderNeedToDone({ bookings }) {
                 })
               ) : (
                 <tr className="border-b border-gray-200 admin-dark:border-gray-700">
-                  <td colSpan={4} className="py-4 text-center text-gray-500 admin-dark:text-gray-400">
+                  <td
+                    colSpan={4}
+                    className="py-4 text-center text-gray-500 admin-dark:text-gray-400"
+                  >
                     Không có đơn hàng nào cần hoàn thành
                   </td>
                 </tr>

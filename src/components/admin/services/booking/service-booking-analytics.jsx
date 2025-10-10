@@ -5,7 +5,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from "recharts";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  BarChart,
+  Bar,
+} from "recharts";
 
 // Hàm chuyển đổi bookings → services
 function transformBookingsToServices(bookings) {
@@ -74,7 +84,7 @@ export default function ServiceBookingAnalytics({ bookings }) {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Biểu đồ LineChart */}
         <Card
-          className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb] 
+          className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]
             admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
         >
           <CardHeader>
@@ -82,12 +92,15 @@ export default function ServiceBookingAnalytics({ bookings }) {
               Số lần đặt dịch vụ theo tháng
             </CardTitle>
             <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
-              Biểu đồ thể hiện xu hướng số lượt đặt dịch vụ trong 12 tháng,
-              giúp theo dõi mức độ quan tâm của khách hàng theo thời gian.
+              Biểu đồ thể hiện xu hướng số lượt đặt dịch vụ trong 12 tháng, giúp
+              theo dõi mức độ quan tâm của khách hàng theo thời gian.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
               <LineChart data={months}>
                 <CartesianGrid
                   strokeDasharray="3 3"
@@ -104,8 +117,11 @@ export default function ServiceBookingAnalytics({ bookings }) {
                   className="admin-dark:stroke-gray-300"
                 />
                 <Tooltip
-                  formatter={(value) => `${value} lượt`}
-                  labelFormatter={(label) => `Tháng: ${label}`}
+                  formatter={(value, name) => [`${value} đơn`, "Đơn đặt"]}
+                  labelFormatter={(label) => {
+                    label = label.slice(1);
+                    return "Tháng " + label;
+                  }}
                   contentStyle={{
                     backgroundColor: "#fff",
                     borderRadius: "8px",
@@ -127,7 +143,7 @@ export default function ServiceBookingAnalytics({ bookings }) {
 
         {/* Biểu đồ BarChart */}
         <Card
-          className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb] 
+          className="bg-white rounded-xl p-2 shadow-md shadow-gray-300/50 border border-[#e5e7eb]
             admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
         >
           <CardHeader>
@@ -140,7 +156,10 @@ export default function ServiceBookingAnalytics({ bookings }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
               <BarChart data={topServices}>
                 <CartesianGrid
                   strokeDasharray="3 3"
@@ -161,8 +180,8 @@ export default function ServiceBookingAnalytics({ bookings }) {
                   className="admin-dark:stroke-gray-300"
                 />
                 <Tooltip
-                  formatter={(value) => `${value} lượt`}
-                  labelFormatter={(label) => `Dịch vụ: ${label}`}
+                  formatter={(value, name) => [`${value} đơn`, "Số đơn"]}
+                  labelFormatter={(label) => `${label}`}
                   contentStyle={{
                     backgroundColor: "#fff",
                     borderRadius: "8px",

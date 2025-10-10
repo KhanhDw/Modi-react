@@ -1,7 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Filter } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -66,7 +73,10 @@ export default function FilterModalListTemplateWebAdmin({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
       <DialogTrigger asChild>
         <Button
           theme="admin"
@@ -90,7 +100,7 @@ export default function FilterModalListTemplateWebAdmin({
         </Button>
       </DialogTrigger>
 
-      <DialogOverlay className="bg-black/50 backdrop-blur-sm fixed inset-0 z-40" />
+      <DialogOverlay className="bg-black/50 backdrop-blur-sm fixed inset-0 z-50" />
 
       <DialogContent
         className="lenis-local w-fit flex flex-col items-start max-w-none max-h-[80vh]
@@ -118,14 +128,21 @@ export default function FilterModalListTemplateWebAdmin({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
             {/* Công nghệ */}
             <div>
-              <h4 className="font-medium mb-3 admin-dark:text-gray-200">Công nghệ</h4>
+              <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+                Công nghệ
+              </h4>
               <div className="space-y-2">
                 {availableTech.map((tech, index) => (
-                  <div key={tech + index} className="flex items-center space-x-2">
+                  <div
+                    key={tech + index}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={`tech-${tech}-${index}`}
                       checked={filters.technologies.includes(tech)}
-                      onCheckedChange={() => toggleArrayFilter("technologies", tech)}
+                      onCheckedChange={() =>
+                        toggleArrayFilter("technologies", tech)
+                      }
                       className="admin-dark:border-gray-600 border-gray-400 cursor-pointer"
                     />
                     <label
@@ -141,10 +158,15 @@ export default function FilterModalListTemplateWebAdmin({
 
             {/* Tags */}
             <div>
-              <h4 className="font-medium mb-3 admin-dark:text-gray-200">Tags</h4>
+              <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+                Tags
+              </h4>
               <div className="space-y-2">
                 {availableTags.map((tag) => (
-                  <div key={tag} className="flex items-center space-x-2">
+                  <div
+                    key={tag}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={`tag-${tag}`}
                       checked={filters.tags.includes(tag)}
@@ -164,14 +186,21 @@ export default function FilterModalListTemplateWebAdmin({
 
             {/* Tính năng nổi bật */}
             <div>
-              <h4 className="font-medium mb-3 admin-dark:text-gray-200">Tính năng</h4>
+              <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+                Tính năng
+              </h4>
               <div className="space-y-2">
                 {availableTopFeatures.map((feature) => (
-                  <div key={feature} className="flex items-center space-x-2">
+                  <div
+                    key={feature}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={`feature-${feature}`}
                       checked={filters.top_features.includes(feature)}
-                      onCheckedChange={() => toggleArrayFilter("top_features", feature)}
+                      onCheckedChange={() =>
+                        toggleArrayFilter("top_features", feature)
+                      }
                       className="admin-dark:border-gray-600 border-gray-400 cursor-pointer"
                     />
                     <label
@@ -187,14 +216,21 @@ export default function FilterModalListTemplateWebAdmin({
 
             {/* Tác giả */}
             <div>
-              <h4 className="font-medium mb-3 admin-dark:text-gray-200">Tác giả</h4>
+              <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+                Tác giả
+              </h4>
               <div className="space-y-2">
                 {availableAuthors.map((author) => (
-                  <div key={author} className="flex items-center space-x-2">
+                  <div
+                    key={author}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={`author-${author}`}
                       checked={filters.authors.includes(author)}
-                      onCheckedChange={() => toggleArrayFilter("authors", author)}
+                      onCheckedChange={() =>
+                        toggleArrayFilter("authors", author)
+                      }
                       className="admin-dark:border-gray-600 border-gray-400 cursor-pointer"
                     />
                     <label
@@ -210,7 +246,9 @@ export default function FilterModalListTemplateWebAdmin({
 
             {/* Ngày đăng */}
             <div>
-              <h4 className="font-medium mb-3 admin-dark:text-gray-200">Ngày đăng</h4>
+              <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+                Ngày đăng
+              </h4>
               <div className="space-y-2">
                 {[
                   { value: "", label: "Tất cả" },
@@ -219,11 +257,16 @@ export default function FilterModalListTemplateWebAdmin({
                   { value: "month", label: "Tháng này" },
                   { value: "year", label: "Năm nay" },
                 ].map((opt) => (
-                  <div key={opt.value} className="flex items-center space-x-2">
+                  <div
+                    key={opt.value}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={`date-${opt.value}`}
                       checked={filters.dateRange === opt.value}
-                      onCheckedChange={() => updateFilter("dateRange", opt.value)}
+                      onCheckedChange={() =>
+                        updateFilter("dateRange", opt.value)
+                      }
                       className="admin-dark:border-gray-600 border-gray-400 cursor-pointer"
                     />
                     <label
@@ -239,18 +282,25 @@ export default function FilterModalListTemplateWebAdmin({
 
             {/* Trạng thái */}
             <div>
-              <h4 className="font-medium mb-3 admin-dark:text-gray-200">Trạng thái</h4>
+              <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+                Trạng thái
+              </h4>
               <div className="space-y-2">
                 {[
                   { value: "", label: "Tất cả" },
                   { value: "published", label: "Đã công bố" },
                   { value: "draft", label: "Chưa công bố" },
                 ].map((opt) => (
-                  <div key={opt.value} className="flex items-center space-x-2">
+                  <div
+                    key={opt.value}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={`status-${opt.value}`}
                       checked={filters.publishStatus === opt.value}
-                      onCheckedChange={() => updateFilter("publishStatus", opt.value)}
+                      onCheckedChange={() =>
+                        updateFilter("publishStatus", opt.value)
+                      }
                       className="admin-dark:border-gray-600 border-gray-400 cursor-pointer"
                     />
                     <label
@@ -269,36 +319,62 @@ export default function FilterModalListTemplateWebAdmin({
         {/* Active Filters */}
         {getActiveFiltersCount() > 0 && (
           <div className="pt-6 w-full">
-            <h4 className="font-medium mb-3 admin-dark:text-gray-200">Bộ lọc đang áp dụng</h4>
+            <h4 className="font-medium mb-3 admin-dark:text-gray-200">
+              Bộ lọc đang áp dụng
+            </h4>
             <div className="flex flex-wrap gap-2">
               {filters.technologies.map((tech) => (
-                <Badge key={tech} variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600">
+                <Badge
+                  key={tech}
+                  variant="outline"
+                  className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                >
                   {tech}
                 </Badge>
               ))}
               {filters.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600">
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                >
                   {tag}
                 </Badge>
               ))}
               {filters.top_features.map((feature) => (
-                <Badge key={feature} variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600">
+                <Badge
+                  key={feature}
+                  variant="outline"
+                  className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                >
                   {feature}
                 </Badge>
               ))}
               {filters.authors.map((author) => (
-                <Badge key={author} variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600">
+                <Badge
+                  key={author}
+                  variant="outline"
+                  className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                >
                   {author}
                 </Badge>
               ))}
               {filters.dateRange && (
-                <Badge variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600">
+                <Badge
+                  variant="outline"
+                  className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                >
                   Ngày: {filters.dateRange}
                 </Badge>
               )}
               {filters.publishStatus && (
-                <Badge variant="outline" className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600">
-                  {filters.publishStatus === "published" ? "Đã công bố" : "Chưa công bố"}
+                <Badge
+                  variant="outline"
+                  className="text-xs text-gray-800 admin-dark:text-gray-200 admin-dark:border-gray-600"
+                >
+                  {filters.publishStatus === "published"
+                    ? "Đã công bố"
+                    : "Chưa công bố"}
                 </Badge>
               )}
             </div>

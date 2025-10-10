@@ -18,20 +18,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useLenisLocal from "@/hook/useLenisLocal";
-import {
-  Edit,
-  Eye,
-  Search,
-  Trash2,
-} from "lucide-react";
-import { useState } from "react";
+import { Edit, Eye, Search, Trash2, Settings } from "lucide-react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import ConfigCustomerVIP from "./configCustomerVIP";
 import ExcelDataUploader from "./ExcelDataUploader";
+import ExportCustomerData from "./ExportCustomerData";
 import ReadInforCustomer from "./readInforCustomer";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
 import { X } from "lucide-react";
+import "@/styles/styleVIP.css";
+import TrashCustomer from "./trashCustomer";
 
 export default function ServiceCustomerTable() {
   const {
@@ -39,24 +37,143 @@ export default function ServiceCustomerTable() {
     initDataBooking,
     openEditCustomerForm,
     handleDeleteCustomer,
-  } = useOutletContext();
+    handleRefetchCustomer,
+    handleGetBookingForCustomerId,
+    showToast,
+  } = useOutletContext(); // src\pages\managers\ServicesPage.jsx
+
   useLenisLocal(".lenis-local");
   const [openConfigCustomerVIP, setOpenConfigCustomerVIP] = useState(false);
   const [openDialogImportCustomer, setOpenDialogImportCustomer] =
     useState(false);
   const [openReadInforCustomer, setOpenReadInforCustomer] = useState(false);
   const [customerDetail, setCustomerDetail] = useState(null);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [loadingCustomer, setLoadingCustomer] = useState(false);
+  const [isDeleteShow, setIsDeleteShow] = useState(false);
+  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
+  const [customerToDeleteId, setCustomerToDeleteId] = useState(null);
 
-  const { minSpent } = useVipConfig();
+  const { minSpent, fetchVipConfig } = useVipConfig();
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Function load dữ liệu khách hàng với Promise để đảm bảo đồng bộ
+  // Sử dụng ref để lưu trữ data mới nhất
+  const initDataCustomerRef = useRef(initDataCustomer);
+  const minSpentRef = useRef(minSpent);
+
+  // Cập nhật ref khi data thay đổi
+  useEffect(() => {
+    initDataCustomerRef.current = initDataCustomer;
+    minSpentRef.current = minSpent;
+  }, [initDataCustomer, minSpent]);
+
+  // Hàm bỏ dấu tiếng Việt
+  const removeVietnameseTones = (str) => {
+    return str
+      .normalize("NFD") // tách ký tự base và dấu
+      .replace(/[\u0300-\u036f]/g, "") // xóa dấu
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D"); // thay đ/Đ
+  };
+
+  // Sử dụng useCallback để tránh tạo hàm mới mỗi lần render
+  const updateCustomerFitIsVip = useCallback(async (id_customer) => {
+    try {
+      await fetch(
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/customers/update_vip/${id_customer}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating customer to VIP:", error);
+    }
+  }, []);
+
+  const updateCustomerIsVipToOld = useCallback(async (id_customer) => {
+    try {
+      await fetch(
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/customers/update_vip_to_old/${id_customer}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating VIP customer to old:", error);
+    }
+  }, []);
+
+  // Sửa lại hàm checkUpdateCustomerFitIsVip
+  const checkUpdateCustomerFitIsVip = useCallback(async () => {
+    try {
+      // Fetch config mới nhất
+      const vipConfig = await fetchVipConfig();
+      const currentMinSpent = vipConfig.min_spent;
+
+      // Sử dụng data từ ref để đảm bảo luôn có data mới nhất
+      const currentCustomers = initDataCustomerRef.current;
+
+      // Sử dụng Promise.all để xử lý bất đồng bộ hiệu quả
+      const updatePromises = currentCustomers.map(async (customer) => {
+        const shouldBeVip = customer.total_spent >= currentMinSpent;
+        const isCurrentlyVip = customer.type === "vip";
+
+        if (!isCurrentlyVip && shouldBeVip) {
+          await updateCustomerFitIsVip(customer.id);
+          return { id: customer.id, action: "upgraded" };
+        } else if (isCurrentlyVip && !shouldBeVip) {
+          await updateCustomerIsVipToOld(customer.id);
+          return { id: customer.id, action: "downgraded" };
+        }
+        return null;
+      });
+
+      const results = await Promise.all(updatePromises);
+      const changes = results.filter((result) => result !== null);
+
+      if (changes.length > 0) {
+        handleRefetchCustomer();
+      }
+    } catch (error) {
+      console.error("❌ Error in VIP customer check:", error);
+    }
+  }, [
+    fetchVipConfig,
+    updateCustomerFitIsVip,
+    updateCustomerIsVipToOld,
+    handleRefetchCustomer,
+  ]);
+
+  // Listen for storage events to trigger VIP check, and check on mount.
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      if (event.key === "customerDataUpdated") {
+        checkUpdateCustomerFitIsVip();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    checkUpdateCustomerFitIsVip(); // Initial check on mount
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [checkUpdateCustomerFitIsVip]);
+
+  // Function load dữ liệu khách hàng
   const getFullInforCustomer = async (id) => {
     try {
       setLoadingCustomer(true);
@@ -71,19 +188,14 @@ export default function ServiceCustomerTable() {
 
       const data = await res.json();
 
-      // Sử dụng setTimeout để đảm bảo state được cập nhật tuần tự
       setCustomerDetail(data);
-
-      // Sử dụng setTimeout 0 để đảm bảo state update hoàn tất trước khi mở modal
-      setTimeout(() => {
-        setLoadingCustomer(false);
-        setOpenReadInforCustomer(true);
-      }, 0);
+      setOpenReadInforCustomer(true);
     } catch (err) {
+      console.error("Error fetching customer details:", err);
       setCustomerDetail(null);
-      setLoadingCustomer(false);
-      setOpenReadInforCustomer(false);
       // Có thể thêm toast notification ở đây
+    } finally {
+      setLoadingCustomer(false);
     }
   };
 
@@ -92,22 +204,10 @@ export default function ServiceCustomerTable() {
     setCurrentPage(1);
   };
 
-  // Hàm bỏ dấu tiếng Việt
-  const removeVietnameseTones = (str) => {
-    return str
-      .normalize("NFD") // tách ký tự base và dấu
-      .replace(/[\u0300-\u036f]/g, "") // xóa dấu
-      .replace(/đ/g, "d").replace(/Đ/g, "D"); // thay đ/Đ
-  };
-
   const filteredCustomer = initDataCustomer.filter((customer) => {
-    const keyword = removeVietnameseTones(search.toLowerCase());
-    const type = (customer.type || "").toLowerCase();
-    const status = (customer.status || "").toLowerCase();
-
-    const name = removeVietnameseTones((customer.name || "").toLowerCase());
-    const phone = (customer.phone || "").toLowerCase();
-    const cccd = (customer.cccd || "").toLowerCase();
+    const keyword = search.toLowerCase();
+    const isVip = customer.total_spent >= minSpent;
+    const groupType = isVip ? "vip" : "thuong";
 
     const matchSearch =
       name.includes(keyword) ||
@@ -129,6 +229,21 @@ export default function ServiceCustomerTable() {
     startIndex,
     startIndex + itemsPerPage
   );
+
+  const checkCustomerCanBeDeleted = (customerId) => {
+    if (handleGetBookingForCustomerId(customerId)) {
+      showToast("Không thể xóa khách hàng vì đang có dịch vụ đã đặt.", "error");
+      return false;
+    }
+    return true;
+  };
+
+  const handleDeleteClick = (customerId) => {
+    if (checkCustomerCanBeDeleted(customerId)) {
+      setCustomerToDeleteId(customerId);
+      setShowConfirmDeleteDialog(true);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -172,15 +287,14 @@ export default function ServiceCustomerTable() {
                 ]}
               />
 
+              <ExportCustomerData data={initDataCustomer} />
+
               <button
                 className="bg-gray-800 hover:bg-slate-700 admin-dark:bg-blue-500 admin-dark:hover:bg-blue-600 text-white font-bold py-1.5 px-4 rounded-md shadow-lg transform transition-all duration-200 ease-in-out cursor-pointer"
                 onClick={() => setOpenDialogImportCustomer(true)}
               >
-                <span className="text-sm lg:text-base">
-                  Nhập danh sách
-                </span>
+                <span className="text-sm lg:text-base">Nhập danh sách</span>
               </button>
-
             </div>
           </div>
         </CardHeader>
@@ -237,7 +351,14 @@ export default function ServiceCustomerTable() {
                       {startIndex + index + 1}
                     </TableCell>
 
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white flex gap-2">
+                      {customer.type === "vip" ? (
+                        <div className="vip-badge  rounded-sm px-1 bg-yellow-300">
+                          <span className="badge-text text-xs font-semibold text-black admin-dark:text-black">
+                            VIP
+                          </span>
+                        </div>
+                      ) : null}
                       {customer.name}
                     </TableCell>
                     <TableCell className="text-black admin-dark:text-white">
@@ -296,7 +417,9 @@ export default function ServiceCustomerTable() {
                           {
                             label: "Xóa",
                             icon: Trash2,
-                            onClick: () => handleDeleteCustomer(customer.id),
+                            onClick: () => {
+                              handleDeleteClick(customer.id);
+                            },
                           },
                         ]}
                       />
@@ -304,9 +427,9 @@ export default function ServiceCustomerTable() {
                   </TableRow>
                 ))}
                 {currentData.length === 0 && (
-                  <TableRow className="admin-dark:border-gray-700">
+                  <TableRow className="admin-dark:border-gray-700 w-full ">
                     <TableCell
-                      colSpan={12}
+                      colSpan={11}
                       className="text-center py-4 text-gray-500 admin-dark:text-gray-400"
                     >
                       Không tìm thấy khách hàng
@@ -319,14 +442,24 @@ export default function ServiceCustomerTable() {
 
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row justify-between mt-4 gap-2 items-center w-full">
-            <div className="w-full flex justify-center sm:justify-start">
+            <div className="w-full flex justify-center sm:justify-start gap-2">
               <button
                 onClick={() => setOpenConfigCustomerVIP(true)}
                 type="button"
                 className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
               >
-                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400">
-                  Thiết lập điều kiện là khách hàng VIP
+                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                  <Settings />
+                  VIP
+                </span>
+              </button>
+              <button
+                onClick={() => setIsDeleteShow(true)}
+                type="button"
+                className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
+              >
+                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                  <Trash2 />
                 </span>
               </button>
             </div>
@@ -357,6 +490,7 @@ export default function ServiceCustomerTable() {
             </button>
             <ConfigCustomerVIP
               setOpenConfigCustomerVIP={setOpenConfigCustomerVIP}
+              onSaveSuccess={checkUpdateCustomerFitIsVip}
             />
           </div>
         </div>
@@ -416,7 +550,10 @@ export default function ServiceCustomerTable() {
              transition-all duration-200 cursor-pointer backdrop-blur-sm z-50"
               aria-label="Đóng"
             >
-              <X className="h-5 w-5" strokeWidth={2.2} />
+              <X
+                className="h-5 w-5"
+                strokeWidth={2.2}
+              />
             </button>
 
             {/* Nội dung */}
@@ -425,7 +562,9 @@ export default function ServiceCustomerTable() {
                 return (
                   <div className="flex flex-col items-center justify-center py-10 text-gray-700 admin-dark:text-gray-200">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800 admin-dark:border-gray-300"></div>
-                    <p className="mt-4 text-sm font-medium">Đang tải dữ liệu...</p>
+                    <p className="mt-4 text-sm font-medium">
+                      Đang tải dữ liệu...
+                    </p>
                   </div>
                 );
               } else if (customerDetail) {
@@ -441,7 +580,67 @@ export default function ServiceCustomerTable() {
           </div>
         </div>
       )}
+      {/* Modal hiển thị khách hàng đã xóa */}
+      {isDeleteShow && (
+        <TrashCustomer
+          setIsDeleteShow={setIsDeleteShow}
+          handleRefetchCustomer={handleRefetchCustomer}
+        />
+      )}
 
+      {/* Delete Confirmation Custom Modal */}
+
+      {showConfirmDeleteDialog && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 admin-dark:bg-black/60 px-3 sm:px-5 md:px-8"
+          onClick={() => {
+            setShowConfirmDeleteDialog(false);
+            setCustomerToDeleteId(null);
+          }}
+        >
+          <div
+            className="relative w-full max-w-md rounded-xl shadow-2xl bg-white admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700 p-6 transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-gray-900 admin-dark:text-white mb-4">
+              Xác nhận xóa khách hàng
+            </h3>
+
+            <p className="text-sm text-gray-600 admin-dark:text-gray-400 mb-6">
+              Bạn có chắc chắn muốn xóa khách hàng này không? Hành động này
+              không thể hoàn tác.
+            </p>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                className="px-4 py-2 text-sm font-medium text-gray-700 admin-dark:text-gray-300 bg-gray-200 admin-dark:bg-gray-700 rounded-md hover:bg-gray-300 admin-dark:hover:bg-gray-600 transition-colors"
+                onClick={() => {
+                  setShowConfirmDeleteDialog(false);
+
+                  setCustomerToDeleteId(null);
+                }}
+              >
+                Hủy
+              </button>
+
+              <button
+                type="button"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+                onClick={async () => {
+                  if (customerToDeleteId) {
+                    await handleDeleteCustomer(customerToDeleteId);
+                    setCustomerToDeleteId(null);
+                  }
+                  setShowConfirmDeleteDialog(false);
+                }}
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

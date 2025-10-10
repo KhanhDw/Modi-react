@@ -179,7 +179,7 @@ export default function WebsiteTemplateList() {
               <div className="px-2 sm:px-3">
                 <div className="flex flex-col md:flex-row min-h-[200px] gap-4 sm:gap-2">
                   {/* Hình ảnh */}
-                  <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-50 ">
+                  <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-80 ">
                     {t.image_url ? (
                       <img
                         src={`${import.meta.env.VITE_MAIN_BE_URL}${
@@ -306,8 +306,7 @@ export default function WebsiteTemplateList() {
                               Giá
                             </span>
                             <span className="font-bold text-gray-900 admin-dark:text-gray-100">
-                              {t.price ? <ProductPrice price={t.price} /> : 0}{" "}
-                              VND
+                              {t.price ? <ProductPrice price={t.price} /> : 0} đ
                             </span>
                           </div>
 
@@ -336,9 +335,25 @@ export default function WebsiteTemplateList() {
                             <span className="text-gray-500 admin-dark:text-gray-400">
                               Ngôn ngữ
                             </span>
-                            <span className="text-gray-900 admin-dark:text-gray-100">
-                              {t.available_langs?.join(", ") || "-"}
-                            </span>
+                            <div className="text-gray-900 admin-dark:text-gray-100 flex items-center gap-1">
+                              {t.available_langs?.map((lang, index) =>
+                                lang === "vi" ? (
+                                  <p
+                                    key={`ww-${index}`}
+                                    className="border border-gray-500 px-1 rounded-sm font-semibold"
+                                  >
+                                    Vi
+                                  </p>
+                                ) : (
+                                  <p
+                                    key={`ww-${index}`}
+                                    className="border border-gray-500 px-1 rounded-sm font-semibold"
+                                  >
+                                    En
+                                  </p>
+                                )
+                              ) || "-"}
+                            </div>
                           </div>
                         </div>
 

@@ -1,35 +1,20 @@
-import { BookingAPI } from "@/api/bookingAPI";
-import { CustomerAPI } from "@/api/customerAPI";
-import { ServiceAPI } from "@/api/serviceAPI";
-import { BarChart3, ShoppingCart, Target, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import ServiceNav from "@/pages/managers/service/headerService.jsx";
+import { useServicesAdmin } from "@/hook/serviceAdmin/useServicesAdmin";
+import { useBookingsAdmin } from "@/hook/serviceAdmin/useBookingsAdmin";
+import { useCustomersAdmin } from "@/hook/serviceAdmin/useCustomersAdmin";
 
 export default function ServicesPage() {
-  // Common part
   const [showForm, setShowForm] = useState(false);
-  const [loadingServices, setLoadingServices] = useState(true);
-  const [loadingBookings, setLoadingBookings] = useState(true);
-  const [loadingCustomers, setLoadingCustomers] = useState(true);
+  const [typeForm, setTypeForm] = useState(null); // service || booking || customer
   const location = useLocation();
   const navigate = useNavigate();
-  const [typeForm, setTypeForm] = useState(null); // service || booking || customer
-  // SERVICE LIST
-  const [services, setServices] = useState([]);
-  const [editingService, setEditingService] = useState(null);
-  // BOOKING LIST
-  const [bookings, setBooking] = useState([]);
-  const [editingBooking, setEditingBooking] = useState(null);
-  // CUSTOMER LIST
-  const [customers, setCustomers] = useState([]);
-  const [editingCustomer, setEditingCustomer] = useState(null);
-
-  // Common logic
-  const handleOpen = (nameType) => {
-    setTypeForm(nameType);
-    setShowForm(true);
-  };
+  const [toastMessage, setToastMessage] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   const handleClose = () => {
     setShowForm(false);
@@ -39,151 +24,63 @@ export default function ServicesPage() {
     setEditingCustomer(null);
   };
 
-  // All part of SERVICE
-  const fetchServices = async () => {
-    setLoadingServices(true);
-    try {
-      const res = await fetch(ServiceAPI.getALL());
-      const data = await res.json();
-      setServices(Array.isArray(data.data) ? data.data : []);
-    } catch (err) {
-      console.error("Lỗi khi lấy dữ liệu:", err);
-    } finally {
-      setLoadingServices(false);
-    }
+  const showToast = (message, type) => {
+    setToastMessage({ show: true, message, type });
+    setTimeout(() => {
+      setToastMessage({ show: false, message: "", type: "" });
+    }, 3000);
   };
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
+  const {
+    services,
+    editingService,
+    setEditingService,
+    loadingServices,
+    handleCreateService,
+    handleEditService,
+    handleDeleteService,
+    handleRefetchService,
+  } = useServicesAdmin(handleClose);
 
-  // Default overview service page
+  const {
+    bookings,
+    bookingsAll,
+    editingBooking,
+    setEditingBooking,
+    loadingBookings,
+    loadingBookingsAll,
+    handleCreateBooking,
+    handleEditingBooking,
+    handleDeleteBooking,
+    handleRefetchBooking,
+  } = useBookingsAdmin({
+    onBookingChange: () => handleRefetchCustomer(),
+  });
+
+  const {
+    customers,
+    editingCustomer,
+    setEditingCustomer,
+    loadingCustomers,
+    handleEditingCustomer,
+    handleDeleteCustomer,
+    handleGetBookingForCustomerId,
+    handleRefetchCustomer,
+  } = useCustomersAdmin({
+    bookings,
+    onCustomerChange: () => handleRefetchBooking(),
+    showToast,
+  });
+
   useEffect(() => {
     if (location.pathname === "/managers/services") {
       navigate("/managers/services/service_overview", { replace: true });
     }
   }, [location, navigate]);
 
-  // File: ServicesPage.jsx
-  const handleCreateService = async (formData) => {
-    try {
-      console.log("Dữ liệu nhận từ form:", formData);
-
-      let bodyData = formData;
-      let headers = {};
-
-      // Nếu formData là FormData (tức có append)
-      if (formData instanceof FormData) {
-        bodyData = formData; // giữ nguyên
-      } else {
-        // nếu là object thường (chỉ tạo translation)
-        bodyData = JSON.stringify(formData);
-        headers["Content-Type"] = "application/json";
-      }
-
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/services`,
-        {
-          method: "POST",
-          body: bodyData,
-          headers,
-        }
-      );
-
-      const result = await res.json();
-      if (!result.success) throw new Error(result.message);
-      console.log("Tạo dịch vụ thành công:", result);
-      await fetchServices();
-      handleClose();
-    } catch (err) {
-      console.error("Lỗi khi tạo dịch vụ:", err);
-    }
-  };
-
-  const handleCreateServiceTranslation = async (formData, id) => {
-    try {
-      console.log("Dữ liệu nhận từ form (translation):", formData);
-
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-
-      const payload = {
-        service_id: id,
-        lang: formData.get("lang"),
-        ten_dich_vu: formData.get("ten_dich_vu"),
-        slug: formData.get("slug"),
-        mo_ta: formData.get("mo_ta"),
-        features: formData.get("features"),
-        details: formData.get("details"),
-      };
-
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/service-translations`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      const result = await res.json();
-      if (!res.ok || !result.success) {
-        throw new Error(result.message || "Có lỗi xảy ra khi tạo bản dịch");
-      }
-
-      console.log("Tạo bản dịch thành công:", result);
-      await fetchServices();
-      handleClose();
-    } catch (err) {
-      console.error("Lỗi khi tạo bản dịch:", err);
-    }
-  };
-
-  const handleEditService = async (formData, id) => {
-    try {
-      const dataServiceUpdate = services.find((s) => s.id === id);
-
-      const getTotalLang = dataServiceUpdate.totalLanguages.includes(
-        formData.get("lang")
-      );
-
-      if (!getTotalLang) {
-        await handleCreateServiceTranslation(formData, id);
-        return;
-      }
-
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}`,
-        {
-          method: "PUT",
-          body: formData, // trực tiếp gửi FormData
-        }
-      );
-
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Cập nhật thất bại");
-      console.log("✅ Update thành công:", result);
-      await fetchServices();
-      handleClose();
-    } catch (error) {
-      console.error("❌ Lỗi khi update service:", error.message);
-    }
-  };
-
-  const handleDeleteService = async (id) => {
-    try {
-      const res = await fetch(ServiceAPI.delete(id), {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Error when delete service");
-      }
-      await fetchServices();
-    } catch (err) {
-      console.log("Error: ", err);
-    }
+  const handleOpen = (nameType) => {
+    setTypeForm(nameType);
+    setShowForm(true);
   };
 
   const openEditServiceForm = (service) => {
@@ -192,166 +89,16 @@ export default function ServicesPage() {
     setShowForm(true);
   };
 
-  // All part of booking
-  const fetchBooking = async () => {
-    setLoadingBookings(true);
-    try {
-      const res = await fetch(BookingAPI.getALL());
-      const data = await res.json();
-      setBooking(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error when try get booking data:", err);
-    } finally {
-      setLoadingBookings(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBooking();
-  }, []);
-
-  const handleCreateBooking = async (formData) => {
-    const dataBooking = {
-      name: formData.cusName,
-      phone: formData.cusPhone,
-      email: formData.cusEmail,
-      address: formData.cusAddress,
-      service: formData.service,
-      price: formData.price,
-      bookingDate: formData.bookingDate,
-      completedDate: formData.completedDate,
-    };
-
-    try {
-      const res = await fetch(BookingAPI.create(), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataBooking),
-      });
-
-      if (!res.ok) {
-        throw new Error("Error when try to create new booking");
-      }
-      await fetchBooking();
-      await fetchCustomer();
-      handleClose();
-    } catch (err) {
-      console.error("Error: ", err);
-    }
-  };
-
   const openEditBookingForm = (booking) => {
     setTypeForm("booking");
     setEditingBooking(booking);
     setShowForm(true);
   };
 
-  const handleEditingBooking = async (formData, id) => {
-    try {
-      const dataEditBooking = {
-        status: formData.status,
-        service: formData.service,
-        price: formData.price,
-        bookingDate: formData.bookingDate,
-        completedDate: formData.completedDate,
-      };
-
-      const res = await fetch(BookingAPI.edit(id), {
-        method: "PUT",
-        body: JSON.stringify(dataEditBooking),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Error when edit booking data");
-      }
-      await fetchBooking();
-      handleClose();
-    } catch (err) {
-      console.error("ERROR: ", err);
-    }
-  };
-
-  const handleDeleteBooking = async (id) => {
-    try {
-      const res = await fetch(BookingAPI.delete(id), {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Error when delete service");
-      }
-      setBooking((prev) => prev.filter((item) => item.id !== id));
-    } catch (err) {
-      console.log("Error: ", err);
-    }
-  };
-
-  // All part of customer
-  const fetchCustomer = async () => {
-    setLoadingCustomers(true);
-    try {
-      const res = await fetch(CustomerAPI.getALL());
-      const data = await res.json();
-      setCustomers(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error when try get customer data:", err);
-    } finally {
-      setLoadingCustomers(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCustomer();
-  }, []);
-
-  // Hàm refetch cho con gọi
-  const handleRefetchCustomer = () => {
-    fetchCustomer();
-  };
-
   const openEditCustomerForm = (customer) => {
     setTypeForm("customer");
     setEditingCustomer(customer);
     setShowForm(true);
-  };
-
-  const handleEditingCustomer = async (formData, id) => {
-    try {
-      const res = await fetch(CustomerAPI.edit(id), {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error("Error when trying to update customer");
-      }
-      if (res.ok) {
-        await fetchCustomer();
-        await fetchBooking();
-        handleClose();
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleDeleteCustomer = async (id) => {
-    try {
-      const res = await fetch(CustomerAPI.delete(id), {
-        method: "DELETE",
-      });
-      if (!res.ok) {
-        throw new Error("Error when trying to delete customer");
-      }
-      setCustomers((prev) => prev.filter((c) => c.id !== id));
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   let content = null;
@@ -376,22 +123,31 @@ export default function ServicesPage() {
           setEditingService,
           handleCreateService,
           openEditServiceForm,
-          handleEditService,
+          handleEditService: (formData, id) =>
+            handleEditService(formData, id, handleClose),
           handleDeleteService,
           initDataBooking: bookings,
-          handleCreateBooking,
-          handleDeleteBooking,
+          initDataBookingAll: bookingsAll,
+          handleCreateBooking: (formData) =>
+            handleCreateBooking(formData, handleClose),
+          handleDeleteBooking: (id) => handleDeleteBooking(id, showToast),
           openEditBookingForm,
           editingBooking,
           setEditingBooking,
-          handleEditingBooking,
+          handleEditingBooking: (formData, id) =>
+            handleEditingBooking(formData, id, handleClose),
+          handleRefetchBooking,
           initDataCustomer: customers,
           editingCustomer,
           setEditingCustomer,
           openEditCustomerForm,
-          handleEditingCustomer,
+          handleEditingCustomer: (formData, id) =>
+            handleEditingCustomer(formData, id, handleClose),
           handleDeleteCustomer,
-          handleRefetchCustomer, // Truyền hàm refetch cho con
+          handleRefetchCustomer,
+          showToast,
+          handleGetBookingForCustomerId,
+          handleRefetchService,
         }}
       />
     );
@@ -399,6 +155,14 @@ export default function ServicesPage() {
 
   return (
     <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
+      {toastMessage.show && (
+        <div
+          className={`fixed top-5 right-5 z-[100] p-4 rounded-md shadow-lg text-white
+            ${toastMessage.type === "success" ? "bg-green-500" : "bg-red-500"}`}
+        >
+          {toastMessage.message}
+        </div>
+      )}
       <div className="container mx-auto md:px-2 lg:px-2">
         <div className="flex w-full flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
           <nav className="w-full flex flex-col sm:flex-row sm:flex-wrap sm:max-w-auto gap-2 sm:gap-3">

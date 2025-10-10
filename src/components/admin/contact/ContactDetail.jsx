@@ -1,11 +1,19 @@
-
 import Modal from "../common/Modal";
 
-export default function ContactDetail({ contact, isOpen, onClose, onStatusChange }) {
-  if (!contact) return null
+export default function ContactDetail({
+  contact,
+  isOpen,
+  onClose,
+  onStatusChange,
+}) {
+  if (!contact) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Chi tiết liên hệ">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Chi tiết liên hệ"
+    >
       <div className="space-y-2 sm:text-base">
         {/* Họ tên */}
         <div>
@@ -60,7 +68,14 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
               Ngày gửi
             </span>
             <p className="text-gray-900 shadow admin-dark:text-gray-300 bg-gray-100 admin-dark:bg-gray-700 rounded-md px-3 py-2">
-              {contact.ngay_gui}
+              {new Date(contact.ngay_gui).toLocaleString("vi-VN", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hourCycle: "h23", // Đảm bảo định dạng 24 giờ
+              })}
             </p>
           </div>
 
@@ -79,8 +94,7 @@ export default function ContactDetail({ contact, isOpen, onClose, onStatusChange
             </select>
           </div>
         </div>
-
       </div>
     </Modal>
-  )
+  );
 }

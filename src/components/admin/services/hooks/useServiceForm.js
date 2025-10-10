@@ -13,7 +13,6 @@ export const useServiceForm = (
 
   // Khi edit thì set lại dữ liệu form
   useEffect(() => {
-    console.log("l;l;l;editingService:::", editingService);
     if (editingService?.id) {
       setFormData({
         ten_dich_vu: editingService.ten_dich_vu || "",
@@ -65,7 +64,6 @@ export const useServiceForm = (
       }
     }
 
-
     if (formData.features && typeof formData.features !== "string") {
       newErrors.features = "Features phải là chuỗi (ngăn bằng '#')";
     }
@@ -106,7 +104,10 @@ export const useServiceForm = (
     // 👉 Nếu user upload file thì append file, nếu không thì append string
     if (formData.image_url instanceof File) {
       submitData.append("image_url", formData.image_url);
-    } else if (typeof formData.image_url === "string" && formData.image_url.trim()) {
+    } else if (
+      typeof formData.image_url === "string" &&
+      formData.image_url.trim()
+    ) {
       submitData.append("image_url", formData.image_url);
     }
 
@@ -119,12 +120,10 @@ export const useServiceForm = (
     if (!editingService) {
       handleCreateService(submitData);
     } else {
-      console.log('-----', editingService.id);
+      console.log("-----", editingService.id);
       handleEditService(submitData, editingService.id);
     }
   };
-
-
 
   return {
     lang,

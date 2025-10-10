@@ -17,36 +17,75 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Search, Trash2 } from "lucide-react";
+import { Edit, Search, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
-
-
+import TrashBooking from "./TrashBooking";
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
+import { toast } from "sonner";
 
 export default function ServiceBookingTable() {
-  const { initDataBooking, handleDeleteBooking, openEditBookingForm } =
-    useOutletContext();
+  const {
+    initDataBooking,
+    handleDeleteBooking,
+    openEditBookingForm,
+    handleRefetchBooking,
+  } = useOutletContext(); // src\pages\managers\ServicesPage.jsx
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const [isDeleteShow, setIsDeleteShow] = useState(false);
+  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
+  const [bookingToDeleteId, setBookingToDeleteId] = useState(null);
+
   const changeStatus = (status) => {
     setStatusFilter(status);
     setCurrentPage(1);
   };
 
+  const handleDeleteClick = (bookingId) => {
+    setBookingToDeleteId(bookingId);
+    setShowConfirmDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowConfirmDeleteDialog(false);
+    if (bookingToDeleteId) {
+      try {
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_MAIN_BE_URL
+          }/api/bookings/${bookingToDeleteId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to delete booking");
+        }
+        toast.success("Xóa đơn đặt thành công!");
+        handleRefetchBooking(); // Refresh the main booking list
+      } catch (error) {
+        console.error("Error deleting booking:", error);
+        toast.error("Xóa đơn đặt thất bại.");
+      } finally {
+        setBookingToDeleteId(null);
+      }
+    }
+  };
 
   // Hàm bỏ dấu tiếng Việt
   const removeVietnameseTones = (str) => {
     return str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .normalize("NFD") // tách ký tự base và dấu
+      .replace(/[\u0300-\u036f]/g, "") // xóa dấu
       .replace(/đ/g, "d")
-      .replace(/Đ/g, "D");
+      .replace(/Đ/g, "D"); // thay đ/Đ
   };
 
   // Filter theo search + status
@@ -67,7 +106,6 @@ export default function ServiceBookingTable() {
 
     return matchSearch && matchStatus;
   });
-
 
   // Phân trang
   const totalPages = Math.ceil(filteredBooking.length / itemsPerPage);
@@ -114,7 +152,7 @@ export default function ServiceBookingTable() {
               value={statusFilter}
               onValueChange={changeStatus}
               placeholder="Trạng thái"
-              className={'w-full sm:w-48 lg:w-40 xl:w-50'}
+              className={"w-full sm:w-48 lg:w-40 xl:w-50"}
               options={[
                 { value: "all", label: "Tất cả đơn hàng" },
                 { value: "pending", label: "Chờ xác nhận" },
@@ -124,7 +162,6 @@ export default function ServiceBookingTable() {
                 { value: "cancelled", label: "Hủy" },
               ]}
             />
-
           </div>
         </div>
       </CardHeader>
@@ -172,7 +209,9 @@ export default function ServiceBookingTable() {
                   key={`${item.id}${index}`}
                   className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
                 >
-                  <TableCell className={`text-gray-900 admin-dark:text-gray-200`}>
+                  <TableCell
+                    className={`text-gray-900 admin-dark:text-gray-200`}
+                  >
                     {startIndex + index + 1}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
@@ -183,19 +222,30 @@ export default function ServiceBookingTable() {
                   </TableCell>
                   <TableCell>
                     {item.status === "pending" ? (
-                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">Chờ xác nhận</Badge>
+                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">
+                        Chờ xác nhận
+                      </Badge>
                     ) : item.status === "completed" ? (
-                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">Hoàn thành</Badge>
+                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">
+                        Hoàn thành
+                      </Badge>
                     ) : item.status === "cancelled" ? (
-                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">Hủy</Badge>
+                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">
+                        Hủy
+                      </Badge>
                     ) : item.status === "processing" ? (
-                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">Đang xử lý</Badge>
+                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">
+                        Đang xử lý
+                      </Badge>
                     ) : item.status === "confirmed" ? (
-                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">Đã xác nhận</Badge>
+                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">
+                        Đã xác nhận
+                      </Badge>
                     ) : (
-                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">Không xác định</Badge>
-                    )
-                    }
+                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">
+                        Không xác định
+                      </Badge>
+                    )}
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {Number(item.price).toLocaleString("vi-VN")} ₫
@@ -205,7 +255,9 @@ export default function ServiceBookingTable() {
                   </TableCell>
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {item.completed_date
-                      ? new Date(item.completed_date).toLocaleDateString("vi-VN")
+                      ? new Date(item.completed_date).toLocaleDateString(
+                          "vi-VN"
+                        )
                       : "Không có"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center space-x-2">
@@ -219,7 +271,7 @@ export default function ServiceBookingTable() {
                         {
                           label: "Xóa",
                           icon: Trash2,
-                          onClick: () => handleDeleteBooking(item.id),
+                          onClick: () => handleDeleteClick(item.id),
                         },
                       ]}
                     />
@@ -238,14 +290,21 @@ export default function ServiceBookingTable() {
                 </TableRow>
               )}
             </TableBody>
-
           </Table>
         </div>
 
         {/* Pagination */}
         <div className="flex justify-between items-center mt-4">
-          <div className="text-sm text-gray-500 admin-dark:text-gray-400">
-            Trang {currentPage} / {totalPages || 1}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsDeleteShow(true)}
+              type="button"
+              className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
+            >
+              <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                <Trash2 />
+              </span>
+            </button>
           </div>
           <Pagination
             currentPage={currentPage}
@@ -253,8 +312,29 @@ export default function ServiceBookingTable() {
             setCurrentPage={setCurrentPage}
           />
         </div>
-
       </CardContent>
+
+      {/* Modal hiển thị đơn đặt đã xóa */}
+      {isDeleteShow && (
+        <TrashBooking
+          setIsDeleteShow={setIsDeleteShow}
+          handleRefetchBooking={handleRefetchBooking}
+        />
+      )}
+
+      {/* Delete Confirmation Custom Modal */}
+      {showConfirmDeleteDialog && (
+        <ConfirmationModal
+          isOpen={showConfirmDeleteDialog}
+          onClose={() => {
+            setShowConfirmDeleteDialog(false);
+            setBookingToDeleteId(null);
+          }}
+          onConfirm={confirmDelete}
+          title="Xác nhận xóa đơn đặt"
+          message="Bạn có chắc chắn muốn xóa đơn đặt này không? Hành động này sẽ chuyển đơn đặt vào thùng rác."
+        />
+      )}
     </Card>
   );
 }

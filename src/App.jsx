@@ -74,7 +74,7 @@ function App() {
             <ScrollHandler />
             <Suspense
               fallback={
-                <div className="flex items-center justify-center min-h-screen">
+                <div className="flex items-center justify-center min-h-screen text-gray-500 bg-gray-800">
                   Đang tải...
                 </div>
               }
