@@ -83,8 +83,7 @@ export default function ServiceCustomerTable() {
   const updateCustomerFitIsVip = useCallback(async (id_customer) => {
     try {
       await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/customers/update_vip/${id_customer}`,
         {
           method: "PUT",
@@ -101,8 +100,7 @@ export default function ServiceCustomerTable() {
   const updateCustomerIsVipToOld = useCallback(async (id_customer) => {
     try {
       await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/customers/update_vip_to_old/${id_customer}`,
         {
           method: "PUT",
@@ -248,7 +246,7 @@ export default function ServiceCustomerTable() {
   return (
     <div className="space-y-6">
       <Card className="bg-white border-gray-300 admin-dark:bg-gray-800 admin-dark:border-gray-700">
-        <CardHeader>
+        <div className="px-2 sm:px-4">
           <div className="flex flex-col md:flex-col xl:flex-row items-center justify-between">
             <div>
               <CardTitle className="admin-dark:text-white text-base sm:text-lg font-bold xl:text-start text-center">
@@ -282,8 +280,6 @@ export default function ServiceCustomerTable() {
                   { value: "regular", label: "Khách thường xuyên" },
                   { value: "old", label: "Khách cũ" },
                   { value: "vip", label: "Khách VIP" },
-                  { value: "active", label: "Hoạt động" },
-                  { value: "inactive", label: "Ngừng hoạt động" },
                 ]}
               />
 
@@ -297,7 +293,7 @@ export default function ServiceCustomerTable() {
               </button>
             </div>
           </div>
-        </CardHeader>
+        </div>
         <CardContent className="text-black admin-dark:text-white">
           <div className="rounded-md border border-gray-300 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800 shadow-sm">
             <Table>
@@ -448,7 +444,7 @@ export default function ServiceCustomerTable() {
                 type="button"
                 className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
               >
-                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center bg-gray-200 admin-dark:bg-gray-700 p-1 rounded-md">
                   <Settings />
                   VIP
                 </span>
@@ -458,7 +454,7 @@ export default function ServiceCustomerTable() {
                 type="button"
                 className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
               >
-                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center bg-gray-200 admin-dark:bg-gray-700 p-1 rounded-md">
                   <Trash2 />
                 </span>
               </button>

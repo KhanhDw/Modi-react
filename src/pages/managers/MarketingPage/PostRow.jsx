@@ -64,7 +64,7 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
 
       {/* Ngôn ngữ */}
       <TableCell>
-        <Badge className="text-black admin-dark:text-white font-medium ">
+        <Badge className="text-white admin-dark:text-white font-medium uppercase">
           {post.available_langs.join(", ")}
         </Badge>
       </TableCell>
@@ -72,19 +72,18 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
       {/* Trạng thái */}
       <TableCell>
         <Badge
-          className={`text-white font-medium ${
-            post.status === "published"
-              ? "bg-green-500"
-              : post.status === "draft"
+          className={`text-white font-medium ${post.status === "published"
+            ? "bg-green-500"
+            : post.status === "draft"
               ? "bg-gray-700"
               : "bg-orange-700"
-          }`}
+            }`}
         >
           {post.status === "published"
             ? "Đã đăng"
             : post.status === "draft"
-            ? "Nháp"
-            : "Lưu trữ"}
+              ? "Nháp"
+              : "Lưu trữ"}
         </Badge>
       </TableCell>
 

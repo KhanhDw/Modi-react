@@ -284,9 +284,9 @@ export default function BookingForm() {
           className="space-y-6"
         >
           {/* Customer Information Group */}
-          <fieldset className="border p-4 rounded-md space-y-4">
-            <div className="flex justify-between items-center">
-              <legend className="text-lg font-semibold px-2 text-gray-800 admin-dark:text-gray-200">
+          <fieldset className="border p-4 border-gray-300 admin-dark:border-gray-700 rounded-md space-y-4">
+            <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
+              <legend className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 admin-dark:text-gray-200">
                 Thông tin khách hàng
               </legend>
               {editingBooking && (
@@ -309,21 +309,20 @@ export default function BookingForm() {
             </div>
 
             {showCustomerInfo && (
-              <div className="space-y-4 pt-4">
+              <div className="space-y-4">
                 {/* Mode Switch */}
                 {!editingBooking && (
-                  <div className="flex gap-4 mt-3 mb-2">
+                  <div className="flex items-center justify-start gap-4 mt-3 mb-4">
                     {["existing", "new"].map((mode) => (
                       <Button
                         key={mode}
                         type="button"
                         onClick={() => handleModeChange(mode)}
                         className={`cursor-pointer shadow border-none transition-all
-                    ${
-                      customerMode === mode
-                        ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
-                        : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
-                    }
+                    ${customerMode === mode
+                            ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+                            : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
+                          }
                   `}
                       >
                         <span className="text-xs sm:text-sm md:text-base font-semibold">
@@ -500,17 +499,17 @@ export default function BookingForm() {
           </fieldset>
 
           {/* Service and Time Information Group */}
-          <fieldset className="border p-4 rounded-md space-y-4">
-            <legend className="text-lg font-semibold px-2 text-gray-800 admin-dark:text-gray-200">
+          <fieldset className="border border-gray-300 admin-dark:border-gray-700 p-4 rounded-md">
+            <legend className="text-sm sm:text-base font-semibold px-2 text-gray-800 admin-dark:text-gray-200">
               Thông tin dịch vụ & thời gian
             </legend>
 
             {/* Trạng thái (chỉ khi chỉnh sửa) */}
             {editingBooking && (
-              <div className="space-y-2 p-3 rounded-lg bg-blue-50 admin-dark:bg-blue-900/20 border-2 border-dashed border-blue-400 shadow-md">
+              <div className="p-3 rounded-lg bg-blue-50 admin-dark:bg-blue-900/20 border-2 border-dashed border-blue-400 shadow-md">
                 <Label
                   htmlFor="status"
-                  className="text-black admin-dark:text-gray-100 font-semibold"
+                  className="text-black admin-dark:text-gray-100 font-semibold mb-2"
                 >
                   Cập nhật trạng thái
                 </Label>
@@ -533,7 +532,7 @@ export default function BookingForm() {
 
             {/* Dịch vụ */}
             {initDataService && (
-              <div className="space-y-2">
+              <div className="space-y-2 mt-4">
                 <Label className="text-black admin-dark:text-gray-100">
                   Chọn dịch vụ *
                 </Label>
@@ -557,7 +556,7 @@ export default function BookingForm() {
             )}
 
             {/* Giá */}
-            <div className="space-y-2">
+            <div className="space-y-2 mt-4">
               <Label
                 htmlFor="price"
                 className="text-black admin-dark:text-gray-100 flex items-center justify-between sm:flex-row sm:items-center sm:justify-between gap-3"
@@ -585,7 +584,7 @@ export default function BookingForm() {
             </div>
 
             {/* Số lượng */}
-            <div className="space-y-2">
+            <div className="space-y-2 mt-4">
               <Label
                 htmlFor="quantity"
                 className="text-black admin-dark:text-gray-100"
@@ -604,7 +603,7 @@ export default function BookingForm() {
             </div>
 
             {/* Tổng tiền */}
-            <div className="space-y-2">
+            <div className="space-y-2 mt-4">
               <Label
                 htmlFor="total"
                 className="text-black admin-dark:text-gray-100"
@@ -621,7 +620,7 @@ export default function BookingForm() {
             </div>
 
             {/* Ngày đặt & Ngày bàn giao */}
-            <div className="flex flex-col sm:flex-row sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:gap-4 mt-4">
               {[
                 ["bookingDate", "Ngày đặt đơn", errors.bookingDate],
                 ["completedDate", "Ngày bàn giao", errors.completedDate],

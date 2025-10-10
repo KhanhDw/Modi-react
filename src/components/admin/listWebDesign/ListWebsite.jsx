@@ -182,9 +182,8 @@ export default function WebsiteTemplateList() {
                   <div className="relative w-full sm:w-auto h-40 sm:h-auto flex-shrink-0 md:w-80 ">
                     {t.image_url ? (
                       <img
-                        src={`${import.meta.env.VITE_MAIN_BE_URL}${
-                          t.image_url
-                        }`}
+                        src={`${import.meta.env.VITE_MAIN_BE_URL}${t.image_url
+                          }`}
                         alt={t.name}
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -267,11 +266,10 @@ export default function WebsiteTemplateList() {
                       <div className="h-fit md:pl-2 pt-2 md:pt-0">
                         <div className="flex items-center justify-end md:justify-center gap-2 mb-2">
                           <div
-                            className={`${
-                              t.export_state
-                                ? "bg-green-600 text-white"
-                                : "bg-gray-400 text-gray-900"
-                            } flex mr-4 items-center gap-1 px-2 py-1 rounded-sm`}
+                            className={`${t.export_state
+                              ? "bg-green-600 text-white"
+                              : "bg-gray-400 text-gray-900"
+                              } flex mr-4 items-center gap-1 px-2 py-1 rounded-sm`}
                           >
                             <span className="text-sm sm:text-sm font-semibold text-white">
                               {t.export_state ? "Đã xuất bản" : "Chưa xuất bản"}
@@ -335,19 +333,19 @@ export default function WebsiteTemplateList() {
                             <span className="text-gray-500 admin-dark:text-gray-400">
                               Ngôn ngữ
                             </span>
-                            <div className="text-gray-900 admin-dark:text-gray-100 flex items-center gap-1">
+                            <div className="text-gray-900 admin-dark:text-gray-100 flex items-center gap-1 uppercase">
                               {t.available_langs?.map((lang, index) =>
                                 lang === "vi" ? (
                                   <p
                                     key={`ww-${index}`}
-                                    className="border border-gray-500 px-1 rounded-sm font-semibold"
+                                    className="border border-gray-400 admin-dark:border-gray-700 px-1 rounded-sm font-semibold"
                                   >
                                     Vi
                                   </p>
                                 ) : (
                                   <p
                                     key={`ww-${index}`}
-                                    className="border border-gray-500 px-1 rounded-sm font-semibold"
+                                    className="border border-gray-400 admin-dark:border-gray-700 px-1 rounded-sm font-semibold"
                                   >
                                     En
                                   </p>

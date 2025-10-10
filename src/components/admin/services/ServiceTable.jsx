@@ -78,13 +78,13 @@ export default function ServiceTable() {
   // Lọc theo search
   const filteredService = Array.isArray(initDataService)
     ? initDataService.filter((service) => {
-        const keyword = removeVietnameseTones(search.toLowerCase());
-        const serviceName = removeVietnameseTones(
-          (service.translation?.ten_dich_vu || "").toLowerCase()
-        );
+      const keyword = removeVietnameseTones(search.toLowerCase());
+      const serviceName = removeVietnameseTones(
+        (service.translation?.ten_dich_vu || "").toLowerCase()
+      );
 
-        return serviceName.includes(keyword);
-      })
+      return serviceName.includes(keyword);
+    })
     : [];
 
   const totalPages = Math.ceil(filteredService.length / itemsPerPage);
@@ -101,8 +101,7 @@ export default function ServiceTable() {
   const checkBookingBeforDelete = async (serviceId) => {
     try {
       const res = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/services/${serviceId}/bookings`,
         {
           method: "GET",
@@ -221,9 +220,8 @@ export default function ServiceTable() {
                     <TableCell>
                       {item.image_url ? (
                         <img
-                          src={`${import.meta.env.VITE_MAIN_BE_URL}${
-                            item.image_url
-                          }`}
+                          src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url
+                            }`}
                           alt="Ảnh dịch vụ"
                           style={{
                             width: 60,
@@ -239,21 +237,19 @@ export default function ServiceTable() {
                       onClick={() =>
                         handleReaderDetailService(item.translation?.slug)
                       }
-                      className={`${
-                        !item.totalLanguages.includes("vi")
-                          ? "text-red-400"
-                          : "text-gray-900 admin-dark:text-gray-200"
-                      } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
+                      className={`${!item.totalLanguages.includes("vi")
+                        ? "text-red-400"
+                        : "text-gray-900 admin-dark:text-gray-200"
+                        } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
                     >
                       {item.translation?.ten_dich_vu ||
                         "Chưa có thông tin tiếng việt"}
                     </TableCell>
                     <TableCell
-                      className={`${
-                        !item.totalLanguages.includes("vi")
-                          ? "text-red-400"
-                          : "text-gray-900 admin-dark:text-gray-200"
-                      }  `}
+                      className={`${!item.totalLanguages.includes("vi")
+                        ? "text-red-400"
+                        : "text-gray-900 admin-dark:text-gray-200"
+                        }  `}
                     >
                       {item.translation?.mo_ta ||
                         "Chưa có thông tin tiếng việt"}
@@ -274,9 +270,8 @@ export default function ServiceTable() {
                           return (
                             <span
                               key={`${lang}-${index}`}
-                              className={`${
-                                lang === "vi" ? "bg-red-700" : "bg-blue-600"
-                              } px-2 py-1 text-xs text-white rounded`}
+                              className={`${lang === "vi" ? "bg-red-700" : "bg-blue-600"
+                                } px-2 py-1 text-xs text-white rounded`}
                             >
                               {lang}
                             </span>
@@ -331,7 +326,7 @@ export default function ServiceTable() {
               type="button"
               className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
             >
-              <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+              <span className="transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center rounded-md bg-gray-200 admin-dark:bg-gray-700 p-1">
                 <Trash2 />
               </span>
             </button>

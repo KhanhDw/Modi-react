@@ -44,8 +44,8 @@ function SortableCategoryItem({
       className={cn(
         "p-2 rounded-lg shadow text-gray-900 admin-dark:text-white font-semibold border flex items-center justify-between cursor-pointer transition-colors admin-dark:bg-gray-800",
         selectedCategory?.id === cat.id
-          ? "bg-primary/90 border-none"
-          : "bg-gray-50 hover:bg-gray-100 border-gray-200 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:border-gray-600"
+          ? "bg-primary/90 border-none border-gray-200 admin-dark:border-gray-700"
+          : "bg-gray-50 hover:bg-gray-100 border-gray-200 admin-dark:bg-gray-800 admin-dark:hover:bg-gray-700 admin-dark:border-gray-700"
       )}
       onClick={() => onSelect(cat)}
     >
@@ -59,9 +59,8 @@ function SortableCategoryItem({
         </span>
         {/* <span className="truncate">{cat.name?.[lang] || cat.name}</span> */}
         <span
-          className={`text-xs lg:text-sm text-gray-700 admin-dark:text-white ${
-            selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
-          }`}
+          className={`text-xs lg:text-sm text-gray-700 admin-dark:text-white ${selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
+            }`}
         >
           {cat.name?.[lang] || cat.name}
         </span>

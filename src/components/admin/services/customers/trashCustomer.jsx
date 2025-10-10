@@ -101,8 +101,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
     if (!customerToRestore) return;
     try {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/customers/${customerToRestore}/restore`,
         {
           method: "PUT",
@@ -132,8 +131,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
     if (!customerToDelete) return;
     try {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/customers/${customerToDelete}/hard`,
         {
           method: "DELETE",
@@ -173,7 +171,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
 
   return (
     <div
-      className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center"
+      className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center px-3 sm:px-5"
       onClick={handleClose}
     >
       <Card
@@ -181,12 +179,12 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
         onClick={(e) => e.stopPropagation()}
       >
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="w-full flex flex-col md:flex-row gap-5 items-center justify-between">
             <div>
               <CardTitle className="admin-dark:text-white">
                 Thùng rác: Khách hàng
               </CardTitle>
-              <CardDescription className="admin-dark:text-gray-400">
+              <CardDescription className="admin-dark:text-gray-400 mt-2">
                 Những khách hàng đã bị xóa. Bạn có thể khôi phục hoặc xóa vĩnh
                 viễn.
               </CardDescription>
@@ -200,7 +198,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm kiếm theo tên, email, sđt, cccd..."
-                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white"
+                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white placeholder:text-sm placeholder:md:text-base"
               />
             </div>
           </div>
@@ -255,21 +253,21 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
                       <TableCell className="flex items-center space-x-2">
                         <button
                           onClick={() => getFullInforCustomer(customer.id)}
-                          className="p-2 text-blue-500 hover:text-blue-700"
+                          className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer"
                           title="Xem chi tiết"
                         >
                           <Eye size={18} />
                         </button>
                         <button
                           onClick={() => handleRestoreCustomer(customer.id)}
-                          className="p-2 text-green-500 hover:text-green-700"
+                          className="p-2 text-green-500 hover:text-green-700 cursor-pointer"
                           title="Khôi phục"
                         >
                           <Undo size={18} />
                         </button>
                         <button
                           onClick={() => handleForceDeleteCustomer(customer.id)}
-                          className="p-2 text-red-500 hover:text-red-700"
+                          className="p-2 text-red-500 hover:text-red-700 cursor-pointer"
                           title="Xóa vĩnh viễn"
                         >
                           <Trash2 size={18} />

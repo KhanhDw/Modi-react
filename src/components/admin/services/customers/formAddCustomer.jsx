@@ -186,7 +186,7 @@ function FormAddCustomer({ onCancel, onSuccess }) {
   return (
     <ScrollArea className="flex flex-col justify-center items-center w-full h-full" data-lenis-prevent>
 
-      <div className="flex justify-between items-center mb-8 mt-2 w-full relative p-3 md:p-5">
+      <div className="flex justify-between items-center mt-2 w-full relative p-3 md:p-5">
         <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-extrabold uppercase text-start sm:text-center text-gray-900 admin-dark:text-gray-100 w-full">
           Thêm Khách Hàng Mới
         </h2>

@@ -21,7 +21,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
           <X className="h-4 w-4" strokeWidth={2.2} />
         </button>
 
-        <h3 className="text-lg font-semibold text-gray-900 admin-dark:text-white mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 admin-dark:text-white mb-4">
           {title}
         </h3>
         <p className="text-sm text-gray-600 admin-dark:text-gray-300 mb-6">
@@ -31,13 +31,13 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
         <div className="flex justify-end space-x-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:hover:bg-gray-600 transition-colors"
+            className="px-4 cursor-pointer py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:hover:bg-gray-600 transition-colors"
           >
             Hủy
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+            className="px-4 py-2 cursor-pointer text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
           >
             Xác nhận
           </button>

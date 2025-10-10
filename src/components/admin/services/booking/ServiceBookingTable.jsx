@@ -58,8 +58,7 @@ export default function ServiceBookingTable() {
     if (bookingToDeleteId) {
       try {
         const response = await fetch(
-          `${
-            import.meta.env.VITE_MAIN_BE_URL
+          `${import.meta.env.VITE_MAIN_BE_URL
           }/api/bookings/${bookingToDeleteId}`,
           {
             method: "DELETE",
@@ -256,8 +255,8 @@ export default function ServiceBookingTable() {
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {item.completed_date
                       ? new Date(item.completed_date).toLocaleDateString(
-                          "vi-VN"
-                        )
+                        "vi-VN"
+                      )
                       : "Không có"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center space-x-2">
@@ -301,7 +300,7 @@ export default function ServiceBookingTable() {
               type="button"
               className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
             >
-              <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+              <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center bg-gray-200 admin-dark:bg-gray-700 p-1 rounded-md">
                 <Trash2 />
               </span>
             </button>

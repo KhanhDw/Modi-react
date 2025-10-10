@@ -525,7 +525,7 @@ export default function CustomerForm() {
                 className="w-fit sm:w-40 cursor-pointer bg-black hover:bg-black/80 admin-dark:hover:bg-black/70"
                 onClick={handleClose}
               >
-                <span className="text-sm md:text-base font-semibold">Thoát</span>
+                <span className="text-sm md:text-base font-semibold text-white">Thoát</span>
               </Button>
             </div>
           </form>

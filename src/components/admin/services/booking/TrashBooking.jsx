@@ -104,8 +104,7 @@ export default function TrashBooking({
     if (!bookingToRestore) return;
     try {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/bookings/${bookingToRestore}/restore`,
         {
           method: "PUT",
@@ -135,8 +134,7 @@ export default function TrashBooking({
     if (!bookingToDelete) return;
     try {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/bookings/${bookingToDelete}/hard`,
         {
           method: "DELETE",
@@ -176,7 +174,7 @@ export default function TrashBooking({
 
   return (
     <div
-      className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center"
+      className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center px-3 sm:px-5"
       onClick={handleClose}
     >
       <Card
@@ -184,12 +182,12 @@ export default function TrashBooking({
         onClick={(e) => e.stopPropagation()}
       >
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="w-full flex flex-col md:flex-row gap-5 items-center justify-between">
             <div>
               <CardTitle className="admin-dark:text-white">
                 Thùng rác: Đơn đặt dịch vụ
               </CardTitle>
-              <CardDescription className="admin-dark:text-gray-400">
+              <CardDescription className="admin-dark:text-gray-400 mt-2">
                 Những đơn đặt dịch vụ đã bị xóa. Bạn có thể khôi phục hoặc xóa
                 vĩnh viễn.
               </CardDescription>
@@ -203,7 +201,7 @@ export default function TrashBooking({
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm kiếm theo tên khách hàng, dịch vụ, trạng thái..."
-                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white"
+                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white placeholder:text-sm placeholder:md:text-base"
               />
             </div>
           </div>
@@ -260,21 +258,21 @@ export default function TrashBooking({
                       <TableCell className="flex items-center space-x-2">
                         <button
                           onClick={() => getFullInforBooking(booking.id)}
-                          className="p-2 text-blue-500 hover:text-blue-700"
+                          className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer"
                           title="Xem chi tiết"
                         >
                           <Eye size={18} />
                         </button>
                         <button
                           onClick={() => handleRestoreBooking(booking.id)}
-                          className="p-2 text-green-500 hover:text-green-700"
+                          className="p-2 text-green-500 hover:text-green-700 cursor-pointer"
                           title="Khôi phục"
                         >
                           <Undo size={18} />
                         </button>
                         <button
                           onClick={() => handleForceDeleteBooking(booking.id)}
-                          className="p-2 text-red-500 hover:text-red-700"
+                          className="p-2 text-red-500 hover:text-red-700 cursor-pointer"
                           title="Xóa vĩnh viễn"
                         >
                           <Trash2 size={18} />

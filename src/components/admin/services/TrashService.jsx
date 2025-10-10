@@ -103,8 +103,7 @@ export default function TrashService({
     if (!serviceToRestore) return;
     try {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/services/${serviceToRestore}/restore`,
         {
           method: "PUT",
@@ -134,8 +133,7 @@ export default function TrashService({
     if (!serviceToDelete) return;
     try {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
+        `${import.meta.env.VITE_MAIN_BE_URL
         }/api/services/${serviceToDelete}/hard`,
         {
           method: "DELETE",
@@ -175,7 +173,7 @@ export default function TrashService({
 
   return (
     <div
-      className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center"
+      className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center px-3 sm:px-5"
       onClick={handleClose}
     >
       <Card
@@ -183,12 +181,12 @@ export default function TrashService({
         onClick={(e) => e.stopPropagation()}
       >
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="w-full flex flex-col md:flex-row gap-5 items-center justify-between">
             <div>
               <CardTitle className="admin-dark:text-white">
                 Thùng rác: Dịch vụ
               </CardTitle>
-              <CardDescription className="admin-dark:text-gray-400">
+              <CardDescription className="admin-dark:text-gray-400 mt-2">
                 Những dịch vụ đã bị xóa. Bạn có thể khôi phục hoặc xóa vĩnh
                 viễn.
               </CardDescription>
@@ -202,7 +200,7 @@ export default function TrashService({
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm kiếm theo tên dịch vụ, trạng thái..."
-                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white"
+                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white placeholder:text-sm placeholder:md:text-base"
               />
             </div>
           </div>
@@ -246,21 +244,21 @@ export default function TrashService({
                       <TableCell className="flex items-center space-x-2">
                         <button
                           onClick={() => getFullInforService(service.id)}
-                          className="p-2 text-blue-500 hover:text-blue-700"
+                          className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer"
                           title="Xem chi tiết"
                         >
                           <Eye size={18} />
                         </button>
                         <button
                           onClick={() => handleRestoreService(service.id)}
-                          className="p-2 text-green-500 hover:text-green-700"
+                          className="p-2 text-green-500 hover:text-green-700 cursor-pointer"
                           title="Khôi phục"
                         >
                           <Undo size={18} />
                         </button>
                         <button
                           onClick={() => handleForceDeleteService(service.id)}
-                          className="p-2 text-red-500 hover:text-red-700"
+                          className="p-2 text-red-500 hover:text-red-700 cursor-pointer"
                           title="Xóa vĩnh viễn"
                         >
                           <Trash2 size={18} />
