@@ -36,27 +36,27 @@ export default function NewCustomers({ initDataCustomer, initDataBooking }) {
       className="bg-white rounded-xl shadow-md shadow-gray-300/50 border border-[#e5e7eb]
         admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
     >
-      <CardHeader>
+      <div className="px-2 sm:px-5">
         <CardTitle className="text-gray-900 admin-dark:text-gray-100">
           Khách hàng mới
         </CardTitle>
-        <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
+        <CardDescription className="text-[#5ea25e] admin-dark:text-green-400 mt-1">
           Danh sách khách hàng mới nhất trong tháng
         </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
+      </div>
+      <CardContent className="space-y-2 mt-1">
         <div
           data-lenis-prevent
-          className=" space-y-2 scrollbar-hide max-h-100 overflow-y-auto  overscroll-y-auto lenis-local"
+          className="space-y-2 scrollbar-hide max-h-100 overflow-y-auto overscroll-y-auto lenis-local"
         >
           {sortCustomersByCreatedAt
             .filter((c) => c.status === "active")
             .map((customer, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 border border-gray-300 rounded-md bg-gray-100 admin-dark:bg-gray-700 admin-dark:border-gray-600"
+                className="flex flex-col sm:flex-row md:flex-col xl:flex-row items-center justify-between gap-2 p-3 border border-gray-300 rounded-md bg-gray-50 admin-dark:bg-gray-700 admin-dark:border-gray-600 w-full"
               >
-                <div>
+                <div className="flex flex-col items-start w-full">
                   <p className="font-medium text-xs lg:text-sm text-black admin-dark:text-gray-200">
                     {customer.name}
                   </p>
@@ -64,7 +64,7 @@ export default function NewCustomers({ initDataCustomer, initDataBooking }) {
                     {customer.email || "Chưa có email"}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-start sm:justify-end md:justify-start xl:justify-end gap-5 w-full">
                   <Badge
                     variant="secondary"
                     className="bg-blue-200 shadow text-blue-700 px-2 py-1 admin-dark:bg-blue-900 admin-dark:text-gray-200"
