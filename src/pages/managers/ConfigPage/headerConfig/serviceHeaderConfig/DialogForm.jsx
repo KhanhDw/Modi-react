@@ -202,8 +202,7 @@ export default function DialogForm({
             <Button
               variant="outline"
               onClick={() => setOpen(false)}
-              className="border-gray-300 text-white
-                                admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800 cursor-pointer"
+              className="border-gray-300 text-white hover:text-white hover:bg-gray-600 bg-gray-700 admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-800 cursor-pointer"
             >
               Hủy
             </Button>

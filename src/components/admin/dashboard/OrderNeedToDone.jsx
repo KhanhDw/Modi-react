@@ -80,7 +80,7 @@ export default function OrderNeedToDone({ bookings }) {
         <CardTitle className="text-base sm:text-[18px] md:text-xl lg:text-xl font-bold text-gray-800 admin-dark:text-gray-100">
           Đơn hàng cần hoàn thành
         </CardTitle>
-        <CardDescription>
+        <CardDescription className={'admin-dark:text-gray-400'}>
           Danh sách đơn hàng cần hoàn thành trong hệ thống
         </CardDescription>
       </CardHeader>

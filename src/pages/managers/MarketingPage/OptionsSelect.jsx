@@ -53,7 +53,7 @@ export default function CustomSelect({
           role="listbox"
           tabIndex={-1}
           style={{ minWidth: '100%', width: 'max-content' }}
-          className="absolute z-10 mt-1 h-auto overflow-auto rounded-md border border-gray-200 bg-white text-sm md:text-base font-normal text-gray-700 shadow-md admin-dark:border-gray-700 admin-dark:bg-gray-800 admin-dark:text-white"
+          className="absolute z-100 mt-1 h-auto overflow-auto rounded-md border border-gray-200 bg-white text-sm md:text-base font-normal text-gray-700 shadow-md admin-dark:border-gray-700 admin-dark:bg-gray-800 admin-dark:text-white"
         >
           {options.map((opt) => (
             <li

@@ -31,6 +31,19 @@ function ServiceModi({ data, activeLang }) {
 
   if (!data || data.length === 0) return null;
 
+  //--------------------------
+  const [initialQuantity, setInitialQuantity] = useState([6]); // giá trị BE trả về
+  async function fetchDataQuantity() {
+    const res = await fetch(
+      `${import.meta.env.VITE_MAIN_BE_URL}/api/service-home-page-ui`
+    );
+    const data = await res.json();
+    setInitialQuantity([data.data.quantity]);
+  }
+  useEffect(() => {
+    fetchDataQuantity();
+  }, []);
+
   return (
     <section className="py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
       <div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
@@ -112,7 +125,7 @@ function ServiceModi({ data, activeLang }) {
         ) : (
           // ================= DESKTOP =================
           <div className="flex w-full h-[400px] overflow-hidden rounded-lg shadow-lg">
-            {data.map((service) => (
+            {data.slice(0, initialQuantity).map((service) => (
               <div
                 key={service.id}
                 onMouseEnter={() => setHoveredItemId(service.id)}

@@ -12,11 +12,15 @@ import { ChevronsUpDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export const VIETNAMESE_BANKS = [
-  { code: "VCB", name: "Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)" },
-  { code: "TCB", name: "Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank)" },
-  { code: "ACB", name: "Ngân hàng TMCP Á Châu (ACB)" },
-  { code: "BIDV", name: "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)" },
-  { code: "MB", name: "Ngân hàng TMCP Quân đội (MB Bank)" },
+  { code: "VCB", name: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)" },
+  { code: "TCB", name: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)" },
+  { code: "BIDV", name: "BIDV (Ngân hàng TMCP Đầu tư và Phát triển Việt Nam)" },
+  { code: "CTG", name: "VietinBank (Ngân hàng TMCP Công Thương Việt Nam)" },
+  { code: "ACB", name: "ACB (Ngân hàng TMCP Á Châu)" },
+  { code: "MB", name: "MBBank (Ngân hàng TMCP Quân đội)" },
+  { code: "VPB", name: "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)" },
+  { code: "STB", name: "Sacombank (Ngân hàng TMCP Sài Gòn Thương Tín)" },
+  { code: "TPB", name: "TPBank (Ngân hàng TMCP Tiên Phong)" },
 ];
 
 export default function BankDropdown({ formData, setFormData }) {
@@ -52,7 +56,7 @@ export default function BankDropdown({ formData, setFormData }) {
         className={`
           w-full justify-between border h-[40px]
           border-black/30 text-black bg-white
-          admin-dark:text-gray-100 admin-dark:bg-gray-800
+          admin-dark:text-gray-100 admin-dark:bg-gray-700
           admin-dark:border-gray-600
           hover:bg-gray-100 admin-dark:hover:bg-gray-700 cursor-pointer hover:text-gray-700
           truncate
@@ -73,8 +77,8 @@ export default function BankDropdown({ formData, setFormData }) {
           className={`
       absolute w-full bottom-full mb-1 max-h-60 overflow-auto
       border border-black/30 bg-white text-black
-      admin-dark:bg-gray-900 admin-dark:text-gray-100
-      admin-dark:border-gray-600 rounded-md shadow-md
+      admin-dark:bg-gray-800 admin-dark:text-gray-100
+      admin-dark:border-gray-600 rounded-md shadow-md scrollbar-hide
     `}
           role="listbox"
         >

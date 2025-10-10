@@ -116,7 +116,7 @@ export default function AddPage() {
                             onClick={() => navigate(-1)}
                             className="px-4 sm:px-6 py-2 rounded-md border-gray-300 admin-dark:border-gray-600 bg-gray-600 admin-dark:bg-gray-800 hover:bg-gray-700 admin-dark:hover:bg-gray-700 cursor-pointer"
                         >
-                            <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200">Hủy</span>
+                            <span className="text-sm sm:text-base font-semibold admin-dark:text-gray-200 text-gray-100">Hủy</span>
                         </Button>
                         <Button
                             onClick={onSubmit}

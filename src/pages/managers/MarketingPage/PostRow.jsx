@@ -1,8 +1,8 @@
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Tag, User, SquarePen } from "lucide-react";
-import { Link, useOutletContext, useLocation } from "react-router-dom";
+import { Tag, User, SquarePen } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import DeleteDialog from "./DeleteDialog";
 import { TriangleAlert } from "lucide-react";
 
@@ -78,7 +78,7 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
               : post.status === "draft"
               ? "bg-gray-700"
               : "bg-orange-700"
-          } `}
+          }`}
         >
           {post.status === "published"
             ? "Đã đăng"

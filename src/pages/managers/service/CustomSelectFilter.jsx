@@ -33,7 +33,7 @@ export default function CustomSelectFilter({
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex items-center w-full h-full shadow sm:w-48 justify-between gap-2 rounded-md border border-gray-300 bg-white px-2 py-2 text-black cursor-pointer admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
+        className="flex items-center w-full h-full shadow justify-between gap-2 rounded-md border border-gray-300 bg-white px-2 py-2 text-black cursor-pointer admin-dark:bg-gray-700 admin-dark:text-gray-200 admin-dark:border-gray-600"
       >
         <div className="flex items-center truncate">
           <Filter className="h-4 w-4 mr-1 sm:mr-2 text-gray-600 admin-dark:text-gray-200" />
@@ -57,7 +57,7 @@ export default function CustomSelectFilter({
           role="listbox"
           tabIndex={-1}
           style={{ minWidth: '100%', width: 'max-content' }}
-          className="absolute z-10 mt-1 w-full h-auto overflow-auto rounded-md border border-gray-300 bg-white text-sm text-black shadow-md admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200"
+          className="absolute z-100 mt-1 w-full h-auto overflow-auto rounded-md border border-gray-300 bg-white text-sm text-black shadow-md admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:text-gray-200"
         >
           {options.map((opt) => (
             <li

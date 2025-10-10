@@ -26,10 +26,14 @@ function SiteVisitsModal({ open, onClose }) {
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className="bg-white admin-dark:bg-gray-900 admin-dark:text-gray-100 rounded-lg shadow-lg w-full max-w-2xl p-6 transition-colors">
+        <div
+            onClick={onClose}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white admin-dark:bg-gray-900 admin-dark:text-gray-100 rounded-lg shadow-lg w-full max-w-2xl p-6 transition-colors">
                 {/* Header */}
-                <div className="flex justify-between items-center border-b pb-3 mb-4 border-gray-200 dark:border-gray-700">
+                <div className="flex justify-between items-center border-b pb-3 mb-4 border-gray-300 admin-dark:border-gray-700">
                     <h2 className="text-xl font-bold">Danh sách lượt truy cập</h2>
                     <button
                         onClick={onClose}
@@ -40,7 +44,7 @@ function SiteVisitsModal({ open, onClose }) {
                 </div>
 
                 {/* Bảng */}
-                <div className="overflow-x-auto max-h-96 overflow-y-auto">
+                <div className="overflow-x-auto max-h-96 overflow-y-auto scrollbar-hide">
                     <table data-lenis-prevent className="lenis-local min-w-full border border-gray-300 admin-dark:border-gray-700">
                         <thead className="bg-gray-100 admin-dark:bg-gray-800 text-gray-700 admin-dark:text-gray-300 sticky top-0">
                             <tr>

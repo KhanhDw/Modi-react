@@ -572,7 +572,7 @@ export default function WebsiteTemplateEdit() {
                     type="button"
                     onClick={addTech}
                     variant="outline"
-                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer text-sm sm:text-base"
+                    className="border-gray-300 bg-gray-300 hover:bg-gray-200 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base"
                   >
                     Thêm
                   </Button>
@@ -583,7 +583,7 @@ export default function WebsiteTemplateEdit() {
                       <Badge
                         key={tech}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm"
+                        className="cursor-pointer bg-gray-300 hover:bg-gray-200 admin-dark:bg-gray-600 admin-dark:text-gray-100 text-xs sm:text-sm"
                         onClick={() => removeTech(tech)}
                       >
                         {tech} ×
@@ -613,7 +613,7 @@ export default function WebsiteTemplateEdit() {
                     type="button"
                     onClick={addTopFeature}
                     variant="outline"
-                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer text-sm sm:text-base"
+                    className="border-gray-300 bg-gray-300 hover:bg-gray-200 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base"
                   >
                     Thêm
                   </Button>
@@ -624,7 +624,7 @@ export default function WebsiteTemplateEdit() {
                       <Badge
                         key={top_feature}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm"
+                        className="cursor-pointer bg-gray-300 hover:bg-gray-200 admin-dark:bg-gray-600 admin-dark:text-gray-100 text-xs sm:text-sm"
                         onClick={() => removeTopFeature(top_feature)}
                       >
                         {top_feature} ×
@@ -654,7 +654,7 @@ export default function WebsiteTemplateEdit() {
                     type="button"
                     onClick={addTag}
                     variant="outline"
-                    className="border-gray-300 admin-dark:border-gray-600 admin-dark:bg-gray-800 cursor-pointer text-sm sm:text-base"
+                    className="border-gray-300 bg-gray-300 hover:bg-gray-200 admin-dark:border-gray-600 admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base"
                   >
                     Thêm
                   </Button>
@@ -665,7 +665,7 @@ export default function WebsiteTemplateEdit() {
                       <Badge
                         key={tag}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground admin-dark:bg-gray-700 admin-dark:text-gray-300 text-xs sm:text-sm"
+                        className="cursor-pointer bg-gray-300 hover:bg-gray-200 admin-dark:bg-gray-600 admin-dark:text-gray-100 text-xs sm:text-sm"
                         onClick={() => removeTag(tag)}
                       >
                         {tag} ×

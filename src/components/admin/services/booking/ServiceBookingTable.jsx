@@ -40,17 +40,33 @@ export default function ServiceBookingTable() {
   };
 
 
+  // Hàm bỏ dấu tiếng Việt
+  const removeVietnameseTones = (str) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D");
+  };
+
   // Filter theo search + status
   const filteredBooking = initDataBooking.filter((booking) => {
-    const keyword = search.toLowerCase();
+    const keyword = removeVietnameseTones(search.toLowerCase());
+    const customerName = removeVietnameseTones(
+      (booking.customer_name || "").toLowerCase()
+    );
+    const serviceName = removeVietnameseTones(
+      (booking.service_name || "").toLowerCase()
+    );
+
     const matchSearch =
-      (booking.customer_name?.toLowerCase() || "").includes(keyword) ||
-      (booking.service_name?.toLowerCase() || "").includes(keyword);
+      customerName.includes(keyword) || serviceName.includes(keyword);
+
     const matchStatus =
       statusFilter === "all" || booking.status === statusFilter;
+
     return matchSearch && matchStatus;
   });
-
 
 
   // Phân trang
@@ -68,11 +84,11 @@ export default function ServiceBookingTable() {
     >
       <CardHeader className="px-2 sm:px-3">
         <div className="flex flex-col sm:flex-col md:flex-col lg:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-          <div className="">
-            <CardTitle className="text-lg sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-gray-100">
+          <div className="flex flex-col items-center lg:items-start w-full">
+            <CardTitle className="text-base sm:text-lg font-bold text-gray-900 admin-dark:text-gray-100">
               Danh sách đơn đặt dịch vụ
             </CardTitle>
-            <CardDescription className="text-xs sm:text-center md:text-center lg:text-start sm:text-sm text-gray-600 admin-dark:text-gray-400 mt-1">
+            <CardDescription className="sm:text-center md:text-center lg:text-start text-xs sm:text-base md:text-[16px] text-gray-600 admin-dark:text-gray-400 mt-1">
               Quản lý tất cả đơn đặt dịch vụ
             </CardDescription>
           </div>
@@ -98,11 +114,14 @@ export default function ServiceBookingTable() {
               value={statusFilter}
               onValueChange={changeStatus}
               placeholder="Trạng thái"
+              className={'w-full sm:w-48 lg:w-40 xl:w-50'}
               options={[
-                { value: "all", label: "Tất cả" },
+                { value: "all", label: "Tất cả đơn hàng" },
+                { value: "pending", label: "Chờ xác nhận" },
+                { value: "confirmed", label: "Đã xác nhận" },
+                { value: "processing", label: "Đang xử lý" },
                 { value: "completed", label: "Hoàn thành" },
-                { value: "pending", label: "Chưa hoàn thành" },
-                { value: "destroy", label: "Hủy" },
+                { value: "cancelled", label: "Hủy" },
               ]}
             />
 
@@ -211,7 +230,7 @@ export default function ServiceBookingTable() {
               {currentData.length === 0 && (
                 <TableRow>
                   <TableCell
-                    colSpan={7}
+                    colSpan={8}
                     className="text-center text-gray-500 py-4 admin-dark:text-gray-400"
                   >
                     Không tìm thấy đơn đặt dịch vụ nào.

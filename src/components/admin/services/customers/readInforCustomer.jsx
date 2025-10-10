@@ -25,15 +25,15 @@ function ReadInforCustomer({ data }) {
   const getCustomerTypeInVietnamese = (type) => {
     switch (type) {
       case "new":
-        return "Mới";
+        return "Khách mới";
       case "regular":
-        return "Thường xuyên";
+        return "Khách thường xuyên";
       case "old":
-        return "Cũ";
+        return "Khách Cũ";
       case "vip":
-        return "VIP";
+        return "Khách VIP";
       default:
-        return type || "—";
+        return type || "Chưa cập nhật";
     }
   };
 
@@ -92,48 +92,50 @@ function ReadInforCustomer({ data }) {
       {/* Thông tin khách hàng */}
       <div className="flex flex-col space-y-8">
         <div>
-          <h2 className="text-base sm:text-lg md:text-xl font-bold mb-4 text-gray-900 admin-dark:text-white">
+          <h2 className="text-base sm:text-center sm:text-lg md:text-xl font-bold mb-4 text-gray-900 admin-dark:text-white">
             Thông tin khách hàng
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 text-sm sm:text-base text-gray-700 admin-dark:text-gray-300">
             <div><span className="font-medium">Tên:</span> {customer.name}</div>
-            <div><span className="font-medium">Email:</span> {customer.email || "—"}</div>
-            <div><span className="font-medium">Số điện thoại:</span> {customer.phone || "—"}</div>
-            <div><span className="font-medium">Địa chỉ:</span> {customer.address || "—"}</div>
+            <div><span className="font-medium">Email:</span> {customer.email || "Chưa cập nhật"}</div>
+            <div><span className="font-medium">Số điện thoại:</span> {customer.phone || "Chưa cập nhật"}</div>
+            <div><span className="font-medium">Địa chỉ:</span> {customer.address || "Chưa cập nhật"}</div>
             <div><span className="font-medium">Tổng chi tiêu:</span> {Number(customer.total_spent).toLocaleString("vi-VN")} ₫</div>
             <div><span className="font-medium">Số lần đặt:</span> {customer.booking_count || 0}</div>
             <div><span className="font-medium">Loại khách:</span> {getCustomerTypeInVietnamese(customer.type)}</div>
-            <div><span className="font-medium">Số CCCD:</span> {customer.cccd || "—"}</div>
+            <div><span className="font-medium">Số CCCD:</span> {customer.cccd || "Chưa cập nhật"}</div>
+            <div><span className="font-medium">Số tài khoản:</span> {customer.number_bank || "Chưa cập nhật"}</div>
+            <div><span className="font-medium">Tên ngân hàng:</span> {customer.name_bank || "Chưa cập nhật"}</div>
 
             {/* Ảnh CCCD */}
             <div className="sm:col-span-1">
               <span className="font-medium block mb-2">Ảnh CCCD mặt trước:</span>
-              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
-                <img
-                  src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_top}`}
-                  alt="CCCD mặt trước"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23eee' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='14'%3ELỗi tải ảnh%3C/text%3E%3C/svg%3E";
-                  }}
-                />
+              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700/30 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden text-gray-500 admin-dark:text-gray-300">
+                {customer.img_cccd_top ? (
+                  <img
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_top}`}
+                    alt="CCCD mặt trước"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm md:text-base font-medium">Chưa có ảnh</span>
+                )}
               </div>
             </div>
 
             <div className="sm:col-span-1">
               <span className="font-medium block mb-2">Ảnh CCCD mặt sau:</span>
-              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
-                <img
-                  src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_bottom}`}
-                  alt="CCCD mặt sau"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23eee' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='14'%3ELỗi tải ảnh%3C/text%3E%3C/svg%3E";
-                  }}
-                />
+              <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700/30 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden text-gray-500 admin-dark:text-gray-300">
+                {customer.img_cccd_bottom ? (
+                  <img
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_bottom}`}
+                    alt="CCCD mặt sau"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm md:text-base font-medium">Chưa có ảnh</span>
+                )}
               </div>
             </div>
 
@@ -150,9 +152,9 @@ function ReadInforCustomer({ data }) {
               Chưa đặt dịch vụ nào.
             </p>
           ) : (
-            <div className="overflow-x-auto overflow-y-hidden rounded-lg border border-gray-200 admin-dark:border-gray-700">
+            <div className="overflow-x-auto w-full rounded-lg border border-gray-200 admin-dark:border-gray-700">
               <table className="w-full text-sm sm:text-base">
-                <thead className="bg-gray-100 admin-dark:bg-gray-900">
+                <thead className="bg-gray-100 admin-dark:bg-gray-800">
                   <tr>
                     <th className="px-3 sm:px-4 py-3 text-left font-semibold">Dịch vụ</th>
                     <th className="px-3 sm:px-4 py-3 text-center font-semibold">Trạng thái</th>
@@ -206,6 +208,7 @@ function ReadInforCustomer({ data }) {
             </div>
           )}
         </div>
+
       </div>
 
     </ScrollArea>

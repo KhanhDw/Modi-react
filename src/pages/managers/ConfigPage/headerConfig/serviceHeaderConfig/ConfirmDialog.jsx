@@ -53,10 +53,10 @@ export default function ConfirmDialog({ open, setOpen, type, target, onConfirmDe
                     <Button
                         variant="outline"
                         onClick={() => setOpen(false)}
-                        className="border-gray-300 text-gray-200 hover:bg-gray-700
+                        className="border-gray-300 bg-gray-800 hover:bg-gray-700
                        admin-dark:border-gray-600 admin-dark:text-gray-200 admin-dark:hover:bg-gray-900 cursor-pointer"
                     >
-                        <span className="font-semibold text-sm sm:text-base">Hủy</span>
+                        <span className="font-semibold text-sm sm:text-base text-gray-200">Hủy</span>
                     </Button>
                 </div>
             </DialogContent>

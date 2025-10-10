@@ -7,10 +7,10 @@ const navItems = [
   { to: "service_list", label: "Danh sách dịch vụ", icon: Target },
   {
     to: "service_booking",
-    label: "Danh sách đơn đặt hàng",
+    label: "Đơn đặt hàng",
     icon: ShoppingCart,
   },
-  { to: "service_customer", label: "Danh sách khách hàng", icon: Users },
+  { to: "service_customer", label: "Khách hàng", icon: Users },
 ];
 
 export default function ServiceNav() {
@@ -19,8 +19,8 @@ export default function ServiceNav() {
 
   useEffect(() => {
     // check initial size
-    setIsMd(window.innerWidth < 769); // xs < 640px
-    const handleResize = () => setIsMd(window.innerWidth < 640);
+    setIsMd(window.innerWidth < 769); // xs < 640px, md < 768
+    const handleResize = () => setIsMd(window.innerWidth < 769);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -45,12 +45,11 @@ export default function ServiceNav() {
           key={to}
           to={to}
           className={({ isActive }) =>
-            `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${
-              isActive ||
+            `flex flex-1 items-center sm:flex-col md:flex-row md:justify-center gap-2 p-2 rounded-md text-sm font-medium ${isActive ||
               (to === "service_overview" &&
                 location.pathname === "/managers/services")
-                ? "bg-gray-800 admin-dark:bg-gray-700 text-white"
-                : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-muted/80 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
+              ? "bg-gray-800 admin-dark:bg-gray-700 text-white"
+              : "bg-gray-200 admin-dark:bg-gray-800 admin-dark:text-gray-300 hover:bg-gray-700 admin-dark:hover:bg-gray-700 hover:text-white admin-dark:hover:text-white"
             }`
           }
         >
