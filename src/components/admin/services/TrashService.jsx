@@ -192,7 +192,7 @@ export default function TrashService({
               </CardDescription>
             </div>
             <div className="relative">
-              <Search className="absolute left-3 top-[10px] h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-[10px] h-4 w-4 admin-dark:text-gray-200 text-gray-400" />
               <Input
                 value={searchTerm}
                 onChange={(e) => {
@@ -200,15 +200,16 @@ export default function TrashService({
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm kiếm theo tên dịch vụ, trạng thái..."
-                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white placeholder:text-sm placeholder:md:text-base"
+                className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white placeholder:text-sm placeholder:md:text-base
+                text-gray-700"
               />
             </div>
           </div>
         </CardHeader>
         <CardContent className="flex-grow overflow-y-auto">
-          <div className="rounded-md border admin-dark:border-gray-700">
+          <div className="rounded-md border border-gray-300 admin-dark:border-gray-700">
             <Table>
-              <TableHeader>
+              <TableHeader className={'bg-gray-100 admin-dark:bg-gray-700'}>
                 <TableRow className="admin-dark:border-gray-700">
                   <TableHead className="text-black admin-dark:text-white">
                     STT
@@ -280,7 +281,7 @@ export default function TrashService({
             </Table>
           </div>
         </CardContent>
-        <div className="p-4 border-t admin-dark:border-gray-700">
+        <div className="p-4 border-t border border-gray-300 admin-dark:border-gray-700">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
