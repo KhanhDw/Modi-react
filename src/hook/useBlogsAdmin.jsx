@@ -1,6 +1,13 @@
 // src/hooks/useBlogs.js
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  extractBase64ImagesFromHTML,
+  uploadMultipleImages,
+  replaceBase64WithUrls,
+  deleteUploadedImages,
+} from "@/utils/imageHandler";
+import { useImageManager } from "./useImageManager";
 import axios from "axios";
 
 export default function useBlogs() {
@@ -14,6 +21,8 @@ export default function useBlogs() {
   const [editingBlog, setEditingBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const imageManager = useImageManager();
+  const [uploading, setUploading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState("desc");
   const itemsPerPage = 10;
@@ -134,10 +143,73 @@ export default function useBlogs() {
 
   const handleSubmit = async (formData, file) => {
     try {
-      // Chuẩn bị FormData
+      // ✅ Bước 1: Trích xuất base64 từ content hiện tại
+      const currentBase64Images = extractBase64ImagesFromHTML(formData.content);
+
+      // ✅ Bước 2: So sánh với ảnh đã upload để tìm ảnh cần xóa
+      const imagesToDelete = imageManager.getUnusedImages();
+
+      // ✅ Bước 3: Tìm ảnh mới cần upload (chưa có trong uploadedImages)
+      const newBase64Images = currentBase64Images.filter(
+        (img) => !imageManager.uploadedImages.has(img)
+      );
+
+      let finalContent = formData.content;
+      let uploadedUrls = [];
+
+      // ✅ Bước 4: Upload ảnh mới (nếu có)
+      if (newBase64Images.length > 0) {
+        setUploading(true);
+
+        const uploadResults = await uploadMultipleImages(newBase64Images, 2); // 2 concurrent
+
+        // Xử lý kết quả upload
+        const successfulUploads = uploadResults.filter(
+          (result) => result.success
+        );
+        const failedUploads = uploadResults.filter((result) => !result.success);
+
+        // Cập nhật state với ảnh upload thành công
+        successfulUploads.forEach(({ base64, url }) => {
+          imageManager.markAsUploaded(base64, url);
+          uploadedUrls.push(url);
+        });
+
+        // Thông báo ảnh upload thất bại
+        if (failedUploads.length > 0) {
+          console.warn("Some images failed to upload:", failedUploads);
+          // Có thể cho user chọn: tiếp tục với ảnh lỗi hoặc dừng lại
+          const shouldContinue = window.confirm(
+            `${failedUploads.length} ảnh upload thất bại. Bạn vẫn muốn tiếp tục lưu?`
+          );
+          if (!shouldContinue) {
+            setUploading(false);
+            return;
+          }
+        }
+
+        // ✅ Bước 5: Thay thế base64 bằng URLs trong content
+        const replacements = successfulUploads.map(({ base64, url }) => ({
+          base64,
+          url,
+        }));
+        finalContent = replaceBase64WithUrls(formData.content, replacements);
+
+        setUploading(false);
+      }
+
+      // ✅ Bước 6: Xóa ảnh không dùng nữa (trong background)
+      if (imagesToDelete.length > 0) {
+        // Không cần await - chạy background
+        deleteUploadedImages(imagesToDelete).catch(console.error);
+      }
+
+      // ✅ Bước 7: Cập nhật used images
+      imageManager.updateUsedImages(finalContent);
+
+      // ✅ Bước 8: Gửi data lên server
       const formDataUpload = new FormData();
 
-      // Nếu là thêm mới → gắn author_id
       if (!editingBlog) {
         formDataUpload.append("author_id", user?.id || 1);
       }
@@ -145,46 +217,35 @@ export default function useBlogs() {
       formDataUpload.append("status", formData.status || "draft");
       formDataUpload.append("published_at", formData.published_at || "");
 
-      // Gắn translations (phải stringify)
       formDataUpload.append(
         "translations",
         JSON.stringify([
           {
             lang: formData.lang ?? "vi",
             title: formData.title,
-            content: formData.content,
+            content: finalContent,
           },
         ])
       );
 
-      const method = editingBlog ? "PUT" : "POST";
-
-      // Gắn file ảnh nếu có
+      // Xử lý ảnh cover (giữ nguyên)
       if (file) {
         formDataUpload.append("image", file);
-      } else {
-        if (!editingBlog) {
-          // 👈 chỉ khi thêm mới thì ép có ảnh
-          setError("Ảnh là bắt buộc");
-          return;
-        }
+      } else if (!editingBlog) {
+        setError("Ảnh cover là bắt buộc");
+        return;
       }
 
+      const method = editingBlog ? "PUT" : "POST";
       const url = editingBlog
         ? `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs/${editingBlog.id}`
         : `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs`;
 
-      const res = await fetch(url, {
-        method,
-        body: formDataUpload, // 👈 Không set Content-Type, browser tự set multipart/form-data
-      });
+      const res = await fetch(url, { method, body: formDataUpload });
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        console.error("Error response:", errData);
-        throw new Error("Thao tác không thành công");
-      }
+      if (!res.ok) throw new Error("Thao tác không thành công");
 
+      // ✅ Bước 9: Cleanup sau khi save thành công
       await res.json();
       fetchBlogs();
       setShowForm(false);
@@ -194,6 +255,8 @@ export default function useBlogs() {
     } catch (err) {
       console.error("Lỗi khi submit:", err);
       setError("Thao tác thất bại. Vui lòng kiểm tra dữ liệu.");
+    } finally {
+      setUploading(false);
     }
   };
 

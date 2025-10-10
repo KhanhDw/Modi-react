@@ -2,21 +2,33 @@ import TextEditorWrapper from "@/components/feature/TextEditor/TextEditor";
 import { Textarea } from "@material-tailwind/react";
 import { useEffect, useRef, useState } from "react";
 import CustomSelect from "./OptionSelect";
+import { useImageManager } from "@/hook/useImageManager";
 
-export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel }) {
+export default function BlogForm({
+  blog,
+  onSubmit,
+  handleChangeLang,
+  onCancel,
+}) {
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     image: "",
-    author_id: 1,          // mặc định = 1
-    status: "draft",       // mặc định là draft
+    author_id: 1, // mặc định = 1
+    status: "draft", // mặc định là draft
     published_at: new Date().toISOString().slice(0, 16),
   });
-
+  const imageManager = useImageManager(); // 👈 Thêm image manager
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [activeLang, setActiveLang] = useState("vi");
+  const [uploading, setUploading] = useState(false);
+  useEffect(() => {
+    if (formData.content) {
+      imageManager.updateUsedImages(formData.content);
+    }
+  }, [formData.content]);
 
   // ✅ Thêm state errors
   const [errors, setErrors] = useState({});
@@ -36,7 +48,9 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
           ? blog.published_at.slice(0, 16)
           : prev.published_at,
       }));
-      setPreview(blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : "");
+      setPreview(
+        blog.image ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}` : ""
+      );
       setFile(null);
       setActiveLang(blog.lang ?? "vi");
     } else {
@@ -139,7 +153,9 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
       <div className="w-full lg:w-1/3 flex flex-col gap-5 p-2 sm:p-3 rounded-md md:rounded-lg border-2 border-gray-300 admin-dark:border-gray-700 admin-dark:bg-slate-800">
         {!blog?.id && (
           <div className="flex flex-col items-center justify-center w-full">
-            <p className="text-sm text-center">Chỉ thiết lập thêm nội dung cho Tiếng Việt</p>
+            <p className="text-sm text-center">
+              Chỉ thiết lập thêm nội dung cho Tiếng Việt
+            </p>
             <p className="text-sm text-center">
               Cập nhật nội dung Tiếng Anh (sau khi thêm tin tức).
             </p>
@@ -154,12 +170,15 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             name="vi"
             onClick={() => handleActiveLangbtn("vi")}
             className={`flex items-center shadow justify-center flex-col px-4 py-1.5 rounded-md font-semibold transition-colors cursor-pointer duration-200
-      ${activeLang === "vi"
-                ? "bg-blue-600 text-white admin-dark:bg-blue-500"
-                : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300"
-              }`}
+      ${
+        activeLang === "vi"
+          ? "bg-blue-600 text-white admin-dark:bg-blue-500"
+          : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300"
+      }`}
           >
-            <span className="text-sm md:text-base font-semibold">Tiếng Việt</span>
+            <span className="text-sm md:text-base font-semibold">
+              Tiếng Việt
+            </span>
           </button>
 
           {/* Nút Tiếng Anh - chỉ hiện khi có blog.id */}
@@ -169,12 +188,15 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
               name="en"
               onClick={() => handleActiveLangbtn("en")}
               className={`flex items-center shadow cursor-pointer justify-center flex-col px-4 py-1.5 rounded-md text-sm font-semibold transition-colors duration-200
-        ${activeLang === "en"
-                  ? "bg-blue-600 text-white admin-dark:bg-blue-500"
-                  : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300"
-                }`}
+        ${
+          activeLang === "en"
+            ? "bg-blue-600 text-white admin-dark:bg-blue-500"
+            : "bg-gray-300 text-gray-700 admin-dark:bg-gray-700 admin-dark:text-gray-300"
+        }`}
             >
-              <span className="text-sm md:text-base font-semibold">Tiếng Anh</span>
+              <span className="text-sm md:text-base font-semibold">
+                Tiếng Anh
+              </span>
             </button>
           )}
         </div>
@@ -192,7 +214,11 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             rows={3}
             className={`w-full px-3 py-2 rounded-lg
       border
-      ${errors.title ? "border-red-500" : "border-gray-300 admin-dark:border-gray-700"}
+      ${
+        errors.title
+          ? "border-red-500"
+          : "border-gray-300 admin-dark:border-gray-700"
+      }
       focus:outline-none
       focus:ring-2
       focus:ring-blue-500
@@ -200,7 +226,9 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
       transition-colors duration-200
     `}
           />
-          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+          )}
         </div>
 
         {/* Status & Published */}
@@ -211,31 +239,36 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
             </span>
             <CustomSelect
               value={formData.status}
-              onValueChange={(newValue) => handleChange({ target: { name: "status", value: newValue } })}
+              onValueChange={(newValue) =>
+                handleChange({ target: { name: "status", value: newValue } })
+              }
               options={[
                 { value: "draft", label: "Nháp" },
                 { value: "published", label: "Công khai" },
               ]}
-              className={'w-full sm:w-40'}
+              className={"w-full sm:w-40"}
             />
-
           </div>
 
           <div className="w-fit lg:w-full xl:w-fit">
             <span className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
               Ngày đăng
             </span>
-            <input autoComplete="off"
+            <input
+              autoComplete="off"
               type="datetime-local"
               name="published_at"
               value={formData.published_at}
               onChange={handleChange}
               disabled={!blog} // ❌ không cho chỉnh khi thêm mới
               className={`w-full px-3 py-2 border-2 border-gray-300 rounded-lg admin-dark:border-gray-700 focus:outline-none admin-dark:text-gray-200
-      ${!blog ? "bg-gray-200 admin-dark:bg-gray-800 text-gray-500 cursor-not-allowed" : ""}`} // style khi disable
+      ${
+        !blog
+          ? "bg-gray-200 admin-dark:bg-gray-800 text-gray-500 cursor-not-allowed"
+          : ""
+      }`} // style khi disable
             />
           </div>
-
         </div>
 
         {/* Image */}
@@ -243,15 +276,21 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
           <span className="block text-sm font-medium text-green-800 admin-dark:text-gray-200 pb-2">
             Ảnh
           </span>
-          <input autoComplete="off"
+          <input
+            autoComplete="off"
             type="file"
             accept="image/*"
             name="image"
             onChange={handleFileChange}
-            className={`w-full px-3 py-2 border-2 rounded-lg cursor-pointer admin-dark:text-gray-200 ${errors.image ? "border-red-500" : "border-slate-300 admin-dark:border-slate-700"
-              }`}
+            className={`w-full px-3 py-2 border-2 rounded-lg cursor-pointer admin-dark:text-gray-200 ${
+              errors.image
+                ? "border-red-500"
+                : "border-slate-300 admin-dark:border-slate-700"
+            }`}
           />
-          {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+          {errors.image && (
+            <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+          )}
           <div className="mt-2 w-full flex justify-center items-center rounded-md">
             {preview ? (
               <img
@@ -298,8 +337,13 @@ export default function BlogForm({ blog, onSubmit, handleChangeLang, onCancel })
           Nội dung
         </label>
         <div className="w-full">
-          <TextEditorWrapper ref={editorRef} value={formData.content} />
-          {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content}</p>}
+          <TextEditorWrapper
+            ref={editorRef}
+            value={formData.content}
+          />
+          {errors.content && (
+            <p className="text-red-500 text-sm mt-1">{errors.content}</p>
+          )}
         </div>
       </div>
     </form>
