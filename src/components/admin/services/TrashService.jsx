@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Search, Trash2, Undo, Eye, X } from "lucide-react";
-import ReadInforCustomer from "./readInforCustomer";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { useOutletContext } from "react-router-dom";
 import Pagination from "@/components/admin/services/utils/Pagination.jsx";
@@ -23,150 +22,153 @@ import {
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
-function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
+export default function TrashService({
+  setIsDeleteShow,
+  handleRefetchService,
+}) {
   useLenisLocal(".lenis-local");
-  const [deletedCustomers, setDeletedCustomers] = useState([]);
+  const [deletedServices, setDeletedServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [needsRefetchOnClose, setNeedsRefetchOnClose] = useState(false);
 
-  const [openReadInforCustomer, setOpenReadInforCustomer] = useState(false);
-  const [customerDetail, setCustomerDetail] = useState(null);
-  const [loadingCustomer, setLoadingCustomer] = useState(false);
+  const [openReadInforService, setOpenReadInforService] = useState(false);
+  const [serviceDetail, setServiceDetail] = useState(null);
+  const [loadingService, setLoadingService] = useState(false);
 
   const [showRestoreConfirmModal, setShowRestoreConfirmModal] = useState(false);
-  const [customerToRestore, setCustomerToRestore] = useState(null);
+  const [serviceToRestore, setServiceToRestore] = useState(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
-  const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [serviceToDelete, setServiceToDelete] = useState(null);
 
   const handleClose = () => {
     if (needsRefetchOnClose) {
-      handleRefetchCustomer();
+      handleRefetchService();
     }
     setIsDeleteShow(false);
   };
 
-  const fetchDeletedCustomers = async () => {
+  const fetchDeletedServices = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/customers/inactive`
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/inactive`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch deleted customers");
+        throw new Error("Failed to fetch deleted services");
       }
       const data = await response.json();
-      setDeletedCustomers(data);
+      setDeletedServices(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
-      console.error("Error fetching deleted customers:", error);
-      toast.error("Không thể tải danh sách khách hàng đã xóa.");
+      console.error("Error fetching deleted services:", error);
+      toast.error("Không thể tải danh sách dịch vụ đã xóa.");
     }
   };
 
-  const getFullInforCustomer = async (id) => {
+  const getFullInforService = async (id) => {
     try {
-      setLoadingCustomer(true);
-      setCustomerDetail(null);
-      setOpenReadInforCustomer(false);
+      setLoadingService(true);
+      setServiceDetail(null);
+      setOpenReadInforService(false);
 
       const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/customers/${id}/full`
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}/full`
       );
 
-      if (!res.ok) throw new Error("Không thể lấy dữ liệu khách hàng");
+      if (!res.ok) throw new Error("Không thể lấy dữ liệu dịch vụ");
 
       const data = await res.json();
 
-      setCustomerDetail(data);
-      setOpenReadInforCustomer(true);
+      setServiceDetail(data);
+      setOpenReadInforService(true);
     } catch (err) {
-      console.error("Error fetching customer details:", err);
-      setCustomerDetail(null);
+      console.error("Error fetching service details:", err);
+      setServiceDetail(null);
     } finally {
-      setLoadingCustomer(false);
+      setLoadingService(false);
     }
   };
 
   useEffect(() => {
-    fetchDeletedCustomers();
+    fetchDeletedServices();
   }, []);
 
-  const handleRestoreCustomer = (id) => {
-    setCustomerToRestore(id);
+  const handleRestoreService = (id) => {
+    setServiceToRestore(id);
     setShowRestoreConfirmModal(true);
   };
 
   const confirmRestore = async () => {
     setShowRestoreConfirmModal(false);
-    if (!customerToRestore) return;
+    if (!serviceToRestore) return;
     try {
       const response = await fetch(
         `${
           import.meta.env.VITE_MAIN_BE_URL
-        }/api/customers/${customerToRestore}/restore`,
+        }/api/services/${serviceToRestore}/restore`,
         {
           method: "PUT",
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to restore customer");
+        throw new Error("Failed to restore service");
       }
-      toast.success("Khôi phục khách hàng thành công!");
-      setNeedsRefetchOnClose(true); // Mark that a refetch is needed
-      fetchDeletedCustomers(); // Refresh the list in the current modal
+      toast.success("Khôi phục dịch vụ thành công!");
+      setNeedsRefetchOnClose(true);
+      fetchDeletedServices(); // Refresh the list
     } catch (error) {
-      console.error("Error restoring customer:", error);
-      toast.error("Khôi phục khách hàng thất bại.");
+      console.error("Error restoring service:", error);
+      toast.error("Khôi phục dịch vụ thất bại.");
     } finally {
-      setCustomerToRestore(null);
+      setServiceToRestore(null);
     }
   };
 
-  const handleForceDeleteCustomer = (id) => {
-    setCustomerToDelete(id);
+  const handleForceDeleteService = (id) => {
+    setServiceToDelete(id);
     setShowDeleteConfirmModal(true);
   };
 
   const confirmDelete = async () => {
     setShowDeleteConfirmModal(false);
-    if (!customerToDelete) return;
+    if (!serviceToDelete) return;
     try {
       const response = await fetch(
         `${
           import.meta.env.VITE_MAIN_BE_URL
-        }/api/customers/${customerToDelete}/hard`,
+        }/api/services/${serviceToDelete}/hard`,
         {
           method: "DELETE",
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to permanently delete customer");
+        throw new Error("Failed to permanently delete service");
       }
-      toast.success("Xóa vĩnh viễn khách hàng thành công!");
-      fetchDeletedCustomers(); // Refresh the list
+      toast.success("Xóa vĩnh viễn dịch vụ thành công!");
+      fetchDeletedServices(); // Refresh the list
     } catch (error) {
-      console.error("Error permanently deleting customer:", error);
-      toast.error("Xóa vĩnh viễn khách hàng thất bại.");
+      console.error("Error permanently deleting service:", error);
+      toast.error("Xóa vĩnh viễn dịch vụ thất bại.");
     } finally {
-      setCustomerToDelete(null);
+      setServiceToDelete(null);
     }
   };
 
-  const filteredCustomers = useMemo(() => {
-    return deletedCustomers.filter((customer) => {
+  const filteredServices = useMemo(() => {
+    const filtered = deletedServices.filter((service) => {
       const keyword = searchTerm.toLowerCase();
       return (
-        customer.name.toLowerCase().includes(keyword) ||
-        (customer.email && customer.email.toLowerCase().includes(keyword)) ||
-        (customer.phone && customer.phone.includes(keyword)) ||
-        (customer.cccd && customer.cccd.includes(keyword))
+        (service.translation?.ten_dich_vu?.toLowerCase() || "").includes(
+          keyword
+        ) || (service.status?.toLowerCase() || "").includes(keyword)
       );
     });
-  }, [deletedCustomers, searchTerm]);
+    return filtered;
+  }, [deletedServices, searchTerm]);
 
-  const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = filteredCustomers.slice(
+  const currentData = filteredServices.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -184,10 +186,10 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="admin-dark:text-white">
-                Thùng rác: Khách hàng
+                Thùng rác: Dịch vụ
               </CardTitle>
               <CardDescription className="admin-dark:text-gray-400">
-                Những khách hàng đã bị xóa. Bạn có thể khôi phục hoặc xóa vĩnh
+                Những dịch vụ đã bị xóa. Bạn có thể khôi phục hoặc xóa vĩnh
                 viễn.
               </CardDescription>
             </div>
@@ -199,7 +201,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Tìm kiếm theo tên, email, sđt, cccd..."
+                placeholder="Tìm kiếm theo tên dịch vụ, trạng thái..."
                 className="pl-10 w-64 admin-dark:bg-gray-700 admin-dark:text-white"
               />
             </div>
@@ -214,16 +216,10 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
                     STT
                   </TableHead>
                   <TableHead className="text-black admin-dark:text-white">
-                    Tên khách hàng
+                    Tên dịch vụ
                   </TableHead>
                   <TableHead className="text-black admin-dark:text-white">
-                    Email
-                  </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
-                    SĐT
-                  </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
-                    Số CCCD
+                    Trạng thái
                   </TableHead>
                   <TableHead className="text-black admin-dark:text-white">
                     Thao tác
@@ -232,43 +228,38 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
               </TableHeader>
               <TableBody>
                 {currentData.length > 0 ? (
-                  currentData.map((customer, index) => (
+                  currentData.map((service, index) => (
                     <TableRow
-                      key={customer.id}
+                      key={service.id}
                       className="admin-dark:border-gray-700"
                     >
                       <TableCell className="admin-dark:text-white">
                         {startIndex + index + 1}
                       </TableCell>
                       <TableCell className="admin-dark:text-white">
-                        {customer.name}
+                        {service.translation?.ten_dich_vu ||
+                          "Không có thông tin tiếng việt"}
                       </TableCell>
                       <TableCell className="admin-dark:text-white">
-                        {customer.email || "N/A"}
-                      </TableCell>
-                      <TableCell className="admin-dark:text-white">
-                        {customer.phone || "N/A"}
-                      </TableCell>
-                      <TableCell className="admin-dark:text-white">
-                        {customer.cccd || "N/A"}
+                        {service.status}
                       </TableCell>
                       <TableCell className="flex items-center space-x-2">
                         <button
-                          onClick={() => getFullInforCustomer(customer.id)}
+                          onClick={() => getFullInforService(service.id)}
                           className="p-2 text-blue-500 hover:text-blue-700"
                           title="Xem chi tiết"
                         >
                           <Eye size={18} />
                         </button>
                         <button
-                          onClick={() => handleRestoreCustomer(customer.id)}
+                          onClick={() => handleRestoreService(service.id)}
                           className="p-2 text-green-500 hover:text-green-700"
                           title="Khôi phục"
                         >
                           <Undo size={18} />
                         </button>
                         <button
-                          onClick={() => handleForceDeleteCustomer(customer.id)}
+                          onClick={() => handleForceDeleteService(service.id)}
                           className="p-2 text-red-500 hover:text-red-700"
                           title="Xóa vĩnh viễn"
                         >
@@ -280,7 +271,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={6}
+                      colSpan={4}
                       className="text-center py-4 text-gray-500 admin-dark:text-gray-400"
                     >
                       Thùng rác trống
@@ -300,14 +291,14 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
         </div>
       </Card>
 
-      {/* Modal hiển thị thông tin chi tiết khách hàng */}
-      {openReadInforCustomer && (
+      {/* Modal hiển thị thông tin chi tiết dịch vụ */}
+      {openReadInforService && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 admin-dark:bg-black/60 px-3 sm:px-5 md:px-8"
           onClick={() => {
-            setOpenReadInforCustomer(false);
-            setCustomerDetail(null);
-            setLoadingCustomer(false);
+            setOpenReadInforService(false);
+            setServiceDetail(null);
+            setLoadingService(false);
           }}
         >
           <div
@@ -319,9 +310,9 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
             {/* Nút đóng */}
             <button
               onClick={() => {
-                setOpenReadInforCustomer(false);
-                setCustomerDetail(null);
-                setLoadingCustomer(false);
+                setOpenReadInforService(false);
+                setServiceDetail(null);
+                setLoadingService(false);
               }}
               className="absolute top-1 sm:top-3 right-3 flex items-center justify-center
              w-9 h-9 rounded-full border border-gray-300 bg-white/80 text-gray-600
@@ -339,7 +330,7 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
 
             {/* Nội dung */}
             {(() => {
-              if (loadingCustomer) {
+              if (loadingService) {
                 return (
                   <div className="flex flex-col items-center justify-center py-10 text-gray-700 admin-dark:text-gray-200">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800 admin-dark:border-gray-300"></div>
@@ -348,8 +339,9 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
                     </p>
                   </div>
                 );
-              } else if (customerDetail) {
-                return <ReadInforCustomer data={customerDetail} />;
+              } else if (serviceDetail) {
+                // Placeholder for service detail display
+                return <p>Service Detail: {serviceDetail.id}</p>;
               } else {
                 return (
                   <div className="text-center py-10 text-red-600 admin-dark:text-red-400 font-medium">
@@ -368,8 +360,8 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
           isOpen={showRestoreConfirmModal}
           onClose={() => setShowRestoreConfirmModal(false)}
           onConfirm={confirmRestore}
-          title="Xác nhận khôi phục khách hàng"
-          message="Bạn có chắc chắn muốn khôi phục khách hàng này không?"
+          title="Xác nhận khôi phục dịch vụ"
+          message="Bạn có chắc chắn muốn khôi phục dịch vụ này không?"
         />
       )}
 
@@ -379,12 +371,10 @@ function TrashCustomer({ setIsDeleteShow, handleRefetchCustomer }) {
           isOpen={showDeleteConfirmModal}
           onClose={() => setShowDeleteConfirmModal(false)}
           onConfirm={confirmDelete}
-          title="Xác nhận xóa vĩnh viễn khách hàng"
-          message="Bạn có chắc chắn muốn xóa vĩnh viễn khách hàng này không? Hành động này không thể hoàn tác."
+          title="Xác nhận xóa vĩnh viễn dịch vụ"
+          message="Bạn có chắc chắn muốn xóa vĩnh viễn dịch vụ này không? Hành động này không thể hoàn tác."
         />
       )}
     </div>
   );
 }
-
-export default TrashCustomer;

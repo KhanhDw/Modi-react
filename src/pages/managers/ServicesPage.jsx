@@ -359,6 +359,9 @@ export default function ServicesPage() {
   const handleRefetchBooking = () => {
     fetchBooking();
   };
+  const handleRefetchService = () => {
+    fetchServices();
+  };
 
   const openEditCustomerForm = (customer) => {
     setTypeForm("customer");
@@ -387,7 +390,9 @@ export default function ServicesPage() {
   };
 
   const handleDeleteCustomer = async (id) => {
-    const customerBookings = bookings.filter((booking) => booking.customer_id === id);
+    const customerBookings = bookings.filter(
+      (booking) => booking.customer_id === id
+    );
     if (customerBookings.length > 0) {
       showToast("Không thể xóa khách hàng vì đang có dịch vụ đã đặt.", "error");
       return false;
@@ -411,7 +416,9 @@ export default function ServicesPage() {
   };
 
   const handleGetBookingForCustomerId = (customerId) => {
-    const customerBookings = bookings.filter((booking) => booking.customer_id === customerId);
+    const customerBookings = bookings.filter(
+      (booking) => booking.customer_id === customerId
+    );
     return customerBookings.length > 0;
   };
 
@@ -457,6 +464,7 @@ export default function ServicesPage() {
           handleRefetchCustomer, // Truyền hàm refetch cho con
           showToast,
           handleGetBookingForCustomerId,
+          handleRefetchService,
         }}
       />
     );

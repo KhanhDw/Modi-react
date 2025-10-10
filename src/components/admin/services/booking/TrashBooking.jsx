@@ -31,6 +31,7 @@ export default function TrashBooking({
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [needsRefetchOnClose, setNeedsRefetchOnClose] = useState(false);
 
   const [openReadInforBooking, setOpenReadInforBooking] = useState(false); // Assuming a ReadInforBooking component might exist or be created
   const [bookingDetail, setBookingDetail] = useState(null);
@@ -40,6 +41,13 @@ export default function TrashBooking({
   const [bookingToRestore, setBookingToRestore] = useState(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState(null);
+
+  const handleClose = () => {
+    if (needsRefetchOnClose) {
+      handleRefetchBooking();
+    }
+    setIsDeleteShow(false);
+  };
 
   const fetchDeletedBookings = async () => {
     try {
@@ -107,8 +115,8 @@ export default function TrashBooking({
         throw new Error("Failed to restore booking");
       }
       toast.success("Khôi phục đơn đặt thành công!");
+      setNeedsRefetchOnClose(true);
       fetchDeletedBookings(); // Refresh the list
-      handleRefetchBooking(); // Refresh the main booking list
     } catch (error) {
       console.error("Error restoring booking:", error);
       toast.error("Khôi phục đơn đặt thất bại.");
@@ -169,7 +177,7 @@ export default function TrashBooking({
   return (
     <div
       className="fixed w-full bg-black/70 inset-0 z-50 flex items-center justify-center"
-      onClick={() => setIsDeleteShow(false)}
+      onClick={handleClose}
     >
       <Card
         className="bg-white admin-dark:bg-gray-800 w-full max-w-4xl max-h-[90vh] flex flex-col"

@@ -21,15 +21,50 @@ import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import WarningMessage from "./utils/warningMessage";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
+import TrashService from "./TrashService"; // Import the new TrashService component
+import ConfirmationModal from "@/components/shared/ConfirmationModal"; // Import ConfirmationModal
+import { toast } from "sonner"; // Import toast for notifications
 
 export default function ServiceTable() {
   const navigate = useNavigate();
 
-  const { initDataService, openEditServiceForm, handleDeleteService } =
-    useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
+  const {
+    initDataService,
+    openEditServiceForm,
+    handleDeleteService,
+    handleRefetchService,
+  } = useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
+
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; // số dịch vụ trên 1 trang
+
+  const [isDeleteShow, setIsDeleteShow] = useState(false);
+  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
+  const [serviceToDeleteId, setServiceToDeleteId] = useState(null);
+
+  const handleDeleteClick = (serviceId) => {
+    if (checkBookingBeforDelete(serviceId)) {
+      setServiceToDeleteId(serviceId);
+      setShowConfirmDeleteDialog(true);
+    }
+  };
+
+  const confirmDelete = async () => {
+    setShowConfirmDeleteDialog(false);
+    if (serviceToDeleteId) {
+      try {
+        await handleDeleteService(serviceToDeleteId); // Use the existing handleDeleteService from context
+        toast.success("Xóa dịch vụ thành công!");
+        handleRefetchService(); // Refresh the main service list
+      } catch (error) {
+        console.error("Error deleting service:", error);
+        toast.error("Xóa dịch vụ thất bại.");
+      } finally {
+        setServiceToDeleteId(null);
+      }
+    }
+  };
 
   // Lọc theo search
   const filteredService = Array.isArray(initDataService)
@@ -48,6 +83,32 @@ export default function ServiceTable() {
 
   const handleReaderDetailService = (slug) => {
     navigate(`/managers/services/read-detail/${slug}`);
+  };
+
+  const checkBookingBeforDelete = async (serviceId) => {
+    try {
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/services/${serviceId}/bookings`,
+        {
+          method: "GET",
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        if (data.data.length > 0) {
+          console.log(data.data);
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -228,7 +289,7 @@ export default function ServiceTable() {
                           {
                             label: "Xóa",
                             icon: Trash2,
-                            onClick: () => handleDeleteService(item.id),
+                            onClick: () => handleDeleteClick(item.id),
                           },
                         ]}
                       />
@@ -251,8 +312,16 @@ export default function ServiceTable() {
         </div>
         {/* Pagination */}
         <div className="flex xs:flex-col lg:flex-row justify-between items-center mt-4">
-          <div className="text-sm text-gray-500 admin-dark:text-gray-400">
-            Trang {currentPage} / {totalPages || 1}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsDeleteShow(true)}
+              type="button"
+              className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
+            >
+              <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                <Trash2 />
+              </span>
+            </button>
           </div>
           <WarningMessage />
           <Pagination
@@ -262,6 +331,28 @@ export default function ServiceTable() {
           />
         </div>
       </CardContent>
+
+      {/* Modal hiển thị dịch vụ đã xóa */}
+      {isDeleteShow && (
+        <TrashService
+          setIsDeleteShow={setIsDeleteShow}
+          handleRefetchService={handleRefetchService}
+        />
+      )}
+
+      {/* Delete Confirmation Custom Modal */}
+      {showConfirmDeleteDialog && (
+        <ConfirmationModal
+          isOpen={showConfirmDeleteDialog}
+          onClose={() => {
+            setShowConfirmDeleteDialog(false);
+            setServiceToDeleteId(null);
+          }}
+          onConfirm={confirmDelete}
+          title="Xác nhận xóa dịch vụ"
+          message="Bạn có chắc chắn muốn xóa dịch vụ này không? Hành động này sẽ chuyển dịch vụ vào thùng rác."
+        />
+      )}
     </Card>
   );
 }
