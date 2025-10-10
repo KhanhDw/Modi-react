@@ -17,24 +17,66 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Search, Trash2 } from "lucide-react";
+import { Edit, Search, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import CustomSelectFilter from "@/pages/managers/service/CustomSelectFilter";
 import TableRowActions from "@/pages/managers/service/TableRowActions";
+import TrashBooking from "./TrashBooking";
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
+import { toast } from "sonner";
 
 export default function ServiceBookingTable() {
-  const { initDataBooking, handleDeleteBooking, openEditBookingForm } =
-    useOutletContext(); // src\pages\managers\ServicesPage.jsx
+  const {
+    initDataBooking,
+    handleDeleteBooking,
+    openEditBookingForm,
+    handleRefetchBooking,
+  } = useOutletContext(); // src\pages\managers\ServicesPage.jsx
 
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const [isDeleteShow, setIsDeleteShow] = useState(false);
+  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
+  const [bookingToDeleteId, setBookingToDeleteId] = useState(null);
+
   const changeStatus = (status) => {
     setStatusFilter(status);
     setCurrentPage(1);
+  };
+
+  const handleDeleteClick = (bookingId) => {
+    setBookingToDeleteId(bookingId);
+    setShowConfirmDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowConfirmDeleteDialog(false);
+    if (bookingToDeleteId) {
+      try {
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_MAIN_BE_URL
+          }/api/bookings/${bookingToDeleteId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to delete booking");
+        }
+        toast.success("Xóa đơn đặt thành công!");
+        handleRefetchBooking(); // Refresh the main booking list
+      } catch (error) {
+        console.error("Error deleting booking:", error);
+        toast.error("Xóa đơn đặt thất bại.");
+      } finally {
+        setBookingToDeleteId(null);
+      }
+    }
   };
 
   // Filter theo search + status
@@ -209,7 +251,7 @@ export default function ServiceBookingTable() {
                         {
                           label: "Xóa",
                           icon: Trash2,
-                          onClick: () => handleDeleteBooking(item.id),
+                          onClick: () => handleDeleteClick(item.id),
                         },
                       ]}
                     />
@@ -233,8 +275,16 @@ export default function ServiceBookingTable() {
 
         {/* Pagination */}
         <div className="flex justify-between items-center mt-4">
-          <div className="text-sm text-gray-500 admin-dark:text-gray-400">
-            Trang {currentPage} / {totalPages || 1}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsDeleteShow(true)}
+              type="button"
+              className="flex items-center space-x-2 text-gray-700 admin-dark:text-gray-300 cursor-pointer"
+            >
+              <span className=" transition-all duration-300 text-sm lg:text-base text-gray-700 admin-dark:text-gray-300 hover:text-blue-500 hover:scale-105 font-semibold admin-dark:hover:text-yellow-400 gap-2 flex flex-row items-center border p-1 border-gray-800 admin-dark:border-gray-400 rounded-md">
+                <Trash2 />
+              </span>
+            </button>
           </div>
           <Pagination
             currentPage={currentPage}
@@ -243,6 +293,28 @@ export default function ServiceBookingTable() {
           />
         </div>
       </CardContent>
+
+      {/* Modal hiển thị đơn đặt đã xóa */}
+      {isDeleteShow && (
+        <TrashBooking
+          setIsDeleteShow={setIsDeleteShow}
+          handleRefetchBooking={handleRefetchBooking}
+        />
+      )}
+
+      {/* Delete Confirmation Custom Modal */}
+      {showConfirmDeleteDialog && (
+        <ConfirmationModal
+          isOpen={showConfirmDeleteDialog}
+          onClose={() => {
+            setShowConfirmDeleteDialog(false);
+            setBookingToDeleteId(null);
+          }}
+          onConfirm={confirmDelete}
+          title="Xác nhận xóa đơn đặt"
+          message="Bạn có chắc chắn muốn xóa đơn đặt này không? Hành động này sẽ chuyển đơn đặt vào thùng rác."
+        />
+      )}
     </Card>
   );
 }

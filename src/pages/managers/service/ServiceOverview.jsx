@@ -9,12 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
-import {
-  DollarSign,
-  Layers,
-  Star,
-  Target,
-} from "lucide-react";
+import { DollarSign, Layers, Star, Target } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 
 // Hàm chuyển đổi bookings → services
@@ -170,12 +165,12 @@ export default function ServiceOverview() {
             </CardHeader>
             <CardContent
               data-lenis-prevent
-              className="space-y-2 overflow-y-auto overscroll-y-auto scrollbar-hide lenis-local h-[420px]"
+              className="space-y-2 overflow-y-auto overscroll-y-auto scrollbar-hide lenis-local h-[320px]"
             >
               {topServices.map((service, index) => (
                 <div
                   key={index}
-                  className="flex w-full items-start justify-between gap-3 flex-col p-2 rounded-xl border border-gray-300 bg-white shadow-sm hover:shadow-md transition-all duration-200 admin-dark:bg-gray-800 admin-dark:border-gray-700"
+                  className="flex w-full items-start justify-between gap-3 flex-col p-2 rounded-xl border border-gray-300 bg-white shadow-sm hover:shadow-md transition-all duration-200 admin-dark:bg-slate-700 admin-dark:border-gray-700"
                 >
                   {/* Left content */}
                   <div className="flex items-center">

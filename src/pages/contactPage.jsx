@@ -57,7 +57,6 @@ export default function ContactPage() {
       );
       const data = await res.json();
       setMapUrl(data[0]?.title?.en || "");
-      console.log(data);
     } catch (err) {
       console.error("Lỗi tải dữ liệu", err);
     }

@@ -26,6 +26,11 @@ export default function ServicesPage() {
   // CUSTOMER LIST
   const [customers, setCustomers] = useState([]);
   const [editingCustomer, setEditingCustomer] = useState(null);
+  const [toastMessage, setToastMessage] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   // Common logic
   const handleOpen = (nameType) => {
@@ -39,6 +44,13 @@ export default function ServicesPage() {
     setEditingService(null);
     setEditingBooking(null);
     setEditingCustomer(null);
+  };
+
+  const showToast = (message, type) => {
+    setToastMessage({ show: true, message, type });
+    setTimeout(() => {
+      setToastMessage({ show: false, message: "", type: "" });
+    }, 3000); // Hide toast after 3 seconds
   };
 
   // All part of SERVICE
@@ -310,11 +322,13 @@ export default function ServicesPage() {
       });
 
       if (!res.ok) {
-        throw new Error("Error when delete service");
+        throw new Error("Error when delete booking");
       }
-      setBooking((prev) => prev.filter((item) => item.id !== id));
+      showToast("Xóa đơn đặt thành công!", "success");
+      await fetchBooking(); // Refresh the active bookings list
     } catch (err) {
       console.log("Error: ", err);
+      showToast("Đã xảy ra lỗi khi xóa đơn đặt.", "error");
     }
   };
   // ===================================
@@ -326,7 +340,6 @@ export default function ServicesPage() {
       const res = await fetch(CustomerAPI.getALL());
       const data = await res.json();
       setCustomers(Array.isArray(data) ? data : []);
-      console.log(data);
     } catch (err) {
       console.error("Error when try get customer data:", err);
     } finally {
@@ -341,6 +354,10 @@ export default function ServicesPage() {
   // Hàm refetch cho con gọi
   const handleRefetchCustomer = () => {
     fetchCustomer();
+  };
+
+  const handleRefetchBooking = () => {
+    fetchBooking();
   };
 
   const openEditCustomerForm = (customer) => {
@@ -370,6 +387,12 @@ export default function ServicesPage() {
   };
 
   const handleDeleteCustomer = async (id) => {
+    const customerBookings = bookings.filter((booking) => booking.customer_id === id);
+    if (customerBookings.length > 0) {
+      showToast("Không thể xóa khách hàng vì đang có dịch vụ đã đặt.", "error");
+      return false;
+    }
+
     try {
       const res = await fetch(CustomerAPI.delete(id), {
         method: "DELETE",
@@ -378,9 +401,18 @@ export default function ServicesPage() {
         throw new Error("Error when trying to delete customer");
       }
       setCustomers((prev) => prev.filter((c) => c.id !== id));
+      showToast("Xóa khách hàng thành công!", "success");
+      return true;
     } catch (err) {
       console.error(err);
+      showToast("Đã xảy ra lỗi khi xóa khách hàng.", "error");
+      return false;
     }
+  };
+
+  const handleGetBookingForCustomerId = (customerId) => {
+    const customerBookings = bookings.filter((booking) => booking.customer_id === customerId);
+    return customerBookings.length > 0;
   };
 
   let content = null;
@@ -415,6 +447,7 @@ export default function ServicesPage() {
           editingBooking,
           setEditingBooking,
           handleEditingBooking,
+          handleRefetchBooking, // Truyền hàm refetch cho con
           initDataCustomer: customers,
           editingCustomer,
           setEditingCustomer,
@@ -422,6 +455,8 @@ export default function ServicesPage() {
           handleEditingCustomer,
           handleDeleteCustomer,
           handleRefetchCustomer, // Truyền hàm refetch cho con
+          showToast,
+          handleGetBookingForCustomerId,
         }}
       />
     );
@@ -429,6 +464,14 @@ export default function ServicesPage() {
 
   return (
     <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
+      {toastMessage.show && (
+        <div
+          className={`fixed top-5 right-5 z-[100] p-4 rounded-md shadow-lg text-white
+            ${toastMessage.type === "success" ? "bg-green-500" : "bg-red-500"}`}
+        >
+          {toastMessage.message}
+        </div>
+      )}
       <div className="container mx-auto md:px-2 lg:px-2">
         <div className="flex w-full flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
           <nav className="w-full flex flex-col sm:flex-row sm:flex-wrap sm:max-w-auto gap-2 sm:gap-3">
