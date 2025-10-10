@@ -19,17 +19,26 @@ export function AdminThemeProvider({ children }) {
     } catch {}
   }, [isDark]);
 
+  // QUAN TRỌNG: Áp dụng class trực tiếp lên html/body
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("admin-dark");
+    } else {
+      document.documentElement.classList.remove("admin-dark");
+    }
+
+    // Cleanup khi unmount
+    return () => {
+      document.documentElement.classList.remove("admin-dark");
+    };
+  }, [isDark]);
+
   const toggleTheme = () => setIsDark((prev) => !prev);
 
   return (
     <AdminThemeContext.Provider value={{ isDark, toggleTheme }}>
-      {/* 
-        Bọc children bằng một div riêng, thêm class `admin-dark` nếu isDark = true.
-        Chỉ áp dụng dark mode cho layout admin, không ảnh hưởng theme toàn cục.
-      */}
-      <div className={isDark ? "admin-dark" : ""}>
-        {children}
-      </div>
+      {/* KHÔNG cần div wrapper nữa */}
+      {children}
     </AdminThemeContext.Provider>
   );
 }

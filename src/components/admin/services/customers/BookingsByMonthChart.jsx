@@ -1,18 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import useLenisLocal from "@/hook/useLenisLocal";
 
 export default function TopSpendingCustomers({ initDataCustomer }) {
@@ -24,63 +9,79 @@ export default function TopSpendingCustomers({ initDataCustomer }) {
     .slice(0, 20); // Display top 20 customers
 
   return (
-    <Card
-      className="bg-white rounded-xl shadow-md shadow-gray-300/50 border border-[#e5e7eb]
-        admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50"
-    >
-      <CardHeader>
-        <CardTitle className="text-gray-900 admin-dark:text-gray-100">
+    <div className="bg-white rounded-xl shadow-md shadow-gray-300/50 border border-[#e5e7eb] admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50">
+      {/* Card Header */}
+      <div className="p-6 border-b border-gray-200 admin-dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 admin-dark:text-gray-100">
           Khách hàng chi tiêu hàng đầu
-        </CardTitle>
-        <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
+        </h3>
+        <p className="text-sm text-[#5ea25e] admin-dark:text-green-400 mt-1">
           Danh sách khách hàng có tổng chi tiêu cao nhất.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+      </div>
+
+      {/* Card Content */}
+      <div className="p-6">
         <div
           data-lenis-prevent
-          className="max-h-[400px] overflow-y-auto scrollbar-hide overscroll-y-auto lenis-local-top-customers"
+          className="max-h-96 overflow-y-auto scrollbar-hide overscroll-y-auto lenis-local-top-customers"
         >
-          <Table>
-            <TableHeader>
-              <TableRow className="admin-dark:border-gray-700">
-                <TableHead className="text-black admin-dark:text-white">
+          <table className="w-full">
+            {/* Table Header */}
+            <thead className="sticky top-0 bg-white admin-dark:bg-gray-800 z-10">
+              <tr className="border-b border-gray-200 admin-dark:border-gray-700">
+                <th className="text-left py-3 px-4 font-semibold text-black admin-dark:text-white">
                   STT
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-white">
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-black admin-dark:text-white">
                   Tên
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-white">
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-black admin-dark:text-white">
                   SĐT
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-white text-right">
+                </th>
+                <th className="text-right py-3 px-4 font-semibold text-black admin-dark:text-white">
                   Đã chi
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+                </th>
+              </tr>
+            </thead>
+
+            {/* Table Body */}
+            <tbody>
               {topCustomers.map((customer, index) => (
-                <TableRow key={customer.id} className="admin-dark:border-gray-700">
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell className="font-medium">{customer.name}</TableCell>
-                  <TableCell>{customer.phone || "N/A"}</TableCell>
-                  <TableCell className="text-right">
+                <tr
+                  key={customer.id}
+                  className="border-b border-gray-100 admin-dark:border-gray-700 hover:bg-gray-50 admin-dark:hover:bg-gray-700"
+                >
+                  <td className="py-3 px-4 text-gray-700 admin-dark:text-gray-300">
+                    {index + 1}
+                  </td>
+                  <td className="py-3 px-4 font-medium text-gray-900 admin-dark:text-gray-100">
+                    {customer.name}
+                  </td>
+                  <td className="py-3 px-4 text-gray-700 admin-dark:text-gray-300">
+                    {customer.phone || "N/A"}
+                  </td>
+                  <td className="py-3 px-4 text-right font-medium text-gray-900 admin-dark:text-gray-100">
                     {Number(customer.total_spent || 0).toLocaleString("vi-VN")}{" "}
                     ₫
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
+
               {topCustomers.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan="4" className="h-24 text-center">
+                <tr>
+                  <td
+                    colSpan="4"
+                    className="py-6 text-center text-gray-500 admin-dark:text-gray-400"
+                  >
                     Chưa có dữ liệu chi tiêu.
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

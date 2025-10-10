@@ -27,6 +27,22 @@ export function ThemeProvider({ children }) {
     }
   }, [isDark]);
 
+  // Trong ThemeContext.jsx (main site)
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDark ? "dark" : "light"
+    );
+  }, [isDark]);
+
+  // Trong ThemeLocalContext.jsx (admin site)
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-admin-theme",
+      isDark ? "dark" : "light"
+    );
+  }, [isDark]);
+
   const toggleTheme = () => setIsDark((prev) => !prev);
 
   return (

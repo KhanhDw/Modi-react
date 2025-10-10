@@ -1,40 +1,116 @@
-/* Scrollbar chung (Chrome, Edge, Safari) */
+/* Custom Scrollbar - Simple Version */
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-    background: transparent;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #c0c0c0;
-    /* xám nhạt */
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: content-box;
+  background: #c1c1c1;
+  border-radius: 4px;
 }
 
-/* Dark mode */
-/* Bỏ khoảng cách để áp dụng đúng */
-.admin-dark::-webkit-scrollbar-thumb {
-    background-color: #666;
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
-.admin-dark::-webkit-scrollbar-track {
-    background-color: #222;
-    /* hoặc màu tối phù hợp */
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
-/* Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #c0c0c0 transparent;
+/* Admin Dark Mode - Viết TRƯỚC và dùng !important */
+.admin-dark ::-webkit-scrollbar-track {
+  background: #0f172a !important;
 }
 
-.admin-dark * {
-    scrollbar-color: #666 #222;
-    /* Màu thumb và track */
+.admin-dark ::-webkit-scrollbar-thumb {
+  background: #334155 !important;
+}
+
+.admin-dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569 !important;
+}
+
+.admin-dark {
+  scrollbar-color: #334155 #0f172a !important;
+}
+
+/* Dark Mode - Viết SAU, không dùng !important */
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+/* Dark Mode */
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+.dark {
+  scrollbar-color: #4b5563 #1f2937;
+}
+
+/* Thay vì .dark ::-webkit-scrollbar-track */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+/* Thay vì .admin-dark ::-webkit-scrollbar-track */
+[data-admin-theme="dark"] ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+/* Ẩn scrollbar toàn cục khi ở admin */
+.admin-no-global-scroll {
+  overflow: hidden !important;
+}
+
+.admin-no-global-scroll body {
+  overflow: hidden !important;
+}
+
+.admin-no-global-scroll ::-webkit-scrollbar {
+  display: none !important;
+}
+
+.admin-no-global-scroll {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* Đảm bảo scroll mượt trên mobile */
+.admin-layout-main {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Ẩn scrollbar toàn cục nhưng vẫn cho phép scroll trên mobile */
+.admin-layout-active {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.admin-layout-active body {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Nhưng cho phép scroll trong main content */
+.admin-layout-main {
+  overflow-y: auto;
+  height: 100%;
 }

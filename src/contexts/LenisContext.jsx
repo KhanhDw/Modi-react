@@ -9,7 +9,11 @@ export default function LenisProvider({ children } = {}) {
   const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
-    if (lenis && typeof lenis.enable === "function" && typeof lenis.disable === "function") {
+    if (
+      lenis &&
+      typeof lenis.enable === "function" &&
+      typeof lenis.disable === "function"
+    ) {
       enabled ? lenis.enable() : lenis.disable();
     }
   }, [enabled, lenis]);
