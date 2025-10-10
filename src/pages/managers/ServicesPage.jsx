@@ -105,7 +105,7 @@ export default function ServicesPage() {
 
   if (loadingServices || loadingBookings || loadingCustomers) {
     content = (
-      <div className="p-4 sm:p-6 text-center text-green-800 admin-dark:text-green-400 text-sm sm:text-base">
+      <div className="p-4 sm:p-6 text-center text-green-800 admin-dark:text-green-400 text-sm sm:text-base bg-transparent">
         Đang tải...
       </div>
     );
