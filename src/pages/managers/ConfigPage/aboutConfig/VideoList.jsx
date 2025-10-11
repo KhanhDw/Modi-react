@@ -47,7 +47,7 @@ const VideoList = ({
   };
 
   return (
-    <div className="admin-light:bg-white admin-dark:bg-gray-800 rounded-xl p-6">
+    <div className="admin-light:bg-white admin-dark:bg-gray-800 rounded-xl p-4 sm:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <div>

@@ -192,7 +192,7 @@ const VideoManager = () => {
           />
         </div>
         <div className="w-full self-start flex flex-col mt-8 lg:mt-0">
-          <div className="px-2 py-1 mb-3 border-2 border-gray-400 rounded-md flex md:flex-col sm:flex-row w-full gap-2">
+          <div className="px-2 py-1 mb-3 border-2 border-gray-400 rounded-md flex md:flex-col sm:flex-row gap-2">
             <p className="font-semibold break-all admin-light:text-gray-700 admin-dark:text-gray-300">
               Video giới thiệu: {videoUsing.aboutIntroVideo}
             </p>

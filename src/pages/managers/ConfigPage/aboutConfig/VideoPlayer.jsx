@@ -127,7 +127,7 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
         onClick={onClose}
       >
         <div
-          className="admin-light:bg-white admin-dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-8 m-4 transform transition-all duration-300 ease-in-out"
+          className="admin-light:bg-white admin-dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 m-4 transform transition-all duration-300 ease-in-out"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-6">
@@ -215,7 +215,7 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
 
   return (
     <>
-      <div className="admin-light:bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 rounded-xl p-6 mb-8 relative transition-all duration-200 hover:admin-light:shadow-lg hover:admin-dark:shadow-xl hover:admin-dark:shadow-gray-900/10">
+      <div className="admin-light:bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 rounded-xl p-4 sm:p-6 mb-8 relative transition-all duration-200 hover:admin-light:shadow-lg hover:admin-dark:shadow-xl hover:admin-dark:shadow-gray-900/10">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="admin-light:bg-blue-100 admin-dark:bg-blue-900/30 p-2 rounded-lg">
@@ -351,7 +351,7 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
         </div>
 
         {/* Status Badge */}
-        <div className="flex  mt-4 xs:flex-col md:flex-row items-center md:justify-between gap-3">
+        <div className="flex mt-4 flex-col md:flex-row items-center md:justify-between gap-3">
           <button
             onClick={() => setIsModalOpen(true)}
             type="button"
