@@ -5,7 +5,7 @@ import { TextEditor } from "./common";
 function AboutPreview({ about, lang }) {
   return (
     <motion.div
-      className="p-1 sm:p-2 bg-white h-full admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-3 sm:space-y-4"
+      className="p-1 sm:p-2 bg-white admin-dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-lg space-y-3 sm:space-y-4"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}

@@ -211,7 +211,7 @@ export default function AboutConfig() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 ">
       <div className="flex flex-col space-y-6">
         {/* Header with controls */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

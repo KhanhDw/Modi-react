@@ -170,7 +170,7 @@ const VideoManager = () => {
   //============================================
 
   return (
-    <div className="w-full flex items-center justify-center flex-col ">
+    <div className="w-full">
       <h1 className="uppercase font-bold text-xl mb-4 text-gray-900 admin-dark:text-white">
         Cấu hình video banner
       </h1>
