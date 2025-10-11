@@ -112,6 +112,7 @@ function ServiceModi({ data, activeLang }) {
 
                     {/* CTA */}
                     <a
+                      hidden="true"
                       className="mt-3 inline-flex items-center justify-center px-5 py-2.5 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors focus:bg-blue-600"
                       href={service.href || "#"}
                     >
@@ -155,6 +156,7 @@ function ServiceModi({ data, activeLang }) {
                       {service.description?.[activeLang]}
                     </p>
                     <a
+                      hidden="true"
                       className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white hover:bg-blue-500 hover:text-gray-900 transition-colors"
                       href={service.href || "#"}
                     >
