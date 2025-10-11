@@ -60,9 +60,9 @@ const VideoUpload = ({ onUploadSuccess, onUploadError }) => {
 
       if (response.data.success) {
         if (onUploadSuccess) {
-          handleUpdateImageUrl(response.data.data.filename).then((e) => {
-            console.log(response.data.data.filename);
-          });
+          // handleUpdateImageUrl(response.data.data.filename).then((e) => {
+          //   console.log(response.data.data.filename);
+          // });
           onUploadSuccess();
         }
       } else {

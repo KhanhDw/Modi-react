@@ -1,8 +1,72 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { formatFileSize, formatDate } from "./utils";
+import useUpdateImageUrl from "./updateImage_url";
 
-const VideoPlayer = ({ selectedVideo, onDeleteVideo }) => {
+const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
   const videoRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("intro"); // 'intro' or 'banner'
+
+  const {
+    item: introItem,
+    load: loadIntro,
+    handleUpdateImageUrl: updateIntroVideo,
+    updating: updatingIntro,
+  } = useUpdateImageUrl({ slug: "about", type: "about_intro" });
+
+  const {
+    item: bannerItem,
+    load: loadBanner,
+    handleUpdateImageUrl: updateBannerVideo,
+    updating: updatingBanner,
+  } = useUpdateImageUrl({ slug: "about", type: "banner_video" });
+
+  const handleSaveChanges = async () => {
+    if (!selectedVideo?.filename) return;
+
+    const newUrl = selectedVideo.filename;
+    let result;
+
+    if (selectedOption === "intro") {
+      console.log("Updating intro video to:", newUrl);
+      const introItem = await loadIntro();
+      if (introItem?.id) {
+        result = await updateIntroVideo(introItem.id, newUrl);
+      } else {
+        const errorMsg = "Failed to load intro item for update.";
+        result = {
+          ok: false,
+          error: errorMsg,
+        };
+        console.error(errorMsg);
+      }
+    } else {
+      console.log("Updating banner video to:", newUrl);
+      const bannerItem = await loadBanner();
+      if (bannerItem?.id) {
+        result = await updateBannerVideo(bannerItem.id, newUrl);
+      } else {
+        const errorMsg = "Failed to load banner item for update.";
+        result = {
+          ok: false,
+          error: errorMsg,
+        };
+        console.error(errorMsg);
+      }
+    }
+
+    if (result.ok) {
+      console.log("Successfully updated video URL.");
+      if (onUpdateSuccess) {
+        onUpdateSuccess();
+      }
+      // You can add a toast notification here, e.g., toast.success("Cập nhật thành công!");
+    } else {
+      console.error("Failed to update video URL:", result.error);
+      // You can add a toast notification here, e.g., toast.error("Cập nhật thất bại!");
+    }
+    setIsModalOpen(false);
+  };
 
   if (!selectedVideo) {
     return (
@@ -46,58 +110,117 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo }) => {
     return `${truncatedName}...${extension}`;
   };
 
-  return (
-    <div className="admin-light:bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 rounded-xl p-6 mb-8 relative transition-all duration-200 hover:admin-light:shadow-lg hover:admin-dark:shadow-xl hover:admin-dark:shadow-gray-900/10">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="admin-light:bg-blue-100 admin-dark:bg-blue-900/30 p-2 rounded-lg">
-          <svg
-            className="w-6 h-6 admin-light:text-blue-600 admin-dark:text-blue-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-            />
-          </svg>
-        </div>
-        <div className="min-w-0 flex-1">
-          <h2 className="admin-light:text-gray-800 admin-dark:text-white text-xl font-semibold truncate">
-            Đang phát: {selectedVideo.filename}
-          </h2>
-          <p className="admin-light:text-gray-500 admin-dark:text-gray-400 text-sm truncate">
-            Streaming chất lượng cao
-          </p>
-        </div>
-      </div>
+  const VideoSettingsModal = ({
+    isOpen,
+    onClose,
+    video,
+    onSave,
+    isSaving,
+    introVideoName,
+    bannerVideoName,
+  }) => {
+    if (!isOpen) return null;
 
-      {/* Video Player */}
-      <div className="relative mb-6">
-        <video
-          ref={videoRef}
-          controls
-          autoPlay
-          className="w-full max-w-4xl h-auto rounded-xl admin-light:shadow-lg admin-dark:shadow-xl admin-dark:shadow-black/20 transition-shadow duration-200"
-          key={selectedVideo.url}
+    return (
+      <div
+        className="fixed inset-0 bg-black/80 bg-opacity-60 z-50 flex justify-center items-center"
+        onClick={onClose}
+      >
+        <div
+          className="admin-light:bg-white admin-dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-8 m-4 transform transition-all duration-300 ease-in-out"
+          onClick={(e) => e.stopPropagation()}
         >
-          <source
-            src={selectedVideo.url}
-            type="video/mp4"
-          />
-          Trình duyệt của bạn không hỗ trợ video tag.
-        </video>
-      </div>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold admin-light:text-gray-800 admin-dark:text-white">
+              Thiết lập Video
+            </h3>
+            <button
+              onClick={onClose}
+              className="admin-light:text-gray-400 admin-dark:text-gray-500 hover:admin-light:text-gray-600 hover:admin-dark:text-gray-300 transition-colors"
+            >
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
 
-      {/* Video Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 admin-light:bg-gray-50 admin-dark:bg-gray-700/50 rounded-lg">
-        <div className="flex items-start gap-3 p-3 admin-light:bg-white admin-dark:bg-gray-600 rounded-lg transition-colors duration-200">
-          <div className="admin-light:bg-green-100 admin-dark:bg-green-900/30 p-2 rounded-lg flex-shrink-0 mt-0.5">
+          <div className="space-y-4">
+            <div
+              className={`p-5 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                selectedOption === "intro"
+                  ? "border-blue-500 admin-light:bg-blue-50 admin-dark:bg-blue-900/20 shadow-md"
+                  : "admin-light:bg-gray-50 admin-dark:bg-gray-700/50 border-transparent hover:admin-light:bg-gray-100 hover:admin-dark:bg-gray-700"
+              }`}
+              onClick={() => setSelectedOption("intro")}
+            >
+              <p className="text-lg font-semibold admin-light:text-gray-900 admin-dark:text-white">
+                Video giới thiệu
+              </p>
+              <p className="text-sm admin-light:text-gray-500 admin-dark:text-gray-400 truncate">
+                Đang dùng: {introVideoName || "Chưa thiết lập"}
+              </p>
+              <p className="text-sm admin-light:text-blue-600 admin-dark:text-blue-400 truncate font-medium">
+                Sẽ thay bằng: {video.filename}
+              </p>
+            </div>
+
+            <div
+              className={`p-5 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                selectedOption === "banner"
+                  ? "border-blue-500 admin-light:bg-blue-50 admin-dark:bg-blue-900/20 shadow-md"
+                  : "admin-light:bg-gray-50 admin-dark:bg-gray-700/50 border-transparent hover:admin-light:bg-gray-100 hover:admin-dark:bg-gray-700"
+              }`}
+              onClick={() => setSelectedOption("banner")}
+            >
+              <p className="text-lg font-semibold admin-light:text-gray-900 admin-dark:text-white">
+                Video banner
+              </p>
+              <p className="text-sm admin-light:text-gray-500 admin-dark:text-gray-400 truncate">
+                Đang dùng: {bannerVideoName || "Chưa thiết lập"}
+              </p>
+              <p className="text-sm admin-light:text-blue-600 admin-dark:text-blue-400 truncate font-medium">
+                Sẽ thay bằng: {video.filename}
+              </p>
+            </div>
+          </div>
+          <div className="mt-8 flex justify-end gap-3">
+            <button
+              onClick={onClose}
+              className="px-6 py-2.5 rounded-lg admin-light:bg-gray-200 admin-dark:bg-gray-700 admin-light:text-gray-800 admin-dark:text-gray-200 font-semibold hover:admin-light:bg-gray-300 hover:admin-dark:bg-gray-600 transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={onSave}
+              disabled={isSaving}
+              className="px-6 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-sm disabled:bg-blue-400 disabled:cursor-not-allowed"
+            >
+              {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <div className="admin-light:bg-white admin-dark:bg-gray-800 border border-gray-200 admin-dark:border-gray-700 rounded-xl p-6 mb-8 relative transition-all duration-200 hover:admin-light:shadow-lg hover:admin-dark:shadow-xl hover:admin-dark:shadow-gray-900/10">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="admin-light:bg-blue-100 admin-dark:bg-blue-900/30 p-2 rounded-lg">
             <svg
-              className="w-5 h-5 admin-light:text-green-600 admin-dark:text-green-400"
+              className="w-6 h-6 admin-light:text-blue-600 admin-dark:text-blue-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -106,85 +229,138 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
               />
             </svg>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="admin-light:text-gray-600 admin-dark:text-gray-300 text-sm font-medium mb-1">
-              Tên file
+            <h2 className="admin-light:text-gray-800 admin-dark:text-white text-xl font-semibold truncate">
+              Đang phát: {selectedVideo.filename}
+            </h2>
+            <p className="admin-light:text-gray-500 admin-dark:text-gray-400 text-sm truncate">
+              Streaming chất lượng cao
             </p>
-            <div className="group relative">
-              <p className="admin-light:text-gray-800 admin-dark:text-white font-semibold truncate">
-                {truncateFilename(selectedVideo.filename)}
+          </div>
+        </div>
+
+        {/* Video Player */}
+        <div className="relative mb-6">
+          <video
+            ref={videoRef}
+            controls
+            autoPlay
+            className="w-full max-w-4xl h-auto rounded-xl admin-light:shadow-lg admin-dark:shadow-xl admin-dark:shadow-black/20 transition-shadow duration-200"
+            key={selectedVideo.url}
+          >
+            <source
+              src={selectedVideo.url}
+              type="video/mp4"
+            />
+            Trình duyệt của bạn không hỗ trợ video tag.
+          </video>
+        </div>
+
+        {/* Video Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 admin-light:bg-gray-50 admin-dark:bg-gray-700/50 rounded-lg">
+          <div className="flex items-start gap-3 p-3 admin-light:bg-white admin-dark:bg-gray-600 rounded-lg transition-colors duration-200">
+            <div className="admin-light:bg-green-100 admin-dark:bg-green-900/30 p-2 rounded-lg flex-shrink-0 mt-0.5">
+              <svg
+                className="w-5 h-5 admin-light:text-green-600 admin-dark:text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="admin-light:text-gray-600 admin-dark:text-gray-300 text-sm font-medium mb-1">
+                Tên file
               </p>
-              {/* Tooltip hiển thị full tên file khi hover */}
-              <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-20">
-                <div className="admin-light:bg-gray-800 admin-dark:bg-gray-900 text-white text-xs rounded py-1 px-2 whitespace-nowrap shadow-lg">
-                  {selectedVideo.filename}
+              <div className="group relative">
+                <p className="admin-light:text-gray-800 admin-dark:text-white font-semibold truncate">
+                  {truncateFilename(selectedVideo.filename)}
+                </p>
+                {/* Tooltip hiển thị full tên file khi hover */}
+                <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-20">
+                  <div className="admin-light:bg-gray-800 admin-dark:bg-gray-900 text-white text-xs rounded py-1 px-2 whitespace-nowrap shadow-lg">
+                    {selectedVideo.filename}
+                  </div>
+                  <div className="w-3 h-3 admin-light:bg-gray-800 admin-dark:bg-gray-900 transform rotate-45 absolute -bottom-1 left-3"></div>
                 </div>
-                <div className="w-3 h-3 admin-light:bg-gray-800 admin-dark:bg-gray-900 transform rotate-45 absolute -bottom-1 left-3"></div>
               </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 admin-light:bg-white admin-dark:bg-gray-600 rounded-lg transition-colors duration-200">
+            <div className="admin-light:bg-purple-100 admin-dark:bg-purple-900/30 p-2 rounded-lg flex-shrink-0">
+              <svg
+                className="w-5 h-5 admin-light:text-purple-600 admin-dark:text-purple-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                />
+              </svg>
+            </div>
+            <div>
+              <p className="admin-light:text-gray-600 admin-dark:text-gray-300 text-sm font-medium">
+                Kích thước
+              </p>
+              <p className="admin-light:text-gray-800 admin-dark:text-white font-semibold">
+                {formatFileSize(selectedVideo.size)}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 admin-light:bg-white admin-dark:bg-gray-600 rounded-lg transition-colors duration-200">
+            <div className="admin-light:bg-orange-100 admin-dark:bg-orange-900/30 p-2 rounded-lg flex-shrink-0">
+              <svg
+                className="w-5 h-5 admin-light:text-orange-600 admin-dark:text-orange-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p className="admin-light:text-gray-600 admin-dark:text-gray-300 text-sm font-medium">
+                Ngày upload
+              </p>
+              <p className="admin-light:text-gray-800 admin-dark:text-white font-semibold">
+                {formatDate(selectedVideo.created)}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 p-3 admin-light:bg-white admin-dark:bg-gray-600 rounded-lg transition-colors duration-200">
-          <div className="admin-light:bg-purple-100 admin-dark:bg-purple-900/30 p-2 rounded-lg flex-shrink-0">
-            <svg
-              className="w-5 h-5 admin-light:text-purple-600 admin-dark:text-purple-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-              />
-            </svg>
-          </div>
-          <div>
-            <p className="admin-light:text-gray-600 admin-dark:text-gray-300 text-sm font-medium">
-              Kích thước
-            </p>
-            <p className="admin-light:text-gray-800 admin-dark:text-white font-semibold">
-              {formatFileSize(selectedVideo.size)}
-            </p>
-          </div>
-        </div>
+        {/* Status Badge */}
+        <div className="flex  mt-4 xs:flex-col md:flex-row items-center md:justify-between gap-3">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            type="button"
+            className="inline-flex items-center gap-2 admin-light:bg-blue-100 admin-dark:bg-blue-900/30 admin-light:text-blue-700 admin-dark:text-blue-400 px-4 py-2 rounded-lg text-sm font-medium hover:admin-light:bg-blue-200 hover:admin-dark:bg-blue-900/50 transition-colors"
+          >
+            Thiết lập video
+          </button>
 
-        <div className="flex items-center gap-3 p-3 admin-light:bg-white admin-dark:bg-gray-600 rounded-lg transition-colors duration-200">
-          <div className="admin-light:bg-orange-100 admin-dark:bg-orange-900/30 p-2 rounded-lg flex-shrink-0">
-            <svg
-              className="w-5 h-5 admin-light:text-orange-600 admin-dark:text-orange-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
-          <div>
-            <p className="admin-light:text-gray-600 admin-dark:text-gray-300 text-sm font-medium">
-              Ngày upload
-            </p>
-            <p className="admin-light:text-gray-800 admin-dark:text-white font-semibold">
-              {formatDate(selectedVideo.created)}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Status Badge */}
-      <div className="flex  mt-4 xs:flex-col md:flex-row items-center md:justify-between gap-3">
-        <div className="inline-flex items-center gap-2 admin-light:bg-green-50 admin-dark:bg-green-900/20 admin-light:text-green-700 admin-dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium">
+          {/* <div className="inline-flex items-center gap-2 admin-light:bg-green-50 admin-dark:bg-green-900/20 admin-light:text-green-700 admin-dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium">
           <svg
             className="w-4 h-4"
             fill="currentColor"
@@ -197,29 +373,39 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo }) => {
             />
           </svg>
           Hỗ trợ streaming chất lượng cao
-        </div>
-        {/* Delete Button */}
-        <button
-          onClick={() => onDeleteVideo(selectedVideo.filename)}
-          className="flex right-4 bg-red-500 admin-dark:bg-red-600 hover:bg-red-600 admin-dark:hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 items-center gap-1 shadow-md z-10"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        </div> */}
+          {/* Delete Button */}
+          <button
+            onClick={() => onDeleteVideo(selectedVideo.filename)}
+            className="flex right-4 bg-red-500 admin-dark:bg-red-600 hover:bg-red-600 admin-dark:hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 items-center gap-1 shadow-md z-10"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
-          Xóa video
-        </button>
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+            Xóa video
+          </button>
+        </div>
       </div>
-    </div>
+      <VideoSettingsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        video={selectedVideo}
+        onSave={handleSaveChanges}
+        isSaving={updatingIntro || updatingBanner}
+        introVideoName={introItem?.image_url}
+        bannerVideoName={bannerItem?.image_url}
+      />
+    </>
   );
 };
 
