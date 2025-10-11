@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 function useUpdateImageUrl({ slug = "about", type = "about_intro" } = {}) {
   const [item, setItem] = useState(null); // { id, image_url }
@@ -6,10 +6,8 @@ function useUpdateImageUrl({ slug = "about", type = "about_intro" } = {}) {
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const ac = new AbortController();
-
-    async function load() {
+  const load = useCallback(
+    async (signal) => {
       setLoading(true);
       setError(null);
       try {
@@ -17,32 +15,41 @@ function useUpdateImageUrl({ slug = "about", type = "about_intro" } = {}) {
           `${
             import.meta.env.VITE_MAIN_BE_URL
           }/api/section-items/type/${type}?slug=${slug}`,
-          { signal: ac.signal }
+          { signal }
         );
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         const data = await res.json();
 
-        // Hợp thức hoá nhiều dạng response: array hoặc { data: [...] }
         const list = Array.isArray(data) ? data : data?.data ?? [];
         if (list.length > 0) {
           const it = list[0];
-          setItem({ id: it.id, image_url: it.image_url ?? "" });
+          const fetchedItem = { id: it.id, image_url: it.image_url ?? "" };
+          setItem(fetchedItem);
+          return fetchedItem;
         } else {
           setItem(null);
+          return null;
         }
       } catch (err) {
-        if (err.name !== "AbortError") setError(err);
+        if (err.name !== "AbortError") {
+          setError(err);
+        }
+        return null;
       } finally {
         setLoading(false);
       }
-    }
+    },
+    [slug, type]
+  );
 
-    load();
+  useEffect(() => {
+    const ac = new AbortController();
+    load(ac.signal);
     return () => ac.abort();
-  }, [slug, type]);
+  }, [load]);
 
-  const handleUpdateImageUrl = async (newUrl) => {
-    if (!item?.id) {
+  const handleUpdateImageUrl = async (id_update, newUrl) => {
+    if (!id_update) {
       const err = new Error("Missing item id — cannot update");
       setError(err);
       return { ok: false, error: err };
@@ -54,7 +61,7 @@ function useUpdateImageUrl({ slug = "about", type = "about_intro" } = {}) {
       const res = await fetch(
         `${
           import.meta.env.VITE_MAIN_BE_URL
-        }/api/section-items/videoBannerAbout/${item.id}`,
+        }/api/section-items/videoBannerAbout/${id_update}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -80,6 +87,7 @@ function useUpdateImageUrl({ slug = "about", type = "about_intro" } = {}) {
   return {
     item,
     loading,
+    load,
     updating,
     error,
     handleUpdateImageUrl,

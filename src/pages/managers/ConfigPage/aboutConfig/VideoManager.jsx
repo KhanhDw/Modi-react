@@ -53,6 +53,10 @@ const VideoManager = () => {
     setSelectedVideo(video);
   };
 
+  const handleVideoConfigChange = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
+
   const handleUploadSuccess = () => {
     setRefreshKey((prev) => prev + 1);
     setModalContent({
@@ -118,28 +122,51 @@ const VideoManager = () => {
 
   //============================================
   const [videoUsing, setVideoUsing] = useState({
-    video_url: "",
+    aboutIntroVideo: "Đang tải...",
+    bannerVideo: "Đang tải...",
   });
-  // Fetch banner từ API
+
+  // Fetch current videos from API
   useEffect(() => {
-    fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
-      }/api/section-items/type/about_intro?slug=about`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const item = data[0];
+    const fetchData = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_MAIN_BE_URL;
+        const urls = [
+          `${baseUrl}/api/section-items/type/about_intro?slug=about`,
+          `${baseUrl}/api/section-items/type/banner_video?slug=about`,
+        ];
 
-          setVideoUsing({
-            video_url: item.image_url || "", // video
-          });
+        const [introRes, bannerRes] = await Promise.all(
+          urls.map((url) => fetch(url))
+        );
+
+        if (!introRes.ok || !bannerRes.ok) {
+          throw new Error("Failed to fetch video configuration.");
         }
-      })
-      .catch((err) => console.error("Lỗi khi fetch banner:", err));
-  }, []);
 
+        const introData = await introRes.json();
+        const bannerData = await bannerRes.json();
+
+        const getImageUrl = (data) => {
+          const list = Array.isArray(data) ? data : data?.data ?? [];
+          return list[0]?.image_url || "Chưa thiết lập";
+        };
+
+        setVideoUsing({
+          aboutIntroVideo: getImageUrl(introData),
+          bannerVideo: getImageUrl(bannerData),
+        });
+      } catch (err) {
+        console.error("Lỗi khi fetch dữ liệu video:", err);
+        setVideoUsing({
+          aboutIntroVideo: "Lỗi khi tải",
+          bannerVideo: "Lỗi khi tải",
+        });
+      }
+    };
+
+    fetchData();
+  }, [refreshKey]);
   //============================================
 
   return (
@@ -165,14 +192,19 @@ const VideoManager = () => {
           />
         </div>
         <div className="w-full self-start flex flex-col mt-8 lg:mt-0">
-          <div className="px-2 py-1 mb-3 border-2 border-gray-400 rounded-md flex flex-col sm:flex-row w-full gap-2">
-            Video đang sử dụng:
-            <p className="font-semibold break-all">{videoUsing.video_url}</p>
+          <div className="px-2 py-1 mb-3 border-2 border-gray-400 rounded-md flex md:flex-col sm:flex-row w-full gap-2">
+            <p className="font-semibold break-all admin-light:text-gray-700 admin-dark:text-gray-300">
+              Video giới thiệu: {videoUsing.aboutIntroVideo}
+            </p>
+            <p className="font-semibold break-all admin-light:text-gray-700 admin-dark:text-gray-300">
+              Video banner: {videoUsing.bannerVideo}
+            </p>
           </div>
 
           <VideoPlayer
             selectedVideo={selectedVideo}
             onDeleteVideo={handleDeleteRequest}
+            onUpdateSuccess={handleVideoConfigChange}
           />
         </div>
       </div>
