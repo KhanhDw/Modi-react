@@ -1,3 +1,4 @@
+// header.jsx
 import React, {
   useState,
   useEffect,
@@ -18,23 +19,9 @@ import NavDropdown from "./NavDropdown";
 
 const API_BASE_URL = import.meta.env.VITE_MAIN_BE_URL;
 
-// Logo component với loading states
-const Logo = React.memo(({ logo, scrolled }) => (
-  <motion.div
-    animate={{
-      scale: scrolled ? 0.95 : 1,
-    }}
-    transition={{
-      duration: 0.35,
-      ease: "easeOut",
-      scale: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      },
-    }}
-    className="flex items-center justify-start lg:pl-5 xl:pl-0"
-  >
+// Simplified Logo component
+const Logo = React.memo(({ logo }) => (
+  <div className="flex items-center justify-start lg:pl-5 xl:pl-0">
     <Link
       to="/"
       className="flex items-center"
@@ -45,32 +32,17 @@ const Logo = React.memo(({ logo, scrolled }) => (
           className="h-8 w-auto lg:h-10 transition-all duration-300"
           alt="logo"
           loading="eager"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          whileHover={{
-            scale: 1.05,
-            transition: { duration: 0.2 },
-          }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
         />
       ) : (
-        <motion.div
-          className="h-8 w-24 bg-gradient-to-r from-gray-700 to-gray-600 rounded-md lg:h-10"
-          animate={{
-            opacity: [0.4, 0.8, 0.4],
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+        <div className="h-8 w-24 bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 rounded-md lg:h-10 animate-pulse" />
       )}
     </Link>
-  </motion.div>
+  </div>
 ));
 
-function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
+function Header({ setActiveScoll_open_HeaderSideBar }) {
   const { t } = useLanguage();
   const location = useLocation();
 
@@ -81,9 +53,16 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
   const [servicesPreloaded, setServicesPreloaded] = useState(false);
 
   const modalServicesRef = useRef(null);
-
-  // Debounced hover handlers
   const hoverTimeoutRef = useRef(null);
+
+  // Clean up timeouts
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleHoverStart = useCallback((setter) => {
     if (hoverTimeoutRef.current) {
@@ -136,12 +115,6 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     }
     fetchLogo();
     preloadServicesData();
-
-    return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-    };
   }, [fetchLogo, preloadServicesData]);
 
   const toggleSidebar = useCallback(() => {
@@ -150,7 +123,7 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     setActiveScoll_open_HeaderSideBar(nextState);
   }, [isSidebarOpen, setActiveScoll_open_HeaderSideBar]);
 
-  // Memoized navigation config
+  // Navigation config
   const navItems = useMemo(
     () => [
       { type: "link", to: "/", label: t("header.home.title") },
@@ -176,49 +149,12 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
     [t, isHoverDesignWeb, isHoverServices]
   );
 
-  // Animation variants
-  const headerVariants = {
-    initial: {
-      height: location.pathname === "/" ? 100 : 80,
-      backgroundColor: "rgba(17, 24, 39, 0)",
-      backdropFilter: "blur(0px)",
-    },
-    scrolled: {
-      height: 80,
-      backgroundColor: "rgba(17, 24, 39, 0.8)",
-      backdropFilter: "blur(12px)",
-    },
-  };
-
-  const menuButtonVariants = {
-    initial: { scale: 1 },
-    hover: {
-      scale: 1.05,
-      backgroundColor: "rgba(55, 65, 81, 0.5)",
-      borderColor: "rgba(107, 114, 128, 0.8)",
-      transition: { duration: 0.2 },
-    },
-    tap: { scale: 0.95 },
-  };
-
   return (
     <>
-      <motion.div
-        variants={headerVariants}
-        initial="initial"
-        animate={scrolled ? "scrolled" : "initial"}
-        transition={{
-          duration: 0.4,
-          ease: [0.25, 0.46, 0.45, 0.94],
-        }}
-        className="w-full fixed top-0 left-0 z-40 xl:px-20"
-      >
+      <div className="w-full h-full">
         <div className="mx-auto grid xs:grid-cols-2 lg:grid-cols-3 items-center h-full px-4 sm:px-6 md:px-20 lg:px-10">
           {/* Logo */}
-          <Logo
-            logo={logo}
-            scrolled={scrolled}
-          />
+          <Logo logo={logo} />
 
           {/* Navigation */}
           <nav className="hidden lg:flex items-center justify-center text-sm font-bold lg:gap-3 xl:gap-5 2xl:gap-10 whitespace-nowrap">
@@ -234,7 +170,6 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
                     key={item.to}
                     to={item.to}
                     label={item.label}
-                    scrolled={scrolled}
                     isActive={isActive}
                   />
                 );
@@ -259,31 +194,28 @@ function Header({ scrolled, setActiveScoll_open_HeaderSideBar }) {
           {/* Right Side Controls */}
           <div className="flex items-center justify-end gap-2 sm:gap-4">
             {/* Theme Toggle */}
-            <motion.div
-              className="hidden lg:flex rounded-full hover:border-gray-600 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <div className="hidden lg:flex rounded-full hover:border-gray-600 transition-colors">
               <ThemeToggle />
-            </motion.div>
+            </div>
 
             {/* Menu Button */}
             <motion.button
               type="button"
               onClick={toggleSidebar}
-              variants={menuButtonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              className="flex lg:hidden h-10 w-10 text-white justify-center items-center border border-gray-600 rounded-lg cursor-pointer"
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: "rgba(55, 65, 81, 0.5)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="flex lg:hidden h-10 w-10 text-white justify-center items-center border border-gray-600 rounded-lg cursor-pointer transition-colors"
             >
               <TiThMenu size={20} />
             </motion.button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Sidebar Overlay với AnimatePresence */}
+      {/* Sidebar Overlay */}
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.div
