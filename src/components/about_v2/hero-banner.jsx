@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
+import { Link } from "react-router-dom";
 
 export function HeroBanner() {
   const { t } = useLanguage();
@@ -71,19 +72,19 @@ export function HeroBanner() {
           {banner.slogan?.[lang] || "Chưa có slogan"}
         </p>
 
-        <Button
-          size="lg"
-          className={`bg-primary hover:bg-primary/90 cursor-pointer text-primary-foreground px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${
+        <Link
+          to={`/contact`}
+          className={`bg-[primary] hover:bg-[primary/90] cursor-pointer text-[primary-foreground] px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
           {t("aboutV2.button")}
-        </Button>
+        </Link>
       </div>
 
       {/* Decorative Elements */}
       <div className="absolute top-20 left-10 w-20 h-20 bg-accent/20 rounded-full blur-xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-secondary/20 rounded-full blur-xl animate-pulse delay-1000" />
+      <div className="absolute bottom-20 right-10 w-32 h-32 bg-[secondary/20] rounded-full blur-xl animate-pulse delay-1000" />
     </section>
   );
 }

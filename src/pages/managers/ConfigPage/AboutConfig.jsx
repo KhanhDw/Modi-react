@@ -120,52 +120,69 @@ export default function AboutConfig() {
 
     try {
       const updates = [];
+      let saveActionTaken = false;
 
-      if (config.banner?.id) {
-        updates.push(
-          updateItem(config.banner.id, {
-            title: config.banner.title,
-            description: config.banner.slogan,
-            image_url: config.banner.image_url || "",
-            position: 0,
-          })
-        );
+      switch (activeTab) {
+        case "banner":
+          if (config.banner?.id) {
+            updates.push(
+              updateItem(config.banner.id, {
+                title: config.banner.title,
+                description: config.banner.slogan,
+                image_url: config.banner.image_url || "",
+                position: 0,
+              })
+            );
+          }
+          break;
+        case "about":
+          if (config.about?.id) {
+            updates.push(
+              updateItem(config.about.id, {
+                title: config.about.title,
+                description: config.about.description,
+                image_url:
+                  typeof config.about.image_url === "string"
+                    ? config.about.image_url
+                    : null,
+                position: 0,
+              })
+            );
+          }
+          break;
+        case "visionMission":
+          config.visionMission.forEach((vm, i) => {
+            if (vm.id) {
+              updates.push(
+                updateItem(vm.id, {
+                  title: vm.title,
+                  description: vm.description,
+                  image_url: typeof vm.img === "string" ? vm.img : null,
+                  position: vm.position ?? i,
+                })
+              );
+            }
+          });
+          break;
+        default:
+          // No action for other tabs like 'video'
+          break;
       }
 
-      if (config.about?.id) {
-        updates.push(
-          updateItem(config.about.id, {
-            title: config.about.title,
-            description: config.about.description,
-            image_url:
-              typeof config.about.image_url === "string"
-                ? config.about.image_url
-                : null,
-            position: 0,
-          })
-        );
+      if (updates.length > 0) {
+        await Promise.all(updates);
+        saveActionTaken = true;
       }
 
-      config.visionMission.forEach((vm, i) => {
-        if (vm.id) {
-          updates.push(
-            updateItem(vm.id, {
-              title: vm.title,
-              description: vm.description,
-              image_url: typeof vm.img === "string" ? vm.img : null,
-              position: vm.position ?? i,
-            })
-          );
-        }
-      });
-
-      await Promise.all(updates);
-
-      if (aboutRef.current?.uploadImage) {
+      // Special handling for image upload in about section
+      if (activeTab === "about" && aboutRef.current?.uploadImage) {
         await aboutRef.current.uploadImage();
+        saveActionTaken = true;
       }
 
-      alert("Đã lưu cấu hình thành công!");
+      if (saveActionTaken) {
+        alert("Đã lưu cấu hình thành công!");
+      }
     } catch (err) {
       console.error("Save error:", err);
       alert("Có lỗi khi lưu cấu hình!");
@@ -211,7 +228,7 @@ export default function AboutConfig() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 ">
       <div className="flex flex-col space-y-6">
         {/* Header with controls */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -226,7 +243,11 @@ export default function AboutConfig() {
             disabled={isSaving || isLoading}
             className="w-full sm:w-auto py-2 px-4 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 transition text-sm font-semibold disabled:bg-indigo-400 disabled:cursor-not-allowed"
           >
-            {isSaving ? "Đang lưu..." : "Lưu Cấu hình"}
+            {isSaving
+              ? "Đang lưu..."
+              : `Lưu Cấu hình ${
+                  TABS.find((t) => t.key === activeTab)?.label || ""
+                }`}
           </button>
         </div>
 

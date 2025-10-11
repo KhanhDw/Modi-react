@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 function Customer({ data, activeLang }) {
   const { t } = useLanguage();
@@ -62,12 +62,12 @@ function Customer({ data, activeLang }) {
                   </motion.p>
                 ))}
                 <div className="flex justify-center md:justify-start py-5">
-                  <Button
-                    size={"lg"}
+                  <Link
+                    to={`/contact`}
                     className="bg-[#2C3E50] hover:bg-[#415263] text-white px-6 xs:py-2  rounded-md text-lg cursor-pointer"
                   >
                     {t("home.customer.btn")}
-                  </Button>
+                  </Link>
                 </div>
               </div>
               <div className="hidden md:block bg-black/30 rounded-lg w-1/2 ">

@@ -83,7 +83,7 @@ const VideoUpload = ({ onUploadSuccess, onUploadError }) => {
   };
 
   return (
-    <div className="admin-light:bg-gray-50 admin-dark:bg-gray-800 p-5 border border-gray-300 admin-dark:border-gray-600 rounded-lg mb-5">
+    <div className="admin-light:bg-gray-50 admin-dark:bg-gray-800 p-4 sm:p-5 border border-gray-300 admin-dark:border-gray-600 rounded-lg mb-5">
       <h2 className="admin-light:text-gray-700 admin-dark:text-gray-200 mb-4">
         Upload Video
       </h2>

@@ -104,8 +104,8 @@ export function CTASection() {
       </div>
 
       {/* Decorative Elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse" />
-      <div className="absolute bottom-10 right-10 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse delay-1000" />
+      <div className="absolute top-10 left-10 w-32 h-32 bg-white/90 rounded-full blur-xl animate-pulse" />
+      <div className="absolute bottom-10 right-10 w-24 h-24 bg-white/90 rounded-full blur-xl animate-pulse delay-1000" />
     </section>
   );
 }

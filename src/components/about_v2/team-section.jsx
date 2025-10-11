@@ -1,9 +1,9 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { useEffect, useState } from "react"
+import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function TeamSection() {
-  const [visibleCards, setVisibleCards] = useState([])
+  const [visibleCards, setVisibleCards] = useState([]);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -12,24 +12,27 @@ export function TeamSection() {
         if (entry.isIntersecting) {
           t("aboutV2.TeamSection.teamMembers").forEach((_, index) => {
             setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index])
-            }, index * 200)
-          })
+              setVisibleCards((prev) => [...prev, index]);
+            }, index * 200);
+          });
         }
       },
-      { threshold: 0.1 },
-    )
+      { threshold: 0.1 }
+    );
 
-    const element = document.getElementById("team-section")
-    if (element) observer.observe(element)
+    const element = document.getElementById("team-section");
+    if (element) observer.observe(element);
 
-    return () => observer.disconnect()
-  }, [t])
+    return () => observer.disconnect();
+  }, [t]);
 
   return (
-    <section id="team-section" className="py-20 px-4">
+    <section
+      id="team-section"
+      className="py-20 px-4"
+    >
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold font-sans text-[foreground] mb-12">
           {t("aboutV2.TeamSection.title")}
         </h2>
 
@@ -38,7 +41,9 @@ export function TeamSection() {
             <Card
               key={index}
               className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${
-                visibleCards.includes(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                visibleCards.includes(index)
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
               }`}
             >
               <CardContent className="p-6 text-center">
@@ -50,14 +55,20 @@ export function TeamSection() {
                   />
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-accent rounded-full"></div>
                 </div>
-                <h3 className="text-xl font-bold font-sans text-foreground mb-2">{member.name}</h3>
-                <p className="text-primary font-semibold mb-3">{member.role}</p>
-                <p className="text-muted-foreground leading-relaxed">{member.description}</p>
+                <h3 className="text-xl font-bold font-sans text-[foreground] mb-2">
+                  {member.name}
+                </h3>
+                <p className="text-[primary] font-semibold mb-3">
+                  {member.role}
+                </p>
+                <p className="text-[muted-foreground] leading-relaxed">
+                  {member.description}
+                </p>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
