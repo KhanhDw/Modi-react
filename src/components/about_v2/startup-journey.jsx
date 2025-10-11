@@ -1,10 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { useEffect, useState } from "react"
+import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Lightbulb, Users, Star } from "lucide-react";
 
 export function StartupJourney() {
-  const [visibleCards, setVisibleCards] = useState([])
+  const [visibleCards, setVisibleCards] = useState([]);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -13,27 +13,30 @@ export function StartupJourney() {
         if (entry.isIntersecting) {
           t("aboutV2.StartupJourney.milestones").forEach((_, index) => {
             setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index])
-            }, index * 200)
-          })
+              setVisibleCards((prev) => [...prev, index]);
+            }, index * 200);
+          });
         }
       },
-      { threshold: 0.1 },
-    )
+      { threshold: 0.1 }
+    );
 
-    const element = document.getElementById("startup-journey")
-    if (element) observer.observe(element)
+    const element = document.getElementById("startup-journey");
+    if (element) observer.observe(element);
 
-    return () => observer.disconnect()
-  }, [t])
+    return () => observer.disconnect();
+  }, [t]);
 
   return (
-    <section id="startup-journey" className="py-20 px-4 bg-muted/30">
+    <section
+      id="startup-journey"
+      className="py-20 px-4 bg-[muted/30]"
+    >
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold font-sans text-foreground mb-6">
+        <h2 className="text-3xl md:text-4xl font-bold font-sans text-[foreground] mb-6">
           {t("aboutV2.StartupJourney.title")}
         </h2>
-        <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
+        <p className="text-base md:text-lg text-[muted-foreground] mb-12 max-w-2xl mx-auto">
           {t("aboutV2.StartupJourney.description")}
         </p>
 
@@ -43,18 +46,18 @@ export function StartupJourney() {
             return (
               <Card
                 key={index}
-                className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${
+                className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-[accent/50] ${
                   visibleCards.includes(index)
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
                 }`}
               >
                 <CardContent className="p-6 text-center">
-                  <Icon className="w-10 h-10 text-primary mb-4 mx-auto" />
-                  <h3 className="text-xl font-bold font-sans text-foreground mb-3">
+                  <Icon className="w-10 h-10 text-[primary] mb-4 mx-auto" />
+                  <h3 className="text-xl font-bold font-sans text-[foreground] mb-3">
                     {milestone.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-[muted-foreground] leading-relaxed">
                     {milestone.description}
                   </p>
                 </CardContent>
@@ -64,5 +67,5 @@ export function StartupJourney() {
         </div>
       </div>
     </section>
-  )
+  );
 }
