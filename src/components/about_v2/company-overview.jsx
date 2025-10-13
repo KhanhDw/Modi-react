@@ -69,15 +69,21 @@ export function CompanyOverview() {
             }`}
           >
             <div className="relative">
-              <img
-                src={
-                  about?.image_url
-                    ? `${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`
-                    : "/no-image.png"
-                }
-                alt={about?.title?.[lang] || "Company Overview"}
-                className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-              />
+              <div className="w-full aspect-video rounded-lg shadow-lg overflow-hidden bg-gray-100">
+                <img
+                  src={
+                    about?.image_url
+                      ? `${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`
+                      : "/no-image.png"
+                  }
+                  alt={about?.title?.[lang] || "Company Overview"}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    e.target.src = "/no-image.png";
+                    e.target.className = "w-full h-full object-contain p-4";
+                  }}
+                />
+              </div>
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[accent/20] rounded-full blur-xl" />
             </div>
           </div>

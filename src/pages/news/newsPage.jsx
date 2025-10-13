@@ -4,11 +4,13 @@ import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import useCurrentLanguage from "@/hook/currentLang";
+import PageList from "@/components/feature/pagination";
 
 export default function NewsInterface() {
   const [newsArticles, setNewsArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [articlesToShow, setArticlesToShow] = useState([]);
   const navigate = useNavigate();
   const { prefix, lang } = useCurrentLanguage();
   const pageSize = 6;
@@ -69,16 +71,9 @@ export default function NewsInterface() {
       </h3>
     </div>;
 
-  let heroArticle = null;
-  let articlesToShow = [];
-  if (currentPage === 1) {
-    heroArticle = newsArticles[0];
-    articlesToShow = newsArticles.slice(1, 1 + pageSize);
-  } else {
-    const startIdx = 1 + (currentPage - 2) * pageSize + pageSize;
-    articlesToShow = newsArticles.slice(startIdx, startIdx + pageSize);
-  }
-  const totalPages = Math.ceil((newsArticles.length - 1) / pageSize) || 1;
+  const heroArticle = newsArticles[0];
+  const gridArticles = newsArticles.slice(1);
+  const totalPages = Math.ceil(gridArticles.length / pageSize);
 
   const handleArticleClick = (slug, id) => {
     navigate(`/news/${slug}`, { state: { blogId: id } });
@@ -174,7 +169,7 @@ export default function NewsInterface() {
 
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articlesToShow.map((article, idx) => (
+          {articlesToShow.map((article) => (
             <motion.div
               key={article.id}
               className="relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md cursor-pointer group"
@@ -225,39 +220,16 @@ export default function NewsInterface() {
         </div>
 
         {/* Pagination */}
-        <div className="text-center mt-12 flex justify-center gap-2">
-          {/* Nút trước */}
-          <button
-            className="px-3 cursor-pointer dark:text-white py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </button>
-
-          {/* Các trang */}
-          {[...Array(totalPages)].map((_, idx) => (
-            <button
-              key={idx + 1}
-              className={`px-4 py-2 rounded transition-colors cursor-pointer ${currentPage === idx + 1
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 dark:bg-gray-700"
-                }`}
-              onClick={() => setCurrentPage(idx + 1)}
-            >
-              {idx + 1}
-            </button>
-          ))}
-
-          {/* Nút sau */}
-          <button
-            className="dark:text-white cursor-pointer px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </button>
-        </div>
+        {totalPages > 1 && (
+          <div className="text-center mt-12 flex justify-center gap-2">
+            <PageList
+              data={gridArticles}
+              pageSize={pageSize}
+              onPageChange={setArticlesToShow}
+              onPageNumberChange={setCurrentPage}
+            />
+          </div>
+        )}
 
       </div >
     </div >
