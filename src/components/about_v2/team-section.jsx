@@ -32,7 +32,7 @@ export function TeamSection() {
       className="py-20 px-4"
     >
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold font-sans text-[foreground] mb-12">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-sans text-[foreground] mb-12">
           {t("aboutV2.TeamSection.title")}
         </h2>
 
@@ -40,11 +40,10 @@ export function TeamSection() {
           {t("aboutV2.TeamSection.teamMembers").map((member, index) => (
             <Card
               key={index}
-              className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${
-                visibleCards.includes(index)
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
-              }`}
+              className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${visibleCards.includes(index)
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+                }`}
             >
               <CardContent className="p-6 text-center">
                 <div className="relative mb-6 group">
@@ -55,13 +54,13 @@ export function TeamSection() {
                   />
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-accent rounded-full"></div>
                 </div>
-                <h3 className="text-xl font-bold font-sans text-[foreground] mb-2">
+                <h3 className="text-base sm:text-lg font-bold font-sans text-[foreground] mb-2">
                   {member.name}
                 </h3>
-                <p className="text-[primary] font-semibold mb-3">
+                <p className="text-[primary] font-semibold mb-3 text-sm sm:text-base">
                   {member.role}
                 </p>
-                <p className="text-[muted-foreground] leading-relaxed">
+                <p className="text-[muted-foreground] leading-relaxed text-sm sm:text-base">
                   {member.description}
                 </p>
               </CardContent>

@@ -24,8 +24,7 @@ export function CompanyOverview() {
   // Fetch dữ liệu từ API section-items (section_id = 2)
   useEffect(() => {
     fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
+      `${import.meta.env.VITE_MAIN_BE_URL
       }/api/section-items/type/company_intro?slug=about`
     )
       .then((res) => res.json())
@@ -46,27 +45,25 @@ export function CompanyOverview() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Text content */}
           <div
-            className={`transition-all duration-600 ${
-              isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-8"
-            }`}
+            className={`transition-all duration-600 ${isVisible
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 -translate-x-8"
+              }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold font-sans text-[foreground] mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold font-sans text-[foreground] mb-6">
               {about?.title?.[lang] || "Đang tải..."}
             </h2>
-            <p className="text-base md:text-lg text-[muted-foreground] leading-relaxed mb-6">
+            <p className="text-sm sm:text-base md:text-lg text-[muted-foreground] leading-relaxed mb-6">
               {about?.description?.[lang] || "Chưa có mô tả"}
             </p>
           </div>
 
           {/* Image */}
           <div
-            className={`transition-all duration-600 delay-200 ${
-              isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-8"
-            }`}
+            className={`transition-all duration-600 delay-200 ${isVisible
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 translate-x-8"
+              }`}
           >
             <div className="relative">
               <div className="w-full aspect-video rounded-lg shadow-lg overflow-hidden bg-gray-100">

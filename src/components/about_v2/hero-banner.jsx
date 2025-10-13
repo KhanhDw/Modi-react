@@ -16,8 +16,7 @@ export function HeroBanner() {
   // Fetch banner từ API
   useEffect(() => {
     fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
+      `${import.meta.env.VITE_MAIN_BE_URL
       }/api/section-items/type/about_intro?slug=about`
     )
       .then((res) => res.json())
@@ -57,26 +56,23 @@ export function HeroBanner() {
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <h1
-          className={`text-4xl md:text-6xl font-bold font-sans text-white mb-6 transition-all duration-800 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold font-sans text-white mb-6 transition-all duration-800 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {banner.title?.[lang] || "Chưa có tiêu đề"}
         </h1>
 
         <p
-          className={`text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto transition-all duration-800 delay-200 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-8 max-w-2xl mx-auto transition-all duration-800 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {banner.slogan?.[lang] || "Chưa có slogan"}
         </p>
 
         <Link
           to={`/contact`}
-          className={`bg-[primary] hover:bg-[primary/90] cursor-pointer text-[primary-foreground] px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`bg-[primary] hover:bg-[primary/90] cursor-pointer text-[primary-foreground] px-8 py-4 text-sm sm:text-base md:text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-105 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {t("aboutV2.button")}
         </Link>

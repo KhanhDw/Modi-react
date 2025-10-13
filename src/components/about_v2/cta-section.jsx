@@ -17,8 +17,7 @@ export function CTASection() {
   // Fetch banner từ API
   useEffect(() => {
     fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
+      `${import.meta.env.VITE_MAIN_BE_URL
       }/api/section-items/type/banner_video?slug=about`
     )
       .then((res) => res.json())
@@ -74,18 +73,16 @@ export function CTASection() {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto text-center text-white">
         <h2
-          className={`text-3xl md:text-4xl font-bold font-sans mb-6 transition-all duration-800 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-xl sm:text-2xl lg:text-3xl font-bold font-sans mb-6 transition-all duration-800 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {/* {t("aboutV2.CTASection.title")} */}
           {banner.title?.[lang] || "Chưa có tiêu đề"}
         </h2>
 
         <p
-          className={`text-lg md:text-xl mb-8 max-w-2xl mx-auto transition-all duration-800 delay-200 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-sm sm:text-base md:text-lg mb-8 max-w-2xl mx-auto transition-all duration-800 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {/* {t("aboutV2.CTASection.description")} */}
           {banner.slogan?.[lang] || "Chưa có tiêu đề"}
@@ -94,9 +91,8 @@ export function CTASection() {
         <Button
           size="lg"
           variant="secondary"
-          className={`text-primary cursor-pointer dark:hover:text-gray-800 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-110 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-primary cursor-pointer dark:hover:text-gray-800 hover:bg-white/90 px-8 py-4 text-sm sm:text-base md:text-lg font-semibold rounded-lg transition-all duration-800 delay-400 hover:scale-110 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
           onClick={() => navigate("/contact")}
         >
           {t("aboutV2.CTASection.contactButton")}

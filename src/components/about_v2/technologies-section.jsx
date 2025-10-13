@@ -58,7 +58,7 @@ export function TechnologiesSection() {
       className="py-20 px-4"
     >
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold font-sans text-[foreground] mb-12">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-sans text-[foreground] mb-12">
           {t("aboutV2.TechnologiesSection")}
         </h2>
 
@@ -69,8 +69,8 @@ export function TechnologiesSection() {
               className="w-full sm:w-40"
             >
               <CardContent className="flex flex-col items-center justify-center p-4 text-center">
-                <tech.icon className="text-5xl sm:text-6xl md:text-7xl mb-3" />
-                <p className="text-sm font-semibold text-[muted-foreground]">
+                <tech.icon className="w-6 h-6 sm:w-7 sm:h-7 mb-3" />
+                <p className="text-sm sm:text-base font-semibold text-[muted-foreground]">
                   {tech.name}
                 </p>
               </CardContent>
