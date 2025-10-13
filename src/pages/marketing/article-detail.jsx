@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, Share2 } from "lucide-react";
+import { Calendar, User, Share2, X, Link2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import useCurrentLanguage from "@/hook/currentLang";
 
@@ -11,6 +11,7 @@ export default function ArticleDetail() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -30,7 +31,76 @@ export default function ArticleDetail() {
       }
     };
     if (slug) fetchArticle();
-  }, [slug, prefix]); // nhớ thêm prefix vào dependency
+  }, [slug, prefix]);
+
+  const shareUrl = window.location.href;
+  const shareTitle = post?.title || "";
+
+  const shareOptions = [
+    {
+      name: "Facebook",
+      icon: "/images/facebook.png",
+      color: "bg-blue-600 hover:bg-blue-700",
+      onClick: () => {
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+            shareUrl
+          )}`,
+          "_blank"
+        );
+      },
+    },
+    {
+      name: "Instagram",
+      icon: "/images/instagram.png",
+      color: "bg-pink-600 hover:bg-pink-700",
+      onClick: () => {
+        try {
+          navigator.clipboard.writeText(shareUrl);
+          alert(
+            "Đã sao chép link vào clipboard! Bạn có thể dán lên Instagram."
+          );
+        } catch (err) {
+          console.error("Failed to copy: ", err);
+        }
+      },
+    },
+    {
+      name: "LinkedIn",
+      icon: "/images/linkedin.png",
+      color: "bg-blue-800 hover:bg-blue-900",
+      onClick: () => {
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+            shareUrl
+          )}`,
+          "_blank"
+        );
+      },
+    },
+    {
+      name: "Sao chép link",
+      icon: Link2,
+      color: "bg-green-600 hover:bg-green-700",
+      onClick: async () => {
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          alert("Đã sao chép link vào clipboard!");
+        } catch (err) {
+          console.error("Failed to copy: ", err);
+        }
+      },
+    },
+  ];
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Đã sao chép link vào clipboard!");
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
 
   if (loading)
     return (
@@ -90,6 +160,7 @@ export default function ArticleDetail() {
             variant="outline"
             size="sm"
             className="gap-2 cursor-pointer self-start sm:self-auto"
+            onClick={() => setShowShareModal(true)}
           >
             <Share2 className="w-4 h-4" />
             Chia sẻ
@@ -117,6 +188,75 @@ export default function ArticleDetail() {
           />
         </CardContent>
       </Card>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Chia sẻ bài viết
+              </h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowShareModal(false)}
+                className="h-8 w-8 p-0"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Share Options */}
+            <div className="p-3">
+              <div className="flex items-center justify-center gap-4">
+                {shareOptions.map((option) => (
+                  <button
+                    key={option.name}
+                    onClick={option.onClick}
+                    className={`flex flex-col items-center justify-center  rounded-lg text-white transition-colors border-2 p-4 border-[${option.color}]`}
+                  >
+                    {typeof option.icon === "string" ? (
+                      // Render image icon
+                      <img
+                        src={option.icon}
+                        alt={option.name}
+                        className="w-6 h-6 mb-2 text-black"
+                      />
+                    ) : (
+                      // Render Lucide React icon
+                      <option.icon className="w-6 h-6 mb-2 text-black" />
+                    )}
+                    <span className="text-xs font-medium text-center text-black">
+                      {option.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* URL Copy Section */}
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={shareUrl}
+                  readOnly
+                  className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+                <Button
+                  onClick={handleCopyUrl}
+                  size="sm"
+                  className="whitespace-nowrap"
+                >
+                  Sao chép
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
