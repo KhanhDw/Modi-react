@@ -1,11 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { tableStyles } from "../typePricingSlider";
+// Đổi tên imports để có thể sử dụng cả hai bộ styles
+import { tableStyles as adminStyles } from "../style/admin";
+import { tableStyles as clientStyles } from "../style/client";
+
+// Hàm tiện ích để quyết định bộ styles nào sẽ được dùng
+const getTableStyles = () => {
+  // Kiểm tra nếu đang ở môi trường trình duyệt và URL bắt đầu bằng '/managers'
+  // Ví dụ: /managers/dashboard, /managers, ...
+  if (
+    typeof window !== "undefined" &&
+    window.location.pathname.startsWith("/managers")
+  ) {
+    return adminStyles;
+  }
+  // Mặc định hoặc khi URL không phải của admin, sử dụng clientStyles
+  return clientStyles;
+};
 
 const PricingTable = ({ uniqueTitles, servicesByStage, isServiceProvided }) => {
+  // Lấy bộ styles phù hợp cho lần render hiện tại
+  const tableStyles = getTableStyles();
+
   return (
-    <div className={`${tableStyles.container}}`}>
+    <div className={`${tableStyles.container}`}>
+      {" "}
+      {/* Đã sửa lỗi cú pháp: }} -> } */}
       <div className={tableStyles.wrapper}>
         <table className={tableStyles.table}>
           <thead className={tableStyles.thead}>
@@ -104,7 +125,6 @@ const PricingTable = ({ uniqueTitles, servicesByStage, isServiceProvided }) => {
           </tbody>
         </table>
       </div>
-
       {/* Mobile Scroll Hint */}
       <div className={tableStyles.mobileScrollHint}>
         <span className={tableStyles.mobileScrollHintIcon}>👉</span>
