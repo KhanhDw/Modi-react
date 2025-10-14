@@ -1,32 +1,28 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-// Đổi tên imports để có thể sử dụng cả hai bộ styles
 import { tableStyles as adminStyles } from "../style/admin";
 import { tableStyles as clientStyles } from "../style/client";
+import { useLocation } from "react-router-dom";
 
 // Hàm tiện ích để quyết định bộ styles nào sẽ được dùng
-const getTableStyles = () => {
-  // Kiểm tra nếu đang ở môi trường trình duyệt và URL bắt đầu bằng '/managers'
-  // Ví dụ: /managers/dashboard, /managers, ...
-  if (
-    typeof window !== "undefined" &&
-    window.location.pathname.startsWith("/managers")
-  ) {
+const getTableStyles = (pathname) => {
+  // Nếu đường dẫn bắt đầu bằng '/managers' → dùng admin styles
+  if (pathname.startsWith("/managers")) {
     return adminStyles;
   }
-  // Mặc định hoặc khi URL không phải của admin, sử dụng clientStyles
+  // Mặc định dùng client styles
   return clientStyles;
 };
 
 const PricingTable = ({ uniqueTitles, servicesByStage, isServiceProvided }) => {
-  // Lấy bộ styles phù hợp cho lần render hiện tại
-  const tableStyles = getTableStyles();
+  const location = useLocation();
+
+  // Lấy bộ styles dựa theo pathname hiện tại
+  const tableStyles = getTableStyles(location.pathname);
 
   return (
     <div className={`${tableStyles.container}`}>
-      {" "}
-      {/* Đã sửa lỗi cú pháp: }} -> } */}
       <div className={tableStyles.wrapper}>
         <table className={tableStyles.table}>
           <thead className={tableStyles.thead}>
