@@ -276,7 +276,7 @@ export default function ServicePage() {
       {/* Intro */}
       <div className="max-w-8xl mx-auto px-4 pb-16 text-center">
         <motion.p
-          className="text-xl text-center md:text-2xl lg:text-4xl font-bold mb-4 leading-snug"
+          className="text-xl sm:text-2xl lg:text-3xl text-center font-bold mb-4 leading-snug"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
@@ -286,7 +286,7 @@ export default function ServicePage() {
         </motion.p>
 
         <motion.div
-          className="text-gray-600 font-semibold dark:text-gray-300 max-w-2xl mx-auto text-center"
+          className="text-gray-600 font-semibold dark:text-gray-300 max-w-2xl mx-auto text-center text-sm sm:text-base md:text-lg"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
@@ -372,7 +372,7 @@ export default function ServicePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="text-xl md:text-3xl lg:text-4xl font-bold mb-4 leading-tight"
+            className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 leading-tight"
           >
             {t("servicesPage.cta.title")}
           </motion.h2>
@@ -396,7 +396,7 @@ export default function ServicePage() {
             <Link
               to="/contact"
               className="
-          inline-block bg-white/90 text-blue-700 text-[14px] md:text-[16px] font-semibold p-2 px-2 md:py-3 md:px-4 rounded-full shadow-md
+          inline-block bg-white/90 text-blue-700 text-sm sm:text-base font-semibold p-2 px-2 md:py-3 md:px-4 rounded-full shadow-md
           hover:shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105
         "
             >

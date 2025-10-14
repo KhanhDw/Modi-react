@@ -206,11 +206,11 @@ const ServiceCardMinimalist = ({
         ></div>
 
         {/* THAY ĐỔI: Chuyển text-white/90 thành text-white opacity-90 để tinh chỉnh */}
-        <h3 className="text-xl font-bold uppercase tracking-wider mb-2 **text-white opacity-90** transition-opacity duration-300">
+        <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider mb-2 **text-white opacity-90** transition-opacity duration-300">
           {service.stage}
         </h3>
 
-        <p className="text-2xl sm:text-3xl font-black mb-4 sm:mb-6 text-white text-ellipsis overflow-hidden transition-opacity duration-300">
+        <p className="text-lg md:text-xl font-black mb-4 sm:mb-6 text-white text-ellipsis overflow-hidden transition-opacity duration-300">
           {service.ten_dich_vu}
         </p>
 
@@ -250,7 +250,7 @@ const ServiceCardMinimalist = ({
         {/* THAY ĐỔI: Nút CTA tăng cường shadow và thêm ring khi hover */}
         <button className="mt-6 w-full bg-white/90 font-bold py-3 rounded-3xl hover:bg-white transition-all duration-300 **shadow-lg hover:shadow-2xl hover:ring-4 hover:ring-white/80** will-change-transform">
           <span
-            className={cn(stageColor.text, "text-base font-bold uppercase")}
+            className={cn(stageColor.text, "text-xs sm:text-sm font-bold uppercase")}
           >
             Xem chi tiết
           </span>
@@ -556,7 +556,7 @@ const PricingSliderMobi = () => {
             aria-label={`Go to slide ${index + 1}`}
             onClick={() => scrollToCard(index)}
             className={cn(
-              "w-2.5 h-2.5 rounded-full transition-all duration-300 ease-in-out",
+              "w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 ease-in-out",
               index === currentIndex
                 ? "bg-indigo-600 w-6 shadow-md"
                 : "bg-gray-400 hover:bg-indigo-400"
