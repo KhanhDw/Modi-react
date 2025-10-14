@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { tableStyles } from "../typePricingSlider";
 
 const PricingTable = ({ uniqueTitles, servicesByStage, isServiceProvided }) => {
   return (
-    <div className={tableStyles.container}>
+    <div className={`${tableStyles.container}}`}>
       <div className={tableStyles.wrapper}>
         <table className={tableStyles.table}>
           <thead className={tableStyles.thead}>

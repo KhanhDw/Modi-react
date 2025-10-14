@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-// Context cục bộ cho Admin Theme
 const AdminThemeContext = createContext();
 
 export function AdminThemeProvider({ children }) {
@@ -13,31 +12,44 @@ export function AdminThemeProvider({ children }) {
     }
   });
 
+  // 🔄 Lưu vào localStorage khi thay đổi
   useEffect(() => {
     try {
       localStorage.setItem("themeAdminDark", isDark.toString());
     } catch {}
   }, [isDark]);
 
-  // QUAN TRỌNG: Áp dụng class trực tiếp lên html/body
+  // 🌙 Áp dụng class lên <html> khi ở trong layout admin
   useEffect(() => {
+    const root = document.documentElement;
+
     if (isDark) {
-      document.documentElement.classList.add("admin-dark");
+      root.classList.add("admin-dark");
     } else {
-      document.documentElement.classList.remove("admin-dark");
+      root.classList.remove("admin-dark");
     }
 
-    // Cleanup khi unmount
+    // Dọn dẹp khi unmount (rời trang admin)
     return () => {
-      document.documentElement.classList.remove("admin-dark");
+      root.classList.remove("admin-dark");
     };
   }, [isDark]);
+
+  // 🧠 Đồng bộ theme giữa nhiều tab admin
+  useEffect(() => {
+    const handleStorage = (e) => {
+      if (e.key === "themeAdminDark") {
+        setIsDark(e.newValue === "true");
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   const toggleTheme = () => setIsDark((prev) => !prev);
 
   return (
     <AdminThemeContext.Provider value={{ isDark, toggleTheme }}>
-      {/* KHÔNG cần div wrapper nữa */}
       {children}
     </AdminThemeContext.Provider>
   );
@@ -45,8 +57,7 @@ export function AdminThemeProvider({ children }) {
 
 export const useAdminTheme = () => {
   const context = useContext(AdminThemeContext);
-  if (!context) {
+  if (!context)
     throw new Error("useAdminTheme must be used within AdminThemeProvider");
-  }
   return context;
 };
