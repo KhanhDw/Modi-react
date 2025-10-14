@@ -98,7 +98,6 @@ html.lenis body {
 [contenteditable="true"] {
   -webkit-user-modify: read-write;
   -webkit-text-size-adjust: none;
-  spellcheck: false;
 }
 
 /* Áp dụng cho Chrome / Safari */

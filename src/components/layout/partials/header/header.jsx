@@ -152,7 +152,7 @@ function Header({ setActiveScoll_open_HeaderSideBar }) {
   return (
     <>
       <div className="w-full h-full">
-        <div className="mx-auto grid xs:grid-cols-2 lg:grid-cols-3 items-center h-full px-4 sm:px-6 md:px-20 lg:px-10">
+        <div className="mx-auto grid xs:grid-cols-2 lg:grid-cols-3 items-center h-full px-4 sm:px-6 md:px-20 lg:px-10 xl:px-20">
           {/* Logo */}
           <Logo logo={logo} />
 
