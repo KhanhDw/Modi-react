@@ -83,7 +83,8 @@ export default function ServiceCustomerTable() {
   const updateCustomerFitIsVip = useCallback(async (id_customer) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/customers/update_vip/${id_customer}`,
         {
           method: "PUT",
@@ -100,7 +101,8 @@ export default function ServiceCustomerTable() {
   const updateCustomerIsVipToOld = useCallback(async (id_customer) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/customers/update_vip_to_old/${id_customer}`,
         {
           method: "PUT",
@@ -216,12 +218,10 @@ export default function ServiceCustomerTable() {
       cccd.includes(keyword) ||
       type.includes(keyword);
 
-    const matchStatus =
-      statusFilter === "all" || statusFilter === type;
+    const matchStatus = statusFilter === "all" || statusFilter === type;
 
     return matchSearch && matchStatus;
   });
-
 
   const totalPages = Math.ceil(filteredCustomer.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;

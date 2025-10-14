@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import PricingSlider from "./PricingSlider";
 import PricingSliderMobi from "./PricingSliderMobi";
-import PricingFooterPage from "./pricingFooterPage";
+import PricingFooterPage from "../pricingFooterPage";
 
 export default function PricingPageV2() {
   const { t } = useLanguage();
@@ -28,8 +28,8 @@ export default function PricingPageV2() {
         </div>
 
         <main className="space-y-16 ">
-          <div className="xs:hidden lg:flex flex-col items-center justify-center">
-            <div className="flex items-center justify-center">
+          <div className="xs:hidden lg:block flex-col items-center justify-center">
+            <div className="flex items-center justify-center overflow-hidden rounded-xl ">
               <PricingSlider />
             </div>
           </div>

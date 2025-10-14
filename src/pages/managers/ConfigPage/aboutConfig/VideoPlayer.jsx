@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { formatFileSize, formatDate } from "./utils";
 import useUpdateImageUrl from "./updateImage_url";
+import VideoSettingsModal from "./VideoSettingsModal";
 
 const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
   const videoRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("intro"); // 'intro' or 'banner'
 
   const {
     item: introItem,
@@ -21,7 +21,7 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
     updating: updatingBanner,
   } = useUpdateImageUrl({ slug: "about", type: "banner_video" });
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (selectedOption) => {
     if (!selectedVideo?.filename) return;
 
     const newUrl = selectedVideo.filename;
@@ -108,109 +108,6 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
     );
 
     return `${truncatedName}...${extension}`;
-  };
-
-  const VideoSettingsModal = ({
-    isOpen,
-    onClose,
-    video,
-    onSave,
-    isSaving,
-    introVideoName,
-    bannerVideoName,
-  }) => {
-    if (!isOpen) return null;
-
-    return (
-      <div
-        className="fixed inset-0 bg-black/80 bg-opacity-60 z-50 flex justify-center items-center"
-        onClick={onClose}
-      >
-        <div
-          className="admin-light:bg-white admin-dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 m-4 transform transition-all duration-300 ease-in-out"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold admin-light:text-gray-800 admin-dark:text-white">
-              Thiết lập Video
-            </h3>
-            <button
-              onClick={onClose}
-              className="admin-light:text-gray-400 admin-dark:text-gray-500 hover:admin-light:text-gray-600 hover:admin-dark:text-gray-300 transition-colors"
-            >
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            <div
-              className={`p-5 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                selectedOption === "intro"
-                  ? "border-blue-500 admin-light:bg-blue-50 admin-dark:bg-blue-900/20 shadow-md"
-                  : "admin-light:bg-gray-50 admin-dark:bg-gray-700/50 border-transparent hover:admin-light:bg-gray-100 hover:admin-dark:bg-gray-700"
-              }`}
-              onClick={() => setSelectedOption("intro")}
-            >
-              <p className="text-lg font-semibold admin-light:text-gray-900 admin-dark:text-white">
-                Video giới thiệu
-              </p>
-              <p className="text-sm admin-light:text-gray-500 admin-dark:text-gray-400 truncate">
-                Đang dùng: {introVideoName || "Chưa thiết lập"}
-              </p>
-              <p className="text-sm admin-light:text-blue-600 admin-dark:text-blue-400 truncate font-medium">
-                Sẽ thay bằng: {video.filename}
-              </p>
-            </div>
-
-            <div
-              className={`p-5 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                selectedOption === "banner"
-                  ? "border-blue-500 admin-light:bg-blue-50 admin-dark:bg-blue-900/20 shadow-md"
-                  : "admin-light:bg-gray-50 admin-dark:bg-gray-700/50 border-transparent hover:admin-light:bg-gray-100 hover:admin-dark:bg-gray-700"
-              }`}
-              onClick={() => setSelectedOption("banner")}
-            >
-              <p className="text-lg font-semibold admin-light:text-gray-900 admin-dark:text-white">
-                Video banner
-              </p>
-              <p className="text-sm admin-light:text-gray-500 admin-dark:text-gray-400 truncate">
-                Đang dùng: {bannerVideoName || "Chưa thiết lập"}
-              </p>
-              <p className="text-sm admin-light:text-blue-600 admin-dark:text-blue-400 truncate font-medium">
-                Sẽ thay bằng: {video.filename}
-              </p>
-            </div>
-          </div>
-          <div className="mt-8 flex justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="px-6 py-2.5 rounded-lg admin-light:bg-gray-200 admin-dark:bg-gray-700 admin-light:text-gray-800 admin-dark:text-gray-200 font-semibold hover:admin-light:bg-gray-300 hover:admin-dark:bg-gray-600 transition-colors"
-            >
-              Hủy
-            </button>
-            <button
-              onClick={onSave}
-              disabled={isSaving}
-              className="px-6 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-sm disabled:bg-blue-400 disabled:cursor-not-allowed"
-            >
-              {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -355,25 +252,11 @@ const VideoPlayer = ({ selectedVideo, onDeleteVideo, onUpdateSuccess }) => {
           <button
             onClick={() => setIsModalOpen(true)}
             type="button"
-            className="inline-flex items-center gap-2 admin-light:bg-blue-100 admin-dark:bg-blue-900/30 admin-light:text-blue-700 admin-dark:text-blue-400 px-4 py-2 rounded-lg text-sm font-medium hover:admin-light:bg-blue-200 hover:admin-dark:bg-blue-900/50 transition-colors"
+            className="inline-flex items-center gap-2 admin-light:bg-blue-100 admin-dark:bg-blue-900/30 admin-light:text-blue-700 admin-dark:text-blue-400 px-4 py-2 rounded-lg text-sm font-medium  bg-gray-200 hover:admin-light:bg-blue-200 hover:admin-dark:bg-blue-900/50 transition-colors"
           >
             Thiết lập video
           </button>
 
-          {/* <div className="inline-flex items-center gap-2 admin-light:bg-green-50 admin-dark:bg-green-900/20 admin-light:text-green-700 admin-dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium">
-          <svg
-            className="w-4 h-4"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Hỗ trợ streaming chất lượng cao
-        </div> */}
           {/* Delete Button */}
           <button
             onClick={() => onDeleteVideo(selectedVideo.filename)}
