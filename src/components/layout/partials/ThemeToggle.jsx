@@ -86,9 +86,11 @@ export default function ThemeToggle() {
         onClick={toggleTheme}
         className={`
           relative w-9 h-9 flex items-center justify-center rounded-full
-          text-gray-500 dark:text-gray-400
+          // FIX: Changed default text color for proper contrast in light/dark mode
+          text-gray-600 dark:text-gray-300
           hover:bg-gray-200 dark:hover:bg-gray-700
-          hover:text-gray-950 dark:hover:text-gray-400
+          // FIX: Set a more standard text color on hover
+          hover:text-gray-900 dark:hover:text-white
           transition-colors duration-200
           cursor-pointer
         `}
@@ -103,6 +105,7 @@ export default function ThemeToggle() {
             <motion.div
               key="sun"
               {...animationProps}
+              className="absolute" // Added absolute to center the animated icon
             >
               <Sun className="w-5 h-5" />
             </motion.div>
@@ -110,6 +113,7 @@ export default function ThemeToggle() {
             <motion.div
               key="moon"
               {...animationProps}
+              className="absolute" // Added absolute to center the animated icon
             >
               <Moon className="w-5 h-5" />
             </motion.div>
@@ -123,12 +127,12 @@ export default function ThemeToggle() {
         onClick={toggleLanguage}
         className={`
           relative h-9 px-3 flex items-center justify-center rounded-full
-          text-gray-500 dark:text-gray-400
+          text-gray-600 dark:text-gray-300
           hover:bg-gray-200 dark:hover:bg-gray-700
-          hover:text-blue-500 dark:hover:text-blue-400
+          hover:text-blue-600 dark:hover:text-blue-400
           transition-colors duration-200
           cursor-pointer
-          disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent
+          disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gray-600 dark:disabled:hover:text-gray-300
         `}
         title={
           language === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"
