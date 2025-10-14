@@ -1,6 +1,6 @@
 export const skeleton = {
   container:
-    "hidden md:block w-full p-3 sm:p-6 lg:p-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 admin-dark:from-gray-950 admin-dark:to-gray-900 rounded-3xl shadow-xl",
+    "hidden md:block w-full p-3 sm:p-6 lg:p-8 bg-slate-50 dark:bg-slate-950 admin-dark:bg-gray-950 rounded-3xl shadow-xl",
   tableWrapper:
     "overflow-x-auto rounded-2xl border-2 border-slate-200/80 dark:border-slate-700/80 admin-dark:border-gray-800/80 shadow-inner",
   table:
@@ -8,13 +8,13 @@ export const skeleton = {
   header: "sticky top-0 z-20",
   stageRow: "flex",
   stageHeaderCell:
-    "py-4 px-4 sm:py-5 sm:px-6 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 admin-dark:from-gray-900 admin-dark:to-gray-800 sticky left-0 z-30 w-[120px] sm:w-[180px] lg:w-[200px] min-w-[120px] sm:min-w-[180px] lg:min-w-[200px] border-r border-b-2 border-slate-200 dark:border-slate-700 admin-dark:border-gray-800 first:rounded-tl-2xl",
+    "py-4 px-4 sm:py-5 sm:px-6 bg-slate-50 dark:bg-slate-800 admin-dark:bg-gray-900 sticky left-0 z-30 w-[120px] sm:w-[180px] lg:w-[200px] min-w-[120px] sm:min-w-[180px] lg:min-w-[200px] border-r border-b-2 border-slate-200 dark:border-slate-700 admin-dark:border-gray-800 first:rounded-tl-2xl",
   stageHeaderPulse:
-    "h-7 sm:h-8 lg:h-9 bg-gradient-to-r from-slate-300 to-slate-200 dark:from-slate-700 dark:to-slate-600 admin-dark:from-gray-800 admin-dark:to-gray-700 rounded-lg w-3/4 animate-pulse",
+    "h-7 sm:h-8 lg:h-9 bg-slate-200 dark:bg-slate-700 admin-dark:bg-gray-800 rounded-lg w-3/4 animate-pulse",
   stageDataCell:
-    "py-4 px-4 sm:py-5 sm:px-6 bg-gradient-to-b from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 admin-dark:from-gray-900 admin-dark:to-gray-800 min-w-[160px] lg:min-w-[170px] border-b-2 border-slate-200 dark:border-slate-700 admin-dark:border-gray-800 last:rounded-tr-2xl",
+    "py-4 px-4 sm:py-5 sm:px-6 bg-slate-50 dark:bg-slate-800 admin-dark:bg-gray-900 min-w-[160px] lg:min-w-[170px] border-b-2 border-slate-200 dark:border-slate-700 admin-dark:border-gray-800 last:rounded-tr-2xl",
   stageDataPulse:
-    "h-7 sm:h-8 lg:h-9 bg-gradient-to-r from-slate-300 to-slate-200 dark:from-slate-700 dark:to-slate-600 admin-dark:from-gray-800 admin-dark:to-gray-700 rounded-lg w-2/3 mx-auto animate-pulse",
+    "h-7 sm:h-8 lg:h-9 bg-slate-200 dark:bg-slate-700 admin-dark:bg-gray-800 rounded-lg w-2/3 mx-auto animate-pulse",
   serviceNameRow:
     "flex bg-slate-50/80 dark:bg-slate-800/40 admin-dark:bg-gray-900/40",
   serviceNameHeaderCell:
@@ -45,7 +45,7 @@ export const skeleton = {
 
 export const errorState = {
   container:
-    "hidden md:flex flex-col items-center justify-center p-8 sm:p-10 lg:p-12 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 admin-dark:from-red-950/30 admin-dark:to-rose-950/30 border-2 border-red-200 dark:border-red-800 admin-dark:border-red-900 rounded-2xl shadow-xl max-w-lg lg:max-w-xl mx-auto my-10",
+    "hidden md:flex flex-col items-center justify-center p-8 sm:p-10 lg:p-12 bg-red-50 dark:bg-red-950/20 admin-dark:bg-red-950/30 border-2 border-red-200 dark:border-red-800 admin-dark:border-red-900 rounded-2xl shadow-xl max-w-lg lg:max-w-xl mx-auto my-10",
   iconWrapper: "relative",
   iconBlur:
     "absolute inset-0 bg-red-500/20 dark:bg-red-500/10 admin-dark:bg-red-600/10 rounded-full blur-xl",
@@ -61,7 +61,7 @@ export const errorState = {
 
 export const missingDataState = {
   container:
-    "hidden md:flex flex-col items-center justify-center p-8 sm:p-10 lg:p-12 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 admin-dark:from-amber-950/30 admin-dark:to-orange-950/30 rounded-2xl shadow-xl border-2 border-amber-200 dark:border-amber-800 admin-dark:border-amber-900 max-w-2xl lg:max-w-3xl mx-auto my-10",
+    "hidden md:flex flex-col items-center justify-center p-8 sm:p-10 lg:p-12 bg-amber-50 dark:bg-amber-950/20 admin-dark:bg-amber-950/30 rounded-2xl shadow-xl border-2 border-amber-200 dark:border-amber-800 admin-dark:border-amber-900 max-w-2xl lg:max-w-3xl mx-auto my-10",
   iconWrapper: "relative mb-6",
   iconBlur:
     "absolute inset-0 bg-amber-500/20 dark:bg-amber-500/10 admin-dark:bg-amber-600/10 rounded-full blur-2xl",
@@ -81,7 +81,7 @@ export const missingDataState = {
 
 export const invalidDataState = {
   container:
-    "hidden md:flex flex-col items-center justify-center p-8 sm:p-10 lg:p-12 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 admin-dark:from-blue-950/30 admin-dark:to-indigo-950/30 rounded-2xl shadow-xl border-2 border-blue-200 dark:border-blue-800 admin-dark:border-blue-900 max-w-2xl lg:max-w-3xl mx-auto my-10",
+    "hidden md:flex flex-col items-center justify-center p-8 sm:p-10 lg:p-12 bg-blue-50 dark:bg-blue-950/20 admin-dark:bg-blue-950/30 rounded-2xl shadow-xl border-2 border-blue-200 dark:border-blue-800 admin-dark:border-blue-900 max-w-2xl lg:max-w-3xl mx-auto my-10",
   iconWrapper: "relative mb-6",
   iconBlur:
     "absolute inset-0 bg-blue-500/20 dark:bg-blue-500/10 admin-dark:bg-blue-600/10 rounded-full blur-2xl",
@@ -117,7 +117,7 @@ export const tableStyles = {
     "text-sm sticky top-0 z-20 bg-white dark:bg-slate-900 admin-dark:bg-gray-950",
   stageHeaderRow: "",
   stageHeaderCell:
-    "py-4 px-4 sm:py-5 sm:px-6 text-left font-bold text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-300 admin-dark:text-gray-300 dark:bg-gray-800 admin-dark:bg-gray-900 bg-gray-100 sticky left-0 z-40 w-[120px] min-w-[120px] sm:w-[180px] sm:min-w-[180px] lg:w-[200px] lg:min-w-[200px] shadow-sm first:rounded-tl-2xl",
+    "py-4 px-4 sm:py-5 sm:px-6 text-left font-bold text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-300 admin-dark:text-gray-300 bg-gray-100 dark:bg-gray-800 admin-dark:bg-gray-900 sticky left-0 z-40 w-[120px] min-w-[120px] sm:w-[180px] sm:min-w-[180px] lg:w-[200px] lg:min-w-[200px] shadow-sm first:rounded-tl-2xl",
   stageColumnHeaderBase:
     "border-b-4 py-4 px-3 sm:py-5 sm:px-4 text-center font-bold text-sm sm:text-base md:text-lg last:rounded-tr-2xl",
   stageColumnStyles: [
@@ -125,25 +125,25 @@ export const tableStyles = {
       border:
         "border-b-blue-500 dark:border-b-blue-400 admin-dark:border-b-blue-500",
       text: "text-blue-700 dark:text-blue-300 admin-dark:text-blue-400",
-      bg: "bg-gradient-to-b from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 admin-dark:from-blue-950/40 admin-dark:to-blue-900/30",
+      bg: "bg-blue-50 dark:bg-blue-950/30 admin-dark:bg-blue-950/40",
     },
     {
       border:
         "border-b-emerald-500 dark:border-b-emerald-400 admin-dark:border-b-emerald-500",
       text: "text-emerald-700 dark:text-emerald-300 admin-dark:text-emerald-400",
-      bg: "bg-gradient-to-b from-emerald-50 to-emerald-100/50 dark:from-emerald-950/30 dark:to-emerald-900/20 admin-dark:from-emerald-950/40 admin-dark:to-emerald-900/30",
+      bg: "bg-emerald-50 dark:bg-emerald-950/30 admin-dark:bg-emerald-950/40",
     },
     {
       border:
         "border-b-purple-500 dark:border-b-purple-400 admin-dark:border-b-purple-500",
       text: "text-purple-700 dark:text-purple-300 admin-dark:text-purple-400",
-      bg: "bg-gradient-to-b from-purple-50 to-purple-100/50 dark:from-purple-950/30 dark:to-purple-900/20 admin-dark:from-purple-950/40 admin-dark:to-purple-900/30",
+      bg: "bg-purple-50 dark:bg-purple-950/30 admin-dark:bg-purple-950/40",
     },
     {
       border:
         "border-b-orange-500 dark:border-b-orange-400 admin-dark:border-b-orange-500",
       text: "text-orange-700 dark:text-orange-300 admin-dark:text-orange-400",
-      bg: "bg-gradient-to-b from-orange-50 to-orange-100/50 dark:from-orange-950/30 dark:to-orange-900/20 admin-dark:from-orange-950/40 admin-dark:to-orange-900/30",
+      bg: "bg-orange-50 dark:bg-orange-950/30 admin-dark:bg-orange-950/40",
     },
   ],
   serviceHeaderRow:
