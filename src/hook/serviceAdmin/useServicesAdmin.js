@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import { ServiceAPI } from "@/api/serviceAPI";
 
 export const useServicesAdmin = (onActionComplete) => {
   const [services, setServices] = useState([]);
   const [editingService, setEditingService] = useState(null);
   const [loadingServices, setLoadingServices] = useState(true);
+  const [errorsMessage, setErrorsMessage] = useState("");
 
   const fetchServices = useCallback(async () => {
     setLoadingServices(true);
@@ -25,8 +26,6 @@ export const useServicesAdmin = (onActionComplete) => {
 
   const handleCreateService = async (formData) => {
     try {
-      console.log("Dữ liệu nhận từ form:", formData);
-
       let bodyData = formData;
       let headers = {};
 
@@ -48,11 +47,10 @@ export const useServicesAdmin = (onActionComplete) => {
 
       const result = await res.json();
       if (!result.success) throw new Error(result.message);
-      console.log("Tạo dịch vụ thành công:", result);
       await fetchServices();
       onActionComplete();
     } catch (err) {
-      console.error("Lỗi khi tạo dịch vụ:", err);
+      setErrorsMessage(err.message);
     }
   };
 
@@ -118,7 +116,6 @@ export const useServicesAdmin = (onActionComplete) => {
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Cập nhật thất bại");
-      console.log("✅ Update thành công:", result);
       await fetchServices();
       onActionComplete();
     } catch (error) {
@@ -128,9 +125,12 @@ export const useServicesAdmin = (onActionComplete) => {
 
   const handleDeleteService = async (id) => {
     try {
-      const res = await fetch(ServiceAPI.delete(id), {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/delete/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Error when delete service");
@@ -142,6 +142,7 @@ export const useServicesAdmin = (onActionComplete) => {
   };
 
   return {
+    errorsMessage,
     services,
     editingService,
     setEditingService,

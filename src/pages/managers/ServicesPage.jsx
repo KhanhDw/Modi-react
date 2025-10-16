@@ -32,6 +32,7 @@ export default function ServicesPage() {
   };
 
   const {
+    errorsMessage,
     services,
     editingService,
     setEditingService,
@@ -118,6 +119,7 @@ export default function ServicesPage() {
           handleClose,
           showForm,
           setShowForm,
+          errorsMessage,
           initDataService: services,
           editingService,
           setEditingService,

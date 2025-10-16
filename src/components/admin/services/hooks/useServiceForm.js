@@ -62,14 +62,21 @@ export const useServiceForm = (
       } else {
         newErrors.image_url = "Ảnh dịch vụ không hợp lệ";
       }
+    } else {
+      // Image is required when creating a new service, but not required when updating
+      if (!editingService) {
+        newErrors.image_url = "Ảnh dịch vụ là bắt buộc khi tạo mới";
+      }
     }
 
+    // Validate features if present but not valid string
     if (formData.features && typeof formData.features !== "string") {
-      newErrors.features = "Features phải là chuỗi (ngăn bằng '#')";
+      newErrors.features = "Tính năng nổi bật phải là chuỗi ký tự";
     }
 
+    // Validate details if present but not valid string
     if (formData.details && typeof formData.details !== "string") {
-      newErrors.details = "Details phải là chuỗi (ngăn bằng '#')";
+      newErrors.details = "Chi tiết dịch vụ phải là chuỗi ký tự";
     }
 
     setErrors(newErrors);
@@ -111,16 +118,9 @@ export const useServiceForm = (
       submitData.append("image_url", formData.image_url);
     }
 
-    // ✅ log FormData an toàn
-    for (let [key, value] of submitData.entries()) {
-      console.log(key, value);
-    }
-
-    console.log("editingService::", editingService);
     if (!editingService) {
       handleCreateService(submitData);
     } else {
-      console.log("-----", editingService.id);
       handleEditService(submitData, editingService.id);
     }
   };
