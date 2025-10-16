@@ -58,7 +58,8 @@ export default function ServiceBookingTable() {
     if (bookingToDeleteId) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_MAIN_BE_URL
+          `${
+            import.meta.env.VITE_MAIN_BE_URL
           }/api/bookings/${bookingToDeleteId}`,
           {
             method: "DELETE",
@@ -185,16 +186,16 @@ export default function ServiceBookingTable() {
                 <TableHead className="w-[20%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
                   Tên dịch vụ
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold">
+                <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
                   Trạng thái
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold ">
+                <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
                   Giá
                 </TableHead>
-                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold ">
+                <TableHead className="w-[15%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold text-center">
                   Ngày đặt
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
+                <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Ngày bàn giao
                 </TableHead>
                 <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold text-center">
@@ -213,53 +214,56 @@ export default function ServiceBookingTable() {
                   >
                     {startIndex + index + 1}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200 ">
                     {item.customer_name}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200 truncate max-w-md">
                     {item.service_name}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className={`text-center`}>
                     {item.status === "pending" ? (
-                      <Badge className="bg-yellow-500 text-white admin-dark:bg-yellow-600">
+                      <Badge className="bg-yellow-500 text-white  admin-dark:bg-yellow-600">
                         Chờ xác nhận
                       </Badge>
                     ) : item.status === "completed" ? (
-                      <Badge className="bg-green-500 text-white admin-dark:bg-green-600">
+                      <Badge className="bg-green-500 text-white  admin-dark:bg-green-600">
                         Hoàn thành
                       </Badge>
                     ) : item.status === "cancelled" ? (
-                      <Badge className="bg-red-500 text-white admin-dark:bg-red-600">
+                      <Badge className="bg-red-500 text-white  admin-dark:bg-red-600">
                         Hủy
                       </Badge>
                     ) : item.status === "processing" ? (
-                      <Badge className="bg-blue-500 text-white admin-dark:bg-blue-600">
+                      <Badge className="bg-blue-500 text-white  admin-dark:bg-blue-600">
                         Đang xử lý
                       </Badge>
                     ) : item.status === "confirmed" ? (
-                      <Badge className="bg-purple-500 text-white admin-dark:bg-purple-600">
+                      <Badge className="bg-purple-500 text-white  admin-dark:bg-purple-600">
                         Đã xác nhận
                       </Badge>
                     ) : (
-                      <Badge className="bg-gray-500 text-white admin-dark:bg-gray-600">
+                      <Badge className="bg-gray-500 text-white  admin-dark:bg-gray-600">
                         Không xác định
                       </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
                     {Number(item.price).toLocaleString("vi-VN")} ₫
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
                     {new Date(item.booking_date).toLocaleDateString("vi-VN")}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
                     {item.completed_date
                       ? new Date(item.completed_date).toLocaleDateString(
-                        "vi-VN"
-                      )
+                          "vi-VN"
+                        )
                       : "Không có"}
                   </TableCell>
-                  <TableCell className="flex items-center justify-center space-x-2">
+                  <TableCell
+                    className="flex items-center justify-center space-x-2 text-center"
+                    text-center
+                  >
                     <TableRowActions
                       actions={[
                         {

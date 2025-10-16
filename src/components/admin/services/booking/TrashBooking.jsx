@@ -203,7 +203,7 @@ export default function TrashBooking({
                   <TableHead className="text-black admin-dark:text-white">
                     Ngày đặt
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white flex items-center justify-center">
                     Thao tác
                   </TableHead>
                 </TableRow>
@@ -221,7 +221,7 @@ export default function TrashBooking({
                       <TableCell className="admin-dark:text-white">
                         {booking.customer_name}
                       </TableCell>
-                      <TableCell className="admin-dark:text-white">
+                      <TableCell className="admin-dark:text-white whitespace-break-spaces">
                         {booking.service_name}
                       </TableCell>
                       {/* <TableCell className="admin-dark:text-white">
@@ -232,7 +232,7 @@ export default function TrashBooking({
                           "vi-VN"
                         )}
                       </TableCell>
-                      <TableCell className="flex items-center space-x-2">
+                      <TableCell className="flex items-center space-x-2 justify-center">
                         <button
                           onClick={() => handleRestoreBooking(booking.id)}
                           className="p-2 text-green-500 hover:text-green-700 cursor-pointer"

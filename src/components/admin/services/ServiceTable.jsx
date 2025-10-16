@@ -193,9 +193,9 @@ export default function ServiceTable() {
                 <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Ngôn ngữ hỗ trợ
                 </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200 text-center">
+                {/* <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Trạng thái
-                </TableHead>
+                </TableHead> */}
                 <TableHead className="text-black admin-dark:text-gray-200 text-center">
                   Thao tác
                 </TableHead>
@@ -238,7 +238,7 @@ export default function ServiceTable() {
                         !item.totalLanguages.includes("vi")
                           ? "text-red-400"
                           : "text-gray-900 admin-dark:text-gray-200"
-                      } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
+                      } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer truncate max-w-md`}
                     >
                       {item.translation?.ten_dich_vu ||
                         "Chưa có thông tin tiếng việt"}
@@ -279,13 +279,13 @@ export default function ServiceTable() {
                         }) || ""}
                       </div>
                     </TableCell>
-                    <TableCell className={`text-center`}>
+                    {/* <TableCell className={`text-center`}>
                       <Badge className="bg-green-600 px-2 py-1 rounded text-white admin-dark:bg-green-500">
                         {item.status === "Active"
                           ? "Hoạt động"
                           : "Không hoạt động"}
                       </Badge>
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="text-center">
                       <TableRowActions
                         actions={[

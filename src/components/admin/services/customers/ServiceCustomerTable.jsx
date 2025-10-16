@@ -301,37 +301,37 @@ export default function ServiceCustomerTable() {
             <Table>
               <TableHeader>
                 <TableRow className="admin-dark:border-gray-700 bg-gray-100 admin-dark:bg-gray-800">
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     STT
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white ">
                     Tên khách hàng
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     SĐT
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Email
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Số CCCD
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Số tài khoản ngân hàng
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Tên ngân hàng
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Đã đặt
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Hoàn thành
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Chi
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white text-center">
                     Thao tác
                   </TableHead>
                 </TableRow>
@@ -342,7 +342,7 @@ export default function ServiceCustomerTable() {
                     key={customer.id}
                     className="admin-dark:border-gray-700 admin-dark:hover:bg-gray-750"
                   >
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {startIndex + index + 1}
                     </TableCell>
 
@@ -356,25 +356,25 @@ export default function ServiceCustomerTable() {
                       ) : null}
                       {customer.name}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {customer.phone || "Chưa cập nhật"}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {customer.email || "Chưa cập nhật"}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {customer.cccd || "Chưa cập nhật"}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {customer.number_bank || "Chưa cập nhật"}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {customer.name_bank || "Chưa cập nhật"}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white pl-6">
+                    <TableCell className="text-black admin-dark:text-white pl-6 text-center">
                       {customer.booking_count || 0}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white pl-9">
+                    <TableCell className="text-black admin-dark:text-white pl-9 text-center">
                       {
                         initDataBooking.filter(
                           (c) =>
@@ -383,13 +383,13 @@ export default function ServiceCustomerTable() {
                         ).length
                       }
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="text-black admin-dark:text-white text-center">
                       {Number(customer.total_spent || 0).toLocaleString(
                         "vi-VN"
                       )}{" "}
                       ₫
                     </TableCell>
-                    <TableCell className="flex items-center justify-center space-x-2">
+                    <TableCell className="flex items-center justify-center space-x-2 text-center">
                       <TableRowActions
                         actions={[
                           {
