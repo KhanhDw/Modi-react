@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import CustomerCombobox from "./selectOldCustomer";
 import CustomSelect from "./CustomSelect";
+import BankDropdown from "@/components/feature/SelectBank.jsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { banks } from "@/data/banks.js";
 import { Switch } from "@/components/ui/switch";
@@ -258,6 +260,14 @@ export default function BookingForm() {
     }
   };
 
+  // Hàm kiểm tra có phải toàn số hay không
+  function isDigitsOnly(value, maxLength) {
+    const regex = /^[0-9]*$/; // chỉ cho phép 0-9
+    if (!regex.test(value)) return false;
+    if (maxLength && value.length > maxLength) return false;
+    return true;
+  }
+
   return (
     <ScrollArea
       className="lenis-local w-full h-full"
@@ -295,9 +305,7 @@ export default function BookingForm() {
                     htmlFor="customer-info-toggle"
                     className="text-sm font-medium text-gray-700 admin-dark:text-gray-300 cursor-pointer"
                   >
-                    {showCustomerInfo
-                      ? "Ẩn thông tin"
-                      : "Chỉnh sửa thông tin"}
+                    {showCustomerInfo ? "Ẩn thông tin" : "Chỉnh sửa thông tin"}
                   </Label>
                   <Switch
                     id="customer-info-toggle"
@@ -307,195 +315,227 @@ export default function BookingForm() {
                 </div>
               )}
             </div>
-
-            {showCustomerInfo && (
-              <div className="space-y-4">
-                {/* Mode Switch */}
-                {!editingBooking && (
-                  <div className="flex items-center justify-start gap-4 mt-3 mb-4">
-                    {["existing", "new"].map((mode) => (
-                      <Button
-                        key={mode}
-                        type="button"
-                        onClick={() => handleModeChange(mode)}
-                        className={`cursor-pointer shadow border-none transition-all
-                    ${customerMode === mode
-                            ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
-                            : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
-                          }
+            <AnimatePresence initial={false}>
+              {showCustomerInfo && (
+                <motion.div
+                  key="customer-info"
+                  initial={{ opacity: 0, height: 0, y: -10 }}
+                  animate={{ opacity: 1, height: "auto", y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -10 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  className="space-y-4 overflow-hidden"
+                >
+                  {/* Mode Switch */}
+                  {!editingBooking && (
+                    <div className="flex items-center justify-start gap-4 mt-3 mb-4">
+                      {["existing", "new"].map((mode) => (
+                        <Button
+                          key={mode}
+                          type="button"
+                          onClick={() => handleModeChange(mode)}
+                          className={`cursor-pointer shadow border-none transition-all
+                    ${
+                      customerMode === mode
+                        ? "bg-blue-500 hover:bg-blue-600 text-white admin-dark:bg-blue-600 admin-dark:hover:bg-blue-700"
+                        : "bg-gray-200 hover:bg-gray-300 text-black admin-dark:bg-gray-700 admin-dark:hover:bg-gray-600 admin-dark:text-white"
+                    }
                   `}
-                      >
-                        <span className="text-xs sm:text-sm md:text-base font-semibold">
-                          {mode === "existing"
-                            ? "Khách hàng cũ"
-                            : "Khách hàng mới"}
-                        </span>
-                      </Button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Khách hàng cũ */}
-                {customerMode === "existing" && !editingBooking && (
-                  <div className="space-y-2">
-                    <Label className="text-black admin-dark:text-gray-100">
-                      Khách hàng *
-                    </Label>
-                    <CustomerCombobox
-                      customers={initDataCustomer}
-                      formData={formData}
-                      setFormData={setFormData}
-                    />
-                  </div>
-                )}
-
-                {/* Số điện thoại */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="cusPhone"
-                    className="text-black admin-dark:text-gray-100"
-                  >
-                    Số điện thoại *
-                  </Label>
-                  <Input
-                    id="cusPhone"
-                    maxLength={10}
-                    className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-                    value={formData.cusPhone || ""}
-                    onChange={(e) => handleChange("cusPhone", e.target.value)}
-                    onBlur={handleCheckCustomer}
-                    placeholder="Nhập số điện thoại của khách hàng..."
-                    readOnly={customerMode === "existing"}
-                  />
-                  {errors.cusPhone && (
-                    <p className="text-red-500 text-sm">{errors.cusPhone}</p>
+                        >
+                          <span className="text-xs sm:text-sm md:text-base font-semibold">
+                            {mode === "existing"
+                              ? "Khách hàng cũ"
+                              : "Khách hàng mới"}
+                          </span>
+                        </Button>
+                      ))}
+                    </div>
                   )}
-                </div>
-
-                {/* Tên khách hàng */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="cusName"
-                    className="text-black admin-dark:text-gray-100"
-                  >
-                    Tên khách hàng *
-                  </Label>
-                  <Input
-                    id="cusName"
-                    className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-                    value={formData.cusName || ""}
-                    onChange={(e) => handleChange("cusName", e.target.value)}
-                    placeholder="Nhập Họ và Tên khách hàng..."
-                    readOnly={customerMode === "existing"}
-                  />
-                  {errors.cusName && (
-                    <p className="text-red-500 text-sm">{errors.cusName}</p>
+                  {/* Khách hàng cũ */}
+                  {customerMode === "existing" && !editingBooking && (
+                    <div className="space-y-2">
+                      <Label className="text-black admin-dark:text-gray-100">
+                        Khách hàng *
+                      </Label>
+                      <CustomerCombobox
+                        customers={initDataCustomer}
+                        formData={formData}
+                        setFormData={setFormData}
+                      />
+                    </div>
                   )}
-                </div>
-
-                {/* Email + Địa chỉ (khi tạo mới) */}
-
-                <>
+                  {/* Số điện thoại */}
                   <div className="space-y-2">
                     <Label
-                      htmlFor="cusEmail"
+                      htmlFor="cusPhone"
                       className="text-black admin-dark:text-gray-100"
                     >
-                      Email
+                      Số điện thoại *
                     </Label>
                     <Input
-                      id="cusEmail"
+                      id="cusPhone"
+                      maxLength={10}
                       className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-                      value={formData.cusEmail || ""}
-                      onChange={(e) =>
-                        handleChange("cusEmail", e.target.value)
-                      }
-                      placeholder="Nhập email của khách hàng..."
-                      readOnly={customerMode === "existing"}
+                      value={formData.cusPhone || ""}
+                      onChange={(e) => {
+                        // Lọc ra chỉ các ký tự 0–9
+                        const val = e.target.value.replace(/[^0-9]/g, "");
+                        // Giới hạn độ dài tối đa
+                        if (val.length <= 10) {
+                          handleChange("cusPhone", val);
+                        }
+                      }}
+                      onBlur={handleCheckCustomer}
+                      placeholder="Nhập số điện thoại của khách hàng..."
+                      readOnly={customerMode === "existing" || editingBooking}
                     />
-                    {errors.cusEmail && (
-                      <p className="text-red-500 text-sm">{errors.cusEmail}</p>
+                    {errors.cusPhone && (
+                      <p className="text-red-500 text-sm">{errors.cusPhone}</p>
                     )}
                   </div>
+                  {/* Tên khách hàng */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="cusName"
+                      className="text-black admin-dark:text-gray-100"
+                    >
+                      Tên khách hàng *
+                    </Label>
+                    <Input
+                      id="cusName"
+                      className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                      value={formData.cusName || ""}
+                      onChange={(e) => handleChange("cusName", e.target.value)}
+                      placeholder="Nhập Họ và Tên khách hàng..."
+                      readOnly={customerMode === "existing" || editingBooking}
+                    />
+                    {errors.cusName && (
+                      <p className="text-red-500 text-sm">{errors.cusName}</p>
+                    )}
+                  </div>
+                  {/* Email + Địa chỉ (khi tạo mới) */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="cusEmail"
+                        className="text-black admin-dark:text-gray-100"
+                      >
+                        Email
+                      </Label>
+                      <Input
+                        id="cusEmail"
+                        className="text-black w-full border border-black/30 admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                        value={formData.cusEmail || ""}
+                        onChange={(e) =>
+                          handleChange("cusEmail", e.target.value)
+                        }
+                        placeholder="Nhập email của khách hàng..."
+                        readOnly={customerMode === "existing" || editingBooking}
+                      />
+                      {errors.cusEmail && (
+                        <p className="text-red-500 text-sm">
+                          {errors.cusEmail}
+                        </p>
+                      )}
+                    </div>
 
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="cusAddress"
-                      className="text-black admin-dark:text-gray-100"
-                    >
-                      Địa chỉ *
-                    </Label>
-                    <Input
-                      id="cusAddress"
-                      className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-                      value={formData.cusAddress || ""}
-                      onChange={(e) =>
-                        handleChange("cusAddress", e.target.value)
-                      }
-                      placeholder="Nhập địa chỉ của khách hàng..."
-                      readOnly={customerMode === "existing"}
-                    />
-                    {errors.cusAddress && (
-                      <p className="text-red-500 text-sm">
-                        {errors.cusAddress}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="cccd"
-                      className="text-black admin-dark:text-gray-100"
-                    >
-                      CCCD/CMND
-                    </Label>
-                    <Input
-                      id="cccd"
-                      className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-                      value={formData.cccd || ""}
-                      onChange={(e) => handleChange("cccd", e.target.value)}
-                      placeholder="Nhập số CCCD/CMND..."
-                      readOnly={customerMode === "existing"}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="bankAccount"
-                      className="text-black admin-dark:text-gray-100"
-                    >
-                      Số tài khoản ngân hàng
-                    </Label>
-                    <Input
-                      id="bankAccount"
-                      className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
-                      value={formData.bankAccount || ""}
-                      onChange={(e) =>
-                        handleChange("bankAccount", e.target.value)
-                      }
-                      placeholder="Nhập số tài khoản..."
-                      readOnly={customerMode === "existing"}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="bankName"
-                      className="text-black admin-dark:text-gray-100"
-                    >
-                      Tên ngân hàng
-                    </Label>
-                    <CustomSelect
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="cusAddress"
+                        className="text-black admin-dark:text-gray-100"
+                      >
+                        Địa chỉ *
+                      </Label>
+                      <Input
+                        id="cusAddress"
+                        className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                        value={formData.cusAddress || ""}
+                        onChange={(e) =>
+                          handleChange("cusAddress", e.target.value)
+                        }
+                        placeholder="Nhập địa chỉ của khách hàng..."
+                        readOnly={customerMode === "existing" || editingBooking}
+                      />
+                      {errors.cusAddress && (
+                        <p className="text-red-500 text-sm">
+                          {errors.cusAddress}
+                        </p>
+                      )}
+                    </div>
+                    {/* CCCD/CMND */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="cccd"
+                        className="text-black admin-dark:text-gray-100"
+                      >
+                        CCCD/CMND
+                      </Label>
+                      {/* CCCD */}
+                      <Input
+                        id="cccd"
+                        maxLength={12}
+                        className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                        value={formData.cccd || ""}
+                        onChange={(e) => {
+                          const val = e.target.value
+                            .replace(/[^0-9]/g, "")
+                            .slice(0, 12);
+                          handleChange("cccd", val);
+                        }}
+                        placeholder="Nhập số CCCD/CMND..."
+                        readOnly={customerMode === "existing" || editingBooking}
+                      />
+                    </div>
+
+                    {/* Số tài khoản ngân hàng */}
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="bankAccount"
+                        className="text-black admin-dark:text-gray-100"
+                      >
+                        Số tài khoản ngân hàng
+                      </Label>
+                      {/* Bank Account */}
+                      <Input
+                        id="bankAccount"
+                        maxLength={14}
+                        className="w-full border border-gray-400 rounded-md text-black admin-dark:text-gray-100 admin-dark:border-gray-600 shadow-none"
+                        value={formData.bankAccount || ""}
+                        onChange={(e) => {
+                          const val = e.target.value
+                            .replace(/[^0-9]/g, "")
+                            .slice(0, 14);
+                          handleChange("bankAccount", val);
+                        }}
+                        placeholder="Nhập số tài khoản..."
+                        readOnly={customerMode === "existing" || editingBooking}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="bankName"
+                        className="text-black admin-dark:text-gray-100"
+                      >
+                        Tên ngân hàng
+                      </Label>
+                      <BankDropdown
+                        formData={formData}
+                        setFormData={setFormData}
+                        disabled={customerMode === "existing"}
+                      />
+                      {/* <CustomSelect
                       value={formData.bankName || ""}
-                      onValueChange={(value) =>
-                        handleChange("bankName", value)
-                      }
+                      onValueChange={(value) => handleChange("bankName", value)}
                       placeholder="Chọn ngân hàng..."
                       options={banks}
                       className="w-full"
                       disabled={customerMode === "existing"}
-                    />
+                    /> */}
+                    </div>
                   </div>
-                </>
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </fieldset>
 
           {/* Service and Time Information Group */}
@@ -537,17 +577,20 @@ export default function BookingForm() {
                   Chọn dịch vụ *
                 </Label>
 
-                <CustomSelect
-                  value={formData.service || ""}
-                  onValueChange={(value) => handleChange("service", value)}
-                  placeholder="Chọn dịch vụ"
-                  options={initDataService.map((service) => ({
-                    value: String(service?.id ?? ""),
-                    label:
-                      service?.translation?.ten_dich_vu || "Dịch vụ không tên",
-                  }))}
-                  className="w-full"
-                />
+                <div className="w-full">
+                  <CustomSelect
+                    value={formData.service || ""}
+                    onValueChange={(value) => handleChange("service", value)}
+                    placeholder="Chọn dịch vụ"
+                    options={initDataService.map((service) => ({
+                      value: String(service?.id ?? ""),
+                      label:
+                        service?.translation?.ten_dich_vu ||
+                        "Dịch vụ không tên",
+                    }))}
+                    className="w-full"
+                  />
+                </div>
 
                 {errors.service && (
                   <p className="text-red-500 text-sm">{errors.service}</p>
@@ -584,7 +627,10 @@ export default function BookingForm() {
             </div>
 
             {/* Số lượng */}
-            <div className="space-y-2 mt-4">
+            <div
+              hidden={true}
+              className="space-y-2 mt-4 "
+            >
               <Label
                 htmlFor="quantity"
                 className="text-black admin-dark:text-gray-100"
@@ -603,7 +649,10 @@ export default function BookingForm() {
             </div>
 
             {/* Tổng tiền */}
-            <div className="space-y-2 mt-4">
+            <div
+              hidden={true}
+              className="space-y-2 mt-4"
+            >
               <Label
                 htmlFor="total"
                 className="text-black admin-dark:text-gray-100"

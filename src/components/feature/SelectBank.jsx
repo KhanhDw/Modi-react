@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -10,26 +9,23 @@ import {
 } from "@/components/ui/command";
 import { ChevronsUpDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { banks } from "@/data/banks.js";
 
-export const VIETNAMESE_BANKS = [
-  { code: "VCB", name: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)" },
-  { code: "TCB", name: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)" },
-  { code: "BIDV", name: "BIDV (Ngân hàng TMCP Đầu tư và Phát triển Việt Nam)" },
-  { code: "CTG", name: "VietinBank (Ngân hàng TMCP Công Thương Việt Nam)" },
-  { code: "ACB", name: "ACB (Ngân hàng TMCP Á Châu)" },
-  { code: "MB", name: "MBBank (Ngân hàng TMCP Quân đội)" },
-  { code: "VPB", name: "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)" },
-  { code: "STB", name: "Sacombank (Ngân hàng TMCP Sài Gòn Thương Tín)" },
-  { code: "TPB", name: "TPBank (Ngân hàng TMCP Tiên Phong)" },
-];
+export const VIETNAMESE_BANKS = banks;
 
-export default function BankDropdown({ formData, setFormData }) {
+export default function BankDropdown({
+  formData,
+  setFormData,
+  disabled = false,
+}) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
-
-  const selectedBank = VIETNAMESE_BANKS.find(
-    (b) => b.code === formData.name_bank // lookup theo name_bank
-  );
+  let selectedBank = "";
+  if (formData.bankName) {
+    selectedBank = VIETNAMESE_BANKS.find((b) => b.value === formData.bankName);
+  } else {
+    selectedBank = VIETNAMESE_BANKS.find((b) => b.value === formData.name_bank);
+  }
 
   // Đóng dropdown khi click ra ngoài
   useEffect(() => {
@@ -45,8 +41,12 @@ export default function BankDropdown({ formData, setFormData }) {
   }, []);
 
   return (
-    <div className="relative w-full space-y-1" ref={dropdownRef}>
+    <div
+      className="relative w-full space-y-1"
+      ref={dropdownRef}
+    >
       <Button
+        disabled={disabled}
         type="button"
         variant="outline"
         role="combobox"
@@ -62,11 +62,9 @@ export default function BankDropdown({ formData, setFormData }) {
           truncate
         `}
       >
-        <span
-          className="admin-dark:text-gray-400 text-gray-500 truncate max-w-[calc(100%-24px)]"
-        >
+        <span className="admin-dark:text-gray-200 text-gray-800 truncate max-w-[calc(100%-24px)]">
           {selectedBank
-            ? `${selectedBank.name} (${selectedBank.code})`
+            ? `${selectedBank.label} (${selectedBank.value})`
             : "Chọn ngân hàng..."}
         </span>
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -75,50 +73,60 @@ export default function BankDropdown({ formData, setFormData }) {
       {open && (
         <div
           className={`
-      absolute w-full bottom-full mb-1 max-h-60 overflow-auto
+      absolute w-full bottom-full mb-1
       border border-black/30 bg-white text-black
       admin-dark:bg-gray-800 admin-dark:text-gray-100
-      admin-dark:border-gray-600 rounded-md shadow-md scrollbar-hide
+      admin-dark:border-gray-600 rounded-md shadow-md
     `}
           role="listbox"
         >
           <Command className="bg-transparent">
+            {/* Input tìm kiếm - luôn dính trên */}
             <CommandInput
               placeholder="Tìm theo tên ngân hàng..."
               className={`
-                placeholder:text-gray-500 text-black
-                admin-dark:placeholder:text-gray-400
-                admin-dark:text-gray-100
-              `}
-              onValueChange={() => { }}
+          placeholder:text-gray-500 text-black
+          admin-dark:placeholder:text-gray-400
+          admin-dark:text-gray-100
+          sticky top-0 z-10 bg-white admin-dark:bg-gray-800
+          border-b border-gray-200 admin-dark:border-gray-700
+        `}
             />
-            <CommandList className="bg-transparent">
-              <CommandEmpty className="px-4 py-2 text-sm text-gray-500 admin-dark:text-gray-400 text-center">
-                Không tìm thấy ngân hàng
-              </CommandEmpty>
-              <CommandGroup>
-                {VIETNAMESE_BANKS.map((bank) => (
-                  <CommandItem
-                    key={bank.code}
-                    value={`${bank.name} - ${bank.code}`}
-                    onSelect={() => {
-                      setFormData({
-                        ...formData,
-                        name_bank: bank.code,
-                      });
-                      setOpen(false);
-                    }}
-                    className={`
-                      cursor-pointer px-2 py-1.5
-                      text-black admin-dark:text-gray-100 admin-dark:hover:text-white
-                      rounded-sm transition-all admin-dark:hover:bg-gray-700
-                    `}
-                  >
-                    {bank.name} ({bank.code})
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
+
+            {/* Vùng cuộn chỉ dành cho danh sách */}
+            <div>
+              <CommandList
+                data-lenis-prevent
+                className="max-h-60 overflow-y-auto scrollbar-hide lenis-local"
+              >
+                <CommandEmpty className="px-4 py-2 text-sm text-gray-500 admin-dark:text-gray-400 text-center">
+                  Không tìm thấy ngân hàng
+                </CommandEmpty>
+                <CommandGroup>
+                  {VIETNAMESE_BANKS.map((bank) => (
+                    <CommandItem
+                      key={bank.value}
+                      value={`${bank.label} - ${bank.value}`}
+                      onSelect={() => {
+                        setFormData({
+                          ...formData,
+                          name_bank: bank.value,
+                          bankName: bank.value,
+                        });
+                        setOpen(false);
+                      }}
+                      className={`
+                  cursor-pointer px-2 py-1.5
+                  text-black admin-dark:text-gray-100 admin-dark:hover:text-white
+                  rounded-sm transition-all admin-dark:hover:bg-gray-700
+                `}
+                    >
+                      {bank.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </div>
           </Command>
         </div>
       )}

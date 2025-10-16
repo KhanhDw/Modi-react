@@ -39,7 +39,7 @@ export default function CustomSelect({
         aria-expanded={open}
       >
         <span
-          className="block flex-1 truncate text-left text-gray-700 admin-dark:text-gray-300"
+          className="block flex-1  text-left text-gray-700 admin-dark:text-gray-300 "
           title={selectedLabel || placeholder}
         >
           {selectedLabel || placeholder}
@@ -60,8 +60,7 @@ export default function CustomSelect({
             position: "absolute",
             top: "calc(100% + 4px)",
             left: 0,
-            minWidth: "100%",
-            width: "max-content",
+            width: "100%",
             maxHeight: "200px",
           }}
           className="z-50 overflow-auto rounded-md border border-gray-200 bg-white text-sm md:text-base font-normal text-gray-700 shadow-lg admin-dark:border-gray-700 admin-dark:bg-gray-800 admin-dark:text-white scrollbar-hide"
@@ -84,13 +83,20 @@ export default function CustomSelect({
                 }
               }}
               className={cn(
-                "relative cursor-pointer px-3 py-2 hover:bg-gray-100 admin-dark:hover:bg-gray-700",
+                "relative flex items-center cursor-pointer px-3 py-2 hover:bg-gray-100 admin-dark:hover:bg-gray-700",
                 value === opt.value ? "font-medium" : ""
               )}
             >
-              {opt.label}
+              {/* Wrapper cho text với truncate */}
+              <span
+                className="flex-1  pr-6" // pr-6 để chừa chỗ cho icon check
+                title={opt.label} // Thêm title để hiển thị đầy đủ text khi hover
+              >
+                {opt.label}
+              </span>
+
               {value === opt.value && (
-                <CheckIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 admin-dark:text-gray-200" />
+                <CheckIcon className="flex-shrink-0 w-4 h-4 text-gray-500 admin-dark:text-gray-200" />
               )}
             </li>
           ))}

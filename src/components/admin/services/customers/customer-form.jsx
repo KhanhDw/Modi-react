@@ -15,7 +15,7 @@ const typeOptions = [
   { value: "new", label: "Khách mới" },
   { value: "regular", label: "Khách thường xuyên" },
   { value: "vip", label: "Khách VIP" },
-  { value: "old", label: "Khách cũ" }
+  { value: "old", label: "Khách cũ" },
 ];
 
 // options cho status
@@ -33,7 +33,6 @@ export default function CustomerForm() {
   } = useOutletContext();
 
   useLenisLocal(".lenis-local");
-
 
   const [formData, setFormData] = useState({
     name: "",
@@ -80,14 +79,44 @@ export default function CustomerForm() {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
+
+    let processedValue = value;
+
+    // Xử lý các trường số đặc biệt
+    if (name === "cccd") {
+      // Chỉ cho phép số, max 12 ký tự
+      processedValue = value.replace(/[^0-9]/g, "").slice(0, 12);
+    } else if (name === "phone") {
+      // Chỉ cho phép số, max 10 ký tự
+      processedValue = value.replace(/[^0-9]/g, "").slice(0, 10);
+    } else if (name === "number_bank") {
+      // Chỉ cho phép số, max 14 ký tự
+      processedValue = value.replace(/[^0-9]/g, "").slice(0, 14);
+    } else {
+      processedValue =
         (type === "number" ||
           ["total_spent", "booking_count"].includes(name)) &&
-          value !== ""
+        value !== ""
           ? Number(value)
-          : value,
+          : value;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: processedValue,
+    }));
+  };
+
+  const handlePaste = (e, fieldName, maxLength) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text");
+
+    // Lọc chỉ lấy số và cắt theo maxLength
+    const processedData = pastedData.replace(/[^0-9]/g, "").slice(0, maxLength);
+
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: processedData,
     }));
   };
 
@@ -141,6 +170,20 @@ export default function CustomerForm() {
       )
     ) {
       newErrors.phone = "Số điện thoại đã tồn tại.";
+    }
+
+    // Validation cho CCCD (nếu có nhập)
+    if (formData.cccd?.trim() && !/^\d{12}$/.test(formData.cccd.trim())) {
+      newErrors.cccd = "Số CCCD phải gồm đúng 12 số.";
+    }
+
+    // Validation cho số tài khoản ngân hàng (nếu có nhập)
+    if (
+      formData.number_bank?.trim() &&
+      !/^\d{1,14}$/.test(formData.number_bank.trim())
+    ) {
+      newErrors.number_bank =
+        "Số tài khoản ngân hàng chỉ được chứa số (tối đa 14 số).";
     }
 
     if (formData.email?.trim()) {
@@ -289,7 +332,10 @@ export default function CustomerForm() {
   };
 
   return (
-    <ScrollArea className="lenis-local w-full h-full" data-lenis-prevent>
+    <ScrollArea
+      className="lenis-local w-full h-full"
+      data-lenis-prevent
+    >
       <div className="bg-white admin-dark:bg-gray-800 w-full h-full mx-auto p-3 md:p-5">
         <div className="relative w-full">
           <div className="flex flex-col items-start sm:items-center w-full mb-8 mt-2">
@@ -334,7 +380,9 @@ export default function CustomerForm() {
                         placeholder="Nguyễn Văn A"
                       />
                       {errors.name && (
-                        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.name}
+                        </p>
                       )}
                     </div>
 
@@ -350,12 +398,19 @@ export default function CustomerForm() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
+                        onPaste={(e) => handlePaste(e, "phone", 10)}
+                        maxLength={10}
                         className={inputClass}
                         placeholder="0901234567"
                       />
                       {errors.phone && (
                         <p className="text-red-500 text-sm mt-1">
                           {errors.phone}
+                        </p>
+                      )}
+                      {formData.phone.length >= 10 && (
+                        <p className="text-orange-500 text-xs mt-1">
+                          Đã đạt tối đa 10 số
                         </p>
                       )}
                     </div>
@@ -412,6 +467,7 @@ export default function CustomerForm() {
                     Thông Tin Ngân Hàng
                   </h3>
                   <div className="space-y-4">
+                    {/* Số tài khoản ngân hàng */}
                     <div>
                       <Label
                         className={labelClass}
@@ -424,9 +480,16 @@ export default function CustomerForm() {
                         name="number_bank"
                         value={formData.number_bank}
                         onChange={handleChange}
+                        onPaste={(e) => handlePaste(e, "number_bank", 14)}
+                        maxLength={14}
                         className={inputClass}
                         placeholder="101010xxxxxx"
                       />
+                      {formData.number_bank.length >= 14 && (
+                        <p className="text-orange-500 text-xs mt-1">
+                          Đã đạt tối đa 14 số
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -449,7 +512,9 @@ export default function CustomerForm() {
                     <Label className={labelClass}>Loại khách hàng</Label>
                     <CustomSelect
                       value={formData.type}
-                      onValueChange={(val) => setFormData(prev => ({ ...prev, type: val }))}
+                      onValueChange={(val) =>
+                        setFormData((prev) => ({ ...prev, type: val }))
+                      }
                       placeholder="Chọn loại khách hàng"
                       options={typeOptions}
                       openUp={true}
@@ -460,7 +525,9 @@ export default function CustomerForm() {
                     <Label className={labelClass}>Trạng thái</Label>
                     <CustomSelect
                       value={formData.status}
-                      onValueChange={(val) => setFormData(prev => ({ ...prev, status: val }))}
+                      onValueChange={(val) =>
+                        setFormData((prev) => ({ ...prev, status: val }))
+                      }
                       placeholder="Chọn trạng thái"
                       options={statusOptions}
                       openUp={true}
@@ -475,6 +542,7 @@ export default function CustomerForm() {
                     Thông Tin Định Danh & Ảnh
                   </h3>
 
+                  {/* CCCD */}
                   <div>
                     <Label
                       className={labelClass}
@@ -485,12 +553,18 @@ export default function CustomerForm() {
                     <Input
                       id="cccd"
                       name="cccd"
-                      maxLength={14}
                       value={formData.cccd}
                       onChange={handleChange}
+                      onPaste={(e) => handlePaste(e, "cccd", 12)}
+                      maxLength={12}
                       className={inputClass}
                       placeholder="001200xxxxxx"
                     />
+                    {formData.cccd.length >= 12 && (
+                      <p className="text-orange-500 text-xs mt-1">
+                        Đã đạt tối đa 12 số
+                      </p>
+                    )}
                   </div>
 
                   <ImageUploadField
@@ -518,7 +592,9 @@ export default function CustomerForm() {
                 className="w-fit text-white bg-blue-500 hover:bg-blue-600 cursor-pointer"
                 disabled={loading}
               >
-                <span className="text-sm md:text-base font-semibold">{loading ? "Đang cập nhật..." : "Cập nhật người dùng"}</span>
+                <span className="text-sm md:text-base font-semibold">
+                  {loading ? "Đang cập nhật..." : "Cập nhật người dùng"}
+                </span>
               </Button>
               <Button
                 type="button"
@@ -526,7 +602,9 @@ export default function CustomerForm() {
                 className="w-fit sm:w-40 cursor-pointer bg-black hover:bg-black/80 admin-dark:hover:bg-black/70"
                 onClick={handleClose}
               >
-                <span className="text-sm md:text-base font-semibold text-white">Thoát</span>
+                <span className="text-sm md:text-base font-semibold text-white">
+                  Thoát
+                </span>
               </Button>
             </div>
           </form>

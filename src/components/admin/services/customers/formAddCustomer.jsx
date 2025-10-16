@@ -34,7 +34,7 @@ function FormAddCustomer({ onCancel, onSuccess }) {
       [name]:
         (type === "number" ||
           ["total_spent", "booking_count"].includes(name)) &&
-          value !== ""
+        value !== ""
           ? Number(value)
           : value,
     }));
@@ -184,8 +184,10 @@ function FormAddCustomer({ onCancel, onSuccess }) {
   );
 
   return (
-    <ScrollArea className="flex flex-col justify-center items-center w-full h-full" data-lenis-prevent>
-
+    <ScrollArea
+      className="flex flex-col justify-center items-center w-full h-full"
+      data-lenis-prevent
+    >
       <div className="flex justify-between items-center mt-2 w-full relative p-3 md:p-5">
         <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-extrabold uppercase text-start sm:text-center text-gray-900 admin-dark:text-gray-100 w-full">
           Thêm Khách Hàng Mới
@@ -315,6 +317,9 @@ function FormAddCustomer({ onCancel, onSuccess }) {
                     Số tài khoản ngân hàng
                   </label>
                   <input
+                    maxLength={14}
+                    required
+                    min={0}
                     type="text"
                     id="number_bank"
                     name="number_bank"
@@ -338,7 +343,6 @@ function FormAddCustomer({ onCancel, onSuccess }) {
                     formData={formData}
                     setFormData={setFormData}
                   />
-
                 </div>
               </div>
             </div>
@@ -480,10 +484,11 @@ function FormAddCustomer({ onCancel, onSuccess }) {
         {/* Hiển thị thông báo trạng thái */}
         {message && (
           <div
-            className={`mt-4 text-center font-medium p-3 rounded-lg ${message.startsWith("Xử lý thất bại")
-              ? "bg-red-100 text-red-700 admin-dark:bg-red-900 admin-dark:text-red-300"
-              : "bg-green-100 text-green-700 admin-dark:bg-green-900 admin-dark:text-green-300"
-              }`}
+            className={`mt-4 text-center font-medium p-3 rounded-lg ${
+              message.startsWith("Xử lý thất bại")
+                ? "bg-red-100 text-red-700 admin-dark:bg-red-900 admin-dark:text-red-300"
+                : "bg-green-100 text-green-700 admin-dark:bg-green-900 admin-dark:text-green-300"
+            }`}
           >
             {message}
           </div>

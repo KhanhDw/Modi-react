@@ -260,10 +260,7 @@ export default function ServiceBookingTable() {
                         )
                       : "Không có"}
                   </TableCell>
-                  <TableCell
-                    className="flex items-center justify-center space-x-2 text-center"
-                    text-center
-                  >
+                  <TableCell className="flex items-center justify-center space-x-2 text-center">
                     <TableRowActions
                       actions={[
                         {
