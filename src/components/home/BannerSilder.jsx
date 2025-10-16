@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Link } from "react-router-dom";
 
-function BannerSilder({ data, activeLang }) {
+const BannerSlider = memo(function BannerSlider({ data, activeLang }) {
   const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(1);
@@ -59,7 +59,8 @@ function BannerSilder({ data, activeLang }) {
             transition={{ duration: 1 }}
             className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-20"
             alt="banner"
-          />
+          loading="eager"
+        />
 
           {/* Nội dung */}
           <motion.div
@@ -130,7 +131,8 @@ function BannerSilder({ data, activeLang }) {
             transition={{ duration: 1 }}
             className="absolute top-0 left-0 w-full h-full object-cover md:rounded-[40px] z-10"
             alt="next banner"
-          />
+          loading="lazy"
+        />
         </AnimatePresence>
 
         {/* Nút dot chọn banner */}
@@ -148,6 +150,6 @@ function BannerSilder({ data, activeLang }) {
       </motion.div>
     </>
   );
-}
+});
 
-export default BannerSilder;
+export default BannerSlider;

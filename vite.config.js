@@ -43,10 +43,33 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("react")) return "vendor-react";
-            if (id.includes("recharts")) return "vendor-recharts";
-            if (id.includes("three")) return "vendor-three";
-            if (id.includes("framer-motion")) return "vendor-motion";
+            // React core libraries
+            if (id.includes("react") && !id.includes("react-router")) return "vendor-react";
+            
+            // UI component libraries
+            if (id.includes("@radix-ui") || id.includes("@material-tailwind") || id.includes("@mantine")) 
+              return "vendor-ui";
+              
+            // Charting libraries
+            if (id.includes("recharts") || id.includes("chart.js") || id.includes("apexcharts") || id.includes("echarts")) 
+              return "vendor-charts";
+              
+            // Animation libraries
+            if (id.includes("framer-motion") || id.includes("lucide-react") || id.includes("react-icons")) 
+              return "vendor-animation";
+              
+            // Form libraries
+            if (id.includes("react-hook-form") || id.includes("react-select") || id.includes("react-dropzone")) 
+              return "vendor-forms";
+              
+            // Utility libraries
+            if (id.includes("lodash") || id.includes("clsx") || id.includes("tailwind-merge")) 
+              return "vendor-utils";
+              
+            // Other large libraries
+            if (id.includes("tiptap") || id.includes("slate")) 
+              return "vendor-editor";
+              
             return "vendor";
           }
         },
