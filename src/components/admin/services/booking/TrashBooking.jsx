@@ -65,31 +65,6 @@ export default function TrashBooking({
     }
   };
 
-  // Placeholder for getFullInforBooking - assuming a similar structure to customers
-  const getFullInforBooking = async (id) => {
-    try {
-      setLoadingBooking(true);
-      setBookingDetail(null);
-      setOpenReadInforBooking(false);
-
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/bookings/${id}/full`
-      );
-
-      if (!res.ok) throw new Error("Không thể lấy dữ liệu đơn đặt");
-
-      const data = await res.json();
-
-      setBookingDetail(data);
-      setOpenReadInforBooking(true);
-    } catch (err) {
-      console.error("Error fetching booking details:", err);
-      setBookingDetail(null);
-    } finally {
-      setLoadingBooking(false);
-    }
-  };
-
   useEffect(() => {
     fetchDeletedBookings();
   }, []);
@@ -104,7 +79,8 @@ export default function TrashBooking({
     if (!bookingToRestore) return;
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/bookings/${bookingToRestore}/restore`,
         {
           method: "PUT",
@@ -134,7 +110,8 @@ export default function TrashBooking({
     if (!bookingToDelete) return;
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/bookings/${bookingToDelete}/hard`,
         {
           method: "DELETE",
@@ -209,7 +186,7 @@ export default function TrashBooking({
         <CardContent className="flex-grow overflow-y-auto">
           <div className="rounded-md border border-gray-300 admin-dark:border-gray-700">
             <Table>
-              <TableHeader className={'bg-gray-100 admin-dark:bg-gray-700'}>
+              <TableHeader className={"bg-gray-100 admin-dark:bg-gray-700"}>
                 <TableRow className="admin-dark:border-gray-700">
                   <TableHead className="text-black admin-dark:text-white">
                     STT
@@ -220,9 +197,9 @@ export default function TrashBooking({
                   <TableHead className="text-black admin-dark:text-white">
                     Tên dịch vụ
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  {/* <TableHead className="text-black admin-dark:text-white">
                     Trạng thái
-                  </TableHead>
+                  </TableHead> */}
                   <TableHead className="text-black admin-dark:text-white">
                     Ngày đặt
                   </TableHead>
@@ -247,22 +224,15 @@ export default function TrashBooking({
                       <TableCell className="admin-dark:text-white">
                         {booking.service_name}
                       </TableCell>
-                      <TableCell className="admin-dark:text-white">
+                      {/* <TableCell className="admin-dark:text-white">
                         {booking.status}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell className="admin-dark:text-white">
                         {new Date(booking.booking_date).toLocaleDateString(
                           "vi-VN"
                         )}
                       </TableCell>
                       <TableCell className="flex items-center space-x-2">
-                        <button
-                          onClick={() => getFullInforBooking(booking.id)}
-                          className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer"
-                          title="Xem chi tiết"
-                        >
-                          <Eye size={18} />
-                        </button>
                         <button
                           onClick={() => handleRestoreBooking(booking.id)}
                           className="p-2 text-green-500 hover:text-green-700 cursor-pointer"

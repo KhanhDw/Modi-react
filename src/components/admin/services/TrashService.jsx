@@ -65,30 +65,6 @@ export default function TrashService({
     }
   };
 
-  const getFullInforService = async (id) => {
-    try {
-      setLoadingService(true);
-      setServiceDetail(null);
-      setOpenReadInforService(false);
-
-      const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/services/${id}/full`
-      );
-
-      if (!res.ok) throw new Error("Không thể lấy dữ liệu dịch vụ");
-
-      const data = await res.json();
-
-      setServiceDetail(data);
-      setOpenReadInforService(true);
-    } catch (err) {
-      console.error("Error fetching service details:", err);
-      setServiceDetail(null);
-    } finally {
-      setLoadingService(false);
-    }
-  };
-
   useEffect(() => {
     fetchDeletedServices();
   }, []);
@@ -103,7 +79,8 @@ export default function TrashService({
     if (!serviceToRestore) return;
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/services/${serviceToRestore}/restore`,
         {
           method: "PUT",
@@ -133,7 +110,8 @@ export default function TrashService({
     if (!serviceToDelete) return;
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
         }/api/services/${serviceToDelete}/hard`,
         {
           method: "DELETE",
@@ -209,18 +187,18 @@ export default function TrashService({
         <CardContent className="flex-grow overflow-y-auto">
           <div className="rounded-md border border-gray-300 admin-dark:border-gray-700">
             <Table>
-              <TableHeader className={'bg-gray-100 admin-dark:bg-gray-700'}>
-                <TableRow className="admin-dark:border-gray-700">
-                  <TableHead className="text-black admin-dark:text-white">
+              <TableHeader className={"bg-gray-100 admin-dark:bg-gray-700"}>
+                <TableRow className="admin-dark:border-gray-700 grid grid-cols-8 items-center">
+                  <TableHead className="text-black admin-dark:text-white col-span-1 flex items-center">
                     STT
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="text-black admin-dark:text-white col-span-6 flex items-center">
                     Tên dịch vụ
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  {/* <TableHead className="text-black admin-dark:text-white">
                     Trạng thái
-                  </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  </TableHead> */}
+                  <TableHead className="text-black admin-dark:text-white col-span-1  flex items-center justify-center">
                     Thao tác
                   </TableHead>
                 </TableRow>
@@ -230,26 +208,19 @@ export default function TrashService({
                   currentData.map((service, index) => (
                     <TableRow
                       key={service.id}
-                      className="admin-dark:border-gray-700"
+                      className="admin-dark:border-gray-700 grid grid-cols-8  hover:bg-gray-100/10 items-center"
                     >
-                      <TableCell className="admin-dark:text-white">
+                      <TableCell className="admin-dark:text-white col-span-1">
                         {startIndex + index + 1}
                       </TableCell>
-                      <TableCell className="admin-dark:text-white">
+                      <TableCell className="admin-dark:text-white col-span-6 whitespace-break-spaces">
                         {service.translation?.ten_dich_vu ||
                           "Không có thông tin tiếng việt"}
                       </TableCell>
-                      <TableCell className="admin-dark:text-white">
+                      {/* <TableCell className="admin-dark:text-white">
                         {service.status}
-                      </TableCell>
-                      <TableCell className="flex items-center space-x-2">
-                        <button
-                          onClick={() => getFullInforService(service.id)}
-                          className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer"
-                          title="Xem chi tiết"
-                        >
-                          <Eye size={18} />
-                        </button>
+                      </TableCell> */}
+                      <TableCell className="flex items-center space-x-2 col-span-1 justify-center">
                         <button
                           onClick={() => handleRestoreService(service.id)}
                           className="p-2 text-green-500 hover:text-green-700 cursor-pointer"
@@ -281,7 +252,7 @@ export default function TrashService({
             </Table>
           </div>
         </CardContent>
-        <div className="p-4 border-t border border-gray-300 admin-dark:border-gray-700">
+        <div className="p-4 border-gray-300 admin-dark:border-gray-700">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
