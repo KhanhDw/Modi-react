@@ -42,7 +42,6 @@ export default function UserDetailView({ user, onClose }) {
     };
   }, []);
 
-
   // Helper để hiển thị giá trị hoặc 'N/A'
   const displayValue = (value) => value || "N/A";
 
@@ -91,6 +90,7 @@ export default function UserDetailView({ user, onClose }) {
       <div className="w-full h-32 bg-gray-100 admin-dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-300 admin-dark:border-gray-600 shadow-sm flex items-center justify-center">
         {url ? (
           <img
+            loading="lazy"
             src={getImageUrl(url)}
             alt={label}
             className="w-full h-full object-cover"
@@ -117,7 +117,6 @@ export default function UserDetailView({ user, onClose }) {
         data-lenis-prevent
       >
         <div className="p-2 sm:p-4 md:p-5">
-
           <h3 className="text-xl lg:text-[22px] font-extrabold mb-6 text-center text-blue-600 admin-dark:text-blue-400 border-b border-gray-300 admin-dark:border-gray-700 pb-3">
             THÔNG TIN CHI TIẾT NGƯỜI DÙNG
           </h3>
@@ -126,23 +125,22 @@ export default function UserDetailView({ user, onClose }) {
             {/* --- AVATAR & BASIC INFO HEADER --- */}
             <header className="flex flex-col sm:flex-row items-center sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 p-3 bg-blue-50 admin-dark:bg-gray-800 rounded-lg shadow-inner">
               <div className="flex-shrink-0 mx-5">
-                {
-                  userData.avatar_url ? (
-                    <img
-                      src={getImageUrl(userData.avatar_url)}
-                      alt="Avatar"
-                      className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-gray-700 shadow-lg"
-                      onError={(e) => {
-                        e.currentTarget.src = "/placeholder-avatar.png";
-                        e.currentTarget.classList.add("ring-2", "ring-red-500");
-                      }}
-                    />
-                  ) : (
-                    <div className="w-24 h-24 flex items-center justify-center bg-gray-300 text-white text-xl font-bold rounded-full shadow-lg admin-dark:bg-gray-700">
-                      {userData.name?.charAt(0) || "Avatar"}
-                    </div>
-                  )
-                }
+                {userData.avatar_url ? (
+                  <img
+                    loading="lazy"
+                    src={getImageUrl(userData.avatar_url)}
+                    alt="Avatar"
+                    className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-gray-700 shadow-lg"
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder-avatar.png";
+                      e.currentTarget.classList.add("ring-2", "ring-red-500");
+                    }}
+                  />
+                ) : (
+                  <div className="w-24 h-24 flex items-center justify-center bg-gray-300 text-white text-xl font-bold rounded-full shadow-lg admin-dark:bg-gray-700">
+                    {userData.name?.charAt(0) || "Avatar"}
+                  </div>
+                )}
               </div>
               <div className="text-center sm:text-left w-full">
                 <p className="text-base sm:text-lg md:text-xl font-bold text-gray-900 admin-dark:text-white">

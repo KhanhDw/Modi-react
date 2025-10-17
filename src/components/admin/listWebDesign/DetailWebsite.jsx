@@ -5,7 +5,12 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { AppWindow, ArrowLeft, Calendar, Folder, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import ConfirmDeleteDialog from "./DeleteAlertDialog";
 
 export default function WebsiteTemplatesDetail() {
@@ -19,7 +24,6 @@ export default function WebsiteTemplatesDetail() {
   const [activeLang, setActiveLang] = useState("vi");
   const [isToggling, setIsToggling] = useState(false);
   const [localExportState, setLocalExportState] = useState(0);
-
 
   const fetchTemplate = async (id, lang) => {
     setLoading(true);
@@ -74,9 +78,20 @@ export default function WebsiteTemplatesDetail() {
     }
   };
 
-  if (loading) return <div className="text-center py-8 text-gray-900 admin-dark:text-gray-100">Đang tải dữ liệu...</div>;
-  if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
-  if (!template) return <div className="text-center py-8 text-gray-900 admin-dark:text-gray-100">Không tìm thấy mẫu website</div>;
+  if (loading)
+    return (
+      <div className="text-center py-8 text-gray-900 admin-dark:text-gray-100">
+        Đang tải dữ liệu...
+      </div>
+    );
+  if (error)
+    return <div className="text-center py-8 text-red-500">{error}</div>;
+  if (!template)
+    return (
+      <div className="text-center py-8 text-gray-900 admin-dark:text-gray-100">
+        Không tìm thấy mẫu website
+      </div>
+    );
 
   return (
     <div className="mx-auto py-4 max-w-7xl">
@@ -101,17 +116,22 @@ export default function WebsiteTemplatesDetail() {
             className="flex items-center shadow gap-2 bg-primary hover:bg-violet-400 hover:text-white admin-dark:bg-violet-700 admin-dark:hover:bg-violet-900 cursor-pointer"
           >
             <AppWindow className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-base font-semibold">Xem mẫu website</span>
+            <span className="text-xs sm:text-base font-semibold">
+              Xem mẫu website
+            </span>
           </Button>
           <Button
             onClick={toggleExportState}
-            className={`flex items-center shadow cursor-pointer gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${localExportState == 1
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-gray-400 hover:bg-gray-500"
-              } text-white`}
+            className={`flex items-center shadow cursor-pointer gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${
+              localExportState == 1
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-gray-400 hover:bg-gray-500"
+            } text-white`}
             disabled={isToggling}
           >
-            <span className="text-xs sm:text-base font-semibold">{localExportState == 1 ? "Đã xuất bản" : "Chưa xuất bản"}</span>
+            <span className="text-xs sm:text-base font-semibold">
+              {localExportState == 1 ? "Đã xuất bản" : "Chưa xuất bản"}
+            </span>
           </Button>
         </div>
       </div>
@@ -124,7 +144,10 @@ export default function WebsiteTemplatesDetail() {
               <div className="relative overflow-hidden rounded-lg w-full">
                 {template.image_url ? (
                   <img
-                    src={`${import.meta.env.VITE_MAIN_BE_URL}${template.image_url}`}
+                    loading="lazy"
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${
+                      template.image_url
+                    }`}
                     alt={template.name}
                     className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover"
                   />
@@ -185,7 +208,6 @@ export default function WebsiteTemplatesDetail() {
             className="shadow-lg mx-auto"
             isDetail={true}
           />
-
         </div>
 
         {/* cột bên phải */}
@@ -242,7 +264,9 @@ export default function WebsiteTemplatesDetail() {
           <div className="bg-white w-full rounded-lg shadow px-2 py-3 md:px-3 admin-dark:bg-gray-900 border border-gray-200 admin-dark:border-gray-700">
             <div className="flex items-center gap-1 sm:gap-2 text-base sm:text-lg md:text-xl text-gray-900 admin-dark:text-gray-100">
               <Tag className="h-3 w-3 sm:h-4 sm:w-4 text-gray-800 admin-dark:text-gray-100" />
-              <span className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">Tags</span>
+              <span className="text-sm sm:text-base md:text-lg text-gray-900 admin-dark:text-gray-100 w-full text-start font-semibold">
+                Tags
+              </span>
             </div>
             <div>
               <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
@@ -266,22 +290,34 @@ export default function WebsiteTemplatesDetail() {
             </div>
             <div className="space-y-3 sm:space-y-4 mt-2 w-full">
               <div className="flex justify-between items-center px-2 py-1 text-sm sm:text-base admin-dark:bg-gray-700 text-gray-700 admin-dark:text-gray-100 bg-gray-200 rounded-lg">
-                <h1>Ngôn ngữ bài viết: {activeLang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}</h1>
-                <Switch onClick={() => setActiveLang(activeLang === "vi" ? "en" : "vi")} checked={activeLang === "en"} />
+                <h1>
+                  Ngôn ngữ bài viết:{" "}
+                  {activeLang === "vi" ? "Tiếng Việt" : "Tiếng Anh"}
+                </h1>
+                <Switch
+                  onClick={() =>
+                    setActiveLang(activeLang === "vi" ? "en" : "vi")
+                  }
+                  checked={activeLang === "en"}
+                />
               </div>
               <div className="flex flex-col sm:flex-row lg:flex-col sm:justify-center md:justify-end md:gap-5 lg:gap-3 gap-3">
                 <Button
                   onClick={() => navigate(`edit`)}
                   className="w-full sm:w-fit lg:w-full px-2 sm:px-3 py-1 sm:py-2 bg-blue-400 hover:bg-blue-500 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-500 cursor-pointer"
                 >
-                  <span className="text-sm sm:text-base font-semibold text-white">Chỉnh sửa mẫu</span>
+                  <span className="text-sm sm:text-base font-semibold text-white">
+                    Chỉnh sửa mẫu
+                  </span>
                 </Button>
                 <Link to={template.url_github}>
                   <Button
                     variant="outline"
                     className="w-full sm:w-fit lg:w-full px-2 sm:px-3 py-1 sm:py-2 bg-black/90 hover:bg-black/80 admin-dark:text-gray-100 admin-dark:bg-gray-800 cursor-pointer"
                   >
-                    <span className="text-sm sm:text-base font-semibold text-white">Github dự án</span>
+                    <span className="text-sm sm:text-base font-semibold text-white">
+                      Github dự án
+                    </span>
                   </Button>
                 </Link>
               </div>
@@ -306,6 +342,6 @@ export default function WebsiteTemplatesDetail() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

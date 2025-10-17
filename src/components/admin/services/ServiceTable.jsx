@@ -216,6 +216,7 @@ export default function ServiceTable() {
                     <TableCell>
                       {item.image_url ? (
                         <img
+                          loading="lazy"
                           src={`${import.meta.env.VITE_MAIN_BE_URL}${
                             item.image_url
                           }`}

@@ -32,6 +32,7 @@ export default function ArticlesList({ articles }) {
           <div className="bg-gray-100 dark:bg-gray-800 overflow-hidden">
             {article.image ? (
               <img
+                loading="lazy"
                 src={`${import.meta.env.VITE_MAIN_BE_URL}${article.image}`}
                 alt={article.title}
                 className="w-full h-60 object-cover hover:scale-105 transition-transform duration-300"

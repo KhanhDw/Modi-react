@@ -4,7 +4,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import useCurrentLanguage from "@/hook/currentLang"
+import useCurrentLanguage from "@/hook/currentLang";
 export default function ServiceDetailPage() {
   const { slug } = useParams();
   const { t } = useLanguage();
@@ -21,7 +21,9 @@ export default function ServiceDetailPage() {
       const lang_api = lang === "vi" ? "" : "/en";
       const tailLang = lang === "vi" ? "" : `-en`;
       const res = await fetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}${lang_api}/api/services/${slug}${tailLang}`
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }${lang_api}/api/services/${slug}${tailLang}`
       );
       const data = await res.json();
 
@@ -50,9 +52,13 @@ export default function ServiceDetailPage() {
       status: servicesItemBySlug.status,
       booking: servicesItemBySlug.booking_count,
       features:
-        servicesItemBySlug.translation?.features?.split("#").map((f) => f.trim()) || [],
+        servicesItemBySlug.translation?.features
+          ?.split("#")
+          .map((f) => f.trim()) || [],
       details:
-        servicesItemBySlug.translation?.details?.split("#").map((d) => d.trim()) || [],
+        servicesItemBySlug.translation?.details
+          ?.split("#")
+          .map((d) => d.trim()) || [],
     };
   }, [servicesItemBySlug]);
 
@@ -96,6 +102,7 @@ export default function ServiceDetailPage() {
       {/* Main Image */}
       <motion.div className="w-full md:mt-4 overflow-hidden rounded-md shadow-md border border-gray-200 dark:border-gray-700">
         <img
+          loading="lazy"
           src={service.image_url}
           alt="Service banner"
           className="w-full h-64 sm:h-80 md:h-[400px] object-cover"
@@ -151,7 +158,10 @@ export default function ServiceDetailPage() {
                 key={i}
                 className="bg-white shadow-sm border dark:bg-gray-800 p-3 rounded-md flex items-start gap-3 text-gray-700 dark:text-gray-200"
               >
-                <FaCheckCircle className="text-green-500 mt-1" size={18} />
+                <FaCheckCircle
+                  className="text-green-500 mt-1"
+                  size={18}
+                />
                 <span>{feat}</span>
               </motion.li>
             ))}
@@ -167,7 +177,10 @@ export default function ServiceDetailPage() {
           </h2>
           <motion.ul className="list-disc list-inside space-y-4 text-gray-700 dark:text-gray-300">
             {service.details.map((detail, i) => (
-              <motion.li key={i} className="leading-relaxed">
+              <motion.li
+                key={i}
+                className="leading-relaxed"
+              >
                 {detail}
               </motion.li>
             ))}

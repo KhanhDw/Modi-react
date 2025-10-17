@@ -94,6 +94,7 @@ function AdminLoginPage() {
             <div className="flex items-center gap-3 justify-center mb-8">
               <Link to={"/"}>
                 <img
+                  loading="lazy"
                   src={logo}
                   alt="Logo"
                   className="w-15 "
@@ -193,6 +194,7 @@ function AdminLoginPage() {
         {/* Right Section */}
         <div className="w-full md:w-1/2 h-64 md:h-full relative hidden md:block">
           <img
+            loading="lazy"
             src={loginBanner}
             alt="Login banner"
             className="absolute inset-0 w-full h-full object-cover"

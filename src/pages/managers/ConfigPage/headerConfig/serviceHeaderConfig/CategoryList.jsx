@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
 import { cn } from "@/lib/utils";
-import { Folder, GripVertical, Pencil, Plus } from "lucide-react";
+import { Folder, GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import EmptyState from "./EmptyState";
 
@@ -59,8 +59,9 @@ function SortableCategoryItem({
         </span>
         {/* <span className="truncate">{cat.name?.[lang] || cat.name}</span> */}
         <span
-          className={`text-xs lg:text-sm text-gray-700 admin-dark:text-white ${selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
-            }`}
+          className={`text-xs lg:text-sm text-gray-200 admin-dark:text-white ${
+            selectedCategory?.id === cat.id ? "text-gray-100" : "text-gray-900"
+          }`}
         >
           {cat.name?.[lang] || cat.name}
         </span>
@@ -68,15 +69,16 @@ function SortableCategoryItem({
 
       <div className="flex gap-2">
         <Button
+          theme="admin"
           size="sm"
           variant="outline"
           onClick={(e) => {
             e.stopPropagation();
             onEdit(cat);
           }}
-          className="cursor-pointer hover:bg-gray-700 bg-gray-900 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-800 border-none"
+          className="cursor-pointer hover:bg-gray-300 bg-gray-200 admin-dark:bg-gray-600 admin-dark:hover:bg-gray-800 border-none"
         >
-          <Pencil className="h-4 w-4 text-xs text-gray-400 admin-dark:text-gray-300" />
+          <Pencil className="h-4 w-4 text-xs text-gray-800 admin-dark:text-gray-300" />
         </Button>
         <Button
           size="sm"
@@ -85,9 +87,11 @@ function SortableCategoryItem({
             e.stopPropagation();
             onDelete(cat);
           }}
-          className="cursor-pointer bg-red-500 hover:bg-red-600"
+          className="cursor-pointer bg-red-400 hover:bg-red-600"
         >
-          <span className="text-xs font-semibold">Xóa</span>
+          <span className="text-xs font-semibold">
+            <Trash2 />
+          </span>
         </Button>
       </div>
     </div>
@@ -209,13 +213,14 @@ export default function CategoryList({
 
         <CardContent
           data-lenis-prevent
-          className="lenis-local space-y-2 max-h-[480px] overflow-y-auto pr-2"
+          className="lenis-local space-y-2  pr-2 max-h-[70vh]  overflow-y-auto"
         >
           {items?.length > 0 ? (
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
+              className={`max-h-20 overflow-y-auto`}
             >
               <SortableContext
                 items={items.map((c) => c.id)}

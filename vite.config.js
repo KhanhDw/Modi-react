@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath, URL } from "node:url";
 import svgr from "vite-plugin-svgr";
 import { visualizer } from "rollup-plugin-visualizer";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import viteCompression from "vite-plugin-compression";
 
 export default defineConfig({
   plugins: [
@@ -14,6 +16,17 @@ export default defineConfig({
       svgrOptions: {
         exportType: "named",
       },
+    }),
+    viteCompression({
+      algorithm: "brotliCompress",
+      ext: ".br",
+    }),
+    ViteImageOptimizer({
+      jpg: { quality: 70 },
+      jpeg: { quality: 70 },
+      png: { quality: 70 },
+      webp: { quality: 70 },
+      avif: { quality: 60 },
     }),
 
     // 📊 Plugin hiển thị phân tích kích thước bundle
@@ -37,7 +50,9 @@ export default defineConfig({
   },
 
   build: {
+    target: "esnext",
     sourcemap: false,
+    cssCodeSplit: true, // tách riêng CSS cho từng page
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
@@ -50,7 +65,24 @@ export default defineConfig({
             return "vendor";
           }
         },
+        // ✨ Giúp browser cache mạnh mẽ hơn
+        entryFileNames: "assets/[name].[hash].js",
+        chunkFileNames: "assets/[name].[hash].js",
+        assetFileNames: "assets/[name].[hash].[ext]",
       },
+    },
+    minify: "terser", // tốt hơn esbuild cho prod
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+  },
+  // ⚡ Cache mạnh & preload tự động
+  server: {
+    headers: {
+      "Cache-Control": "public, max-age=31536000, immutable",
     },
   },
 });

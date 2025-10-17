@@ -260,8 +260,9 @@ export default function WebsiteTemplateEdit() {
     if (!id) return;
     try {
       const langPath = lang === "en" ? `/${lang}` : "";
-      const url = `${import.meta.env.VITE_MAIN_BE_URL
-        }${langPath}/api/web-samples/${id}`;
+      const url = `${
+        import.meta.env.VITE_MAIN_BE_URL
+      }${langPath}/api/web-samples/${id}`;
       const res = await fetch(url);
 
       let websiteData = {};
@@ -386,9 +387,10 @@ export default function WebsiteTemplateEdit() {
               name={lang.key}
               onClick={() => handleActiveLangbtn(lang.key)}
               className={`flex px-2 sm:px-3 py-1 sm:py-1.5 rounded-md font-semibold text-sm sm:text-xl transition-colors
-                ${activeLang === lang.key
-                  ? "bg-blue-600 text-white cursor-pointer admin-dark:bg-blue-500 admin-dark:text-white"
-                  : "bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
+                ${
+                  activeLang === lang.key
+                    ? "bg-blue-600 text-white cursor-pointer admin-dark:bg-blue-500 admin-dark:text-white"
+                    : "bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200 admin-dark:bg-blue-900 admin-dark:text-blue-300 admin-dark:hover:bg-blue-800"
                 }`}
             >
               {lang.label}
@@ -406,10 +408,11 @@ export default function WebsiteTemplateEdit() {
             <Button
               type="button"
               onClick={toggleExportState}
-              className={`w-full sm:w-auto mt-2 sm:mt-0 ${localExportState === 1
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-gray-400 hover:bg-gray-500"
-                } text-white cursor-pointer text-sm sm:text-base`}
+              className={`w-full sm:w-auto mt-2 sm:mt-0 ${
+                localExportState === 1
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-gray-400 hover:bg-gray-500"
+              } text-white cursor-pointer text-sm sm:text-base`}
               disabled={isLoading}
             >
               {localExportState === 1 ? "Đã xuất bản" : "Chưa xuất bản"}
@@ -685,8 +688,8 @@ export default function WebsiteTemplateEdit() {
                   {isLoading
                     ? "Đang lưu..."
                     : template
-                      ? "Cập nhật"
-                      : "Thêm mẫu"}{" "}
+                    ? "Cập nhật"
+                    : "Thêm mẫu"}{" "}
                   {activeLang === "vi" ? "(Tiếng Việt)" : "(Tiếng Anh)"}
                 </span>
               </Button>
@@ -706,6 +709,7 @@ export default function WebsiteTemplateEdit() {
                 <div className="relative overflow-hidden rounded-lg w-full lg:w-120 border-2 border-gray-300 admin-dark:border-gray-700">
                   <div className="w-full lg:w-120 h-40 lg:h-50 admin-dark:border-gray-800 rounded-lg overflow-hidden">
                     <img
+                      loading="lazy"
                       src={preview}
                       alt="Preview"
                       className="w-full lg:w-120 h-40 lg:h-50 object-cover"

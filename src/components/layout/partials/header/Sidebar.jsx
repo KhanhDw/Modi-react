@@ -200,6 +200,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
             <div className="flex items-center justify-between mb-4 sm:mb-6 p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 w-full bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-800">
               <div className="flex items-center">
                 <img
+                  loading="lazy"
                   src={`${logoUrl}`}
                   className="h-6 sm:h-8 w-fit"
                   alt="logo"

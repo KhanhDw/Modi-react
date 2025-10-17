@@ -193,6 +193,7 @@ export default function BlogsListPage() {
                             className="px-3 sm:px-4 py-3"
                           >
                             <img
+                              loading="lazy"
                               src={
                                 value
                                   ? `${

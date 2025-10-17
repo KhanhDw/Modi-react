@@ -18,8 +18,6 @@ import { UploadAPI } from "@/api/serviceAPI";
 import ArticleDetailModal from "./articles/article_modal_detail";
 import * as XLSX from "xlsx";
 
-
-
 export default function ServiceForm() {
   // Cac state
   const [isAddingParagraph, setIsAddingParagraph] = useState(false);
@@ -47,8 +45,6 @@ export default function ServiceForm() {
   const [editKey, setEditKey] = useState(null);
   const [errors, setErrors] = useState({});
   const [paraErrors, setParaErrors] = useState({});
-
-
 
   const validateParagraph = (type, part) => {
     const newErrors = {};
@@ -347,7 +343,10 @@ export default function ServiceForm() {
   const validateForm = () => {
     const newErrors = {};
     // 🔹 Tên dịch vụ
-    if (typeof formData.serviceName !== "string" || !formData.serviceName.trim()) {
+    if (
+      typeof formData.serviceName !== "string" ||
+      !formData.serviceName.trim()
+    ) {
       newErrors.serviceName = "Tên dịch vụ không được bỏ trống";
     }
 
@@ -373,7 +372,11 @@ export default function ServiceForm() {
         newErrors.header = "Tiêu đề bài viết không được bỏ trống";
       }
 
-      if (!dataArticle || typeof dataArticle !== "object" || Object.keys(dataArticle).length === 0) {
+      if (
+        !dataArticle ||
+        typeof dataArticle !== "object" ||
+        Object.keys(dataArticle).length === 0
+      ) {
         newErrors.dataArticle = "Bài viết phải có ít nhất một phần nội dung";
       }
     }
@@ -381,7 +384,6 @@ export default function ServiceForm() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 
   return (
     <>
@@ -413,14 +415,21 @@ export default function ServiceForm() {
             </div>
           </CardHeader>
           <CardContent>
-            <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
+            <form
+              onSubmit={(e) => handleSubmit(e)}
+              className="space-y-6"
+            >
               <div className="space-y-6">
                 <div
-                  className={`flex ${editingService ? `flex-col` : ""
-                    } justify-between gap-6`}
+                  className={`flex ${
+                    editingService ? `flex-col` : ""
+                  } justify-between gap-6`}
                 >
                   <div className="space-y-2 flex-1/3">
-                    <Label className="text-black" htmlFor="serviceName">
+                    <Label
+                      className="text-black"
+                      htmlFor="serviceName"
+                    >
                       Tên dịch vụ *
                     </Label>
                     <Input
@@ -439,7 +448,10 @@ export default function ServiceForm() {
                     )}
                   </div>
                   <div className="space-y-2 flex-1/3">
-                    <Label className="text-black" htmlFor="description">
+                    <Label
+                      className="text-black"
+                      htmlFor="description"
+                    >
                       Mô tả *
                     </Label>
                     <Textarea
@@ -454,7 +466,10 @@ export default function ServiceForm() {
                     )}
                   </div>
                   <div className="space-y-2 flex-1/3">
-                    <Label className="text-black" htmlFor="price">
+                    <Label
+                      className="text-black"
+                      htmlFor="price"
+                    >
                       Giá
                     </Label>
                     <Input
@@ -469,7 +484,10 @@ export default function ServiceForm() {
                       onChange={(e) => {
                         // Bỏ ký tự không phải số
                         const rawValue = e.target.value.replace(/\D/g, "");
-                        handleChange("price", rawValue ? parseInt(rawValue, 10) : 0);
+                        handleChange(
+                          "price",
+                          rawValue ? parseInt(rawValue, 10) : 0
+                        );
                       }}
                       placeholder="Nhập giá của dịch vụ"
                     />
@@ -482,13 +500,16 @@ export default function ServiceForm() {
                   <>
                     <div className="space-y-2">
                       <div className="space-y-2">
-                        <Label className="text-black" htmlFor="header">
+                        <Label
+                          className="text-black"
+                          htmlFor="header"
+                        >
                           Tiêu đề của bài viết *
                         </Label>
                         <Input
                           className="text-black border border-black/30"
                           id="header"
-                          type={'text'}
+                          type={"text"}
                           // value={
                           //   editingService
                           //     ? editingService.ten_dich_vu
@@ -586,7 +607,7 @@ export default function ServiceForm() {
                                   <Input
                                     className="text-black border border-black/30"
                                     id="paraTitle"
-                                    type={'text'}
+                                    type={"text"}
                                     // value={
                                     //   editingService ? editingService.mo_ta : formData.desc
                                     // }
@@ -682,7 +703,7 @@ export default function ServiceForm() {
                                   <Input
                                     className="text-black border border-black/30"
                                     id="imgTitle"
-                                    type={'text'}
+                                    type={"text"}
                                     // value={
                                     //   editingService ? editingService.mo_ta : formData.desc
                                     // }
@@ -715,8 +736,8 @@ export default function ServiceForm() {
                                       <Input
                                         key={fileKey}
                                         type="file"
-                                        className="text-black border border-black/30 file:bg-gray-950/30 
-                              file:text-center file:text-black file:rounded file:border-none 
+                                        className="text-black border border-black/30 file:bg-gray-950/30
+                              file:text-center file:text-black file:rounded file:border-none
                               hover:file:bg-gray-950/50 hover:file:text-white file:px-2"
                                         id="img"
                                         accept="image/*"
@@ -741,6 +762,7 @@ export default function ServiceForm() {
                                     <div className="flex-1/2">
                                       {preview && (
                                         <img
+                                          loading="lazy"
                                           src={preview}
                                           alt="Preview"
                                           className="min-w-20 min-h-20"
@@ -855,8 +877,8 @@ export default function ServiceForm() {
                                   <Input
                                     key={excelKey}
                                     type="file"
-                                    className="text-black border border-black/30 file:bg-gray-950/30 
-                              file:text-center file:text-black file:rounded file:border-none 
+                                    className="text-black border border-black/30 file:bg-gray-950/30
+                              file:text-center file:text-black file:rounded file:border-none
                               hover:file:bg-gray-950/50 hover:file:text-white file:px-2"
                                     id="tbl"
                                     accept=".xlsx, .xls"
@@ -1103,7 +1125,10 @@ export default function ServiceForm() {
               </div>
 
               <div className="flex gap-3">
-                <Button type="submit" className="flex-1 hover:bg-gray-500/25">
+                <Button
+                  type="submit"
+                  className="flex-1 hover:bg-gray-500/25"
+                >
                   {editingService ? "Cập nhật dịch vụ" : "Tạo dịch vụ"}
                 </Button>
                 <Button

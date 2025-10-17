@@ -1,10 +1,5 @@
 import useLenisLocal from "@/hook/useLenisLocal";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 export const TextEditor = forwardRef(
   ({ label, fields, data, onChange, lang, haveImage = false }, ref) => {
@@ -77,6 +72,7 @@ export const TextEditor = forwardRef(
       if (preview) {
         return (
           <img
+            loading="lazy"
             src={preview}
             alt="Ảnh tạm thời"
             className="mt-2 w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg shadow border-2 border-indigo-400"
@@ -93,6 +89,7 @@ export const TextEditor = forwardRef(
         }
         return (
           <img
+            loading="lazy"
             src={
               data?.image_url
                 ? `${import.meta.env.VITE_MAIN_BE_URL}${data.image_url}`

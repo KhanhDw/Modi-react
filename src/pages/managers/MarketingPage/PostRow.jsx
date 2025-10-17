@@ -18,10 +18,10 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
       <TableCell className="w-1/20 pl-0">
         {post.image ? (
           <img
+            loading="lazy"
             src={`${import.meta.env.VITE_MAIN_BE_URL}/${post.image}`}
             alt="Ảnh bài viết"
             className="w-12 h-12 rounded-md object-cover border border-gray-200 admin-dark:border-gray-600"
-            loading="lazy"
             onError={(e) => {
               e.currentTarget.style.display = "none"; // ẩn ảnh bị lỗi
               e.currentTarget.nextSibling.style.display = "flex"; // hiện fallback
@@ -72,18 +72,19 @@ export default function PostRow({ post, indexSTT, handleDeletePost }) {
       {/* Trạng thái */}
       <TableCell>
         <Badge
-          className={`text-white font-medium ${post.status === "published"
-            ? "bg-green-500"
-            : post.status === "draft"
+          className={`text-white font-medium ${
+            post.status === "published"
+              ? "bg-green-500"
+              : post.status === "draft"
               ? "bg-gray-700"
               : "bg-orange-700"
-            }`}
+          }`}
         >
           {post.status === "published"
             ? "Đã đăng"
             : post.status === "draft"
-              ? "Nháp"
-              : "Lưu trữ"}
+            ? "Nháp"
+            : "Lưu trữ"}
         </Badge>
       </TableCell>
 

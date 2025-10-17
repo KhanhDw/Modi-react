@@ -91,6 +91,7 @@ export default function ServiceCard({ service, onFetchService }) {
                          bg-gray-50 dark:bg-gray-800 rounded-md md:rounded-xl overflow-hidden grid place-items-center"
             >
               <img
+                loading="lazy"
                 src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image_url}`}
                 alt={translation.ten_dich_vu || "Ảnh dịch vụ"}
                 className="w-full h-full object-cover"

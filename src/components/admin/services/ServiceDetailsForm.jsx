@@ -15,7 +15,12 @@ const toSlug = (str) => {
     .replace(/\s+/g, "-"); // khoảng trắng -> -
 };
 
-export default function ServiceDetailsForm({ formData, errors, handleChange, editingService }) {
+export default function ServiceDetailsForm({
+  formData,
+  errors,
+  handleChange,
+  editingService,
+}) {
   const [preview, setPreview] = useState(null);
 
   const handleNameChange = (value) => {
@@ -148,6 +153,7 @@ export default function ServiceDetailsForm({ formData, errors, handleChange, edi
           {/* Nếu có preview thì ưu tiên hiển thị, không thì lấy từ server */}
           {(preview || formData.image_url) && (
             <img
+              loading="lazy"
               src={
                 preview ||
                 (formData.image_url?.startsWith("http")

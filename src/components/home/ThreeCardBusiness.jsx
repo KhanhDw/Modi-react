@@ -40,6 +40,7 @@ function ThreeCardBusiness({ data, activeLang }) {
                   {/* Hình ảnh */}
                   <div className="h-56 sm:h-60 md:h-70 rounded-xl p-4 overflow-hidden  ">
                     <img
+                      loading="lazy"
                       src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
                       alt={item.title?.[activeLang]}
                       className="w-full h-full object-cover  border-2 border-gray-600 rounded-xl"
@@ -98,6 +99,7 @@ function ThreeCardBusiness({ data, activeLang }) {
                   {/* Hình ảnh */}
                   <div className="h-65  rounded-xl p-4 overflow-hidden ">
                     <img
+                      loading="lazy"
                       src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image}`}
                       alt={item.title?.[activeLang]}
                       className="w-full h-full object-cover  border-2 border-gray-300 dark:border-gray-600 rounded-xl"

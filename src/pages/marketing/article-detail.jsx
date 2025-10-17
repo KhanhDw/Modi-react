@@ -172,6 +172,7 @@ export default function ArticleDetail() {
       {post.image && (
         <div className="mb-6 sm:mb-8">
           <img
+            loading="lazy"
             src={`${import.meta.env.VITE_MAIN_BE_URL}${post.image}`}
             alt={post.title}
             className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-sm"
@@ -220,6 +221,7 @@ export default function ArticleDetail() {
                     {typeof option.icon === "string" ? (
                       // Render image icon
                       <img
+                        loading="lazy"
                         src={option.icon}
                         alt={option.name}
                         className="w-6 h-6 mb-2 text-black"

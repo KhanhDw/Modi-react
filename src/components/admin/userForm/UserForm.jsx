@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import PlaceholderBox from "./PlaceholderBox";
-import RoleDropdown from "./SelectRole"
+import RoleDropdown from "./SelectRole";
 import InputField from "./InputField";
 import FileInput from "./FileInput";
 import BankDropdown from "@/components/feature/SelectBank.jsx";
@@ -44,7 +44,6 @@ export default function UserForm({ user, onClose, onSuccess }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
 
   useEffect(() => {
     if (isEdit && user) {
@@ -94,8 +93,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
       return url;
     }
     // Ngược lại, nối với base URL của backend
-    return `${import.meta.env.VITE_MAIN_BE_URL}${url.startsWith("/") ? url : "/" + url
-      }`;
+    return `${import.meta.env.VITE_MAIN_BE_URL}${
+      url.startsWith("/") ? url : "/" + url
+    }`;
   };
 
   // Helper to get preview URL for CCCD images (File object or URL string)
@@ -264,8 +264,10 @@ export default function UserForm({ user, onClose, onSuccess }) {
                   autoComplete="off"
                 />
 
-                <RoleDropdown form={form} setForm={setForm} />
-
+                <RoleDropdown
+                  form={form}
+                  setForm={setForm}
+                />
               </div>
 
               {/* Password Fields */}
@@ -317,6 +319,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                 <div className="flex justify-center sm:justify-center xl:justify-center w-full">
                   {avatarFile ? (
                     <img
+                      loading="lazy"
                       src={previewAvatar}
                       alt="Avatar Preview"
                       className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-white shadow-xl transition-all duration-300 hover:scale-105"
@@ -324,6 +327,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     />
                   ) : form.avatar_url ? (
                     <img
+                      loading="lazy"
                       src={getImageUrl(form.avatar_url)}
                       alt="Avatar Preview"
                       className="w-24 h-24 object-cover rounded-full border-4 border-white admin-dark:border-gray-600 shadow-xl transition-all duration-300 hover:scale-105"
@@ -371,6 +375,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     <div className="mt-2 flex justify-center">
                       {getCccdPreviewUrl(form.img_cccd_top) ? (
                         <img
+                          loading="lazy"
                           src={getCccdPreviewUrl(form.img_cccd_top)}
                           alt="CCCD Top Preview"
                           className="w-full h-auto max-h-52 object-cover rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-md"
@@ -397,6 +402,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     <div className="mt-2 flex justify-center">
                       {getCccdPreviewUrl(form.img_cccd_bottom) ? (
                         <img
+                          loading="lazy"
                           src={getCccdPreviewUrl(form.img_cccd_bottom)}
                           alt="CCCD Bottom Preview"
                           className="w-full h-auto max-h-52 object-cover rounded-lg border border-gray-300 admin-dark:border-gray-600 shadow-md"
@@ -482,7 +488,9 @@ export default function UserForm({ user, onClose, onSuccess }) {
                     ></path>
                   </svg>
                 ) : (
-                  <span className="text-sm sm:text-base font-semibold">{isEdit ? "CẬP NHẬT TÀI KHOẢN" : "THÊM MỚI"}</span>
+                  <span className="text-sm sm:text-base font-semibold">
+                    {isEdit ? "CẬP NHẬT TÀI KHOẢN" : "THÊM MỚI"}
+                  </span>
                 )}
               </button>
             </div>

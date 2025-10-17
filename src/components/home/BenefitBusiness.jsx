@@ -26,6 +26,7 @@ function BenefitBusiness({ data, activeLang }) {
             className="overflow-hidden rounded-2xl shadow-sm shadow-black h-40 md:h-140 3xl:h-180 w-1/2"
           >
             <img
+              loading="lazy"
               src="/images/company.jpg"
               className="object-cover w-full h-full"
             />

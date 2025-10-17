@@ -87,8 +87,10 @@ function ReadInforCustomer({ data }) {
   });
 
   return (
-
-    <ScrollArea className="space-y-6 admin-dark:text-white lenis-local" data-lenis-prevent>
+    <ScrollArea
+      className="space-y-6 admin-dark:text-white lenis-local"
+      data-lenis-prevent
+    >
       {/* Thông tin khách hàng */}
       <div className="flex flex-col space-y-8">
         <div>
@@ -97,29 +99,65 @@ function ReadInforCustomer({ data }) {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 text-sm sm:text-base text-gray-700 admin-dark:text-gray-300">
-            <div><span className="font-medium">Tên:</span> {customer.name}</div>
-            <div><span className="font-medium">Email:</span> {customer.email || "Chưa cập nhật"}</div>
-            <div><span className="font-medium">Số điện thoại:</span> {customer.phone || "Chưa cập nhật"}</div>
-            <div><span className="font-medium">Địa chỉ:</span> {customer.address || "Chưa cập nhật"}</div>
-            <div><span className="font-medium">Tổng chi tiêu:</span> {Number(customer.total_spent).toLocaleString("vi-VN")} ₫</div>
-            <div><span className="font-medium">Số lần đặt:</span> {customer.booking_count || 0}</div>
-            <div><span className="font-medium">Loại khách:</span> {getCustomerTypeInVietnamese(customer.type)}</div>
-            <div><span className="font-medium">Số CCCD:</span> {customer.cccd || "Chưa cập nhật"}</div>
-            <div><span className="font-medium">Số tài khoản:</span> {customer.number_bank || "Chưa cập nhật"}</div>
-            <div><span className="font-medium">Tên ngân hàng:</span> {customer.name_bank || "Chưa cập nhật"}</div>
+            <div>
+              <span className="font-medium">Tên:</span> {customer.name}
+            </div>
+            <div>
+              <span className="font-medium">Email:</span>{" "}
+              {customer.email || "Chưa cập nhật"}
+            </div>
+            <div>
+              <span className="font-medium">Số điện thoại:</span>{" "}
+              {customer.phone || "Chưa cập nhật"}
+            </div>
+            <div>
+              <span className="font-medium">Địa chỉ:</span>{" "}
+              {customer.address || "Chưa cập nhật"}
+            </div>
+            <div>
+              <span className="font-medium">Tổng chi tiêu:</span>{" "}
+              {Number(customer.total_spent).toLocaleString("vi-VN")} ₫
+            </div>
+            <div>
+              <span className="font-medium">Số lần đặt:</span>{" "}
+              {customer.booking_count || 0}
+            </div>
+            <div>
+              <span className="font-medium">Loại khách:</span>{" "}
+              {getCustomerTypeInVietnamese(customer.type)}
+            </div>
+            <div>
+              <span className="font-medium">Số CCCD:</span>{" "}
+              {customer.cccd || "Chưa cập nhật"}
+            </div>
+            <div>
+              <span className="font-medium">Số tài khoản:</span>{" "}
+              {customer.number_bank || "Chưa cập nhật"}
+            </div>
+            <div>
+              <span className="font-medium">Tên ngân hàng:</span>{" "}
+              {customer.name_bank || "Chưa cập nhật"}
+            </div>
 
             {/* Ảnh CCCD */}
             <div className="sm:col-span-1">
-              <span className="font-medium block mb-2">Ảnh CCCD mặt trước:</span>
+              <span className="font-medium block mb-2">
+                Ảnh CCCD mặt trước:
+              </span>
               <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700/30 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden text-gray-500 admin-dark:text-gray-300">
                 {customer.img_cccd_top ? (
                   <img
-                    src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_top}`}
+                    loading="lazy"
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${
+                      customer.img_cccd_top
+                    }`}
                     alt="CCCD mặt trước"
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-sm md:text-base font-medium">Chưa có ảnh</span>
+                  <span className="text-sm md:text-base font-medium">
+                    Chưa có ảnh
+                  </span>
                 )}
               </div>
             </div>
@@ -129,16 +167,20 @@ function ReadInforCustomer({ data }) {
               <div className="w-full aspect-[3/2] max-h-48 bg-gray-50 admin-dark:bg-gray-700/30 border border-gray-300 admin-dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden text-gray-500 admin-dark:text-gray-300">
                 {customer.img_cccd_bottom ? (
                   <img
-                    src={`${import.meta.env.VITE_MAIN_BE_URL}${customer.img_cccd_bottom}`}
+                    loading="lazy"
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${
+                      customer.img_cccd_bottom
+                    }`}
                     alt="CCCD mặt sau"
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-sm md:text-base font-medium">Chưa có ảnh</span>
+                  <span className="text-sm md:text-base font-medium">
+                    Chưa có ảnh
+                  </span>
                 )}
               </div>
             </div>
-
           </div>
         </div>
 
@@ -156,10 +198,18 @@ function ReadInforCustomer({ data }) {
               <table className="w-full text-sm sm:text-base">
                 <thead className="bg-gray-100 admin-dark:bg-gray-800">
                   <tr>
-                    <th className="px-3 sm:px-4 py-3 text-left font-semibold">Dịch vụ</th>
-                    <th className="px-3 sm:px-4 py-3 text-center font-semibold">Trạng thái</th>
-                    <th className="px-3 sm:px-4 py-3 text-center font-semibold">Số lần đặt</th>
-                    <th className="px-3 sm:px-4 py-3 text-right font-semibold">Tổng chi</th>
+                    <th className="px-3 sm:px-4 py-3 text-left font-semibold">
+                      Dịch vụ
+                    </th>
+                    <th className="px-3 sm:px-4 py-3 text-center font-semibold">
+                      Trạng thái
+                    </th>
+                    <th className="px-3 sm:px-4 py-3 text-center font-semibold">
+                      Số lần đặt
+                    </th>
+                    <th className="px-3 sm:px-4 py-3 text-right font-semibold">
+                      Tổng chi
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white admin-dark:bg-gray-800">
@@ -172,11 +222,21 @@ function ReadInforCustomer({ data }) {
                         {b.service_name}
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-center">
-                        {b.status === "completed" && <CheckCircle className="h-5 w-5 text-green-600 admin-dark:text-green-400 inline-block" />}
-                        {b.status === "pending" && <Hourglass className="h-5 w-5 text-gray-500 admin-dark:text-gray-400 inline-block" />}
-                        {b.status === "processing" && <Clock className="h-5 w-5 text-yellow-600 admin-dark:text-yellow-400 inline-block" />}
-                        {b.status === "confirmed" && <CalendarCheck2 className="h-5 w-5 text-blue-600 admin-dark:text-blue-400 inline-block" />}
-                        {b.status === "cancelled" && <XCircle className="h-5 w-5 text-red-600 admin-dark:text-red-400 inline-block" />}
+                        {b.status === "completed" && (
+                          <CheckCircle className="h-5 w-5 text-green-600 admin-dark:text-green-400 inline-block" />
+                        )}
+                        {b.status === "pending" && (
+                          <Hourglass className="h-5 w-5 text-gray-500 admin-dark:text-gray-400 inline-block" />
+                        )}
+                        {b.status === "processing" && (
+                          <Clock className="h-5 w-5 text-yellow-600 admin-dark:text-yellow-400 inline-block" />
+                        )}
+                        {b.status === "confirmed" && (
+                          <CalendarCheck2 className="h-5 w-5 text-blue-600 admin-dark:text-blue-400 inline-block" />
+                        )}
+                        {b.status === "cancelled" && (
+                          <XCircle className="h-5 w-5 text-red-600 admin-dark:text-red-400 inline-block" />
+                        )}
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-center text-gray-900 admin-dark:text-gray-300">
                         {b.count}
@@ -208,9 +268,7 @@ function ReadInforCustomer({ data }) {
             </div>
           )}
         </div>
-
       </div>
-
     </ScrollArea>
   );
 }

@@ -40,14 +40,16 @@ export function TeamSection() {
           {t("aboutV2.TeamSection.teamMembers").map((member, index) => (
             <Card
               key={index}
-              className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${visibleCards.includes(index)
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-                }`}
+              className={`transition-all duration-500 hover:scale-105 hover:shadow-lg border-2 hover:border-accent/50 ${
+                visibleCards.includes(index)
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`}
             >
               <CardContent className="p-6 text-center">
                 <div className="relative mb-6 group">
                   <img
+                    loading="lazy"
                     src={member.image || "/placeholder.svg"}
                     alt={member.name}
                     className="w-32 h-32 rounded-full mx-auto object-cover shadow-lg group-hover:scale-105 transition-transform duration-300"

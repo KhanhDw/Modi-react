@@ -22,6 +22,7 @@ export default function VisionMissionPreview({ visionMission, lang }) {
           >
             {item.img && (
               <img
+                loading="lazy"
                 src={item.img}
                 alt={item.title?.[lang]}
                 className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-cover rounded-full mb-3 sm:mb-4 shadow-lg"

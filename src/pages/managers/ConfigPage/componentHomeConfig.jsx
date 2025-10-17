@@ -69,6 +69,7 @@ export function SafeImage({
       {isError ? (
         <div className="w-full h-full flex items-center justify-center bg-gray-200 admin-dark:bg-gray-400 rounded-xl">
           <img
+            loading="lazy"
             src={fallback}
             alt="fallback"
             className="w-20 h-20 object-contain"
@@ -76,6 +77,7 @@ export function SafeImage({
         </div>
       ) : (
         <img
+          loading="lazy"
           src={src}
           alt={alt}
           className="w-full h-full object-cover rounded-xl"

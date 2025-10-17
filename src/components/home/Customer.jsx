@@ -20,6 +20,7 @@ function Customer({ data, activeLang }) {
             className="md:hidden md:p-2 xs:p-2 overflow-hidden shadow-sm md:w-1/2 shadow-black rounded-2xl"
           >
             <img
+              loading="lazy"
               src="./images/What-Customers-Want.jpg"
               alt={t("home.customer.alt")}
               className="rounded-lg w-full h-auto"
@@ -31,6 +32,7 @@ function Customer({ data, activeLang }) {
             {/* Hình ảnh nền (ẩn trên xs:, hiển thị từ md:) */}
             <div className="absolute inset-0 hidden md:block  w-full">
               <img
+                loading="lazy"
                 src="./images/What-Customers-Want.jpg" // Sử dụng hình ảnh phù hợp làm nền
                 alt="Background image of customer support"
                 className="object-cover opacity-3 rounded-lg  w-full" // Che phủ, độ mờ nhẹ
@@ -72,6 +74,7 @@ function Customer({ data, activeLang }) {
               </div>
               <div className="hidden md:block bg-black/30 rounded-lg w-1/2 ">
                 <img
+                  loading="lazy"
                   src="./images/What-Customers-Want.jpg"
                   alt={t("home.customer.alt")}
                   className="rounded-lg w-full h-auto"

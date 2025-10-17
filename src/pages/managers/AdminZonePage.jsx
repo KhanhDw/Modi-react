@@ -208,6 +208,7 @@ export default function AdminZonePage() {
 
                           cellContent = avatarUrl ? (
                             <img
+                              loading="lazy"
                               src={avatarUrl}
                               alt="Avatar"
                               className="w-10 h-10 rounded-full object-cover border border-gray-200 admin-dark:border-gray-600"

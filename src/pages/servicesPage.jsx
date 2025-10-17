@@ -207,6 +207,7 @@ export default function ServicePage() {
         {queryParams_sub && servicesItemBySlug && (
           <div className="space-y-6 p-4 border rounded-lg shadow">
             <img
+              loading="lazy"
               src={servicesItemBySlug.image_url}
               alt={servicesItemBySlug.translation?.ten_dich_vu}
               className="w-full max-w-md rounded-lg shadow"

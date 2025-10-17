@@ -71,6 +71,7 @@ function ServiceModi({ data, activeLang }) {
                   {/* Ảnh + overlay + title */}
                   <div className="relative h-65">
                     <img
+                      loading="lazy"
                       src={`${import.meta.env.VITE_MAIN_BE_URL}${
                         service.image
                       }`}
@@ -136,6 +137,7 @@ function ServiceModi({ data, activeLang }) {
                 }`}
               >
                 <img
+                  loading="lazy"
                   src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image}`}
                   alt={service.title?.[activeLang]}
                   className="w-full h-full object-cover"

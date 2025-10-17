@@ -88,12 +88,13 @@ function BlogViewPage() {
         <div className="mx-auto px-2 md:px-4 py-8">
           {/* Blog Image */}
           <div className="mb-8">
-            {/* <img
+            {/* <img loading="lazy"
               src={blog.image || "/placeholder.svg"}
               alt={blog.title}
               className="w-full h-96 object-cover rounded-lg shadow-md"
             /> */}
             <img
+              loading="lazy"
               src={
                 blog.image
                   ? `${import.meta.env.VITE_MAIN_BE_URL}${blog.image}`

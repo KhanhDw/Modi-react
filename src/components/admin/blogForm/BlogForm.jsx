@@ -294,6 +294,7 @@ export default function BlogForm({
           <div className="mt-2 w-full flex justify-center items-center rounded-md">
             {preview ? (
               <img
+                loading="lazy"
                 src={preview}
                 alt="Preview"
                 className="h-62 sm:h-fit w-full object-cover rounded-md"

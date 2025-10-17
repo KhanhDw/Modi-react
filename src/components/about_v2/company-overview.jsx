@@ -24,7 +24,8 @@ export function CompanyOverview() {
   // Fetch dữ liệu từ API section-items (section_id = 2)
   useEffect(() => {
     fetch(
-      `${import.meta.env.VITE_MAIN_BE_URL
+      `${
+        import.meta.env.VITE_MAIN_BE_URL
       }/api/section-items/type/company_intro?slug=about`
     )
       .then((res) => res.json())
@@ -45,10 +46,11 @@ export function CompanyOverview() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Text content */}
           <div
-            className={`transition-all duration-600 ${isVisible
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 -translate-x-8"
-              }`}
+            className={`transition-all duration-600 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-8"
+            }`}
           >
             <h2 className="text-xl sm:text-2xl font-bold font-sans text-[foreground] mb-6">
               {about?.title?.[lang] || "Đang tải..."}
@@ -60,14 +62,16 @@ export function CompanyOverview() {
 
           {/* Image */}
           <div
-            className={`transition-all duration-600 delay-200 ${isVisible
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 translate-x-8"
-              }`}
+            className={`transition-all duration-600 delay-200 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-8"
+            }`}
           >
             <div className="relative">
               <div className="w-full aspect-video rounded-lg shadow-lg overflow-hidden bg-gray-100">
                 <img
+                  loading="lazy"
                   src={
                     about?.image_url
                       ? `${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`

@@ -27,7 +27,8 @@ export function MissionVision() {
   useEffect(() => {
     // Fetch dữ liệu từ API
     fetch(
-      `${import.meta.env.VITE_MAIN_BE_URL
+      `${
+        import.meta.env.VITE_MAIN_BE_URL
       }/api/section-items/type/vision_mission?slug=about`
     )
       .then((res) => res.json())
@@ -51,21 +52,24 @@ export function MissionVision() {
           {items.map((item, index) => (
             <Card
               key={item.id}
-              className={`transition-all duration-600 hover:shadow-lg border-2 ${index % 2 === 0
-                ? "hover:border-primary/50"
-                : "hover:border-secondary/50"
-                } ${isVisible
+              className={`transition-all duration-600 hover:shadow-lg border-2 ${
+                index % 2 === 0
+                  ? "hover:border-primary/50"
+                  : "hover:border-secondary/50"
+              } ${
+                isVisible
                   ? "opacity-100 translate-x-0"
                   : index % 2 === 0
-                    ? "opacity-0 -translate-x-8"
-                    : "opacity-0 translate-x-8"
-                }`}
+                  ? "opacity-0 -translate-x-8"
+                  : "opacity-0 translate-x-8"
+              }`}
             >
               <CardContent className="p-8">
                 <div className="flex items-center mb-4">
                   <div
-                    className={`w-3 h-3 rounded-full mr-3 ${index % 2 === 0 ? "bg-primary" : "bg-secondary"
-                      }`}
+                    className={`w-3 h-3 rounded-full mr-3 ${
+                      index % 2 === 0 ? "bg-primary" : "bg-secondary"
+                    }`}
                   ></div>
                   <h3 className="text-base sm:text-lg lg:text-xl font-bold font-sans text-[foreground]">
                     {item.title?.[lang] || "Chưa có tiêu đề"}
@@ -76,6 +80,7 @@ export function MissionVision() {
                 </p>
                 {item.image_url && (
                   <img
+                    loading="lazy"
                     src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`}
                     alt={item.title?.[lang] || ""}
                     className="w-full h-40 object-cover rounded-lg mt-4 shadow"

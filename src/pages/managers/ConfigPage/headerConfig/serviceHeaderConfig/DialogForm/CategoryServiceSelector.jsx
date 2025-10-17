@@ -85,7 +85,10 @@ export default function CategoryServiceSelector({
   };
 
   return (
-    <div className="border admin-dark:bg-gray-800 bg-gray-100 py-2 rounded-md">
+    <div
+      data-lenis-prevent
+      className="lenis-local max-h-64 overflow-y-auto rounded-xl border border-gray-200 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-900 shadow-sm"
+    >
       {services.map((s) => {
         const slug = s.translation.slug;
         const checked = localList.includes(slug);
@@ -97,15 +100,16 @@ export default function CategoryServiceSelector({
         return (
           <div
             key={s.id}
-            className={`flex items-center space-x-2 px-2 ${
+            className={`group flex items-center justify-between px-3 py-2 transition-all duration-150 border-b last:border-none border-gray-100 admin-dark:border-gray-800 ${
               !disabled
-                ? "hover:bg-gray-800/50 admin-dark:hover:bg-gray-300/50"
+                ? "hover:bg-gray-50 admin-dark:hover:bg-gray-800/70"
                 : "opacity-50 cursor-not-allowed"
             }`}
           >
+            {/* Checkbox + label */}
             <label
               htmlFor={`service-${s.id}`}
-              className="text-gray-800 admin-dark:text-gray-200 py-2 w-full"
+              className="flex items-center gap-3 text-sm font-medium text-gray-800 admin-dark:text-gray-100 w-full cursor-pointer select-none"
             >
               <input
                 type="checkbox"
@@ -114,15 +118,17 @@ export default function CategoryServiceSelector({
                 checked={checked}
                 disabled={disabled || isUsedByChild}
                 onChange={(e) => toggleService(slug, e.target.checked)}
-                className="checkbox w-5 h-5 rounded border border-gray-400 bg-gray-100 accent-blue-600 checked:bg-blue-600"
+                className="h-4 w-4 accent-blue-600 rounded border-gray-400 focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all"
               />
-              <span> {s.translation.ten_dich_vu}</span>
-              {isUsedByChild && (
-                <span className="text-red-500 text-xs ml-2">
-                  (mục con đang dùng)
-                </span>
-              )}
+              <span>{s.translation.ten_dich_vu}</span>
             </label>
+
+            {/* trạng thái mục con */}
+            {isUsedByChild && (
+              <span className="text-xs text-red-500 font-medium italic whitespace-nowrap ml-2">
+                (đang dùng ở mục con)
+              </span>
+            )}
           </div>
         );
       })}
