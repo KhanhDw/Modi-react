@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowRight, X } from "lucide-react";
@@ -12,7 +12,8 @@ const categoryConfig = {
   webTemplate: { label: "Website mẫu" },
 };
 
-export default function AdminSearch({ isFullScreen = false }) {
+// Sử dụng forwardRef
+const AdminSearch = ({ isFullScreen = false }) => {
   useLenisLocal(".lenis-local");
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,7 +22,9 @@ export default function AdminSearch({ isFullScreen = false }) {
   const [lienHeResults, setLienHeResults] = useState([]);
   const [marketingResults, setMarketingResults] = useState([]);
   const [websiteTemplateResults, setWebsiteTemplateResults] = useState([]);
-  const searchInputRef = useRef(null);
+
+  // Sửa: Đổi tên ref để tránh xung đột
+  const inputRef = useRef(null);
 
   const safeFetch = async (url) => {
     try {
@@ -49,63 +52,75 @@ export default function AdminSearch({ isFullScreen = false }) {
 
       // --- Blogs ---
       const blogsData = await safeFetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/blogs/search?term=${encodeURIComponent(searchQuery)}`
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/blogs/search?term=${encodeURIComponent(searchQuery)}`
       );
       setBlogResults(
         Array.isArray(blogsData)
           ? blogsData.map((blog) => ({
-            id: `blog-${blog.id}`,
-            title: blog.title,
-            category: "blogs",
-            url: `/managers/news/${blog.id}/view`,
-          }))
+              id: `blog-${blog.id}`,
+              title: blog.title,
+              category: "blogs",
+              url: `/managers/news/${blog.id}/view`,
+            }))
           : []
       );
 
       // --- Liên hệ ---
       const lienheData = await safeFetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/lienhe/search?term=${encodeURIComponent(searchQuery)}`
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/lienhe/search?term=${encodeURIComponent(searchQuery)}`
       );
       setLienHeResults(
         Array.isArray(lienheData)
           ? lienheData.map((lh) => ({
-            id: `lienhe-${lh.id}`,
-            title: `${lh.ho_ten} – "${lh.noi_dung?.slice(0, 50)}..."`,
-            category: "lienhe",
-            url: `/managers/contact`,
-          }))
+              id: `lienhe-${lh.id}`,
+              title: `${lh.ho_ten} – "${lh.noi_dung?.slice(0, 50)}..."`,
+              category: "lienhe",
+              url: `/managers/contact`,
+            }))
           : []
       );
 
       // --- Marketing ---
       const marketingRaw = await safeFetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/marketing/search?term=${encodeURIComponent(searchQuery)}&status=published`
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/marketing/search?term=${encodeURIComponent(
+          searchQuery
+        )}&status=published`
       );
       const marketingData = marketingRaw?.data || [];
       setMarketingResults(
         Array.isArray(marketingData)
           ? marketingData.map((mk) => ({
-            id: `marketing-${mk.id}`,
-            title: mk.title,
-            category: "marketing",
-            url: `/managers/marketing/${mk.id}/view`,
-          }))
+              id: `marketing-${mk.id}`,
+              title: mk.title,
+              category: "marketing",
+              url: `/managers/marketing/${mk.id}/view`,
+            }))
           : []
       );
 
       // --- Website template ---
       const wsRaw = await safeFetch(
-        `${import.meta.env.VITE_MAIN_BE_URL}/api/web-samples/search?term=${encodeURIComponent(searchQuery)}&lang=vi`
+        `${
+          import.meta.env.VITE_MAIN_BE_URL
+        }/api/web-samples/search?term=${encodeURIComponent(
+          searchQuery
+        )}&lang=vi`
       );
       const websiteTemplateData = wsRaw?.data || wsRaw;
       setWebsiteTemplateResults(
         Array.isArray(websiteTemplateData)
           ? websiteTemplateData.map((ws) => ({
-            id: `web-${ws.id}`,
-            title: ws.name,
-            category: "webTemplate",
-            url: `/managers/website-templates/${ws.id}`,
-          }))
+              id: `web-${ws.id}`,
+              title: ws.name,
+              category: "webTemplate",
+              url: `/managers/website-templates/${ws.id}`,
+            }))
           : []
       );
     };
@@ -133,12 +148,14 @@ export default function AdminSearch({ isFullScreen = false }) {
 
   const clearSearch = () => {
     setSearchQuery("");
-    searchInputRef.current?.focus();
+    inputRef.current?.focus();
   };
 
   return (
     <div className={cn("relative", isFullScreen && "flex-1")}>
-      <div className={cn("rounded-lg", isFullScreen && "w-full max-w-4xl mx-auto")}>
+      <div
+        className={cn("rounded-lg", isFullScreen && "w-full max-w-4xl mx-auto")}
+      >
         <div className={cn("relative", isFullScreen && "w-full")}>
           <Search
             className={cn(
@@ -147,7 +164,7 @@ export default function AdminSearch({ isFullScreen = false }) {
               "lg:h-6 lg:w-6"
             )}
           />
-          <Input
+          <input
             type="text"
             placeholder="Tìm kiếm..."
             value={searchQuery}
@@ -155,16 +172,17 @@ export default function AdminSearch({ isFullScreen = false }) {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             className={cn(
-              "pl-10 pr-10 py-3 rounded-xl shadow-md focus:border-[3px]",
-              "border-gray-400 admin-dark:border-gray-600",
+              "pl-10 pr-10 py-3 rounded-xl shadow-md border ",
+              "focus:border-gray-400 focus:admin-dark:border-gray-600",
               "bg-white placeholder:text-gray-400 focus:outline-none",
+              "focus:ring-0 ",
               "hover:shadow-lg transition-all duration-300 ease-in-out",
               "admin-dark:bg-gray-800 admin-dark:text-white admin-dark:placeholder:text-gray-400",
               isFocused
                 ? "  md:w-[30.5rem] lg:w-[31.6rem] xl:w-[35.3rem] 2xl:w-[35.3rem]"
                 : "  md:w-[10rem] lg:w-[10rem] xl:w-[15rem] 2xl:w-[15rem]"
             )}
-            ref={searchInputRef}
+            ref={inputRef}
           />
           {searchQuery && (
             <button
@@ -192,7 +210,7 @@ export default function AdminSearch({ isFullScreen = false }) {
             // ⬇️ đồng bộ width với input
             isFocused
               ? "w-[18rem] sm:w-[28rem] md:w-[30.5rem] lg:w-[31.6rem] xl:w-[35.3rem] "
-              : "  md:w-[30.5rem] lg:w-[31.6rem]  xl:w-[35.3rem] ",
+              : "  md:w-[30.5rem] lg:w-[31.6rem]  xl:w-[35.3rem] "
           )}
         >
           <div className="z-100 px-4 py-3 border-b border-gray-700 sticky top-0 admin-dark:bg-gray-800 bg-slate-50 text-gray-800">
@@ -215,38 +233,42 @@ export default function AdminSearch({ isFullScreen = false }) {
             </h3>
           </div>
           <div>
-            {Object.entries(groupedResults).map(([category, categoryResults], index) => {
-              const config = categoryConfig[category];
-              return (
-                <div key={category}>
-                  <div className="px-4 py-2 text-xs sm:text-sm font-medium admin-dark:text-gray-300 admin-dark:bg-gray-800/50 bg-slate-50 text-gray-800 sticky top-12">
-                    {config?.label || category} ({categoryResults.length})
-                  </div>
-                  <div>
-                    {categoryResults.map((result) => (
-                      <div
-                        key={result.id}
-                        onMouseDown={() => navigate(result.url)}
-                        className="group cursor-pointer transition-colors hover:bg-gray-300 admin-dark:hover:bg-gray-700"
-                      >
-                        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3">
-                          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-gray-400 group-hover:text-gray-800 transition-colors" />
-                          <span className="text-gray-800 admin-dark:text-white font-medium group-hover:text-gray-800 transition-colors text-sm sm:text-base">
-                            {result.title}
-                          </span>
+            {Object.entries(groupedResults).map(
+              ([category, categoryResults], index) => {
+                const config = categoryConfig[category];
+                return (
+                  <div key={category}>
+                    <div className="px-4 py-2 text-xs sm:text-sm font-medium admin-dark:text-gray-300 admin-dark:bg-gray-800/50 bg-slate-50 text-gray-800 sticky top-12">
+                      {config?.label || category} ({categoryResults.length})
+                    </div>
+                    <div>
+                      {categoryResults.map((result) => (
+                        <div
+                          key={result.id}
+                          onMouseDown={() => navigate(result.url)}
+                          className="group cursor-pointer transition-colors hover:bg-gray-300 admin-dark:hover:bg-gray-700"
+                        >
+                          <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3">
+                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-gray-400 group-hover:text-gray-800 transition-colors" />
+                            <span className="text-gray-800 admin-dark:text-white font-medium group-hover:text-gray-800 transition-colors text-sm sm:text-base">
+                              {result.title}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    {index < Object.entries(groupedResults).length - 1 && (
+                      <div className="border-b border-gray-700"></div>
+                    )}
                   </div>
-                  {index < Object.entries(groupedResults).length - 1 && (
-                    <div className="border-b border-gray-700"></div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              }
+            )}
           </div>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default AdminSearch;
