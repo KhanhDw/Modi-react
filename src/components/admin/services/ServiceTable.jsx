@@ -166,158 +166,127 @@ export default function ServiceTable() {
             admin-dark:bg-gray-800 admin-dark:border-gray-700 admin-dark:shadow-gray-900/50
             w-full overflow-x-auto"
         >
-          <Table className="min-w-[800px]">
-            <TableHeader>
-              <TableRow
-                className="bg-gray-50 admin-dark:bg-gray-900
-                  hover:bg-gray-100 admin-dark:hover:bg-gray-800"
-              >
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  STT
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Hình ảnh
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200">
-                  Tên dịch vụ
-                </TableHead>
-                <TableHead className="w-[30%] sm:w-[25%] md:w-[20%] text-black admin-dark:text-gray-200 font-semibold ">
-                  Mô tả
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200 text-center">
-                  Giá
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200 text-center">
-                  Số lần đặt
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200 text-center">
-                  Ngôn ngữ hỗ trợ
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200 text-center">
-                  Trạng thái
-                </TableHead>
-                <TableHead className="text-black admin-dark:text-gray-200 text-center">
-                  Thao tác
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentData.map((item, index) => {
-                return (
-                  <TableRow
-                    key={item.id}
-                    className="hover:bg-gray-50 admin-dark:hover:bg-gray-900"
-                  >
-                    <TableCell
-                      className={`text-gray-900 admin-dark:text-gray-200  `}
-                    >
-                      {startIndex + index + 1}
-                    </TableCell>
-                    <TableCell>
-                      {item.image_url ? (
-                        <img
-                          loading="lazy"
-                          src={`${import.meta.env.VITE_MAIN_BE_URL}${
-                            item.image_url
-                          }`}
-                          alt="Ảnh dịch vụ"
-                          style={{
-                            width: 60,
-                            height: 40,
-                            objectFit: "cover",
-                            borderRadius: 6,
-                          }}
-                        />
-                      ) : null}
-                    </TableCell>
+          <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm bg-white dark:bg-gray-950">
+            <Table className="w-full text-sm text-gray-700 dark:text-gray-300">
+              <TableHeader>
+                <TableRow className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+                  <TableHead className="px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs text-gray-800 dark:text-gray-200">
+                    STT
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left">
+                    Hình ảnh
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left">
+                    Tên dịch vụ
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left">Mô tả</TableHead>
+                  <TableHead className="px-4 py-3 text-center">Giá</TableHead>
+                  <TableHead className="px-4 py-3 text-center">Đặt</TableHead>
+                  <TableHead className="px-4 py-3 text-center">
+                    Ngôn ngữ
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-center">
+                    Trạng thái
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-center">
+                    Thao tác
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
 
-                    <TableCell
-                      onClick={() =>
-                        handleReaderDetailService(item.translation?.slug)
-                      }
-                      className={`${
-                        !item.totalLanguages.includes("vi")
-                          ? "text-red-400"
-                          : "text-gray-900 admin-dark:text-gray-200"
-                      } hover:bg-slate-200 admin-dark:hover:bg-slate-700 cursor-pointer`}
+              <TableBody>
+                {currentData.length > 0 ? (
+                  currentData.map((item, i) => (
+                    <TableRow
+                      key={item.id}
+                      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
                     >
-                      {item.translation?.ten_dich_vu ||
-                        "Chưa có thông tin tiếng việt"}
-                    </TableCell>
-                    <TableCell
-                      className={`${
-                        !item.totalLanguages.includes("vi")
-                          ? "text-red-400"
-                          : "text-gray-900 admin-dark:text-gray-200"
-                      }  `}
-                    >
-                      {item.translation?.mo_ta ||
-                        "Chưa có thông tin tiếng việt"}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
-                      {item.floor_price
-                        ? `₫${Number(item.floor_price).toLocaleString()}`
-                        : ""}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 text-center">
-                      {typeof item.booking_count === "number"
-                        ? item.booking_count
-                        : ""}
-                    </TableCell>
-                    <TableCell className="text-gray-900 admin-dark:text-gray-200 flex-col items-center justify-center">
-                      <div className="flex flex-wrap justify-center gap-1 text-center">
-                        {item.totalLanguages.map((lang, index) => {
-                          return (
+                      <TableCell className="px-4 py-2 text-center">
+                        {i + 1}
+                      </TableCell>
+                      <TableCell className="px-4 py-2">
+                        <img
+                          src={item.image_url}
+                          alt=""
+                          loading="lazy"
+                          className="w-14 h-10 rounded-md object-cover border border-gray-200 dark:border-gray-700"
+                        />
+                      </TableCell>
+                      <TableCell
+                        onClick={() =>
+                          handleReaderDetailService(item.translation?.slug)
+                        }
+                        className="px-4 py-2 font-medium truncate max-w-[200px] cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                      >
+                        {item.translation?.ten_dich_vu || "Chưa có TV"}
+                      </TableCell>
+                      <TableCell className="px-4 py-2 truncate max-w-[250px]">
+                        {item.translation?.mo_ta || "—"}
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-center">
+                        {item.floor_price
+                          ? `₫${Number(item.floor_price).toLocaleString()}`
+                          : ""}
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-center">
+                        {item.booking_count ?? ""}
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-center">
+                        <div className="flex flex-wrap justify-center gap-1">
+                          {item.totalLanguages.map((lang) => (
                             <span
-                              key={`${lang}-${index}`}
-                              className={`${
-                                lang === "vi" ? "bg-red-700" : "bg-blue-600"
-                              } px-2 py-1 text-xs text-white rounded`}
+                              key={lang}
+                              className={`px-2 py-0.5 text-xs font-medium text-white rounded-full ${
+                                lang === "vi" ? "bg-red-600" : "bg-blue-600"
+                              }`}
                             >
                               {lang}
                             </span>
-                          );
-                        }) || ""}
-                      </div>
-                    </TableCell>
-                    <TableCell className={`text-center`}>
-                      <Badge className="bg-green-600 px-2 py-1 rounded text-white admin-dark:bg-green-500">
-                        {item.status === "Active"
-                          ? "Hoạt động"
-                          : "Không hoạt động"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <TableRowActions
-                        actions={[
-                          {
-                            label: "Cập nhật",
-                            icon: Edit,
-                            onClick: () => openEditServiceForm(item),
-                          },
-                          {
-                            label: "Xóa",
-                            icon: Trash2,
-                            onClick: () => handleDeleteClick(item.id),
-                          },
-                        ]}
-                      />
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-center">
+                        <Badge
+                          className={`px-2 py-1 text-xs font-medium rounded ${
+                            item.status === "Active"
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                              : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
+                          }`}
+                        >
+                          {item.status === "Active" ? "Hoạt động" : "Tắt"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-center">
+                        <TableRowActions
+                          actions={[
+                            {
+                              label: "Cập nhật",
+                              icon: Edit,
+                              onClick: () => openEditServiceForm(item),
+                            },
+                            {
+                              label: "Xóa",
+                              icon: Trash2,
+                              onClick: () => handleDeleteClick(item.id),
+                            },
+                          ]}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={9}
+                      className="py-6 text-center text-gray-500 dark:text-gray-400"
+                    >
+                      Không có dữ liệu
                     </TableCell>
                   </TableRow>
-                );
-              })}
-              {currentData.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={9}
-                    className="text-center text-muted-foreground py-4"
-                  >
-                    Không có dữ liệu
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
         {/* Pagination */}
         <div className="flex xs:flex-col lg:flex-row justify-between items-center mt-4">

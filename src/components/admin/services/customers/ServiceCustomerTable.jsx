@@ -298,83 +298,109 @@ export default function ServiceCustomerTable() {
         </div>
         <CardContent className="text-black admin-dark:text-white">
           <div className="rounded-md border border-gray-300 admin-dark:border-gray-700 bg-white admin-dark:bg-gray-800 shadow-sm">
-            <Table>
+            <Table className="w-full text-sm text-gray-800 dark:text-gray-200">
               <TableHeader>
-                <TableRow className="admin-dark:border-gray-700 bg-gray-100 admin-dark:bg-gray-800">
-                  <TableHead className="text-black admin-dark:text-white">
+                <TableRow className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                  <TableHead className="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100 text-left uppercase tracking-wider text-xs">
                     STT
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-gray-900 dark:text-gray-100">
                     Tên khách hàng
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-gray-900 dark:text-gray-100 text-center">
                     SĐT
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-gray-900 dark:text-gray-100 text-center">
                     Email
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-gray-900 dark:text-gray-100 text-center">
                     Số CCCD
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-gray-900 dark:text-gray-100 text-center">
                     Số tài khoản ngân hàng
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-gray-900 dark:text-gray-100 text-center">
                     Tên ngân hàng
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-center text-gray-900 dark:text-gray-100 ">
                     Đã đặt
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-center text-gray-900 dark:text-gray-100">
                     Hoàn thành
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-center text-gray-900 dark:text-gray-100">
                     Chi
                   </TableHead>
-                  <TableHead className="text-black admin-dark:text-white">
+                  <TableHead className="px-4 py-3 text-center text-gray-900 dark:text-gray-100">
                     Thao tác
                   </TableHead>
                 </TableRow>
               </TableHeader>
+
               <TableBody>
                 {currentData.map((customer, index) => (
                   <TableRow
                     key={customer.id}
-                    className="admin-dark:border-gray-700 admin-dark:hover:bg-gray-750"
+                    className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
-                    <TableCell className="text-black admin-dark:text-white">
+                    <TableCell className="px-4 py-2 text-center font-medium">
                       {startIndex + index + 1}
                     </TableCell>
 
-                    <TableCell className="text-black admin-dark:text-white flex gap-2">
-                      {customer.type === "vip" ? (
-                        <div className="vip-badge  rounded-sm px-1 bg-yellow-300">
-                          <span className="badge-text text-xs font-semibold text-black admin-dark:text-black">
-                            VIP
-                          </span>
+                    <TableCell className="px-4 py-2 flex items-center gap-2">
+                      {customer.type === "vip" && (
+                        <div className="px-2 py-0.5 bg-yellow-300 text-xs font-semibold text-black rounded-sm shadow-sm">
+                          VIP
                         </div>
-                      ) : null}
-                      {customer.name}
+                      )}
+                      <span>{customer.name}</span>
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
-                      {customer.phone || "Chưa cập nhật"}
+
+                    <TableCell className="px-4 py-2">
+                      {customer.phone || (
+                        <span className="text-gray-400 italic">
+                          Chưa cập nhật
+                        </span>
+                      )}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
-                      {customer.email || "Chưa cập nhật"}
+
+                    <TableCell className="px-4 py-2 truncate max-w-[200px]">
+                      {customer.email || (
+                        <span className="text-gray-400 italic">
+                          Chưa cập nhật
+                        </span>
+                      )}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
-                      {customer.cccd || "Chưa cập nhật"}
+
+                    <TableCell className="px-4 py-2 text-center">
+                      {customer.cccd || (
+                        <span className="text-gray-400 italic">
+                          Chưa cập nhật
+                        </span>
+                      )}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
-                      {customer.number_bank || "Chưa cập nhật"}
+
+                    <TableCell className="px-4 py-2 text-center">
+                      {customer.number_bank || (
+                        <span className="text-gray-400 italic">
+                          Chưa cập nhật
+                        </span>
+                      )}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
-                      {customer.name_bank || "Chưa cập nhật"}
+
+                    <TableCell className="px-4 py-2 text-center">
+                      {customer.name_bank || (
+                        <span className="text-gray-400 italic">
+                          Chưa cập nhật
+                        </span>
+                      )}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white pl-6">
+
+                    <TableCell className="px-4 py-2 text-center">
                       {customer.booking_count || 0}
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white pl-9">
+
+                    <TableCell className="px-4 py-2 text-center">
                       {
                         initDataBooking.filter(
                           (c) =>
@@ -383,42 +409,45 @@ export default function ServiceCustomerTable() {
                         ).length
                       }
                     </TableCell>
-                    <TableCell className="text-black admin-dark:text-white">
+
+                    <TableCell className="px-4 py-2 text-center font-medium text-green-700 dark:text-green-400">
                       {Number(customer.total_spent || 0).toLocaleString(
                         "vi-VN"
                       )}{" "}
                       ₫
                     </TableCell>
-                    <TableCell className="flex items-center justify-center space-x-2">
-                      <TableRowActions
-                        actions={[
-                          {
-                            label: "Xem chi tiết",
-                            icon: Eye,
-                            onClick: () => getFullInforCustomer(customer.id),
-                          },
-                          {
-                            label: "Chỉnh sửa",
-                            icon: Edit,
-                            onClick: () => openEditCustomerForm(customer),
-                          },
-                          {
-                            label: "Xóa",
-                            icon: Trash2,
-                            onClick: () => {
-                              handleDeleteClick(customer.id);
+
+                    <TableCell className="px-4 py-2 text-center">
+                      <div className="flex justify-center items-center gap-2">
+                        <TableRowActions
+                          actions={[
+                            {
+                              label: "Xem chi tiết",
+                              icon: Eye,
+                              onClick: () => getFullInforCustomer(customer.id),
                             },
-                          },
-                        ]}
-                      />
+                            {
+                              label: "Chỉnh sửa",
+                              icon: Edit,
+                              onClick: () => openEditCustomerForm(customer),
+                            },
+                            {
+                              label: "Xóa",
+                              icon: Trash2,
+                              onClick: () => handleDeleteClick(customer.id),
+                            },
+                          ]}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
+
                 {currentData.length === 0 && (
-                  <TableRow className="admin-dark:border-gray-700 w-full ">
+                  <TableRow>
                     <TableCell
                       colSpan={11}
-                      className="text-center py-4 text-gray-500 admin-dark:text-gray-400"
+                      className="py-6 text-center text-gray-500 dark:text-gray-400 italic"
                     >
                       Không tìm thấy khách hàng
                     </TableCell>

@@ -58,7 +58,8 @@ export default function ServiceBookingTable() {
     if (bookingToDeleteId) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_MAIN_BE_URL
+          `${
+            import.meta.env.VITE_MAIN_BE_URL
           }/api/bookings/${bookingToDeleteId}`,
           {
             method: "DELETE",
@@ -174,7 +175,7 @@ export default function ServiceBookingTable() {
             <TableHeader>
               <TableRow
                 className="bg-gray-50 admin-dark:bg-gray-900
-                  hover:bg-gray-100 admin-dark:hover:bg-gray-800"
+        hover:bg-gray-100 admin-dark:hover:bg-gray-800"
               >
                 <TableHead className="text-black admin-dark:text-gray-200">
                   STT
@@ -182,7 +183,7 @@ export default function ServiceBookingTable() {
                 <TableHead className="text-black admin-dark:text-gray-200">
                   Tên khách hàng
                 </TableHead>
-                <TableHead className="w-[20%] sm:w-[15%] text-black admin-dark:text-gray-200 font-semibold">
+                <TableHead className="w-[33%] max-w-[33%] text-black admin-dark:text-gray-200 font-semibold">
                   Tên dịch vụ
                 </TableHead>
                 <TableHead className="w-[15%] sm:w-[10%] text-black admin-dark:text-gray-200 font-semibold">
@@ -213,10 +214,20 @@ export default function ServiceBookingTable() {
                   >
                     {startIndex + index + 1}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell
+                    className="text-gray-900 admin-dark:text-gray-200
+                  w-[20%] max-w-[33%]
+          break-words whitespace-normal
+          min-w-0 overflow-hidden"
+                  >
                     {item.customer_name}
                   </TableCell>
-                  <TableCell className="text-gray-900 admin-dark:text-gray-200">
+                  <TableCell
+                    className="text-gray-900 admin-dark:text-gray-200
+          w-[33%] max-w-[33%]
+          break-words whitespace-normal
+          min-w-0 overflow-hidden"
+                  >
                     {item.service_name}
                   </TableCell>
                   <TableCell>
@@ -255,8 +266,8 @@ export default function ServiceBookingTable() {
                   <TableCell className="text-gray-900 admin-dark:text-gray-200">
                     {item.completed_date
                       ? new Date(item.completed_date).toLocaleDateString(
-                        "vi-VN"
-                      )
+                          "vi-VN"
+                        )
                       : "Không có"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center space-x-2">
