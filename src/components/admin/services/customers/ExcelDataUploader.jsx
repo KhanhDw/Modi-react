@@ -8,8 +8,9 @@ function ExcelDataUploader({
   setOpenDialogImportCustomer,
 }) {
   useLenisLocal(".lenis-local");
-
+  const [isImporting, setIsImporting] = useState(false);
   const { handleRefetchCustomer } = useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
+  const [infoMessage, setInfoMessage] = useState(null);
 
   const [excelData, setExcelData] = useState(null);
   const [fileName, setFileName] = useState("");
@@ -161,10 +162,11 @@ function ExcelDataUploader({
 
   const handleImportData = async () => {
     if (!excelData || excelData.length === 0) {
-      alert("Vui lòng tải lên một file Excel hợp lệ trước khi nhập.");
+      setInfoMessage("Vui lòng tải lên một file Excel hợp lệ trước khi nhập.");
       return;
     }
 
+    setIsImporting(true);
     try {
       const res = await fetch(
         `${import.meta.env.VITE_MAIN_BE_URL}/api/customers/bulk`,
@@ -178,28 +180,27 @@ function ExcelDataUploader({
       const data = await res.json();
 
       if (!res.ok) {
-        // Nếu có trùng (409) thì hiển thị duplicates
         if (res.status === 409 && data.duplicates) {
-          console.warn("Khách hàng bị trùng:", data.duplicates);
-          alert(
-            `Có ${data.duplicates.length} khách hàng bị trùng (số điện thoại/email). Vui lòng xử lý.`
+          setInfoMessage(
+            `⚠️ Có ${data.duplicates.length} khách hàng bị trùng (số điện thoại/email). Vui lòng xử lý.`
           );
         } else {
-          alert(`Lỗi: ${data.error || data.message}`);
+          setInfoMessage(`Lỗi: ${data.error || data.message}`);
         }
         return;
       }
 
       handleRefetchCustomer();
-      // Thành công
-      alert(
-        `Đã cập nhật ${data.insertedCount} dữ liệu khách hàng thành công .`
+      setInfoMessage(
+        `Đã nhập ${data.insertedCount} khách hàng thành công vào hệ thống.`
       );
       setExcelData(null);
       setFileName("");
     } catch (err) {
       console.error("Import error:", err);
-      alert("Không thể kết nối server. Vui lòng thử lại sau.");
+      setInfoMessage("Không thể kết nối server. Vui lòng thử lại sau.");
+    } finally {
+      setIsImporting(false);
     }
   };
 
@@ -288,9 +289,33 @@ function ExcelDataUploader({
               disabled={!excelData}
               className="px-6 py-3 bg-blue-600 admin-dark:bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 admin-dark:hover:bg-blue-500 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600 cursor-pointer"
             >
-              <span className="text-base sm:text-base">
-                Nhập dữ liệu vào hệ thống
-              </span>
+              {isImporting ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  <span>Đang nhập...</span>
+                </>
+              ) : (
+                <span>Nhập dữ liệu vào hệ thống</span>
+              )}
             </button>
           </div>
         </div>
@@ -360,6 +385,35 @@ function ExcelDataUploader({
             <button
               onClick={() => setError(null)}
               className="w-full px-4 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-300"
+            >
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      )}
+      {isImporting && (
+        <div className="fixed inset-0 bg-black/60 flex flex-col items-center justify-center z-[200]">
+          <div className="bg-white dark:bg-gray-800 px-8 py-6 rounded-2xl shadow-2xl flex flex-col items-center">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-base font-semibold text-gray-800 dark:text-gray-200">
+              Đang nhập dữ liệu vào hệ thống...
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Vui lòng không đóng trình duyệt hoặc đổi trang
+            </p>
+          </div>
+        </div>
+      )}
+      {/* Modal thông báo kết quả (thay cho alert) */}
+      {infoMessage && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[150]">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4 text-center">
+            <p className="text-gray-800 dark:text-gray-100 text-base sm:text-lg mb-6 whitespace-pre-line">
+              {infoMessage}
+            </p>
+            <button
+              onClick={() => setInfoMessage(null)}
+              className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300"
             >
               Đã hiểu
             </button>
