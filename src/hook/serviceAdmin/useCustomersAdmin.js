@@ -1,30 +1,31 @@
-import { useState, useEffect, useCallback } from "react";
+// src/hook/serviceAdmin/useCustomersAdmin.js
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CustomerAPI } from "@/api/customerAPI";
 
-export const useCustomersAdmin = ({ bookings, onCustomerChange, showToast }) => {
-  const [customers, setCustomers] = useState([]);
-  const [editingCustomer, setEditingCustomer] = useState(null);
-  const [loadingCustomers, setLoadingCustomers] = useState(true);
+export const useCustomersAdmin = ({
+  bookings,
+  onCustomerChange,
+  showToast,
+}) => {
+  const queryClient = useQueryClient();
 
-  const fetchCustomer = useCallback(async () => {
-    setLoadingCustomers(true);
-    try {
+  // Query để fetch customers
+  const {
+    data: customers = [],
+    isLoading: loadingCustomers,
+    error: customersError,
+  } = useQuery({
+    queryKey: ["customers"],
+    queryFn: async () => {
       const res = await fetch(CustomerAPI.getALL());
       const data = await res.json();
-      setCustomers(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error when try get customer data:", err);
-    } finally {
-      setLoadingCustomers(false);
-    }
-  }, []);
+      return Array.isArray(data) ? data : [];
+    },
+  });
 
-  useEffect(() => {
-    fetchCustomer();
-  }, [fetchCustomer]);
-
-  const handleEditingCustomer = async (formData, id, handleClose) => {
-    try {
+  // Mutation để update customer
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, formData }) => {
       const res = await fetch(CustomerAPI.edit(id), {
         method: "PUT",
         body: formData,
@@ -33,40 +34,67 @@ export const useCustomersAdmin = ({ bookings, onCustomerChange, showToast }) => 
       if (!res.ok) {
         throw new Error("Error when trying to update customer");
       }
-      if (res.ok) {
-        await fetchCustomer();
-        await onCustomerChange(); // Refetch bookings
-        handleClose();
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["customers"]);
+      onCustomerChange?.(); // Refetch bookings
+    },
+    onError: (error) => {
+      console.error("Error updating customer:", error);
+    },
+  });
+
+  // Mutation để delete customer
+  const deleteMutation = useMutation({
+    mutationFn: async (id) => {
+      // Kiểm tra xem customer có bookings không
+      const customerBookings = bookings.filter(
+        (booking) => booking.customer_id === id
+      );
+
+      if (customerBookings.length > 0) {
+        throw new Error("Không thể xóa khách hàng vì đang có dịch vụ đã đặt.");
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
-  const handleDeleteCustomer = async (id) => {
-    const customerBookings = bookings.filter(
-      (booking) => booking.customer_id === id
-    );
-    if (customerBookings.length > 0) {
-      showToast("Không thể xóa khách hàng vì đang có dịch vụ đã đặt.", "error");
-      return false;
-    }
-
-    try {
       const res = await fetch(CustomerAPI.delete(id), {
         method: "DELETE",
       });
+
       if (!res.ok) {
         throw new Error("Error when trying to delete customer");
       }
-      setCustomers((prev) => prev.filter((c) => c.id !== id));
-      showToast("Xóa khách hàng thành công!", "success");
-      return true;
-    } catch (err) {
-      console.error(err);
-      showToast("Đã xảy ra lỗi khi xóa khách hàng.", "error");
-      return false;
-    }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["customers"]);
+    },
+    onError: (error) => {
+      console.error("Error deleting customer:", error);
+    },
+  });
+
+  const handleEditingCustomer = (formData, id, handleClose) => {
+    updateMutation.mutate(
+      { id, formData },
+      {
+        onSuccess: () => handleClose?.(),
+        onError: (error) => {
+          showToast?.(error.message, "error");
+        },
+      }
+    );
+  };
+
+  const handleDeleteCustomer = (id) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        showToast?.("Xóa khách hàng thành công!", "success");
+      },
+      onError: (error) => {
+        showToast?.(error.message, "error");
+      },
+    });
   };
 
   const handleGetBookingForCustomerId = (customerId) => {
@@ -78,12 +106,21 @@ export const useCustomersAdmin = ({ bookings, onCustomerChange, showToast }) => 
 
   return {
     customers,
-    editingCustomer,
-    setEditingCustomer,
+    editingCustomer: null, // Quản lý trong component
+    setEditingCustomer: () => {}, // Placeholder
     loadingCustomers,
     handleEditingCustomer,
     handleDeleteCustomer,
     handleGetBookingForCustomerId,
-    handleRefetchCustomer: fetchCustomer,
+    handleRefetchCustomer: () => queryClient.invalidateQueries(["customers"]),
+
+    // Thêm states mutation cho UI
+    isUpdatingCustomer: updateMutation.isPending,
+    isDeletingCustomer: deleteMutation.isPending,
+
+    // Error states
+    customersError,
+    updateCustomerError: updateMutation.error,
+    deleteCustomerError: deleteMutation.error,
   };
 };

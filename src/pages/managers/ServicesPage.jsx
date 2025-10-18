@@ -9,6 +9,10 @@ import { useCustomersAdmin } from "@/hook/serviceAdmin/useCustomersAdmin";
 export default function ServicesPage() {
   const [showForm, setShowForm] = useState(false);
   const [typeForm, setTypeForm] = useState(null); // service || booking || customer
+  const [editingService, setEditingService] = useState(null); // ✅ THÊM state này
+  const [editingBooking, setEditingBooking] = useState(null); // ✅ THÊM state này
+  const [editingCustomer, setEditingCustomer] = useState(null); // ✅ THÊM state này
+
   const location = useLocation();
   const navigate = useNavigate();
   const [toastMessage, setToastMessage] = useState({
@@ -32,42 +36,57 @@ export default function ServicesPage() {
     }, 3000);
   };
 
+  // ✅ SỬA: Không truyền handleClose vào useServicesAdmin vì đã xử lý trong mutation callbacks
   const {
     errorsMessage,
     services,
-    editingService,
-    setEditingService,
     loadingServices,
     handleCreateService,
     handleEditService,
     handleDeleteService,
     handleRefetchService,
-  } = useServicesAdmin(handleClose);
+    isCreating,
+    isUpdating,
+    isDeleting,
+    servicesError,
+    createMutation,
+    updateMutation,
+    deleteMutation,
+  } = useServicesAdmin(); // ❌ BỎ handleClose
 
   const {
     bookings,
     bookingsAll,
-    editingBooking,
-    setEditingBooking,
     loadingBookings,
     loadingBookingsAll,
     handleCreateBooking,
     handleEditingBooking,
     handleDeleteBooking,
     handleRefetchBooking,
+    isCreatingBooking,
+    isUpdatingBooking,
+    isDeletingBooking,
+    bookingsError,
+    bookingsAllError,
+    createBookingError,
+    updateBookingError,
+    deleteBookingError,
   } = useBookingsAdmin({
     onBookingChange: () => handleRefetchCustomer(),
   });
 
   const {
     customers,
-    editingCustomer,
-    setEditingCustomer,
     loadingCustomers,
     handleEditingCustomer,
     handleDeleteCustomer,
     handleGetBookingForCustomerId,
     handleRefetchCustomer,
+    isUpdatingCustomer,
+    isDeletingCustomer,
+    customersError,
+    updateCustomerError,
+    deleteCustomerError,
   } = useCustomersAdmin({
     bookings,
     onCustomerChange: () => handleRefetchBooking(),
@@ -97,58 +116,113 @@ export default function ServicesPage() {
     setShowForm(true);
   };
 
-  let content = null;
+  const content = (
+    <Outlet
+      context={{
+        // === Existing props ===
+        typeForm,
+        handleOpen,
+        handleClose,
+        showForm,
+        setShowForm,
+        errorsMessage,
+        initDataService: services,
+        editingService,
+        setEditingService,
+        handleCreateService: (formData) =>
+          handleCreateService(formData, handleClose), // ✅ THÊM handleClose
+        openEditServiceForm,
+        handleEditService: (formData, id) =>
+          handleEditService(formData, id, handleClose), // ✅ THÊM handleClose
+        handleDeleteService: (id) => handleDeleteService(id),
+        initDataBooking: bookings,
+        initDataBookingAll: bookingsAll,
+        handleCreateBooking: (formData) =>
+          handleCreateBooking(formData, handleClose),
+        handleDeleteBooking: (id) => handleDeleteBooking(id),
+        openEditBookingForm,
+        editingBooking,
+        setEditingBooking,
+        handleEditingBooking: (formData, id) =>
+          handleEditingBooking(formData, id, handleClose),
+        handleRefetchBooking,
+        initDataCustomer: customers,
+        editingCustomer,
+        setEditingCustomer,
+        openEditCustomerForm,
+        handleEditingCustomer: (formData, id) =>
+          handleEditingCustomer(formData, id, handleClose),
+        handleDeleteCustomer: (id) => handleDeleteCustomer(id),
+        handleRefetchCustomer,
+        showToast,
+        handleGetBookingForCustomerId,
+        handleRefetchService,
 
-  if (loadingServices || loadingBookings || loadingCustomers) {
-    content = (
-      <div className="p-4 sm:p-6 text-center text-green-800 admin-dark:text-green-400 text-sm sm:text-base bg-transparent">
-        Đang tải...
-      </div>
-    );
-  } else {
-    content = (
-      <Outlet
-        context={{
-          typeForm,
-          handleOpen,
-          handleClose,
-          showForm,
-          setShowForm,
-          errorsMessage,
-          initDataService: services,
-          editingService,
-          setEditingService,
-          handleCreateService,
-          openEditServiceForm,
-          handleEditService: (formData, id) =>
-            handleEditService(formData, id, handleClose),
-          handleDeleteService,
-          initDataBooking: bookings,
-          initDataBookingAll: bookingsAll,
-          handleCreateBooking: (formData) =>
-            handleCreateBooking(formData, handleClose),
-          handleDeleteBooking: (id) => handleDeleteBooking(id, showToast),
-          openEditBookingForm,
-          editingBooking,
-          setEditingBooking,
-          handleEditingBooking: (formData, id) =>
-            handleEditingBooking(formData, id, handleClose),
-          handleRefetchBooking,
-          initDataCustomer: customers,
-          editingCustomer,
-          setEditingCustomer,
-          openEditCustomerForm,
-          handleEditingCustomer: (formData, id) =>
-            handleEditingCustomer(formData, id, handleClose),
-          handleDeleteCustomer,
-          handleRefetchCustomer,
-          showToast,
-          handleGetBookingForCustomerId,
-          handleRefetchService,
-        }}
-      />
-    );
-  }
+        // === React Query states ===
+        loadingStates: {
+          // Services
+          services: loadingServices,
+          creatingService: isCreating,
+          updatingService: isUpdating,
+          deletingService: isDeleting,
+
+          // Bookings
+          bookings: loadingBookings,
+          bookingsAll: loadingBookingsAll,
+          creatingBooking: isCreatingBooking,
+          updatingBooking: isUpdatingBooking,
+          deletingBooking: isDeletingBooking,
+
+          // Customers
+          customers: loadingCustomers,
+          updatingCustomer: isUpdatingCustomer,
+          deletingCustomer: isDeletingCustomer,
+        },
+
+        errorStates: {
+          // Services
+          services: servicesError?.message,
+          createService: createMutation?.error?.message,
+          updateService: updateMutation?.error?.message,
+          deleteService: deleteMutation?.error?.message,
+
+          // Bookings
+          bookings: bookingsError?.message,
+          bookingsAll: bookingsAllError?.message,
+          createBooking: createBookingError?.message,
+          updateBooking: updateBookingError?.message,
+          deleteBooking: deleteBookingError?.message,
+
+          // Customers
+          customers: customersError?.message,
+          updateCustomer: updateCustomerError?.message,
+          deleteCustomer: deleteCustomerError?.message,
+        },
+
+        mutationStates: {
+          // Services
+          isCreatingService: isCreating,
+          isUpdatingService: isUpdating,
+          isDeletingService: isDeleting,
+
+          // Bookings
+          isCreatingBooking: isCreatingBooking,
+          isUpdatingBooking: isUpdatingBooking,
+          isDeletingBooking: isDeletingBooking,
+
+          // Customers
+          isUpdatingCustomer: isUpdatingCustomer,
+          isDeletingCustomer: isDeletingCustomer,
+        },
+
+        refetchAll: () => {
+          handleRefetchService();
+          handleRefetchBooking();
+          handleRefetchCustomer();
+        },
+      }}
+    />
+  );
 
   return (
     <div className="bg-white admin-dark:bg-gray-900 min-h-screen">
