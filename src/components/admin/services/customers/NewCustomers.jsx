@@ -1,9 +1,9 @@
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import useLenisLocal from "@/hook/useLenisLocal";
@@ -25,11 +25,21 @@ function formatRelativeTime(dateString) {
 }
 
 export default function NewCustomers({ initDataCustomer, initDataBooking }) {
+  const containerRef = useRef(null);
+  const [shouldPrevent, setShouldPrevent] = useState(false);
+
   useLenisLocal(".lenis-local");
 
   const sortCustomersByCreatedAt = initDataCustomer
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 20); // lấy 20 khách hàng mới nhất
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const hasScroll = el.scrollHeight > el.clientHeight;
+    setShouldPrevent(hasScroll);
+  }, [sortCustomersByCreatedAt]);
 
   return (
     <Card
@@ -44,10 +54,12 @@ export default function NewCustomers({ initDataCustomer, initDataBooking }) {
           Danh sách khách hàng mới nhất trong tháng
         </CardDescription>
       </div>
+
       <CardContent className="space-y-2 mt-1">
         <div
-          data-lenis-prevent
+          ref={containerRef}
           className="space-y-2 scrollbar-hide max-h-100 overflow-y-auto overscroll-y-auto lenis-local"
+          {...(shouldPrevent ? { "data-lenis-prevent": true } : {})}
         >
           {sortCustomersByCreatedAt
             .filter((c) => c.status === "active")
@@ -64,6 +76,7 @@ export default function NewCustomers({ initDataCustomer, initDataBooking }) {
                     {customer.email || "Chưa có email"}
                   </p>
                 </div>
+
                 <div className="flex items-center justify-start sm:justify-end md:justify-start xl:justify-end gap-5 w-full">
                   <Badge
                     variant="secondary"
@@ -78,6 +91,7 @@ export default function NewCustomers({ initDataCustomer, initDataBooking }) {
                     }
                     <span className="ml-1 text-xs">đơn</span>
                   </Badge>
+
                   <div className="text-right">
                     <p className="text-xs font-medium text-[#5ea25e] admin-dark:text-green-400">
                       {formatRelativeTime(customer.created_at)}
@@ -87,6 +101,7 @@ export default function NewCustomers({ initDataCustomer, initDataBooking }) {
               </div>
             ))}
         </div>
+
         {sortCustomersByCreatedAt.length === 0 && (
           <p className="text-xs text-gray-500 admin-dark:text-gray-400">
             Chưa có khách hàng mới

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import DailyRevenueTable from "@/components/admin/services/overview/DailyRevenueTable";
 import SaleAnalytics from "@/components/admin/services/sales/sale-analytics";
 import { Badge } from "@/components/ui/badge";
@@ -144,6 +145,9 @@ const getStatsData = (
 
 export default function ServiceOverview() {
   useLenisLocal(".lenis-local");
+  const containerRef = useRef(null);
+  const [shouldPrevent, setShouldPrevent] = useState(false);
+
   const {
     initDataService,
     initDataBooking,
@@ -177,10 +181,31 @@ export default function ServiceOverview() {
     totalRevenue
   );
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const checkScroll = () => {
+      const hasScroll = el.scrollHeight > el.clientHeight + 2;
+      setShouldPrevent(hasScroll); // ✅ chỉ bật prevent nếu thực sự có scroll
+    };
+
+    checkScroll();
+
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(el);
+
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [topServices]);
+
   return (
     <div className="text-black admin-dark:text-white">
       <div className="space-y-6">
-        {/* 4 thẻ thống kê - Đã được tối ưu */}
+        {/* 4 thẻ thống kê */}
         <div className="grid gap-3 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
           {statsData.map((stat, index) => (
             <StatCard
@@ -196,11 +221,9 @@ export default function ServiceOverview() {
         {/* Dịch vụ hot + Analytics */}
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-white admin-dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 admin-dark:border-gray-700">
-            <CardHeader
-              className={`flex flex-row items-center justify-between`}
-            >
+            <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className={`admin-dark:text-white`}>
+                <CardTitle className="admin-dark:text-white">
                   Dịch vụ hot
                 </CardTitle>
                 <CardDescription className="text-[#5ea25e] admin-dark:text-green-400">
@@ -208,16 +231,18 @@ export default function ServiceOverview() {
                 </CardDescription>
               </div>
             </CardHeader>
+
             <CardContent
-              data-lenis-prevent
-              className="space-y-2 overflow-y-auto overscroll-y-auto scrollbar-hide lenis-local h-[320px]"
+              ref={containerRef}
+              className="space-y-2 overflow-y-auto overscroll-y-auto scrollbar-hide lenis-local
+              h-[320px]"
+              data-lenis-prevent={!shouldPrevent || undefined}
             >
               {topServices.map((service, index) => (
                 <div
                   key={index}
                   className="flex w-full items-start justify-between gap-3 flex-col p-2 rounded-xl border border-gray-300 bg-white shadow-sm hover:shadow-md transition-all duration-200 admin-dark:bg-slate-700 admin-dark:border-gray-700"
                 >
-                  {/* Left content */}
                   <div className="flex items-center">
                     <div className="h-full gap-2 flex flex-col justify-between">
                       <p className="font-semibold text-sm sm:text-base text-gray-900 admin-dark:text-gray-100">
@@ -233,13 +258,12 @@ export default function ServiceOverview() {
                     </div>
                   </div>
 
-                  {/* Right content */}
                   <div className="flex items-end justify-between gap-4 w-full">
                     <Badge
                       variant="secondary"
                       className="px-2 py-1 rounded-full bg-gray-200 text-gray-600 text-xs font-medium admin-dark:bg-gray-700 admin-dark:text-gray-200 flex items-end"
                     >
-                      <p> Số lượng: {service.orders} đơn</p>
+                      <p>Số lượng: {service.orders} đơn</p>
                     </Badge>
 
                     <div className="text-right h-full gap-2 flex flex-wrap flex-row items-center justify-end">
@@ -259,9 +283,9 @@ export default function ServiceOverview() {
             </CardContent>
           </Card>
 
-          {/* Biểu đồ phân tích */}
           <SaleAnalytics />
         </div>
+
         <div>
           <DailyRevenueTable
             data={initDataBooking.filter(
