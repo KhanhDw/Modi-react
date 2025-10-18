@@ -1,5 +1,10 @@
 // app/RouterView.jsx
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  BrowserRouter as Router,
+  Navigate,
+} from "react-router-dom";
 import { Suspense } from "react";
 import { publicRoutes, privateRoutes } from "@/routes";
 import PrivateRoute from "@/guardRouter/PrivateRoute";
@@ -27,14 +32,27 @@ function renderRoutes(routes, isPrivate = false) {
         }
       >
         {r.children?.map((child, j) => {
-          const ChildPage = child.component;
-          return (
-            <Route
-              key={child.path + j}
-              path={child.path}
-              element={<ChildPage />}
-            />
-          );
+          // QUAN TRỌNG: Xử lý cả element và component
+          if (child.element) {
+            return (
+              <Route
+                key={child.path + j}
+                index={child.index}
+                path={child.path}
+                element={child.element}
+              />
+            );
+          } else {
+            const ChildPage = child.component;
+            return (
+              <Route
+                key={child.path + j}
+                index={child.index}
+                path={child.path}
+                element={<ChildPage />}
+              />
+            );
+          }
         })}
       </Route>
     );

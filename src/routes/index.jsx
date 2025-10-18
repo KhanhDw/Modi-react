@@ -239,6 +239,15 @@ export const privateRoutes = [
     layout: AdminLayout,
     children: [
       {
+        path: "", // Empty path thay vì index: true
+        element: (
+          <Navigate
+            to="service_overview"
+            replace
+          />
+        ),
+      },
+      {
         path: "service_overview",
         component: lazy(() =>
           import("@/pages/managers/service/ServiceOverview")

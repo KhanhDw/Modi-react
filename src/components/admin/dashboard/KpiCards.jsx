@@ -3,8 +3,8 @@ import { MessageSquare, Sprout, DollarSign, TrendingUp } from "lucide-react";
 
 // Helper: format số lớn (2300000 -> 2.3M)
 function formatLargeNumber(num) {
-  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + " triệu";
-  if (num >= 1_000) return (num / 1_000).toFixed(1) + "nghìn";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
+  if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
   return num.toString();
 }
 
@@ -94,8 +94,8 @@ export default function KpiCards({
         const textColor = isNeutral
           ? "text-gray-500 admin-dark:text-gray-400"
           : isNegative
-            ? "text-red-600 admin-dark:text-red-400"
-            : "text-green-600 admin-dark:text-green-400";
+          ? "text-red-600 admin-dark:text-red-400"
+          : "text-green-600 admin-dark:text-green-400";
 
         return (
           <Card

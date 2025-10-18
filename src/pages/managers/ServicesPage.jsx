@@ -1,3 +1,4 @@
+// src\pages\managers\ServicesPage.jsx
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import ServiceNav from "@/pages/managers/service/headerService.jsx";
@@ -72,12 +73,6 @@ export default function ServicesPage() {
     onCustomerChange: () => handleRefetchBooking(),
     showToast,
   });
-
-  useEffect(() => {
-    if (location.pathname === "/managers/services") {
-      navigate("/managers/services/service_overview", { replace: true });
-    }
-  }, [location, navigate]);
 
   const handleOpen = (nameType) => {
     setTypeForm(nameType);
