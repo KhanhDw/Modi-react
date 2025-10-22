@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot"; // Thêm Slot
 import { XIcon } from "lucide-react";
-import { createContext, forwardRef, useContext, useState } from "react";
+import React, { createContext, forwardRef, useContext, useState } from "react";
 
 const DialogContext = createContext(null);
 
@@ -35,7 +35,11 @@ const DialogTrigger = forwardRef(
     const Comp = asChild ? Slot : "button"; // Sử dụng Slot khi asChild={true}
 
     return (
-      <Comp ref={ref} onClick={() => setOpen(true)} {...props}>
+      <Comp
+        ref={ref}
+        onClick={() => setOpen(true)}
+        {...props}
+      >
         {children}
       </Comp>
     );
@@ -46,7 +50,10 @@ DialogTrigger.displayName = "DialogTrigger";
 function DialogClose({ children, ...props }) {
   const { setOpen } = useDialogContext();
   return (
-    <button onClick={() => setOpen(false)} {...props}>
+    <button
+      onClick={() => setOpen(false)}
+      {...props}
+    >
       {children}
     </button>
   );
@@ -67,18 +74,14 @@ function DialogOverlay({ className, ...props }) {
   );
 }
 
-function DialogContent({
-  className,
-  children,
-  showCloseButton = true,
-  ...props
-}) {
-  const { open, setOpen } = useDialogContext();
-  if (!open) return null;
+const DialogContent = React.forwardRef(
+  ({ className, children, showCloseButton = true, ...props }, ref) => {
+    const { open, setOpen } = useDialogContext();
+    if (!open) return null;
 
-  return (
-    <>
+    return (
       <div
+        ref={ref}
         className={cn(
           "fixed top-1/2 left-1/2 z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 animate-in fade-in-0 zoom-in-95",
           className
@@ -96,9 +99,11 @@ function DialogContent({
           </button>
         )}
       </div>
-    </>
-  );
-}
+    );
+  }
+);
+
+DialogContent.displayName = "DialogContent";
 
 function DialogHeader({ className, ...props }) {
   return (
@@ -132,10 +137,21 @@ function DialogTitle({ className, ...props }) {
 
 function DialogDescription({ className, ...props }) {
   return (
-    <p className={cn("text-sm text-muted-foreground", className)} {...props} />
+    <p
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
   );
 }
 
 export {
-  Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
 };

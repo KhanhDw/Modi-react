@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils"
-import { cva } from "class-variance-authority"
+import { cn } from "@/lib/utils";
+import { cva } from "class-variance-authority";
+import React from "react";
 
 // Card styles
 const cardVariants = cva(
@@ -33,7 +34,7 @@ const cardVariants = cva(
       },
     ],
   }
-)
+);
 
 function Card({ className, theme, bordered, ...props }) {
   return (
@@ -42,7 +43,7 @@ function Card({ className, theme, bordered, ...props }) {
       className={cn(cardVariants({ theme, bordered, className }))}
       {...props}
     />
-  )
+  );
 }
 
 const cardHeaderVariants = cva(
@@ -59,7 +60,7 @@ const cardHeaderVariants = cva(
       theme: "light",
     },
   }
-)
+);
 
 function CardHeader({ className, theme, ...props }) {
   return (
@@ -68,7 +69,7 @@ function CardHeader({ className, theme, ...props }) {
       className={cn(cardHeaderVariants({ theme, className }))}
       {...props}
     />
-  )
+  );
 }
 
 function CardTitle({ className, ...props }) {
@@ -78,7 +79,7 @@ function CardTitle({ className, ...props }) {
       className={cn("leading-none font-semibold text-gray-800", className)}
       {...props}
     />
-  )
+  );
 }
 
 function CardDescription({ className, ...props }) {
@@ -88,7 +89,7 @@ function CardDescription({ className, ...props }) {
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
 function CardAction({ className, ...props }) {
@@ -101,14 +102,20 @@ function CardAction({ className, ...props }) {
       )}
       {...props}
     />
-  )
+  );
 }
 
-function CardContent({ className, ...props }) {
+const CardContent = React.forwardRef(({ className, ...props }, ref) => {
   return (
-    <div data-slot="card-content" className={cn("px-2 sm:px-4", className)} {...props} />
-  )
-}
+    <div
+      ref={ref}
+      data-slot="card-content"
+      className={cn("px-2 sm:px-4", className)}
+      {...props}
+    />
+  );
+});
+CardContent.displayName = "CardContent";
 
 function CardFooter({ className, ...props }) {
   return (
@@ -117,9 +124,15 @@ function CardFooter({ className, ...props }) {
       className={cn("flex items-center px-6 [.border-t]:pt-6", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
-  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
-}
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+};
