@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import { useLanguage } from "../../../contexts/LanguageContext";
-import { useTheme } from "../../../contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**

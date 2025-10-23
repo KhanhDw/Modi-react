@@ -157,10 +157,11 @@ function AdminLoginPage() {
               </div>
 
               {/* Hiển thị lỗi */}
-              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+              {error && <p className="text-red-500 text-sm mt-2 ">{error}</p>}
+              <p className="mb-12"></p>
 
               {/* Forget password */}
-              <div className="text-right mb-6">
+              <div className="text-right mb-6 hidden">
                 <Link
                   to="/forgot-password"
                   className="text-orange-500 text-sm hover:underline"

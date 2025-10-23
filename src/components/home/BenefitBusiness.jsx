@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { TiArrowSortedDown } from "react-icons/ti";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function BenefitBusiness({ data, activeLang }) {
   const { t } = useLanguage();

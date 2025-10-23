@@ -1,4 +1,4 @@
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import React from "react";
 import { Link } from "react-router-dom";
 

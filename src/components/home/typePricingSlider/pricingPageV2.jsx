@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLanguage } from "../../../contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import PricingSlider from "./PricingSlider";
 import PricingSliderMobi from "./PricingSliderMobi";
 import PricingFooterPage from "../pricingFooterPage";

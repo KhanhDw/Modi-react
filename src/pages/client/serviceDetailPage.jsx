@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import useCurrentLanguage from "@/hook/currentLang";
 export default function ServiceDetailPage() {
   const { slug } = useParams();

@@ -19,88 +19,92 @@ export const publicRoutes = [
   // Core Pages
   {
     path: "/",
-    component: lazy(() => import("@/pages/homePage")),
+    component: lazy(() => import("@/pages/client/homePage")),
     layout: DefaultLayout,
   },
   {
     path: "/about",
-    component: lazy(() => import("@/pages/aboutMePage")),
+    component: lazy(() => import("@/pages/client/aboutMePage")),
     layout: DefaultLayout,
   },
   {
     path: "/contact",
-    component: lazy(() => import("@/pages/contactPage")),
+    component: lazy(() => import("@/pages/client/contactPage")),
     layout: DefaultLayout,
   },
   {
     path: "/careers",
-    component: lazy(() => import("@/pages/recruitmentPage")),
+    component: lazy(() => import("@/pages/client/recruitmentPage")),
     layout: DefaultLayout,
   },
   {
     path: "/terms-of-services",
-    component: lazy(() => import("@/pages/TermsOfServicePage")),
+    component: lazy(() => import("@/pages/client/TermsOfServicePage")),
     layout: DefaultLayout,
   },
 
   // Services Pages
   {
     path: "/services",
-    component: lazy(() => import("@/pages/servicesPage")),
+    component: lazy(() => import("@/pages/client/servicesPage")),
     layout: DefaultLayout,
   },
   {
     path: "/services/:parentSlug",
-    component: lazy(() => import("@/pages/servicesPage")),
+    component: lazy(() => import("@/pages/client/servicesPage")),
     layout: DefaultLayout,
   },
   {
     path: "/services/:parentSlug/:slug",
-    component: lazy(() => import("@/pages/serviceDetailPage")),
+    component: lazy(() => import("@/pages/client/serviceDetailPage")),
     layout: DefaultLayout,
   },
   {
     path: "/services/detail/:slug",
-    component: lazy(() => import("@/pages/serviceDetailPage")),
+    component: lazy(() => import("@/pages/client/serviceDetailPage")),
     layout: DefaultLayout,
   },
 
   // Marketing & News Pages
   {
     path: "/marketing",
-    component: lazy(() => import("@/pages/marketingPage")), // Outlet Component
+    component: lazy(() => import("@/pages/client/marketingPage")), // Outlet Component
     layout: DefaultLayout,
     children: [
       {
         path: "",
-        component: lazy(() => import("@/pages/marketing/marketing-list_page")),
+        component: lazy(() =>
+          import("@/pages/client/marketing/marketing-list_page")
+        ),
       },
       {
         path: ":slug",
-        component: lazy(() => import("@/pages/marketing/article-detail")),
+        component: lazy(() =>
+          import("@/pages/client/marketing/article-detail")
+        ),
       },
     ],
   },
   {
     path: "/news",
-    component: lazy(() => import("@/pages/news/newsPage")),
+    component: lazy(() => import("@/pages/client/news/newsPage")),
     layout: DefaultLayout,
   },
   {
     path: "/news/:slug",
-    component: lazy(() => import("@/pages/news/NewsDetail")),
+    component: lazy(() => import("@/pages/client/news/NewsDetail")),
     layout: DefaultLayout,
   },
 
   // Products Pages
   {
     path: "/Products",
-    component: lazy(() => import("@/pages/Products")),
+    component: lazy(() => import("@/pages/client/Products")),
     layout: DefaultLayout,
   },
   {
     path: "/Products/:id",
-    component: lazy(() => import("@/pages/ProductDetail")),
+    component: lazy(() => import("@/pages/client/ProductDetail")),
     layout: DefaultLayout,
   },
 
@@ -112,7 +116,7 @@ export const publicRoutes = [
   },
   {
     path: "*",
-    component: lazy(() => import("@/pages/NotFoundPage")),
+    component: lazy(() => import("@/pages/client/NotFoundPage")),
     layout: NoneHeaderFooterLayout,
   },
 ];

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useLanguage } from "../contexts/LanguageContext";
-import PricingPage from "../components/home/pricingPage";
+import { useLanguage } from "@/contexts/LanguageContext";
+import PricingPage from "@/components/home/pricingPage";
 import useCurrentLanguage from "@/hook/currentLang";
-import ScrollToTopButton from "../components/button/ScrollToTopButton";
-import BannerSilder from "../components/home/BannerSilder";
-import BaseModi from "../components/home/BaseModi";
-import ThreeCardBusiness from "../components/home/ThreeCardBusiness";
-import ServiceModi from "../components/home/ServiceModi";
-import BenefitBusiness from "../components/home/BenefitBusiness";
-import BannerText from "../components/home/BannerText";
-import Customer from "../components/home/Customer";
+import ScrollToTopButton from "@/components/button/ScrollToTopButton";
+import BannerSilder from "@/components/home/BannerSilder";
+import BaseModi from "@/components/home/BaseModi";
+import ThreeCardBusiness from "@/components/home/ThreeCardBusiness";
+import ServiceModi from "@/components/home/ServiceModi";
+import BenefitBusiness from "@/components/home/BenefitBusiness";
+import BannerText from "@/components/home/BannerText";
+import Customer from "@/components/home/Customer";
 
 function HomePage({ activeSidebarHeader }) {
   const { t } = useLanguage();

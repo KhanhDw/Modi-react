@@ -1,8 +1,8 @@
 import React, { useState, useEffect, use } from "react";
-import CaptchaImage from "../components/feature/CaptchaImage";
+import CaptchaImage from "@/components/feature/CaptchaImage";
 import { useSearchParams } from "react-router-dom";
-import getServiceBySlug from "../utils/slugData.jsx";
-import { useLanguage } from "../contexts/LanguageContext.jsx";
+import getServiceBySlug from "@/utils/slugData.jsx";
+import { useLanguage } from "@/contexts/LanguageContext.jsx";
 import useSocket from "@/hook/useSocket";
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 
