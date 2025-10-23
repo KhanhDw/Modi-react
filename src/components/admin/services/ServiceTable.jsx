@@ -33,6 +33,9 @@ export default function ServiceTable() {
     openEditServiceForm,
     handleDeleteService,
     handleRefetchService,
+    loadingStates,
+    errorStates,
+    mutationStates,
   } = useOutletContext(); // Lấy dữ liệu và hàm từ context cha: src\pages\managers\ServicesPage.jsx
 
   const [search, setSearch] = useState("");

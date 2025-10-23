@@ -1,6 +1,6 @@
 // src\pages\managers\ServicesPage.jsx
-import { useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import ServiceNav from "@/pages/managers/service/headerService.jsx";
 import { useServicesAdmin } from "@/hook/serviceAdmin/useServicesAdmin";
 import { useBookingsAdmin } from "@/hook/serviceAdmin/useBookingsAdmin";
@@ -9,12 +9,10 @@ import { useCustomersAdmin } from "@/hook/serviceAdmin/useCustomersAdmin";
 export default function ServicesPage() {
   const [showForm, setShowForm] = useState(false);
   const [typeForm, setTypeForm] = useState(null); // service || booking || customer
-  const [editingService, setEditingService] = useState(null); // ✅ THÊM state này
-  const [editingBooking, setEditingBooking] = useState(null); // ✅ THÊM state này
-  const [editingCustomer, setEditingCustomer] = useState(null); // ✅ THÊM state này
+  const [editingService, setEditingService] = useState(null);
+  const [editingBooking, setEditingBooking] = useState(null);
+  const [editingCustomer, setEditingCustomer] = useState(null);
 
-  const location = useLocation();
-  const navigate = useNavigate();
   const [toastMessage, setToastMessage] = useState({
     show: false,
     message: "",
