@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "@mantine/core/styles.css";
 import "@mantine/tiptap/styles.css";
 import "./index.css";
+import React from "react";
 import App from "./app/App.jsx";
 import queryClient from "./app/hooks/QueryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
