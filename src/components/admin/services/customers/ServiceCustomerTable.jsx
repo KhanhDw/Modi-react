@@ -1,4 +1,4 @@
-import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
+import useVipConfig from "@/components/admin/services/hooks/useVipConfig.jsx";
 import Pagination from "@/components/admin/services/utils/Pagination.jsx";
 import {
   Card,

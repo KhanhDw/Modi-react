@@ -1,4 +1,4 @@
-import useVipConfig from "@/components/admin/services/hooks/useVipConfig.js";
+import useVipConfig from "@/components/admin/services/hooks/useVipConfig.jsx";
 import NotificationToast from "@/components/feature/notification-toast.jsx";
 import { useEffect, useState } from "react";
 
