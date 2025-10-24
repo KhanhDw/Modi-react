@@ -2,7 +2,7 @@
 import { MapPin, Clock, DollarSign, Users, Briefcase } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
-import { recruitmentData } from "../data/MockData"; // Import dữ liệu mẫu
+// import { recruitmentData } from "../data/MockData"; // Import dữ liệu mẫu
 
 export default function RecruitmentPage() {
   const [jobs, setJobs] = useState([]);
