@@ -8,6 +8,7 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import viteCompression from "vite-plugin-compression";
 
 export default defineConfig({
+  base: './',
   plugins: [
     react(),
     tailwindcss(),
@@ -56,15 +57,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (id.includes("react")) return "vendor-react";
-            if (id.includes("recharts")) return "vendor-recharts";
-            if (id.includes("three")) return "vendor-three";
-            if (id.includes("framer-motion")) return "vendor-motion";
-            return "vendor";
-          }
-        },
         // ✨ Giúp browser cache mạnh mẽ hơn
         entryFileNames: "assets/[name].[hash].js",
         chunkFileNames: "assets/[name].[hash].js",
@@ -72,12 +64,6 @@ export default defineConfig({
       },
     },
     minify: "terser", // tốt hơn esbuild cho prod
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
   },
   // ⚡ Cache mạnh & preload tự động
   server: {
