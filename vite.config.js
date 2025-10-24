@@ -55,6 +55,14 @@ export default defineConfig({
     sourcemap: false,
     cssCodeSplit: true, // tách riêng CSS cho từng page
     chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      output: {
+        // ✨ Giúp browser cache mạnh mẽ hơn
+        entryFileNames: "assets/[name].[hash].js",
+        chunkFileNames: "assets/[name].[hash].js",
+        assetFileNames: "assets/[name].[hash].[extname]",
+      },
+    },
     minify: "terser", // tốt hơn esbuild cho prod
   },
   // ⚡ Cache mạnh & preload tự động
