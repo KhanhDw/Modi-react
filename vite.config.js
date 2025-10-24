@@ -3,40 +3,37 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath, URL } from "node:url";
 import svgr from "vite-plugin-svgr";
-import { visualizer } from "rollup-plugin-visualizer";
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import viteCompression from "vite-plugin-compression";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 export default defineConfig({
+  // ✅ Base path cho Netlify (để build ra link tương đối)
   base: "./",
+
   plugins: [
+    // React + Tailwind
     react(),
     tailwindcss(),
+
+    // SVG thành React component
     svgr({
       include: "**/*.svg?react",
-      svgrOptions: {
-        exportType: "named",
-      },
+      svgrOptions: { exportType: "named" },
     }),
+
+    // ✅ Tự động nén file JS/CSS (gzip + brotli)
     viteCompression({
       algorithm: "brotliCompress",
       ext: ".br",
     }),
+
+    // ✅ Tối ưu hình ảnh khi build
     ViteImageOptimizer({
       jpg: { quality: 70 },
       jpeg: { quality: 70 },
       png: { quality: 70 },
       webp: { quality: 70 },
       avif: { quality: 60 },
-    }),
-
-    // 📊 Plugin hiển thị phân tích kích thước bundle
-    visualizer({
-      filename: "dist/stats.html", // nơi lưu file kết quả
-      template: "treemap", // kiểu hiển thị: treemap, sunburst, network
-      open: true, // tự động mở sau khi build
-      gzipSize: true, // hiển thị kích thước gzip
-      brotliSize: true, // hiển thị kích thước brotli
     }),
   ],
 
@@ -47,7 +44,7 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ["lenis"],
+    include: ["lenis"], // hoặc các lib bạn dùng
   },
 
   build: {
@@ -55,17 +52,21 @@ export default defineConfig({
     sourcemap: false,
     cssCodeSplit: true, // tách riêng CSS cho từng page
     chunkSizeWarningLimit: 2000,
+
     rollupOptions: {
       output: {
-        // ✨ Giúp browser cache mạnh mẽ hơn
-        entryFileNames: "assets/[name].[hash].js",
-        chunkFileNames: "assets/[name].[hash].js",
-        assetFileNames: "assets/[name].[hash].[extname]",
+        // ✅ Giúp cache tốt và không lỗi MIME
+        entryFileNames: "assets/[name]-[hash].js",
+        chunkFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash][extname]",
       },
     },
-    minify: "terser", // tốt hơn esbuild cho prod
+
+    // ✅ Giảm size, tối ưu cho production
+    minify: "terser",
   },
-  // ⚡ Cache mạnh & preload tự động
+
+  // ✅ Cache mạnh cho dev server (không ảnh hưởng Netlify)
   server: {
     headers: {
       "Cache-Control": "public, max-age=31536000, immutable",
