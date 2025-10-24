@@ -8,7 +8,7 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import viteCompression from "vite-plugin-compression";
 
 export default defineConfig({
-  base: './',
+  base: "./",
   plugins: [
     react(),
     tailwindcss(),
@@ -55,14 +55,6 @@ export default defineConfig({
     sourcemap: false,
     cssCodeSplit: true, // tách riêng CSS cho từng page
     chunkSizeWarningLimit: 2000,
-    rollupOptions: {
-      output: {
-        // ✨ Giúp browser cache mạnh mẽ hơn
-        entryFileNames: "assets/[name].[hash].js",
-        chunkFileNames: "assets/[name].[hash].js",
-        assetFileNames: "assets/[name].[hash].[ext]",
-      },
-    },
     minify: "terser", // tốt hơn esbuild cho prod
   },
   // ⚡ Cache mạnh & preload tự động
