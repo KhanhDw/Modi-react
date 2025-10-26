@@ -1,28 +1,30 @@
-import React, {
-    useMemo,
-    useState,
-    useEffect,
-    useImperativeHandle,
-    forwardRef,
-} from "react";
-import { RichTextEditor } from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
-import { Image, FileImage } from "lucide-react";
-import { MantineProvider, createTheme, rem } from "@mantine/core";
-import Highlight from "@tiptap/extension-highlight";
-import StarterKit from "@tiptap/starter-kit";
-import TextAlign from "@tiptap/extension-text-align";
-import Superscript from "@tiptap/extension-superscript";
-import SubScript from "@tiptap/extension-subscript";
-import ImageExtension from "@tiptap/extension-image";
-import LinkExtension from "@tiptap/extension-link";
-import Placeholder from "@tiptap/extension-placeholder";
-import DOMPurify from "dompurify"; // Added for HTML sanitization
-import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import React, {
+    useMemo,
+    useState,
+    useEffect,
+    useImperativeHandle,
+    forwardRef,
+} from "react";
+import { RichTextEditor } from "@mantine/tiptap";
+import { useEditor } from "@tiptap/react";
+import { Image, FileImage } from "lucide-react";
+import { MantineProvider, createTheme, rem } from "@mantine/core";
+import Highlight from "@tiptap/extension-highlight";
+import StarterKit from "@tiptap/starter-kit";
+import TextAlign from "@tiptap/extension-text-align";
+import Superscript from "@tiptap/extension-superscript";
+import SubScript from "@tiptap/extension-subscript";
+import ImageExtension from "@tiptap/extension-image";
+import LinkExtension from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import DOMPurify from "dompurify"; // Added for HTML sanitization
+import { useAdminTheme } from "@/contexts/ThemeLocalContext";
+import { uploadImage } from "@/services/imageUploadService";
 
-const TextEditor_mantine = forwardRef(({ valueContextNews }, ref) => {
-    const { isDark } = useAdminTheme();
-    const [colorScheme, setColorScheme] = useState("light");
+const TextEditor_mantine = forwardRef(({ valueContextNews }, ref) => {
+    const { isDark } = useAdminTheme();
+    const [colorScheme, setColorScheme] = useState("light");
+    const [isUploading, setIsUploading] = useState(false);
 
     // Sanitize the incoming HTML string
     const sanitizedContent = useMemo(() => {
@@ -180,25 +182,38 @@ const TextEditor_mantine = forwardRef(({ valueContextNews }, ref) => {
         }
     };
 
-    // Add image from file
-    const addImageFromFile = () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-        input.onchange = (e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const src = e.target.result;
-                    if (editor && src) {
-                        editor.chain().focus().setImage({ src }).run();
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-        input.click();
+    // Add image from file
+    const addImageFromFile = () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.onchange = async (e) => {
+            const file = e.target.files?.[0];
+            if (file && editor) {
+                try {
+                    setIsUploading(true);
+                    const imageUrl = await uploadImage(file);
+                    editor.chain().focus().setImage({ src: imageUrl }).run();
+                } catch (error) {
+                    console.error("Failed to upload image:", error);
+                    // More detailed error handling based on error type
+                    let errorMessage = "Upload ảnh thất bại. Vui lòng thử lại.";
+                    
+                    if (error.message.includes("413")) {
+                        errorMessage = "Ảnh quá lớn. Vui lòng chọn ảnh nhỏ hơn 10MB.";
+                    } else if (error.message.includes("400")) {
+                        errorMessage = "Định dạng ảnh không hợp lệ. Vui lòng chọn ảnh JPEG, PNG, GIF hoặc WebP.";
+                    } else if (error.message.includes("Failed to fetch")) {
+                        errorMessage = "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.";
+                    }
+                    
+                    alert(errorMessage);
+                } finally {
+                    setIsUploading(false);
+                }
+            }
+        };
+        input.click();
     };
 
     return (
@@ -261,11 +276,23 @@ const TextEditor_mantine = forwardRef(({ valueContextNews }, ref) => {
                             </RichTextEditor.Control>
                             <RichTextEditor.Control
                                 onClick={addImageFromFile}
-                                aria-label="Upload image from file"
-                                title="Upload image from file"
-                                className="hover:bg-gray-100 admin-dark:hover:bg-gray-700 text-gray-600 admin-dark:text-gray-200 p-2 rounded transition-all duration-200"
+                                disabled={isUploading}
+                                aria-label={isUploading ? "Đang tải ảnh lên..." : "Upload image from file"}
+                                title={isUploading ? "Đang tải ảnh lên..." : "Upload image from file"}
+                                className={`p-2 rounded transition-all duration-200 ${
+                                    isUploading 
+                                        ? "bg-gray-200 admin-dark:bg-gray-700 text-gray-400 cursor-not-allowed" 
+                                        : "hover:bg-gray-100 admin-dark:hover:bg-gray-700 text-gray-600 admin-dark:text-gray-200"
+                                }`}
                             >
-                                <FileImage size={18} className="admin-dark:text-gray-500" />
+                                {isUploading ? (
+                                    <div className="flex items-center">
+                                        <div className="w-4 h-4 border-t-2 border-blue-500 rounded-full animate-spin mr-1"></div>
+                                        <span className="text-xs">Đang tải...</span>
+                                    </div>
+                                ) : (
+                                    <FileImage size={18} className="admin-dark:text-gray-500" />
+                                )}
                             </RichTextEditor.Control>
                         </RichTextEditor.ControlsGroup>
                         <RichTextEditor.ControlsGroup>
