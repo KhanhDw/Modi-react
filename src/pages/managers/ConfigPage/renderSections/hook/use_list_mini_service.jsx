@@ -1,6 +1,4 @@
-import { localBE } from "@/assets/urlBE";
-
-const API_URL = `${localBE()}/api/list-mini-service`;
+const API_URL = `${import.meta.env.VITE_MAIN_BE_URL}/api/list-mini-service`;
 
 // Lấy tất cả mini services
 export const getAllMiniServices = async () => {

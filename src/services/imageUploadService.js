@@ -1,5 +1,3 @@
-import { urlBE, localBE } from "@/assets/urlBE";
-
 /**
  * Uploads an image file to the server and returns the URL
  * @param {File} file - The image file to upload
@@ -9,11 +7,14 @@ export const uploadImage = async (file) => {
   const formData = new FormData();
   formData.append("image", file);
 
-  const response = await fetch(`${urlBE()}/api/upload`, {
-    method: "POST",
-    body: formData,
-    // Do NOT set Content-Type header - browser will set it automatically with boundary
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_MAIN_BE_URL}/api/upload`,
+    {
+      method: "POST",
+      body: formData,
+      // Do NOT set Content-Type header - browser will set it automatically with boundary
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
