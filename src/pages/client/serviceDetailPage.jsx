@@ -103,7 +103,7 @@ export default function ServiceDetailPage() {
       <motion.div className="w-full md:mt-4 overflow-hidden rounded-md shadow-md border border-gray-200 dark:border-gray-700">
         <img
           loading="lazy"
-          src={service.image_url}
+          src={`${import.meta.env.VITE_MAIN_BE_URL}${service.image_url}`}
           alt="Service banner"
           className="w-full h-64 sm:h-80 md:h-[400px] object-cover"
         />

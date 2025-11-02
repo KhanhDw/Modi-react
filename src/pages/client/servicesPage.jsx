@@ -208,7 +208,9 @@ export default function ServicePage() {
           <div className="space-y-6 p-4 border rounded-lg shadow">
             <img
               loading="lazy"
-              src={servicesItemBySlug.image_url}
+              src={`${import.meta.env.VITE_MAIN_BE_URL}${
+                servicesItemBySlug.image_url
+              }`}
               alt={servicesItemBySlug.translation?.ten_dich_vu}
               className="w-full max-w-md rounded-lg shadow"
             />
@@ -252,7 +254,7 @@ export default function ServicePage() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-black/60 to-indigo-900/70"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-blue-900/70 via-black/60 to-indigo-900/70"></div>
 
           <div className="relative text-center px-4 py-4 z-10">
             <h1 className="text-3xl md:text-5xl font-bold mb-3 drop-shadow-lg">

@@ -209,9 +209,20 @@ export default function ServiceTable() {
                       </TableCell>
                       <TableCell className="px-4 py-2">
                         <img
-                          src={item.image_url}
-                          alt=""
+                          src={
+                            item.image_url?.startsWith("http")
+                              ? item.image_url
+                              : `${import.meta.env.VITE_MAIN_BE_URL}${
+                                  item.image_url
+                                }`
+                          }
+                          alt={item.translation?.ten_dich_vu || "Service image"}
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null; // Prevent infinite loop if fallback also fails
+                            e.target.src =
+                              "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCAxMDAgODAiPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIGZpbGw9IiNlZWUiLz48dGV4dCB4PSI1MCIgeT0iNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSI+Tm8gSW1hZ2U8L3RleHQ+PC9zdmc+";
+                          }}
                           className="w-14 h-10 rounded-md object-cover border border-gray-200 dark:border-gray-700"
                         />
                       </TableCell>

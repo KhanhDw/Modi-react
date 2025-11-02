@@ -1,0 +1,25 @@
+trang chủ     localhost_5173_ (1)                
+Giới thiệu     localhost_5173_about (3).png
+dịch vụ         localhost_5173_services
+dịch vụ chi tiết  localhost_5173_services (1)
+thiết kế web    localhost_5173_Products
+thiết kế trang web chi tiết localhost_5173_products_2
+truyền thông   localhost_5173_marketing
+truyền thông chi tiết localhost_5173_services (3)
+tin tức   localhost_5173_news.png
+tin tức chi tiết  localhost_5173_news_tien-quan-ca
+liên hệ  localhost_5173_news (1)
+
+tổng quan  localhost_5173_managers_profile (1)  localhost_5173_managers_dashboard
+dịch vụ
+	tổng quan    localhost_5173_managers_dashboard (1)
+	danh sách dịch vụ  localhost_5173_managers_dashboard (6)    localhost_5173_managers_dashboard (5)
+	đơn đặt hàng  localhost_5173_managers_dashboard (3)  localhost_5173_managers_dashboard (2)
+	khách hàng  localhost_5173_managers_dashboard (8)  localhost_5173_managers_dashboard (7)    localhost_5173_managers_dashboard (4)
+liên hệ   localhost_5173_managers_dashboard (10)  localhost_5173_managers_dashboard (9)
+tin tức   localhost_5173_managers_dashboard (13)  localhost_5173_managers_dashboard (12)     localhost_5173_managers_dashboard (11)
+truyền thông  localhost_5173_managers_marketing (2)     localhost_5173_managers_marketing (1)    localhost_5173_managers_marketing
+thiết kế website   localhost_5173_managers_website-templates_2    localhost_5173_managers_website-templates (1)  localhost_5173_managers_website-templates
+cấu hình trang web   localhost_5173_managers_page-config_home (2)  localhost_5173_managers_page-config_home (1) localhost_5173_managers_page-config_home localhost_5173_managers_website-templates_2 (5) localhost_5173_managers_website-templates_2 (4)  localhost_5173_managers_website-templates_2 (3)  localhost_5173_managers_website-templates_2 (2)  localhost_5173_managers_website-templates_2 (1)
+quản trị    localhost_5173_managers_page-config_home (3)
+tài khoản  localhost_5173_managers_profile
