@@ -1,65 +1,84 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import PricingPage from "@/components/home/pricingPage";
 import useCurrentLanguage from "@/hook/currentLang";
+import useApiCache from "@/hooks/useApiCache"; // Custom caching hook
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import DeferredComponent from "@/utils/DeferredComponent";
 import ScrollToTopButton from "@/components/button/ScrollToTopButton";
-import BannerSilder from "@/components/home/BannerSilder";
-import BaseModi from "@/components/home/BaseModi";
-import ThreeCardBusiness from "@/components/home/ThreeCardBusiness";
-import ServiceModi from "@/components/home/ServiceModi";
-import BenefitBusiness from "@/components/home/BenefitBusiness";
-import BannerText from "@/components/home/BannerText";
-import Customer from "@/components/home/Customer";
+
+// Simple in-memory cache (same as in useApiCache.js)
+const cache = new Map();
+
+// Lazy load components for code splitting
+const PricingPage = lazy(() => import("@/components/home/pricingPage"));
+const BannerSilder = lazy(() => import("@/components/home/BannerSilder"));
+const BaseModi = lazy(() => import("@/components/home/BaseModi"));
+const ThreeCardBusiness = lazy(() =>
+  import("@/components/home/ThreeCardBusiness")
+);
+const ServiceModi = lazy(() => import("@/components/home/ServiceModi"));
+const BenefitBusiness = lazy(() => import("@/components/home/BenefitBusiness"));
+const BannerText = lazy(() => import("@/components/home/BannerText"));
+const Customer = lazy(() => import("@/components/home/Customer"));
+
+// Loading component for lazy loaded components
+const ComponentLoader = () => (
+  <div className="w-full h-64 flex items-center justify-center">Loading...</div>
+);
 
 function HomePage({ activeSidebarHeader }) {
   const { t } = useLanguage();
   const { lang } = useCurrentLanguage();
-  const [activeLang, setActiveLang] = useState("vi"); // vi en
-  const [vitri, setVitri] = useState([]);
-  const [status, setStatus] = useState([]);
 
-  const FetchStatusPosition = async () => {
-    try {
+  // Performance monitoring
+  usePerformanceMonitor("HomePage");
+  const [activeLang, setActiveLang] = useState("vi"); // vi en
+
+  // Use caching for API calls with performance monitoring
+  const { data: statusData } = useApiCache(
+    `status-position-${lang}`,
+    async () => {
+      const start = performance.now();
       const statusPositionUrl = `${
         import.meta.env.VITE_MAIN_BE_URL
       }/api/status-position-home-page`;
-
       const res = await fetch(statusPositionUrl);
-      if (!res.ok) {
-        throw new Error(`Lỗi HTTP: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Lỗi HTTP: ${res.status}`);
       const data = await res.json();
-      setStatus(data.data);
-    } catch (error) {}
-  };
+      const end = performance.now();
+      console.log(
+        `Status position API call took ${(end - start).toFixed(2)}ms`
+      );
+      return data.data;
+    },
+    10 * 60 * 1000 // 10 minutes TTL for status data
+  );
 
-  // ============ FETCH POSITION COMPONENT ================
-  const FetchPositionComponentHome = async () => {
-    try {
+  const { data: positionData } = useApiCache(
+    `position-${lang}`,
+    async () => {
+      const start = performance.now();
       const res = await fetch(
         `${import.meta.env.VITE_MAIN_BE_URL}/api/sections?slug=home`
       );
-      if (!res.ok) {
-        throw new Error(`Lỗi HTTP: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Lỗi HTTP: ${res.status}`);
       const data = await res.json();
-      // Kiểm tra dữ liệu hợp lệ
       if (!data.data || !Array.isArray(data.data)) {
         throw new Error("Dữ liệu không đúng định dạng hoặc rỗng");
       }
-      const clonedData = JSON.parse(JSON.stringify(data.data));
-      setVitri(clonedData);
-      // console.log(clonedData); // type and position
-    } catch (err) {
-      console.error("Fetch vitri error:", err);
-      // setError(err.message);
-    }
-  };
+      const end = performance.now();
+      console.log(`Position data API call took ${(end - start).toFixed(2)}ms`);
+      return JSON.parse(JSON.stringify(data.data)); // Clone data
+    },
+    10 * 60 * 1000 // 10 minutes TTL for position data
+  );
+
+  const status = statusData || [];
+  const vitri = positionData || [];
 
   useEffect(() => {
     setActiveLang(lang);
-    FetchStatusPosition();
-    FetchPositionComponentHome();
   }, [lang]);
 
   useEffect(() => {
@@ -78,7 +97,102 @@ function HomePage({ activeSidebarHeader }) {
     };
   }, []);
 
-  const [homeData, setHomeData] = useState({
+  // Use useMemo to memoize parsers to prevent re-creation on every render
+  const sectionParsers = useMemo(
+    () => ({
+      banner: (data) => {
+        // Mapping riêng cho buttonText
+        const buttonTextMapping = [
+          "home.banner.goal.buttonText",
+          "home.banner.coreValues.buttonText",
+        ];
+
+        return data.map((item, idx) => {
+          // Ensure the banner URL is properly formatted
+          let bannerUrl = "";
+          if (item.image_url) {
+            // Check if image_url is already an absolute URL
+            if (item.image_url.startsWith("http")) {
+              bannerUrl = item.image_url;
+            } else {
+              // Construct the full URL with the base URL
+              bannerUrl = `${import.meta.env.VITE_MAIN_BE_URL}${
+                item.image_url
+              }`;
+            }
+          }
+
+          return {
+            id: item.id,
+            title: { vi: item.title?.vi || "", en: item.title?.en || "" },
+            description: {
+              vi: item.description?.vi || "",
+              en: item.description?.en || "",
+            },
+            banner: bannerUrl,
+            buttonText: buttonTextMapping[idx] || "", // 👈 append ở đây
+          };
+        });
+      },
+
+      nenTang: (data) => ({
+        title: { vi: data[0]?.title?.vi || "", en: data[0]?.title?.en || "" },
+        description: {
+          vi: data[0]?.description?.vi || "",
+          en: data[0]?.description?.en || "",
+        },
+      }),
+
+      cards: (data) =>
+        data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          image: item.image_url,
+        })),
+
+      dichVu: (data) =>
+        data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          image: item.image_url,
+        })),
+
+      loiIch: (data) =>
+        data.map((item) => ({
+          id: item.id,
+          title: {
+            vi: item.title?.vi || "",
+            en: item.title?.en || "",
+          },
+          description: {
+            vi: item.description?.vi
+              ? item.description.vi.split("\n") // tách thành list
+              : [],
+            en: item.description?.en ? item.description.en.split("\n") : [],
+          },
+          imageUrl: item.image_url,
+          position: item.position,
+        })),
+
+      khauHieu: (data) => ({
+        text: data[0]?.title || "",
+      }),
+
+      khachHang: (data) =>
+        data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          image: item.image_url,
+        })),
+    }),
+    []
+  );
+
+  // Create memoized homeData state with caching
+  const [homeData, setHomeData] = useState(() => ({
     vi: {
       banner: [],
       nenTang: [],
@@ -97,120 +211,78 @@ function HomePage({ activeSidebarHeader }) {
       khauHieu: [],
       khachHang: [],
     },
-  });
-  const currentData = homeData[activeLang];
-  // ===================== PARSERS =====================
-  const sectionParsers = {
-    banner: (data) => {
-      // Mapping riêng cho buttonText
-      const buttonTextMapping = [
-        "home.banner.goal.buttonText",
-        "home.banner.coreValues.buttonText",
-      ];
+  }));
 
-      return data.map((item, idx) => ({
-        id: item.id,
-        title: { vi: item.title?.vi || "", en: item.title?.en || "" },
-        description: {
-          vi: item.description?.vi || "",
-          en: item.description?.en || "",
-        },
-        banner: item.image_url
-          ? `${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`
-          : "",
-        buttonText: buttonTextMapping[idx] || "", // 👈 append ở đây
-      }));
-    },
+  // Memoize the current data based on active language
+  const currentData = useMemo(
+    () => homeData[activeLang],
+    [homeData, activeLang]
+  );
 
-    nenTang: (data) => ({
-      title: { vi: data[0]?.title?.vi || "", en: data[0]?.title?.en || "" },
-      description: {
-        vi: data[0]?.description?.vi || "",
-        en: data[0]?.description?.en || "",
-      },
-    }),
-
-    cards: (data) =>
-      data.map((item) => ({
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        image: item.image_url,
-      })),
-
-    dichVu: (data) =>
-      data.map((item) => ({
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        image: item.image_url,
-      })),
-
-    loiIch: (data) =>
-      data.map((item) => ({
-        id: item.id,
-        title: {
-          vi: item.title?.vi || "",
-          en: item.title?.en || "",
-        },
-        description: {
-          vi: item.description?.vi
-            ? item.description.vi.split("\n") // tách thành list
-            : [],
-          en: item.description?.en ? item.description.en.split("\n") : [],
-        },
-        imageUrl: item.image_url,
-        position: item.position,
-      })),
-
-    khauHieu: (data) => ({
-      text: data[0]?.title || "",
-    }),
-
-    khachHang: (data) =>
-      data.map((item) => ({
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        image: item.image_url,
-      })),
-  };
-
-  // ===================== FETCH CHUNG =====================
-  const fetchSection = async (type) => {
-    try {
-      const res = await fetch(
-        `${
-          import.meta.env.VITE_MAIN_BE_URL
-        }/api/section-items/type/${type}?slug=home`
-      );
-      const data = await res.json();
-      const parsed = sectionParsers[type]?.(data) || data;
-
-      setHomeData((prev) => ({
-        ...prev,
-        [activeLang]: {
-          ...prev[activeLang],
-          [type]: parsed,
-        },
-      }));
-    } catch (err) {
-      console.error(`❌ Fetch ${type} failed:`, err);
-    }
-  };
+  // Create cached fetch functions for each section type
+  const sections = [
+    "banner",
+    "nenTang",
+    "cards",
+    "dichVu",
+    "loiIch",
+    "khauHieu",
+    "khachHang",
+  ];
 
   useEffect(() => {
-    const sections = [
-      "banner",
-      "nenTang",
-      "cards",
-      "dichVu",
-      "loiIch",
-      "khauHieu",
-      "khachHang",
-    ];
-    Promise.all(sections.map((type) => fetchSection(type)));
-  }, [activeLang]);
+    const fetchSectionWithCache = async (type) => {
+      try {
+        const cacheKey = `section-${type}-${activeLang}`;
+        const cached = cache.get(cacheKey);
+        if (cached && Date.now() - cached.timestamp < 10 * 60 * 1000) {
+          // 10 minutes
+          console.log(`Using cached data for ${type} section`);
+          setHomeData((prev) => ({
+            ...prev,
+            [activeLang]: {
+              ...prev[activeLang],
+              [type]: cached.data,
+            },
+          }));
+          return;
+        }
+
+        const start = performance.now();
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_MAIN_BE_URL
+          }/api/section-items/type/${type}?slug=home`
+        );
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        const parsed = sectionParsers[type]?.(data) || data;
+        const end = performance.now();
+        console.log(
+          `Section ${type} API call took ${(end - start).toFixed(2)}ms`
+        );
+
+        // Cache the result
+        cache.set(cacheKey, {
+          data: parsed,
+          timestamp: Date.now(),
+        });
+
+        setHomeData((prev) => ({
+          ...prev,
+          [activeLang]: {
+            ...prev[activeLang],
+            [type]: parsed,
+          },
+        }));
+      } catch (err) {
+        console.error(`❌ Fetch ${type} failed:`, err);
+      }
+    };
+
+    // Fetch all sections in parallel
+    Promise.all(sections.map((type) => fetchSectionWithCache(type)));
+  }, [activeLang, sectionParsers]);
 
   // ánh xạ type (DB) => key (currentData)
   const typeKeyMap = {
@@ -225,61 +297,84 @@ function HomePage({ activeSidebarHeader }) {
   };
 
   const componentMap = {
-    banner: (data, activeLang) =>
+    banner: (data, activeLang, sectionType) =>
       data.banner?.length > 0 && (
-        <BannerSilder
-          data={data.banner}
-          activeLang={activeLang}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <BannerSilder
+            data={data.banner}
+            activeLang={activeLang}
+            sectionType={sectionType}
+          />
+        </Suspense>
       ),
-    nenTang: (data, activeLang) =>
+    nenTang: (data, activeLang, sectionType) =>
       data.nenTang && (
-        <BaseModi
-          data={data.nenTang}
-          activeLang={activeLang}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <BaseModi
+            data={data.nenTang}
+            activeLang={activeLang}
+            sectionType={sectionType}
+          />
+        </Suspense>
       ),
-    cards: (data, activeLang) =>
+    cards: (data, activeLang, sectionType) =>
       data.cards?.length > 0 && (
-        <ThreeCardBusiness
-          data={data.cards}
-          activeLang={activeLang}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <ThreeCardBusiness
+            data={data.cards}
+            activeLang={activeLang}
+            sectionType={sectionType}
+          />
+        </Suspense>
       ),
-    dichvu: (data, activeLang) =>
+    dichvu: (data, activeLang, sectionType) =>
       data.dichVu?.length > 0 && (
-        <ServiceModi
-          data={data.dichVu}
-          activeLang={activeLang}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <ServiceModi
+            data={data.dichVu}
+            activeLang={activeLang}
+            sectionType={sectionType}
+          />
+        </Suspense>
       ),
-    chitietdichvu: (data, activeLang) => (
+    chitietdichvu: (data, activeLang, sectionType) => (
       <div className="w-full">
-        <PricingPage />
+        <Suspense fallback={<ComponentLoader />}>
+          <PricingPage />
+        </Suspense>
       </div>
     ),
-    loiich: (data, activeLang) =>
+    loiich: (data, activeLang, sectionType) =>
       data.loiIch?.length > 0 && (
-        <BenefitBusiness
-          data={data.loiIch}
-          activeLang={activeLang}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <BenefitBusiness
+            data={data.loiIch}
+            activeLang={activeLang}
+            sectionType={sectionType}
+          />
+        </Suspense>
       ),
-    khauhieu: (data, activeLang) =>
+    khauhieu: (data, activeLang, sectionType) =>
       data.khauHieu && (
         <div className="w-full">
-          <BannerText
-            data={data.khauHieu}
-            activeLang={activeLang}
-          />
+          <Suspense fallback={<ComponentLoader />}>
+            <BannerText
+              data={data.khauHieu}
+              activeLang={activeLang}
+              sectionType={sectionType}
+            />
+          </Suspense>
         </div>
       ),
-    khachhang: (data, activeLang) =>
+    khachhang: (data, activeLang, sectionType) =>
       data.khachHang?.length > 0 && (
-        <Customer
-          data={data.khachHang}
-          activeLang={activeLang}
-        />
+        <Suspense fallback={<ComponentLoader />}>
+          <Customer
+            data={data.khachHang}
+            activeLang={activeLang}
+            sectionType={sectionType}
+          />
+        </Suspense>
       ),
   };
 
@@ -301,7 +396,19 @@ function HomePage({ activeSidebarHeader }) {
           const key = typeKeyMap[section.type]; // map DB type -> currentData key
           return (
             <React.Fragment key={section.type}>
-              {componentMap[section.type]?.(currentData, activeLang)}
+              <DeferredComponent
+                component={(data, lang) =>
+                  componentMap[section.type]?.(data, lang)
+                }
+                data={currentData}
+                activeLang={activeLang}
+                sectionType={section.type}
+                fallback={
+                  <div className="w-full h-64 flex items-center justify-center">
+                    Loading...
+                  </div>
+                }
+              />
             </React.Fragment>
           );
         })}

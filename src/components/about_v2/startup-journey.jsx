@@ -11,10 +11,13 @@ export function StartupJourney() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // Use requestAnimationFrame instead of setTimeout for better performance
           t("aboutV2.StartupJourney.milestones").forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index]);
-            }, index * 200);
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                setVisibleCards((prev) => [...prev, index]);
+              }, index * 100); // Reduced delay for faster loading
+            });
           });
         }
       },

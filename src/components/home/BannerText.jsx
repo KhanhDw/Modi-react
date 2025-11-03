@@ -1,7 +1,7 @@
 import React from "react";
 import "@/styles/bannerText.css";
 
-function BannerText({ data, activeLang }) {
+function BannerText({ data, activeLang, sectionType }) {
   if (!data || !data.text) return null;
 
   // Đảm bảo text là string

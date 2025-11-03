@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 
-function ThreeCardBusiness({ data, activeLang }) {
+function ThreeCardBusiness({ data, activeLang, sectionType }) {
   const [isMobileView, setIsMobileView] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
+
+  const toggleExpand = useCallback((id) => {
+    setExpandedCardId((prev) => (prev === id ? null : id));
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -13,11 +17,9 @@ function ThreeCardBusiness({ data, activeLang }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const toggleExpand = (id) => {
-    setExpandedCardId((prev) => (prev === id ? null : id));
-  };
+  const memoizedData = useMemo(() => data, [data]);
 
-  if (!data || data.length === 0) return null;
+  if (!memoizedData || memoizedData.length === 0) return null;
 
   return (
     <section className="w-full rounded-2xl">
@@ -25,7 +27,7 @@ function ThreeCardBusiness({ data, activeLang }) {
         {isMobileView ? (
           // ================= MOBILE / TABLET =================
           <div className="flex items-start overflow-x-auto snap-x snap-mandatory gap-6 px-2 scrollbar-hide">
-            {data.map((item) => {
+            {memoizedData.map((item) => {
               const isExpanded = expandedCardId === item.id;
               const description = item.description?.[activeLang] || "";
 
@@ -87,7 +89,7 @@ function ThreeCardBusiness({ data, activeLang }) {
         ) : (
           // ================= DESKTOP =================
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 items-start">
-            {data.map((item) => {
+            {memoizedData.map((item) => {
               const isExpanded = expandedCardId === item.id;
               const description = item.description?.[activeLang] || "";
 

@@ -3,35 +3,20 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
 import { Link } from "react-router-dom";
+import { useAboutData } from "@/contexts/AboutDataContext";
 
-export function HeroBanner() {
+export function HeroBanner({ bannerData }) {
   const { t } = useLanguage();
   const { lang, prefix } = useCurrentLanguage();
   const [isVisible, setIsVisible] = useState(false);
-  const [banner, setBanner] = useState({
+  const { data } = useAboutData();
+  
+  // Get banner from context, fallback to prop, then to default state
+  const banner = bannerData || (data?.banner) || {
     title: { vi: "", en: "" },
     slogan: { vi: "", en: "" },
-  });
-
-  // Fetch banner từ API
-  useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_MAIN_BE_URL
-      }/api/section-items/type/about_intro?slug=about`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const item = data[0];
-          setBanner({
-            title: item.title || { vi: "", en: "" },
-            slogan: item.description || { vi: "", en: "" },
-            image_url: item.image_url || "", // video
-          });
-        }
-      })
-      .catch((err) => console.error("Lỗi khi fetch banner:", err));
-  }, [lang]);
+    image_url: "",
+  };
 
   useEffect(() => {
     setIsVisible(true);
@@ -48,6 +33,7 @@ export function HeroBanner() {
         loop
         muted
         playsInline
+        preload="metadata" // Preload metadata only for faster initial load
       />
 
       {/* Overlay */}

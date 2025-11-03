@@ -2,7 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function PricingFooterPage() {
+function PricingFooterPage({ sectionType }) {
   const { t } = useLanguage();
   return (
     <>

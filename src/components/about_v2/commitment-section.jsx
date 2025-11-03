@@ -18,10 +18,13 @@ export function CommitmentSection() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // Use requestAnimationFrame for better performance
           t("aboutV2.CommitmentSection.commitments").forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index]);
-            }, index * 150);
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                setVisibleCards((prev) => [...prev, index]);
+              }, index * 100); // Reduced delay for faster loading
+            });
           });
         }
       },

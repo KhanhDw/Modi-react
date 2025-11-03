@@ -3,36 +3,22 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import useCurrentLanguage, { setAppLanguage } from "@/hook/currentLang";
+import { useAboutData } from "@/contexts/AboutDataContext";
 
-export function CTASection() {
+export function CTASection({ ctaData }) {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
-  const [banner, setBanner] = useState({
-    title: "",
-    slogan: "",
-    image_url: "",
-  });
   const { lang } = useCurrentLanguage();
-
-  // Fetch banner từ API
-  useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_MAIN_BE_URL
-      }/api/section-items/type/banner_video?slug=about`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const item = data[0];
-          setBanner({
-            title: item.title || { vi: "", en: "" },
-            slogan: item.description || { vi: "", en: "" },
-            image_url: item.image_url || "", // video
-          });
-        }
-      })
-      .catch((err) => console.error("Lỗi khi fetch banner:", err));
-  }, [lang]);
+  const { data } = useAboutData();
+  
+  // Get CTA data from context, fallback to prop, then to default state
+  const banner = ctaData || (data?.ctaBanner) || {
+    title: { vi: "", en: "" },
+    slogan: { vi: "", en: "" },
+    image_url: "",
+  };
+  
+  const { t } = useLanguage();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -49,12 +35,11 @@ export function CTASection() {
 
     return () => observer.disconnect();
   }, []);
-  const { t } = useLanguage();
 
   return (
     <section
       id="cta-section"
-      className="py-20 px-4 relative overflow-hid den"
+      className="py-20 px-4 relative overflow-hidden"
     >
       {/* Video Background */}
       <video
@@ -65,6 +50,7 @@ export function CTASection() {
         muted
         loop
         playsInline
+        preload="metadata" // Preload metadata only for faster initial load
       />
 
       {/* Overlay để dễ đọc chữ */}

@@ -1,69 +1,66 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-function ServiceModi({ data, activeLang, sectionType }) {
-  const { t } = useLanguage();
-  const [hoveredItemId, setHoveredItemId] = useState(null);
-  const [isMobileView, setIsMobileView] = useState(false);
-  const [expandedCardId, setExpandedCardId] = useState(null); // card đang mở rộng
+function ServiceModi({ data, activeLang }) {
+const { t } = useLanguage();
+const [hoveredItemId, setHoveredItemId] = useState(null);
+const [isMobileView, setIsMobileView] = useState(false);
+const [expandedCardId, setExpandedCardId] = useState(null); // card đang mở rộng
 
-  const toggleExpand = useCallback((id) => {
-    setExpandedCardId(prev => prev === id ? null : id);
-  }, []);
+useEffect(() => {
+const handleResize = () => {
+setIsMobileView(window.innerWidth <= 1024); // mobile & tablet
+};
+handleResize();
+window.addEventListener("resize", handleResize);
+return () => window.removeEventListener("resize", handleResize);
+}, []);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 1024); // mobile & tablet
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+const handleMouseEnter = (id) => setHoveredItemId(id);
+const handleMouseLeave = () => setHoveredItemId(null);
 
-  const handleMouseEnter = (id) => setHoveredItemId(id);
-  const handleMouseLeave = () => setHoveredItemId(null);
+const getItemWidth = (id) => {
+if (hoveredItemId === null) {
+return `${100 / data.length}%`;
+}
+if (hoveredItemId === id) {
+return "35%";
+}
+return `${(100 - 35) / (data.length - 1)}%`;
+};
 
-  const getItemWidth = (id) => {
-    if (hoveredItemId === null) {
-      return `${100 / data.length}%`;
-    }
-    if (hoveredItemId === id) {
-      return "35%";
-    }
-    return `${(100 - 35) / (data.length - 1)}%`;
-  };
+if (!data || data.length === 0) return null;
 
-  if (!data || data.length === 0) return null;
+//--------------------------
+const [initialQuantity, setInitialQuantity] = useState([6]); // giá trị BE trả về
+async function fetchDataQuantity() {
+const res = await fetch(
+`${import.meta.env.VITE_MAIN_BE_URL}/api/service-home-page-ui`
+);
+const data = await res.json();
+setInitialQuantity([data.data.quantity]);
+}
+useEffect(() => {
+fetchDataQuantity();
+}, []);
 
-  //--------------------------
-  const [initialQuantity, setInitialQuantity] = useState([6]); // giá trị BE trả về
-  async function fetchDataQuantity() {
-    const res = await fetch(
-      `${import.meta.env.VITE_MAIN_BE_URL}/api/service-home-page-ui`
-    );
-    const data = await res.json();
-    setInitialQuantity([data.data.quantity]);
-  }
-  useEffect(() => {
-    fetchDataQuantity();
-  }, []);
+return (
 
-  return (
-    <section className="py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
-      <div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
-        <h3 className="  text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
-          {t("home.serviceModi.title")}
-        </h3>
-        <div className="text-lg xs:text-xl sm:text-2xl text-gray-600 dark:text-[#D1D5DB]">
-          {t("home.serviceModi.description")}
-        </div>
-      </div>
+<section className="py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 bg-neutral-50 dark:bg-transparent w-full rounded-3xl">
+<div className="container mx-auto text-center flex flex-col gap-4 xs:gap-5 sm:gap-6 px-4 xs:px-5 sm:px-6 md:px-8 relative z-20">
+<h3 className="  text-3xl xs:text-4xl sm:text-4xl md:text-5xl font-bold text-black dark:text-[#F3F4F6]">
+{t("home.serviceModi.title")}
+</h3>
+<div className="text-lg xs:text-xl sm:text-2xl text-gray-600 dark:text-[#D1D5DB]">
+{t("home.serviceModi.description")}
+</div>
+</div>
 
       <div className="relative z-20 mt-8 md:mt-12 container mx-auto w-full">
         {isMobileView ? (
           // ================= MOBILE / TABLET =================
           <div className="flex items-start overflow-x-auto snap-x snap-mandatory gap-6 px-4 pb-6 scrollbar-hide">
-            {data.slice(0, initialQuantity).map((service) => {
+            {data.map((service) => {
               const isExpanded = expandedCardId === service.id;
               const description = service.description?.[activeLang] || "";
 
@@ -139,9 +136,6 @@ function ServiceModi({ data, activeLang, sectionType }) {
                 className={`relative overflow-hidden cursor-pointer transition-[flex-grow] duration-500 ease-in-out ${
                   hoveredItemId === service.id ? "flex-[4]" : "flex-[1]"
                 }`}
-                style={{
-                  width: getItemWidth(service.id)
-                }}
               >
                 <img
                   loading="lazy"
@@ -179,7 +173,8 @@ function ServiceModi({ data, activeLang, sectionType }) {
         )}
       </div>
     </section>
-  );
+
+);
 }
 
 export default ServiceModi;

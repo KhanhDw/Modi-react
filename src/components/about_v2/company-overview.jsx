@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import useCurrentLanguage from "@/hook/currentLang";
+import { useAboutData } from "@/contexts/AboutDataContext";
+import OptimizedImage from "@/components/optimized-image";
 
-export function CompanyOverview() {
+export function CompanyOverview({ companyData }) {
   const { lang } = useCurrentLanguage();
   const [isVisible, setIsVisible] = useState(false);
-  const [about, setAbout] = useState(null);
+  const { data } = useAboutData();
+  
+  // Get company data from context, fallback to prop, then to null
+  const about = companyData || (data?.companyOverview) || null;
 
   // Quan sát khi scroll để hiện animation
   useEffect(() => {
@@ -20,22 +25,6 @@ export function CompanyOverview() {
 
     return () => observer.disconnect();
   }, []);
-
-  // Fetch dữ liệu từ API section-items (section_id = 2)
-  useEffect(() => {
-    fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
-      }/api/section-items/type/company_intro?slug=about`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setAbout(data[0]); // lấy phần tử đầu tiên
-        }
-      })
-      .catch((err) => console.error("Fetch about error:", err));
-  }, [lang]); // refetch khi đổi ngôn ngữ
 
   return (
     <section
@@ -69,21 +58,18 @@ export function CompanyOverview() {
             }`}
           >
             <div className="relative">
-              <div className="w-full aspect-video rounded-lg shadow-lg overflow-hidden bg-gray-100">
-                <img
-                  loading="lazy"
-                  src={
-                    about?.image_url
-                      ? `${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`
-                      : "/no-image.png"
-                  }
-                  alt={about?.title?.[lang] || "Company Overview"}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    e.target.src = "/no-image.png";
-                    e.target.className = "w-full h-full object-contain p-4";
-                  }}
-                />
+              <div className="w-full aspect-video rounded-lg shadow-lg overflow-hidden">
+                {about?.image_url ? (
+                  <OptimizedImage
+                    src={`${import.meta.env.VITE_MAIN_BE_URL}${about.image_url}`}
+                    alt={about?.title?.[lang] || "Company Overview"}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500">No image</span>
+                  </div>
+                )}
               </div>
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[accent/20] rounded-full blur-xl" />
             </div>

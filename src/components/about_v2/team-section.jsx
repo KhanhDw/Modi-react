@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import OptimizedImage from "@/components/optimized-image";
 
 export function TeamSection() {
   const [visibleCards, setVisibleCards] = useState([]);
@@ -10,10 +11,13 @@ export function TeamSection() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // Use requestAnimationFrame for better performance
           t("aboutV2.TeamSection.teamMembers").forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index]);
-            }, index * 200);
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                setVisibleCards((prev) => [...prev, index]);
+              }, index * 100); // Reduced delay for faster loading
+            });
           });
         }
       },
@@ -48,12 +52,13 @@ export function TeamSection() {
             >
               <CardContent className="p-6 text-center">
                 <div className="relative mb-6 group">
-                  <img
-                    loading="lazy"
-                    src={member.image || "/placeholder.svg"}
-                    alt={member.name}
-                    className="w-32 h-32 rounded-full mx-auto object-cover shadow-lg group-hover:scale-105 transition-transform duration-300"
-                  />
+                  <div className="w-32 h-32 rounded-full mx-auto overflow-hidden shadow-lg">
+                    <OptimizedImage
+                      src={member.image || "/placeholder.svg"}
+                      alt={member.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-accent rounded-full"></div>
                 </div>
                 <h3 className="text-base sm:text-lg font-bold font-sans text-[foreground] mb-2">

@@ -1,11 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import useCurrentLanguage from "@/hook/currentLang";
+import { useAboutData } from "@/contexts/AboutDataContext";
+import OptimizedImage from "@/components/optimized-image";
 
-export function MissionVision() {
+export function MissionVision({ missionVisionData }) {
   const { lang } = useCurrentLanguage();
   const [isVisible, setIsVisible] = useState(false);
-  const [items, setItems] = useState([]);
+  const { data } = useAboutData();
+  
+  // Get mission/vision data from context, fallback to prop, then to empty array
+  const items = missionVisionData || (data?.missionVision) || [];
 
   useEffect(() => {
     // Quan sát khi scroll tới section
@@ -23,20 +28,6 @@ export function MissionVision() {
 
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    // Fetch dữ liệu từ API
-    fetch(
-      `${
-        import.meta.env.VITE_MAIN_BE_URL
-      }/api/section-items/type/vision_mission?slug=about`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data); // data là mảng các mục vision & mission
-      })
-      .catch((err) => console.error("Fetch Mission & Vision error:", err));
-  }, [lang]); // refetch khi đổi ngôn ngữ
 
   return (
     <section
@@ -79,12 +70,13 @@ export function MissionVision() {
                   {item.description?.[lang] || "Chưa có mô tả"}
                 </p>
                 {item.image_url && (
-                  <img
-                    loading="lazy"
-                    src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`}
-                    alt={item.title?.[lang] || ""}
-                    className="w-full h-40 object-cover rounded-lg mt-4 shadow"
-                  />
+                  <div className="w-full h-40 rounded-lg mt-4 overflow-hidden">
+                    <OptimizedImage
+                      src={`${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`}
+                      alt={item.title?.[lang] || ""}
+                      className="w-full h-full object-cover shadow"
+                    />
+                  </div>
                 )}
               </CardContent>
             </Card>

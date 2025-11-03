@@ -36,10 +36,13 @@ export function TechnologiesSection() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // Use requestAnimationFrame for better performance
           technologies.forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...prev, index]);
-            }, index * 100);
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                setVisibleCards((prev) => [...prev, index]);
+              }, index * 80); // Reduced delay for faster loading
+            });
           });
         }
       },
@@ -66,7 +69,11 @@ export function TechnologiesSection() {
           {technologies.map((tech, index) => (
             <Card
               key={index}
-              className="w-full sm:w-40"
+              className={`w-full sm:w-40 transition-all duration-500 ${
+                visibleCards.includes(index)
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`}
             >
               <CardContent className="flex flex-col items-center justify-center p-4 text-center">
                 <tech.icon className="w-6 h-6 sm:w-7 sm:h-7 mb-3" />
