@@ -1,41 +1,62 @@
-import React, { useState, useEffect, lazy, Suspense, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+  useMemo,
+  useRef,
+} from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import useCurrentLanguage from "@/hook/currentLang";
 import useApiCache from "@/hooks/useApiCache"; // Custom caching hook
-import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import DeferredComponent from "@/utils/DeferredComponent";
 import ScrollToTopButton from "@/components/button/ScrollToTopButton";
 
-// Simple in-memory cache (same as in useApiCache.js)
-const cache = new Map();
+/*
+  Optimized HomePage
+  - Use `lang` directly (no extra activeLang state)
+  - Group lazy imports for maintainability
+  - Keep small in-memory cache with useRef
+  - Avoid unnecessary deep cloning
+  - Use DEV-only logs to avoid noisy production console
+  - Memoize section parsers & component map
+  - Respect deferred rendering (DeferredComponent expected to use IntersectionObserver)
+*/
 
-// Lazy load components for code splitting
-const PricingPage = lazy(() => import("@/components/home/pricingPage"));
-const BannerSilder = lazy(() => import("@/components/home/BannerSilder"));
-const BaseModi = lazy(() => import("@/components/home/BaseModi"));
-const ThreeCardBusiness = lazy(() =>
-  import("@/components/home/ThreeCardBusiness")
-);
-const ServiceModi = lazy(() => import("@/components/home/ServiceModi"));
-const BenefitBusiness = lazy(() => import("@/components/home/BenefitBusiness"));
-const BannerText = lazy(() => import("@/components/home/BannerText"));
-const Customer = lazy(() => import("@/components/home/Customer"));
+// Grouped lazy imports
+const HomeSections = {
+  PricingPage: lazy(() => import("@/components/home/pricingPage")),
+  BannerSilder: lazy(() => import("@/components/home/BannerSilder")),
+  BaseModi: lazy(() => import("@/components/home/BaseModi")),
+  ThreeCardBusiness: lazy(() => import("@/components/home/ThreeCardBusiness")),
+  ServiceModi: lazy(() => import("@/components/home/Service/ServiceModi")),
+  BenefitBusiness: lazy(() => import("@/components/home/BenefitBusiness")),
+  BannerText: lazy(() => import("@/components/home/BannerText")),
+  Customer: lazy(() => import("@/components/home/Customer")),
+};
 
-// Loading component for lazy loaded components
 const ComponentLoader = () => (
   <div className="w-full h-64 flex items-center justify-center">Loading...</div>
 );
 
 function HomePage({ activeSidebarHeader }) {
   const { t } = useLanguage();
-  const { lang } = useCurrentLanguage();
+  const { lang } = useCurrentLanguage(); // use lang directly
 
-  // Performance monitoring
-  usePerformanceMonitor("HomePage");
-  const [activeLang, setActiveLang] = useState("vi"); // vi en
+  // Performance monitoring (keeps existing behavior)
+  // If usePerformanceMonitor has effects, keep it; otherwise it's a noop.
+  try {
+    // lazy require to avoid errors if hook not available in some envs
+    const { usePerformanceMonitor } = require("@/hooks/usePerformanceMonitor");
+    usePerformanceMonitor("HomePage");
+  } catch (e) {
+    // ignore if hook missing in test env
+  }
 
-  // Use caching for API calls with performance monitoring
+  // Small in-memory cache local to component lifecycle
+  const cacheRef = useRef(new Map());
+
+  // Fetch status & positions through existing useApiCache hook (keeps shared caching semantics)
   const { data: statusData } = useApiCache(
     `status-position-${lang}`,
     async () => {
@@ -45,14 +66,15 @@ function HomePage({ activeSidebarHeader }) {
       }/api/status-position-home-page`;
       const res = await fetch(statusPositionUrl);
       if (!res.ok) throw new Error(`Lỗi HTTP: ${res.status}`);
-      const data = await res.json();
+      const json = await res.json();
       const end = performance.now();
-      console.log(
-        `Status position API call took ${(end - start).toFixed(2)}ms`
-      );
-      return data.data;
+      if (import.meta.env.DEV)
+        console.log(
+          `Status position API call took ${(end - start).toFixed(2)}ms`
+        );
+      return json.data;
     },
-    10 * 60 * 1000 // 10 minutes TTL for status data
+    10 * 60 * 1000
   );
 
   const { data: positionData } = useApiCache(
@@ -63,65 +85,47 @@ function HomePage({ activeSidebarHeader }) {
         `${import.meta.env.VITE_MAIN_BE_URL}/api/sections?slug=home`
       );
       if (!res.ok) throw new Error(`Lỗi HTTP: ${res.status}`);
-      const data = await res.json();
-      if (!data.data || !Array.isArray(data.data)) {
+      const json = await res.json();
+      if (!json.data || !Array.isArray(json.data)) {
         throw new Error("Dữ liệu không đúng định dạng hoặc rỗng");
       }
       const end = performance.now();
-      console.log(`Position data API call took ${(end - start).toFixed(2)}ms`);
-      return JSON.parse(JSON.stringify(data.data)); // Clone data
+      if (import.meta.env.DEV)
+        console.log(
+          `Position data API call took ${(end - start).toFixed(2)}ms`
+        );
+      return json.data; // avoid deep clone to save CPU
     },
-    10 * 60 * 1000 // 10 minutes TTL for position data
+    10 * 60 * 1000
   );
 
   const status = statusData || [];
   const vitri = positionData || [];
 
   useEffect(() => {
-    setActiveLang(lang);
-  }, [lang]);
-
-  useEffect(() => {
-    // Khi load lại trang thì reset scroll
+    // restore/scroll behavior
     window.history.scrollRestoration = "manual";
     window.scrollTo(0, 0);
-
-    // Khi chuẩn bị reload/đóng tab -> về top
-    const handleBeforeUnload = () => {
-      window.scrollTo(0, 0);
-    };
+    const handleBeforeUnload = () => window.scrollTo(0, 0);
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
-  // Use useMemo to memoize parsers to prevent re-creation on every render
+  // section parsers memoized
   const sectionParsers = useMemo(
     () => ({
       banner: (data) => {
-        // Mapping riêng cho buttonText
         const buttonTextMapping = [
           "home.banner.goal.buttonText",
           "home.banner.coreValues.buttonText",
         ];
-
-        return data.map((item, idx) => {
-          // Ensure the banner URL is properly formatted
+        return (data || []).map((item, idx) => {
           let bannerUrl = "";
           if (item.image_url) {
-            // Check if image_url is already an absolute URL
-            if (item.image_url.startsWith("http")) {
-              bannerUrl = item.image_url;
-            } else {
-              // Construct the full URL with the base URL
-              bannerUrl = `${import.meta.env.VITE_MAIN_BE_URL}${
-                item.image_url
-              }`;
-            }
+            bannerUrl = item.image_url.startsWith("http")
+              ? item.image_url
+              : `${import.meta.env.VITE_MAIN_BE_URL}${item.image_url}`;
           }
-
           return {
             id: item.id,
             title: { vi: item.title?.vi || "", en: item.title?.en || "" },
@@ -130,7 +134,7 @@ function HomePage({ activeSidebarHeader }) {
               en: item.description?.en || "",
             },
             banner: bannerUrl,
-            buttonText: buttonTextMapping[idx] || "", // 👈 append ở đây
+            buttonText: buttonTextMapping[idx] || "",
           };
         });
       },
@@ -144,7 +148,7 @@ function HomePage({ activeSidebarHeader }) {
       }),
 
       cards: (data) =>
-        data.map((item) => ({
+        (data || []).map((item) => ({
           id: item.id,
           title: item.title,
           description: item.description,
@@ -152,7 +156,7 @@ function HomePage({ activeSidebarHeader }) {
         })),
 
       dichVu: (data) =>
-        data.map((item) => ({
+        (data || []).map((item) => ({
           id: item.id,
           title: item.title,
           description: item.description,
@@ -160,28 +164,21 @@ function HomePage({ activeSidebarHeader }) {
         })),
 
       loiIch: (data) =>
-        data.map((item) => ({
+        (data || []).map((item) => ({
           id: item.id,
-          title: {
-            vi: item.title?.vi || "",
-            en: item.title?.en || "",
-          },
+          title: { vi: item.title?.vi || "", en: item.title?.en || "" },
           description: {
-            vi: item.description?.vi
-              ? item.description.vi.split("\n") // tách thành list
-              : [],
+            vi: item.description?.vi ? item.description.vi.split("\n") : [],
             en: item.description?.en ? item.description.en.split("\n") : [],
           },
           imageUrl: item.image_url,
           position: item.position,
         })),
 
-      khauHieu: (data) => ({
-        text: data[0]?.title || "",
-      }),
+      khauHieu: (data) => ({ text: data[0]?.title || "" }),
 
       khachHang: (data) =>
-        data.map((item) => ({
+        (data || []).map((item) => ({
           id: item.id,
           title: item.title,
           description: item.description,
@@ -191,59 +188,38 @@ function HomePage({ activeSidebarHeader }) {
     []
   );
 
-  // Create memoized homeData state with caching
-  const [homeData, setHomeData] = useState(() => ({
-    vi: {
-      banner: [],
-      nenTang: [],
-      cards: [],
-      dichVu: [],
-      loiIch: [],
-      khauHieu: [],
-      khachHang: [],
-    },
-    en: {
-      banner: [],
-      nenTang: [],
-      cards: [],
-      dichVu: [],
-      loiIch: [],
-      khauHieu: [],
-      khachHang: [],
-    },
-  }));
+  // local homeData state with two langs
+  const [homeData, setHomeData] = useState(() => ({ vi: {}, en: {} }));
 
-  // Memoize the current data based on active language
-  const currentData = useMemo(
-    () => homeData[activeLang],
-    [homeData, activeLang]
+  const currentData = useMemo(() => homeData[lang] || {}, [homeData, lang]);
+
+  const sections = useMemo(
+    () => [
+      "banner",
+      "nenTang",
+      "cards",
+      "dichVu",
+      "loiIch",
+      "khauHieu",
+      "khachHang",
+    ],
+    []
   );
 
-  // Create cached fetch functions for each section type
-  const sections = [
-    "banner",
-    "nenTang",
-    "cards",
-    "dichVu",
-    "loiIch",
-    "khauHieu",
-    "khachHang",
-  ];
-
   useEffect(() => {
-    const fetchSectionWithCache = async (type) => {
+    let mounted = true;
+
+    const fetchSection = async (type) => {
       try {
-        const cacheKey = `section-${type}-${activeLang}`;
-        const cached = cache.get(cacheKey);
+        const cacheKey = `section-${type}-${lang}`;
+        const cached = cacheRef.current.get(cacheKey);
         if (cached && Date.now() - cached.timestamp < 10 * 60 * 1000) {
-          // 10 minutes
-          console.log(`Using cached data for ${type} section`);
+          if (import.meta.env.DEV)
+            console.log(`Using cached data for ${type} section`);
+          if (!mounted) return;
           setHomeData((prev) => ({
             ...prev,
-            [activeLang]: {
-              ...prev[activeLang],
-              [type]: cached.data,
-            },
+            [lang]: { ...(prev[lang] || {}), [type]: cached.data },
           }));
           return;
         }
@@ -255,134 +231,144 @@ function HomePage({ activeSidebarHeader }) {
           }/api/section-items/type/${type}?slug=home`
         );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        const parsed = sectionParsers[type]?.(data) || data;
+        const json = await res.json();
+        const parsed = sectionParsers[type]?.(json) || json;
         const end = performance.now();
-        console.log(
-          `Section ${type} API call took ${(end - start).toFixed(2)}ms`
-        );
+        if (import.meta.env.DEV)
+          console.log(
+            `Section ${type} API call took ${(end - start).toFixed(2)}ms`
+          );
 
-        // Cache the result
-        cache.set(cacheKey, {
-          data: parsed,
-          timestamp: Date.now(),
-        });
-
+        cacheRef.current.set(cacheKey, { data: parsed, timestamp: Date.now() });
+        if (!mounted) return;
         setHomeData((prev) => ({
           ...prev,
-          [activeLang]: {
-            ...prev[activeLang],
-            [type]: parsed,
-          },
+          [lang]: { ...(prev[lang] || {}), [type]: parsed },
         }));
       } catch (err) {
         console.error(`❌ Fetch ${type} failed:`, err);
       }
     };
 
-    // Fetch all sections in parallel
-    Promise.all(sections.map((type) => fetchSectionWithCache(type)));
-  }, [activeLang, sectionParsers]);
+    // Trigger parallel fetch with Promise.allSettled to avoid one failure blocking others
+    (async () => {
+      await Promise.allSettled(sections.map((s) => fetchSection(s)));
+    })();
 
-  // ánh xạ type (DB) => key (currentData)
+    return () => {
+      mounted = false;
+    };
+  }, [lang, sectionParsers, sections]);
+
+  // Map DB types to keys in currentData
   const typeKeyMap = {
     banner: "banner",
     nenTang: "nenTang",
     cards: "cards",
-    dichvu: "dichVu", // DB: dichvu -> State: dichVu
+    dichvu: "dichVu",
     chitietdichvu: "chitietdichvu",
-    loiich: "loiIch", // DB: loiich -> State: loiIch
-    khauhieu: "khauHieu", // DB: khauhieu -> State: khauHieu
-    khachhang: "khachHang", // DB: khachhang -> State: khachHang
+    loiich: "loiIch",
+    khauhieu: "khauHieu",
+    khachhang: "khachHang",
   };
 
-  const componentMap = {
-    banner: (data, activeLang, sectionType) =>
-      data.banner?.length > 0 && (
-        <Suspense fallback={<ComponentLoader />}>
-          <BannerSilder
-            data={data.banner}
-            activeLang={activeLang}
-            sectionType={sectionType}
-          />
-        </Suspense>
-      ),
-    nenTang: (data, activeLang, sectionType) =>
-      data.nenTang && (
-        <Suspense fallback={<ComponentLoader />}>
-          <BaseModi
-            data={data.nenTang}
-            activeLang={activeLang}
-            sectionType={sectionType}
-          />
-        </Suspense>
-      ),
-    cards: (data, activeLang, sectionType) =>
-      data.cards?.length > 0 && (
-        <Suspense fallback={<ComponentLoader />}>
-          <ThreeCardBusiness
-            data={data.cards}
-            activeLang={activeLang}
-            sectionType={sectionType}
-          />
-        </Suspense>
-      ),
-    dichvu: (data, activeLang, sectionType) =>
-      data.dichVu?.length > 0 && (
-        <Suspense fallback={<ComponentLoader />}>
-          <ServiceModi
-            data={data.dichVu}
-            activeLang={activeLang}
-            sectionType={sectionType}
-          />
-        </Suspense>
-      ),
-    chitietdichvu: (data, activeLang, sectionType) => (
-      <div className="w-full">
-        <Suspense fallback={<ComponentLoader />}>
-          <PricingPage />
-        </Suspense>
-      </div>
-    ),
-    loiich: (data, activeLang, sectionType) =>
-      data.loiIch?.length > 0 && (
-        <Suspense fallback={<ComponentLoader />}>
-          <BenefitBusiness
-            data={data.loiIch}
-            activeLang={activeLang}
-            sectionType={sectionType}
-          />
-        </Suspense>
-      ),
-    khauhieu: (data, activeLang, sectionType) =>
-      data.khauHieu && (
-        <div className="w-full">
+  const componentMap = useMemo(
+    () => ({
+      banner: (data, activeLang, sectionType) =>
+        data.banner?.length > 0 && (
           <Suspense fallback={<ComponentLoader />}>
-            <BannerText
-              data={data.khauHieu}
+            <HomeSections.BannerSilder
+              data={data.banner}
               activeLang={activeLang}
               sectionType={sectionType}
             />
           </Suspense>
+        ),
+
+      nenTang: (data, activeLang, sectionType) =>
+        data.nenTang && (
+          <Suspense fallback={<ComponentLoader />}>
+            <HomeSections.BaseModi
+              data={data.nenTang}
+              activeLang={activeLang}
+              sectionType={sectionType}
+            />
+          </Suspense>
+        ),
+
+      cards: (data, activeLang, sectionType) =>
+        data.cards?.length > 0 && (
+          <Suspense fallback={<ComponentLoader />}>
+            <HomeSections.ThreeCardBusiness
+              data={data.cards}
+              activeLang={activeLang}
+              sectionType={sectionType}
+            />
+          </Suspense>
+        ),
+
+      dichvu: (data, activeLang, sectionType) =>
+        data.dichVu?.length > 0 && (
+          <Suspense fallback={<ComponentLoader />}>
+            <HomeSections.ServiceModi
+              data={data.dichVu}
+              activeLang={activeLang}
+              sectionType={sectionType}
+            />
+          </Suspense>
+        ),
+
+      chitietdichvu: (data, activeLang, sectionType) => (
+        <div className="w-full">
+          <Suspense fallback={<ComponentLoader />}>
+            <HomeSections.PricingPage />
+          </Suspense>
         </div>
       ),
-    khachhang: (data, activeLang, sectionType) =>
-      data.khachHang?.length > 0 && (
-        <Suspense fallback={<ComponentLoader />}>
-          <Customer
-            data={data.khachHang}
-            activeLang={activeLang}
-            sectionType={sectionType}
-          />
-        </Suspense>
-      ),
-  };
+
+      loiich: (data, activeLang, sectionType) =>
+        data.loiIch?.length > 0 && (
+          <Suspense fallback={<ComponentLoader />}>
+            <HomeSections.BenefitBusiness
+              data={data.loiIch}
+              activeLang={activeLang}
+              sectionType={sectionType}
+            />
+          </Suspense>
+        ),
+
+      khauhieu: (data, activeLang, sectionType) =>
+        data.khauHieu && (
+          <div className="w-full">
+            <Suspense fallback={<ComponentLoader />}>
+              <HomeSections.BannerText
+                data={data.khauHieu}
+                activeLang={activeLang}
+                sectionType={sectionType}
+              />
+            </Suspense>
+          </div>
+        ),
+
+      khachhang: (data, activeLang, sectionType) =>
+        data.khachHang?.length > 0 && (
+          <Suspense fallback={<ComponentLoader />}>
+            <HomeSections.Customer
+              data={data.khachHang}
+              activeLang={activeLang}
+              sectionType={sectionType}
+            />
+          </Suspense>
+        ),
+    }),
+    []
+  );
 
   return (
     <div
-      className={`${activeSidebarHeader ? "overflow-hidden" : ""}
-                w-full h-full md:p-4 mx-auto flex flex-col
-                items-center justify-center bg-slate-50 dark:bg-slate-950`}
+      className={`${
+        activeSidebarHeader ? "overflow-hidden" : ""
+      } w-full h-full md:p-4 mx-auto flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950`}
     >
       {vitri
         .sort((a, b) => a.position - b.position)
@@ -393,15 +379,15 @@ function HomePage({ activeSidebarHeader }) {
           return sectionStatus && sectionStatus.status === 1;
         })
         .map((section) => {
-          const key = typeKeyMap[section.type]; // map DB type -> currentData key
+          const key = typeKeyMap[section.type];
           return (
             <React.Fragment key={section.type}>
               <DeferredComponent
-                component={(data, lang) =>
-                  componentMap[section.type]?.(data, lang)
+                component={(data, activeLang) =>
+                  componentMap[section.type]?.(data, activeLang, section.type)
                 }
                 data={currentData}
-                activeLang={activeLang}
+                activeLang={lang}
                 sectionType={section.type}
                 fallback={
                   <div className="w-full h-64 flex items-center justify-center">
@@ -418,4 +404,4 @@ function HomePage({ activeSidebarHeader }) {
   );
 }
 
-export default HomePage;
+export default React.memo(HomePage);

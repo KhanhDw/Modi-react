@@ -11,7 +11,7 @@
 }
 
 .marquee-content:hover {
-  animation-play-state: paused;
+  animation-play-state: running !important;
 }
 
 @keyframes marquee {
